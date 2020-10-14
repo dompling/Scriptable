@@ -1,0 +1,8 @@
+/node_modules
+# production
+/build
+/.vscode
+/.idea
+/.history
+*.json
+test.js
