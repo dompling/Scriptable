@@ -10,7 +10,7 @@ const blurBackground = true; // 开启背景虚化 true 值类型布尔或数字
 const imageBackground = true; // 设置配置背景图片
 const forceImageUpdate = false; // 设置为true将重置小部件的背景图像
 
-const avatarImage = false; // 设置左边照片  ： 默认左边照片为 BoxJS 的媒体图片
+const avatarImage = true; // 设置左边照片  ： 默认左边照片为 BoxJS 的媒体图片
 const forceAvatarUpdate = false; // 重置左边照片
 
 const defaultData = {
@@ -28,7 +28,7 @@ class YaYaBirthday extends Calendar {
     this.props = props;
     this.data = props.data;
     this.prefix = props.prefix;
-    this.widgetSize = config.runsInWidget ? config.widgetFamily : "small";
+    this.widgetSize = config.runsInWidget ? config.widgetFamily : "large";
     this.mode = Device.isUsingDarkAppearance();
     if (blurBackground) {
       if (typeof blurBackground === "number") {
@@ -65,18 +65,26 @@ class YaYaBirthday extends Calendar {
     return undefined;
   };
 
-  isNight(dateInput) {
-    const timeValue = dateInput.getTime();
-    return timeValue < sunData.sunrise || timeValue > sunData.sunset;
-  }
-
   fetchImg = async (url) => {
     const response = new Request(url);
     return await response.loadImage();
   };
 
-  setHeader = async (widget) => {
+  setHeader = async (widget, icon, title) => {
+    let header = widget.addStack();
+    header.centerAlignContent();
+    let _icon = header.addImage(await this.fetchImg(icon));
+    _icon.imageSize = new Size(14, 14);
+    _icon.cornerRadius = 4;
+    header.addSpacer(10);
+    provideText(title, header, this.mode ? textFormat.light : undefined);
+    widget.addSpacer(30);
+    return widget;
+  };
+
+  setImgeTop = async (widget) => {
     const header = widget.addStack();
+    header.centerAlignContent();
     provideText(`🐣${this.data.username}🐣`, header); // 设置头信息
     return widget;
   };
@@ -144,6 +152,20 @@ class YaYaBirthday extends Calendar {
     return body;
   };
 
+  setWidgetFooter = async (widget) => {
+    widget.addSpacer(10);
+    const text = await this.getEveryDaySay();
+    this.setRightCell(text, widget, "F44336");
+    const textItem = provideText(
+      `—— @${this.data.username}`,
+      widget,
+      this.mode ? textFormat.light : undefined
+    );
+    textItem.rightAlignText();
+
+    return widget;
+  };
+
   // 给图片加透明遮罩
   setShadowImage = async (img, opacity) => {
     if (!opacity) return img;
@@ -177,6 +199,13 @@ class YaYaBirthday extends Calendar {
       provideText(text, rowCell);
     }
     cell.addSpacer(1);
+  };
+
+  getEveryDaySay = async () => {
+    const response = await $.get({
+      url: "https://api.uomg.com/api/rand.qinghua?format=json",
+    });
+    return response.content;
   };
 
   getEdayNumber = (date) => {
@@ -226,10 +255,8 @@ class YaYaBirthday extends Calendar {
     body.url = "";
     let left = body.addStack();
     left.layoutVertically();
-    left.centerAlignContent();
-    await this.setHeader(left);
+    await this.setImgeTop(left);
     left.addSpacer(5);
-
     let leftImg = await this.fetchImg(this.data.mediaImg);
     if (avatarImage) {
       const files = FileManager.local();
@@ -251,7 +278,7 @@ class YaYaBirthday extends Calendar {
     let leftContent = left.addImage(leftImg);
     leftContent.imageSize = new Size(120, 120);
     leftContent.cornerRadius = 5;
-    body.addSpacer(5);
+    body.addSpacer(15);
     return body;
   };
 
@@ -271,6 +298,20 @@ class YaYaBirthday extends Calendar {
     return widget;
   };
 
+  renderLarge = async (widget) => {
+    widget.setPadding(0, 10, 0, 10);
+    await this.setHeader(
+      widget,
+      "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
+      "破壳日🎂"
+    );
+    let body = await this.getEnableLeft(widget);
+    await this.setWidget(body);
+    widget.addSpacer(20);
+    await this.setWidgetFooter(widget);
+    return widget;
+  };
+
   render = async () => {
     const widget = new ListWidget();
     widget.setPadding(0, 0, 0, 0);
@@ -284,6 +325,11 @@ class YaYaBirthday extends Calendar {
       case "medium": {
         w = await this.renderMedium(w);
         w.presentMedium();
+        break;
+      }
+      case "large": {
+        w = await this.renderLarge(w);
+        w.presentLarge();
         break;
       }
       default: {
