@@ -28,7 +28,7 @@ class YaYaBirthday extends Calendar {
     this.props = props;
     this.data = props.data;
     this.prefix = props.prefix;
-    this.widgetSize = config.runsInWidget ? config.widgetFamily : "medium";
+    this.widgetSize = config.runsInWidget ? config.widgetFamily : "small";
     this.mode = Device.isUsingDarkAppearance();
     if (blurBackground) {
       if (typeof blurBackground === "number") {
@@ -117,7 +117,7 @@ class YaYaBirthday extends Calendar {
     return widget;
   };
 
-  setWidget = async (widget) => {
+  setWidget = async (body) => {
     const {
       animal,
       astro,
@@ -127,38 +127,6 @@ class YaYaBirthday extends Calendar {
       birthdayText,
     } = this.contentText;
     const { IMonthCn, IDayCn } = gregorian;
-
-    let body = widget.addStack();
-    body.url = "";
-    let left = body.addStack();
-    left.layoutVertically();
-    left.centerAlignContent();
-    await this.setHeader(left);
-    left.addSpacer(5);
-
-    let leftImg = await this.fetchImg(this.data.mediaImg);
-    if (avatarImage) {
-      const files = FileManager.local();
-      const path = files.joinPath(
-        files.documentsDirectory(),
-        "birthday-avatar-image"
-      );
-      const exists = files.fileExists(path);
-      if (exists && (config.runsInWidget || !forceAvatarUpdate)) {
-        leftImg = files.readImage(path);
-      } else if (!exists && config.runsInWidget) {
-        widget.backgroundColor = Color.gray();
-      } else {
-        const img = await Photos.fromLibrary();
-        leftImg = img;
-        files.writeImage(path, img);
-      }
-    }
-    let leftContent = left.addImage(leftImg);
-    leftContent.imageSize = new Size(120, 120);
-    leftContent.cornerRadius = 5;
-    body.addSpacer(5);
-
     let right = body.addStack();
     right.layoutVertically();
     this.setRightCell(`🐽相:${animal}`, right, "8E44AD"); // 属相
@@ -173,7 +141,7 @@ class YaYaBirthday extends Calendar {
     );
     // this.setRightCell(`📆公:${cYear}-${cMonth}-${cDay}`, right);
     this.setRightCell(`📆农:${IMonthCn}${IDayCn}`, right, "2E86C1");
-    return widget;
+    return body;
   };
 
   // 给图片加透明遮罩
@@ -253,13 +221,54 @@ class YaYaBirthday extends Calendar {
     this.contentText = response;
   };
 
+  getEnableLeft = async (widget) => {
+    let body = widget.addStack();
+    body.url = "";
+    let left = body.addStack();
+    left.layoutVertically();
+    left.centerAlignContent();
+    await this.setHeader(left);
+    left.addSpacer(5);
+
+    let leftImg = await this.fetchImg(this.data.mediaImg);
+    if (avatarImage) {
+      const files = FileManager.local();
+      const path = files.joinPath(
+        files.documentsDirectory(),
+        "birthday-avatar-image"
+      );
+      const exists = files.fileExists(path);
+      if (exists && (config.runsInWidget || !forceAvatarUpdate)) {
+        leftImg = files.readImage(path);
+      } else if (!exists && config.runsInWidget) {
+        widget.backgroundColor = Color.gray();
+      } else {
+        const img = await Photos.fromLibrary();
+        leftImg = img;
+        files.writeImage(path, img);
+      }
+    }
+    let leftContent = left.addImage(leftImg);
+    leftContent.imageSize = new Size(120, 120);
+    leftContent.cornerRadius = 5;
+    body.addSpacer(5);
+    return body;
+  };
+
   renderErrorWidget = (widget) => {
     widget.addText("暂不支持该尺寸组件");
     return widget;
   };
 
-  renderMedium = async (widget) => {
+  renderSmall = async (widget) => {
+    widget.setPadding(0, 10, 0, 0);
     return await this.setWidget(widget);
+  };
+
+  renderMedium = async (widget) => {
+    let body = await this.getEnableLeft(widget);
+    await this.setWidget(body);
+    return widget;
   };
 
   render = async () => {
@@ -267,6 +276,11 @@ class YaYaBirthday extends Calendar {
     widget.setPadding(0, 0, 0, 0);
     let w = await this.setWidgetBackGround(widget);
     switch (this.widgetSize) {
+      case "small": {
+        w = await this.renderSmall(w);
+        w.presentSmall();
+        break;
+      }
       case "medium": {
         w = await this.renderMedium(w);
         w.presentMedium();
