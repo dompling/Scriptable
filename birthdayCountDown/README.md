@@ -8,3 +8,8 @@
 
 1. 引入 Components 中的[Calendar.scriptable](https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/Components/Calendar.scriptable)
 2. 引入 [Birthday.scriptable](https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/Birthday.scriptable)
+3. 引入 G 大 仓库的[Env.js](https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Env.scriptable)
+
+## 特别感谢
+
+1.  [@GideonSenku](https://github.com/GideonSenku) 提供帮助

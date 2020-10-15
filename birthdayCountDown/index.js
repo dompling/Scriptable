@@ -5,13 +5,19 @@ const $ = importModule("Env");
 
 const prefix = "boxjs.net"; // 输入 BoxJs 的域名前缀 boxjs.com || boxjs.net || 自定义
 
-const blurBackground = true; // 开启背景虚化 true 值类型布尔或数字 ，默认 0.7 取值范围 0 至 1
+const blurBackground = false; // 开启背景虚化 true 值类型布尔或数字 ，默认 0.7 取值范围 0 至 1
 
-const imageBackground = true; // 设置配置背景图片
+const imageBackground = false; // 设置配置背景图片
 const forceImageUpdate = false; // 设置为true将重置小部件的背景图像
 
-const avatarImage = true; // 设置左边照片  ： 默认左边照片为 BoxJS 的媒体图片
-const forceAvatarUpdate = false; // 重置左边照片
+const avatarImage = false; // 设置左边照片  ： 默认左边照片为 BoxJS 的媒体图片
+const forceAvatarUpdate = false; // true重置左边照片
+
+const textFormat = {
+  // Set the default font and color.
+  defaultText: { size: 16, color: "ffffff", font: "regular" }, // 默认字体颜色
+  light: { size: 16, color: "D0D3D4", font: "light" }, // 夜间字体颜色
+};
 
 const defaultData = {
   username: "", // 姓名
@@ -28,8 +34,9 @@ class YaYaBirthday extends Calendar {
     this.props = props;
     this.data = props.data;
     this.prefix = props.prefix;
-    this.widgetSize = config.runsInWidget ? config.widgetFamily : "large";
+    this.widgetSize = config.runsInWidget ? config.widgetFamily : "medium";
     this.mode = Device.isUsingDarkAppearance();
+    this.textFormat = this.mode ? textFormat.light : textFormat.defaultText;
     if (blurBackground) {
       if (typeof blurBackground === "number") {
         this.backgroundOpacity = blurBackground;
@@ -77,7 +84,7 @@ class YaYaBirthday extends Calendar {
     _icon.imageSize = new Size(14, 14);
     _icon.cornerRadius = 4;
     header.addSpacer(10);
-    provideText(title, header, this.mode ? textFormat.light : undefined);
+    provideText(title, header, this.textFormat);
     widget.addSpacer(30);
     return widget;
   };
@@ -85,7 +92,7 @@ class YaYaBirthday extends Calendar {
   setImgeTop = async (widget) => {
     const header = widget.addStack();
     header.centerAlignContent();
-    provideText(`🐣${this.data.username}🐣`, header); // 设置头信息
+    provideText(`🐣${this.data.username}🐣`, header, this.textFormat); // 设置头信息
     return widget;
   };
 
@@ -159,7 +166,7 @@ class YaYaBirthday extends Calendar {
     const textItem = provideText(
       `—— @${this.data.username}`,
       widget,
-      this.mode ? textFormat.light : undefined
+      this.textFormat
     );
     textItem.rightAlignText();
 
@@ -193,11 +200,7 @@ class YaYaBirthday extends Calendar {
     subConditionStack.addSpacer(5);
     let rowCell = subConditionStack.addStack();
     rowCell.setPadding(4, 0, 0, 0);
-    if (this.mode) {
-      provideText(text, rowCell, textFormat.light);
-    } else {
-      provideText(text, rowCell);
-    }
+    provideText(text, rowCell, this.textFormat);
     cell.addSpacer(1);
   };
 
@@ -251,6 +254,7 @@ class YaYaBirthday extends Calendar {
   };
 
   getEnableLeft = async (widget) => {
+    if (!avatarImage && !this.data.mediaImg) return widget;
     let body = widget.addStack();
     body.url = "";
     let left = body.addStack();
@@ -314,7 +318,7 @@ class YaYaBirthday extends Calendar {
 
   render = async () => {
     const widget = new ListWidget();
-    widget.setPadding(0, 0, 0, 0);
+    // widget.setPadding(0, 0, 0, 0);
     let w = await this.setWidgetBackGround(widget);
     switch (this.widgetSize) {
       case "small": {
@@ -361,18 +365,8 @@ function drawVerticalLine(color, height) {
   return draw.getImage();
 }
 
-const textFormat = {
-  // Set the default font and color.
-  defaultText: { size: 16, color: "ffffff", font: "regular" },
-  light: { size: 16, color: "000", font: "light" },
-};
-
 // Add formatted text to a container.
-function provideText(
-  string,
-  container,
-  format = { size: 16, color: "ffffff", font: "regular" }
-) {
+function provideText(string, container, format = textFormat.defaultText) {
   const textItem = container.addText(string);
   const textFont = format.font || textFormat.defaultText.font;
   const textSize = format.size || textFormat.defaultText.size;
