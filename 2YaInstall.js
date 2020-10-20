@@ -29,26 +29,26 @@ class YaYaInstall {
   constructor() {
     this.request = new Request("");
     this.files = FileManager.iCloud();
-    this.dict = this.files.documentsDirectory();
+    this.rootPath = this.files.documentsDirectory();
     this.defaultHeaders = {
       Accept: "*/*",
       "Content-Type": "application/json",
     };
   }
 
-  initFile = (fileName) => {
+  saveFileName = (fileName) => {
     const hasSuffix = fileName.lastIndexOf(".") + 1;
     return !hasSuffix ? `${fileName}.js` : fileName;
   };
 
   write = (fileName, content) => {
-    let file = this.initFile(fileName);
-    const filePath = `${this.dict}/${file}`;
+    let file = this.saveFileName(fileName);
+    const filePath = `${this.rootPath}/${file}`;
     FileManager.iCloud().writeString(filePath, content);
     return true;
   };
 
-  getStr = async ({ url, headers = {} }, callback = () => {}) => {
+  fetchUrlString = async ({ url, headers = {} }, callback = () => {}) => {
     this.request.url = url;
     this.request.method = "GET";
     this.request.headers = {
@@ -60,24 +60,21 @@ class YaYaInstall {
     return data;
   };
 
-  getFile = async ({ moduleName, url }) => {
-    console.log(`开始下载文件: 🌝 ${moduleName}`);
+  saveFile = async ({ moduleName, url }) => {
     const header = `// Variables used by Scriptable.
   // These must be at the very top of the file. Do not edit.
   // icon-color: deep-gray; icon-glyph: file-code;\n`;
-    const content = await this.getStr({ url });
-    console.log(content);
+    const content = await this.fetchUrlString({ url });
     const fileHeader = content.includes("icon-color") ? `` : header;
     this.write(`${moduleName}`, `${fileHeader}${content}`);
-    console.log(`文件下载完成: 🌚 ${moduleName}`);
   };
 
   install = () => {
-    console.log("🔔更新脚本开始!");
+    console.log("🤖更新开始!");
     scripts.forEach(async (script) => {
-      await this.getFile(script);
+      await this.saveFile(script);
     });
-    console.log("🔔更新脚本结束!");
+    console.log("🤖更新结束!");
   };
 }
 new YaYaInstall().install();
