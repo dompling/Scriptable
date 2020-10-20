@@ -7,6 +7,7 @@ const scripts = [
     moduleName: "Env",
     url:
       "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Env.js",
+    // 感谢G大的 EnvJS (https://github.com/GideonSenku)
   },
   {
     moduleName: "2YaInstall",
