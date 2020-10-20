@@ -23,6 +23,11 @@ const scripts = [
     url:
       "https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/index.js",
   },
+  {
+    moduleName: "historyToDay",
+    url:
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/historyToDay/index.js",
+  },
 ];
 
 class YaYaInstall {
