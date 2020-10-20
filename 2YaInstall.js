@@ -9,11 +9,6 @@ const scripts = [
       "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Env.js",
   },
   {
-    moduleName: "ZhihuMonitor",
-    url:
-      "https://raw.githubusercontent.com/evilbutcher/Scriptables/master/ZhihuMonitor.js",
-  },
-  {
     moduleName: "2YaInstall",
     url:
       "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
