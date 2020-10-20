@@ -74,7 +74,7 @@ class YaYaBirthday extends Calendar {
       if (typeof blurBackground === "number") {
         this.backgroundOpacity = blurBackground;
       } else {
-        this.backgroundOpacity = this.mode ? 0.7 : 0.1;
+        this.backgroundOpacity = this.mode ? 0.7 : 0.4;
       }
     }
   }
