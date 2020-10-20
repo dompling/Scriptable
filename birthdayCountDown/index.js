@@ -7,10 +7,10 @@ const prefix = "boxjs.net"; // 输入 BoxJs 的域名前缀 boxjs.com || boxjs.n
 
 const blurBackground = false; // 开启背景虚化 true 值类型布尔或数字 ，默认 0.7 取值范围 0 至 1
 
-const imageBackground = false; // 设置配置背景图片
+const imageBackground = true; // 设置配置背景图片
 const forceImageUpdate = false; // 设置为true将重置小部件的背景图像
 
-const avatarImage = false; // 设置左边照片  ： 默认左边照片为 BoxJS 的媒体图片
+const avatarImage = true; // 设置左边照片  ： 默认左边照片为 BoxJS 的媒体图片
 const forceAvatarUpdate = false; // true重置左边照片
 
 const textFormat = {
@@ -34,14 +34,15 @@ class YaYaBirthday extends Calendar {
     this.props = props;
     this.data = props.data;
     this.prefix = props.prefix;
-    this.widgetSize = config.runsInWidget ? config.widgetFamily : "medium";
+    this.widgetSize = config.runsInWidget ? config.widgetFamily : "large";
     this.mode = Device.isUsingDarkAppearance();
     this.textFormat = this.mode ? textFormat.light : textFormat.defaultText;
     if (blurBackground) {
       if (typeof blurBackground === "number") {
         this.backgroundOpacity = blurBackground;
+      } else {
+        this.backgroundOpacity = this.mode ? 0.7 : 0.3;
       }
-      this.backgroundOpacity = 0.7;
     }
   }
 
@@ -495,3 +496,23 @@ function provideFont(fontName, fontSize) {
   await renderBirthday.init(); //  初始化组件
   await renderBirthday.render(); // 渲染 widget
 })();
+
+//更新代码
+function update() {
+  console.log("🔔更新脚本开始!");
+  scripts.forEach(async (script) => {
+    await $.getFile(script);
+  });
+  console.log("🔔更新脚本结束!");
+}
+
+const goupdate = true;
+
+const scripts = [
+  {
+    moduleName: "Birthday",
+    url:
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/index.js",
+  },
+];
+if (goupdate == true) update();
