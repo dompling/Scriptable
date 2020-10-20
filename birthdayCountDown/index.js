@@ -88,22 +88,26 @@ class YaYaBirthday extends Calendar {
   };
 
   fetchBoxJsData = async (key) => {
-    const url = `http://${this.prefix}/query/boxdata`;
-    const boxdata = await $.get({ url });
-    const data = {};
-    let isReadBoxJs = false;
-    Object.keys(defaultData).forEach((params) => {
-      const datasKey = `${key}.${params}`;
-      const dataValue = boxdata.datas[datasKey];
-      if (dataValue) {
-        isReadBoxJs = true;
-        data[params] = dataValue;
+    try {
+      const url = `http://${this.prefix}/query/boxdata`;
+      const boxdata = await $.get({ url });
+      const data = {};
+      let isReadBoxJs = false;
+      Object.keys(defaultData).forEach((params) => {
+        const datasKey = `${key}.${params}`;
+        const dataValue = boxdata.datas[datasKey];
+        if (dataValue) {
+          isReadBoxJs = true;
+          data[params] = dataValue;
+        }
+      });
+      if (isReadBoxJs) {
+        return data;
       }
-    });
-    if (isReadBoxJs) {
-      return data;
+      return isReadBoxJs;
+    } catch (e) {
+      return isReadBoxJs;
     }
-    return undefined;
   };
 
   fetchImg = async (url) => {
