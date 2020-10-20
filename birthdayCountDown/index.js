@@ -29,6 +29,29 @@ const textFormat = {
   light: { size: 16, color: "D0D3D4", font: "light" }, // 夜间字体颜色
 };
 
+// Set up the gradient for the widget background.
+// 设置widget 背景色
+async function setupGradient() {
+  return {
+    sunrise: {
+      color() {
+        return [new Color("#a18cd1"), new Color("#fbc2eb")];
+      },
+      position() {
+        return [0.0, 1.0];
+      },
+    }, // 普通背景颜色
+    night: {
+      color() {
+        return [new Color("#030079"), new Color("#000000")];
+      },
+      position() {
+        return [0.0, 1.0];
+      },
+    }, // 夜间背景颜色
+  };
+}
+
 const defaultData = {
   username: "", // 姓名
   time: "", // 生日日期
@@ -387,79 +410,6 @@ function provideText(string, container, format = textFormat.defaultText) {
   textItem.textColor = new Color(textColor);
 
   return textItem;
-}
-
-// Set up the gradient for the widget background.
-async function setupGradient() {
-  return {
-    dawn: {
-      color() {
-        return [new Color("142C52"), new Color("1B416F"), new Color("62668B")];
-      },
-      position() {
-        return [0, 0.5, 1];
-      },
-    },
-
-    sunrise: {
-      color() {
-        return [new Color("274875"), new Color("766f8d"), new Color("f0b35e")];
-      },
-      position() {
-        return [0, 0.8, 1.5];
-      },
-    },
-
-    midday: {
-      color() {
-        return [new Color("3a8cc1"), new Color("90c0df")];
-      },
-      position() {
-        return [0, 1];
-      },
-    },
-
-    noon: {
-      color() {
-        return [new Color("b2d0e1"), new Color("80B5DB"), new Color("3a8cc1")];
-      },
-      position() {
-        return [-0.2, 0.2, 1.5];
-      },
-    },
-
-    sunset: {
-      color() {
-        return [new Color("32327A"), new Color("662E55"), new Color("7C2F43")];
-      },
-      position() {
-        return [0.1, 0.9, 1.2];
-      },
-    },
-
-    twilight: {
-      color() {
-        return [new Color("021033"), new Color("16296b"), new Color("414791")];
-      },
-      position() {
-        return [0, 0.5, 1];
-      },
-    },
-
-    night: {
-      color() {
-        return [
-          new Color("16296b"),
-          new Color("021033"),
-          new Color("021033"),
-          new Color("113245"),
-        ];
-      },
-      position() {
-        return [-0.5, 0.2, 0.5, 1];
-      },
-    },
-  };
 }
 
 // Provide a font based on the input.
