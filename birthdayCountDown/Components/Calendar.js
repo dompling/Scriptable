@@ -1,3 +1,13 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: yellow; icon-glyph: calendar-alt;
+
+/*
+ * Author: 2Ya
+ * Github: https://github.com/dompling
+ * 本脚本使用了@Gideon_Senku的Env
+ */
+
 class Calendar {
   lunarInfo = [
     0x04bd8,

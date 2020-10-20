@@ -1,3 +1,13 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: pink; icon-glyph: birthday-cake;
+
+/*
+ * Author: 2Ya
+ * Github: https://github.com/dompling
+ * 本脚本使用了@Gideon_Senku的Env
+ */
+
 // 先引入Components 中的Calendar.scriptable,然后引入当前文件即可正常使用
 
 const { Calendar } = importModule("Calendar");
