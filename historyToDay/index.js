@@ -49,7 +49,9 @@ month = month >= 10 ? month : `0${month}`;
 let day = date.getDate();
 day = day >= 10 ? day : `0${day}`;
 class YaYaHistory {
-  constructor() {
+  constructor(widgetParameter) {
+    this.start = parseInt(widgetParameter) > 0 ? widgetParameter : 0;
+    this.size = this.start > 0 ? 9 : 3;
     this.widgetSize = config.runsInWidget ? config.widgetFamily : "large";
     this.mode = Device.isUsingDarkAppearance();
     this.textFormat = this.mode ? textFormat.light : textFormat.defaultText;
@@ -199,10 +201,10 @@ class YaYaHistory {
     return hex; //返回‘#’开头16进制颜色
   }
 
-  setWidget = async (widget, number) => {
+  setWidget = async (widget, start = 0, number) => {
     await this.setHeader(widget);
     if (this.dataSource.length) {
-      const data = this.dataSource.splice(0, number);
+      const data = this.dataSource.splice(start, number);
       data.forEach((item) => {
         let dom = widget.addStack();
         dom.url = `https://www.lssdjt.com/d/${item.f}.htm`;
@@ -227,32 +229,34 @@ class YaYaHistory {
   };
 
   renderSmall = async (widget) => {
-    return await this.setWidget(widget, 1);
+    return await this.setWidget(widget, this.start, 1);
   };
 
   renderMedium = async (widget) => {
-    await this.setWidget(widget, 3);
+    await this.setWidget(widget, this.start, 3);
     return widget;
   };
 
   renderLarge = async (widget) => {
-    const topItem = this.dataSource.find((item) => item.g === 1);
-    const hotBody = widget.addStack();
-    hotBody.url = `https://www.lssdjt.com/d/${topItem.f}.htm`;
-    hotBody.centerAlignContent();
-    hotBody.size = new Size(340, 200);
-    hotBody.borderWidth = 15;
-    hotBody.borderColor = new Color("#fff");
-    hotBody.cornerRadius = 20;
-    const hotImg = await this.fetchImg(`${imgUri}/${topItem.j}`);
-    hotBody.backgroundImage = await this.setShadowImage(
-      hotImg,
-      this.backgroundOpacity
-    );
-    this.setCell(`${topItem.t}`, hotBody, false, textFormat.hot);
-    hotBody.addSpacer(10);
-    widget.addSpacer(10);
-    await this.setWidget(widget, 3);
+    if (this.start === 0) {
+      const topItem = this.dataSource.find((item) => item.g === 1);
+      const hotBody = widget.addStack();
+      hotBody.url = `https://www.lssdjt.com/d/${topItem.f}.htm`;
+      hotBody.centerAlignContent();
+      hotBody.size = new Size(340, 200);
+      hotBody.borderWidth = 15;
+      hotBody.borderColor = new Color("#fff");
+      hotBody.cornerRadius = 20;
+      const hotImg = await this.fetchImg(`${imgUri}/${topItem.j}`);
+      hotBody.backgroundImage = await this.setShadowImage(
+        hotImg,
+        this.backgroundOpacity
+      );
+      this.setCell(`${topItem.t}`, hotBody, false, textFormat.hot);
+      hotBody.addSpacer(10);
+      widget.addSpacer(10);
+    }
+    await this.setWidget(widget, this.start, this.size);
     return widget;
   };
 
@@ -287,6 +291,6 @@ class YaYaHistory {
   };
 }
 
-const _2YaHistory = new YaYaHistory();
+const _2YaHistory = new YaYaHistory(args.widgetParameter);
 await _2YaHistory.init(); // 初始化数据
 await _2YaHistory.render(); // 加载widget
