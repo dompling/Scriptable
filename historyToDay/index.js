@@ -17,8 +17,11 @@ const cacheBackgroundName = "historyDay-image"; // 缓存背景图片名字
 
 const textFormat = {
   // Set the default font and color.
-  defaultText: { size: 16, color: "ffffff", font: "regular" }, // 默认字体颜色
-  light: { size: 16, color: "D0D3D4", font: "light" }, // 夜间字体颜色
+  defaultText: { size: 14, color: "ffffff", font: "regular" }, // 默认字体颜色
+  light: { size: 14, color: "D0D3D4", font: "light" }, // 夜间字体颜色
+  title: { size: 16, color: "ff651a", font: "semibold" },
+  hot: { size: 20, color: "ffffff", font: "semibold" },
+  more: { size: 14, color: "ffffff", font: "regular" },
 };
 
 // 设置widget 背景色
@@ -33,9 +36,21 @@ const skinColor = {
   },
 };
 
+// 设置单行内容背景色
+const cellBgColor = {
+  color: [new Color("#aaa")],
+  position: [1.0],
+};
+
+const imgUri = "http://img.lssdjt.com";
+const date = new Date();
+let month = date.getMonth() + 1;
+month = month >= 10 ? month : `0${month}`;
+let day = date.getDate();
+day = day >= 10 ? day : `0${day}`;
 class YaYaHistory {
   constructor() {
-    this.widgetSize = config.runsInWidget ? config.widgetFamily : "medium";
+    this.widgetSize = config.runsInWidget ? config.widgetFamily : "large";
     this.mode = Device.isUsingDarkAppearance();
     this.textFormat = this.mode ? textFormat.light : textFormat.defaultText;
     this.dataSource = [];
@@ -47,6 +62,13 @@ class YaYaHistory {
       }
     }
   }
+
+  init = async () => {
+    // const url = `https://api.nowtime.cc/v1/today_in_history`;
+    const url = `http://code.lssdjt.com/jsondata/history.${month}.${day}.js`;
+    const response = await $.get({ url });
+    this.dataSource = response.d;
+  };
 
   // 给图片加透明遮罩
   setShadowImage = async (img, opacity) => {
@@ -124,25 +146,47 @@ class YaYaHistory {
     return draw.getImage();
   }
 
-  setHeader = async (widget, icon, title) => {
-    let header = widget.addStack();
-    header.centerAlignContent();
-    let _icon = header.addImage(await this.fetchImg(icon));
-    _icon.imageSize = new Size(14, 14);
+  setHeader = async (widget) => {
+    const headerBody = widget.addStack();
+    headerBody.centerAlignContent();
+    // 左边内容
+    const headerLeft = headerBody.addStack();
+    const icon =
+      "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png";
+    const title = "历史上的今天";
+    let _icon = headerLeft.addImage(await this.fetchImg(icon));
+    _icon.imageSize = new Size(14, 16);
     _icon.cornerRadius = 4;
-    header.addSpacer(10);
-    $.provideText(title, header, this.textFormat);
+    headerLeft.addSpacer(5);
+    $.provideText(title, headerLeft, textFormat.title);
+    headerBody.addSpacer(170);
+    // 右边更多
+    const headerRight = headerBody.addStack();
+    headerRight.url = `https://m.8684.cn/today_d${month}${day}`;
+    headerRight.setPadding(1, 10, 1, 10);
+    headerRight.cornerRadius = 10;
+    headerRight.backgroundColor = new Color("#fff", 0.5);
+
+    $.provideText("更多", headerRight, textFormat.more);
+
     widget.addSpacer(10);
     return widget;
   };
 
-  setRightCell = async (text, cell, prefixColor = "fff") => {
-    let tomorrowLine = cell.addImage(
-      this.drawVerticalLine(new Color(prefixColor, 0.8), 12)
-    );
-    tomorrowLine.imageSize = new Size(3, 28);
+  setCell = async (
+    text,
+    cell,
+    prefixColor = "fff",
+    format = this.textFormat
+  ) => {
+    if (prefixColor) {
+      let tomorrowLine = cell.addImage(
+        this.drawVerticalLine(new Color(prefixColor, 0.8), 12)
+      );
+      tomorrowLine.imageSize = new Size(3, 28);
+    }
     cell.addSpacer(5);
-    $.provideText(text, cell, this.textFormat);
+    $.provideText(text, cell, format);
     cell.addSpacer(2);
   };
 
@@ -156,25 +200,20 @@ class YaYaHistory {
   }
 
   setWidget = async (widget, number) => {
+    await this.setHeader(widget);
     if (this.dataSource.length) {
       const data = this.dataSource.splice(0, number);
       data.forEach((item) => {
         let dom = widget.addStack();
+        dom.url = `https://www.lssdjt.com/d/${item.f}.htm`;
         dom.centerAlignContent();
-        const prefixColor = this.randomHexColor();
-        this.setRightCell(`${item.year}:${item.data}`, dom, prefixColor);
+        dom.cornerRadius = 5;
+        let prefixColor = this.randomHexColor();
+        this.setCell(`${item.t}`, dom, prefixColor);
         widget.addSpacer(5);
       });
     }
     return widget;
-  };
-
-  init = async () => {
-    const url = `https://api.nowtime.cc/v1/today_in_history`;
-    const response = await $.get({ url });
-    if (response.code === 200) {
-      this.dataSource = response.data;
-    }
   };
 
   fetchImg = async (url) => {
@@ -192,12 +231,28 @@ class YaYaHistory {
   };
 
   renderMedium = async (widget) => {
-    await this.setWidget(widget, 4);
+    await this.setWidget(widget, 3);
     return widget;
   };
 
   renderLarge = async (widget) => {
-    await this.setWidget(widget, 8);
+    const topItem = this.dataSource.find((item) => item.g === 1);
+    const hotBody = widget.addStack();
+    hotBody.url = `https://www.lssdjt.com/d/${topItem.f}.htm`;
+    hotBody.centerAlignContent();
+    hotBody.size = new Size(340, 200);
+    hotBody.borderWidth = 15;
+    hotBody.borderColor = new Color("#fff");
+    hotBody.cornerRadius = 20;
+    const hotImg = await this.fetchImg(`${imgUri}/${topItem.j}`);
+    hotBody.backgroundImage = await this.setShadowImage(
+      hotImg,
+      this.backgroundOpacity
+    );
+    this.setCell(`${topItem.t}`, hotBody, false, textFormat.hot);
+    hotBody.addSpacer(10);
+    widget.addSpacer(10);
+    await this.setWidget(widget, 3);
     return widget;
   };
 
@@ -205,16 +260,6 @@ class YaYaHistory {
     const widget = new ListWidget();
     widget.setPadding(10, 10, 10, 10);
     let w = await this.setWidgetBackGround(widget);
-    const date = new Date();
-    let month = date.getMonth() + 1;
-    month = month >= 10 ? month : `0${month}`;
-    let day = date.getDate();
-    day = day >= 10 ? day : `0${day}`;
-    w = await this.setHeader(
-      widget,
-      "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
-      `历史上的今天(${month}-${day})`
-    );
     switch (this.widgetSize) {
       case "small": {
         w = await this.renderSmall(w);
