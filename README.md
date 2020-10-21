@@ -1,6 +1,6 @@
 # scriptable
 
-> 将文件 2YaInstall.scriptable 导入到 scriptable 软件中，点击运行即可
+> 将文件 [2YaInstall.scriptable](https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.scriptable) 导入到 scriptable 软件中，点击运行即可
 
 # 组件列表
 
@@ -8,7 +8,6 @@
 | ----------------------------- | ---------- | -------- |
 | [破壳日](birthdayCountDown/)  | BoxJs 数据 |          |
 | [历史上的今天](historyToDay/) |            |          |
-
 
 ## 特别感谢
 
