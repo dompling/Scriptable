@@ -243,6 +243,7 @@ class YaYaHistory {
         this.dataSource.find((item) => item.g === 1) ||
         this.dataSource.find((item) => item.j !== "");
       const hotBody = widget.addStack();
+      hotBody.setPadding(10, 10, 10, 10);
       hotBody.url = `https://www.lssdjt.com/d/${topItem.f}.htm`;
       hotBody.centerAlignContent();
       hotBody.size = new Size(340, 200);
