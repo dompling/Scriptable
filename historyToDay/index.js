@@ -240,7 +240,8 @@ class YaYaHistory {
   renderLarge = async (widget) => {
     if (this.start === 0) {
       const topItem =
-        this.dataSource.find((item) => item.g === 1) || this.dataSource[0];
+        this.dataSource.find((item) => item.g === 1) ||
+        this.dataSource.find((item) => item.j !== "");
       const hotBody = widget.addStack();
       hotBody.url = `https://www.lssdjt.com/d/${topItem.f}.htm`;
       hotBody.centerAlignContent();
