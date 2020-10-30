@@ -10,6 +10,12 @@ const scripts = [
     // 感谢G大的 EnvJS (https://github.com/GideonSenku)
   },
   {
+    moduleName: "Install",
+    url:
+      "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Install%20Scripts.js",
+    // 感谢G大的 脚本库安装包 (https://github.com/GideonSenku)
+  },
+  {
     moduleName: "2YaInstall",
     url:
       "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
