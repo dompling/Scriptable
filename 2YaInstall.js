@@ -35,6 +35,15 @@ const scripts = [
     url:
       "https://raw.githubusercontent.com/dompling/Scriptable/master/historyToDay/index.js",
   },
+  {
+    moduleName: "DmYY",
+    url: "https://raw.githubusercontent.com/dompling/Scriptable/master/DmYY.js",
+  },
+  {
+    moduleName: "JD",
+    url:
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/JD/index.js",
+  },
 ];
 
 class YaYaInstall {
