@@ -148,7 +148,7 @@ class YaYaJD extends DmYY {
     const jdD_icon = await this.$request.get(icon, "IMG");
     const imageElemView = viewer.addImage(jdD_icon);
     imageElemView.centerAlignImage();
-    imageElemView.imageSize = new Size(30, 30);
+    imageElemView.imageSize = new Size(25, 25);
     container.addSpacer(10);
 
     const textview = container.addStack();
