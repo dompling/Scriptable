@@ -223,6 +223,10 @@ class YaYaJD extends DmYY {
   renderLarge = async (w) => {
     return this.renderErrorWidget(w);
   };
+
+  renderSmall = async (w) => {
+    return this.renderErrorWidget(w);
+  };
 }
 
 const _2YaJD = new YaYaJD(args.widgetParameter);
