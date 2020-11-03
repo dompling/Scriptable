@@ -53,7 +53,7 @@ const scripts = [
   {
     moduleName: "JDWuliu",
     url:
-      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuliu.js",
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
   },
 ];
 
