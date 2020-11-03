@@ -58,6 +58,15 @@ class DmYY {
 
   init = () => {};
 
+  async notify(title, body, url, opts = {}) {
+    let n = new Notification();
+    n = Object.assign(n, opts);
+    n.title = title;
+    n.body = body;
+    if (url) n.openURL = url;
+    return await n.schedule();
+  }
+
   getRequest = (url = "") => {
     return new Request(url);
   };
@@ -366,12 +375,10 @@ class DmYY {
   };
 
   render = async () => {
-    await this.init();
-
     const widget = new ListWidget();
     widget.setPadding(10, 10, 10, 10);
     let w = await this.renderBefor(widget);
-
+    await this.setWidgetBackGround(w);
     switch (this.widgetSize) {
       case "small": {
         w = await this.renderSmall(w);
@@ -394,10 +401,7 @@ class DmYY {
         break;
       }
     }
-
-    Script.setWidget(w);
-    Script.complete();
+    return w;
   };
 }
-
 module.exports = { DmYY };
