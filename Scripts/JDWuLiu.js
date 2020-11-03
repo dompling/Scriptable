@@ -7,6 +7,7 @@
  * Github: https://github.com/dompling
  */
 if (typeof require === "undefined") require = importModule;
+console.log(require);
 const { DmYY, Testing } = require("./DmYY");
 
 const blurBackground = true; // 开启背景虚化 true 值类型布尔或数字 ，默认 0.7 取值范围 0 至 1

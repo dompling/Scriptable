@@ -8,8 +8,7 @@
  */
 
 class DmYY {
-  constructor(args) {
-    super(args);
+  constructor() {
     this.textStyle = this.mode
       ? this._textFormat.light
       : this._textFormat.defaultText;
