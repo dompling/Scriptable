@@ -37,7 +37,7 @@ const scripts = [
   },
   {
     moduleName: "DmYY",
-    url: "https://raw.githubusercontent.com/dompling/Scriptable/master/DmYY.js",
+    url: "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
   },
   {
     moduleName: "JD",

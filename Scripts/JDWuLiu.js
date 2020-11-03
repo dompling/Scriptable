@@ -5,10 +5,9 @@
 /*
  * Author: 2Ya
  * Github: https://github.com/dompling
- * 本脚本使用了@Gideon_Senku的Env
  */
-// const { DmYY } = require("../DmYY");
-const { DmYY } = importModule("DmYY");
+if (typeof require === "undefined") require = importModule;
+const { DmYY, Testing } = require("./DmYY");
 
 const blurBackground = true; // 开启背景虚化 true 值类型布尔或数字 ，默认 0.7 取值范围 0 至 1
 const imageBackground = true; // 设置配置背景图片
@@ -19,7 +18,7 @@ const textFont = {
   desc: { size: 14, color: "fff", font: "black" },
 };
 
-class YaYaJD extends DmYY {
+class YaYaJDWuLiu extends DmYY {
   constructor(widgetParameter) {
     super();
     this.jdIndex = parseInt(widgetParameter) || 0;
@@ -117,6 +116,9 @@ class YaYaJD extends DmYY {
       if (this.widgetSize !== "large" && index === 1) {
         return widget;
       }
+      if (index === 3) {
+        return widget;
+      }
       const data = this.orderList[index];
       let listItem = body.addStack();
       await this.setListCell(listItem, data);
@@ -151,6 +153,4 @@ class YaYaJD extends DmYY {
   };
 }
 
-const _2YaJD = new YaYaJD(args.widgetParameter);
-await _2YaJD.init(); // 初始化数据
-await _2YaJD.render(); // 加载widget
+await Testing(YaYaJDWuLiu);

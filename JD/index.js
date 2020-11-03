@@ -231,5 +231,4 @@ class YaYaJD extends DmYY {
 }
 
 const _2YaJD = new YaYaJD(args.widgetParameter);
-await _2YaJD.init(); // 初始化数据
 await _2YaJD.render(); // 加载widget
