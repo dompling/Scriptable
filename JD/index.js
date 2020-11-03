@@ -31,6 +31,7 @@ class YaYaJD extends DmYY {
   CookiesJD = [];
   cookie = "";
   widgetSize = "medium";
+  cacheBackgroundName = "2Ya-JD-img";
 
   userName = "";
   beanCount = 0;
