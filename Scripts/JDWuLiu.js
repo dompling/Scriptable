@@ -174,7 +174,7 @@ class Widget extends Base {
       body.setPadding(1, 10, 1, 10);
       body.cornerRadius = 10;
       body.backgroundColor = new Color("#fff", 0.5);
-      textItem.fontColor = new Color("#fff");
+      textItem.textColor = new Color("#fff");
       textItem.font = Font.boldSystemFont(15);
       textItem.lineLimit = 1;
       return widget;
@@ -244,7 +244,7 @@ class Widget extends Base {
       headerMore.backgroundColor = new Color("#fff", 0.5);
       const textItem = headerMore.addText(this.JDCookie.userName);
       textItem.font = Font.boldSystemFont(12);
-      textItem.fontColor = new Color("#fff");
+      textItem.textColor = new Color("#fff");
       textItem.lineLimit = 1;
     } else {
       await this.renderHeader(header, this.logo, this.name);
