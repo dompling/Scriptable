@@ -235,7 +235,12 @@ class Widget extends Base {
     if (this.widgetFamily !== "small") {
       header.centerAlignContent();
       const headerLogo = header.addStack();
-      await this.renderHeader(headerLogo, this.logo, this.name);
+      await this.renderHeader(
+        headerLogo,
+        this.logo,
+        this.name,
+        new Color("#fff")
+      );
       header.addSpacer(140);
       const headerMore = header.addStack();
       headerMore.url = "https://home.m.jd.com/myJd/home.action";
