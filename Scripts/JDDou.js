@@ -44,17 +44,6 @@ class Widget extends Base {
   incomeBean = 0;
   expenseBean = 0;
 
-  opts = {
-    headers: {
-      Accept: `*/*`,
-      Connection: `keep-alive`,
-      Host: `wq.jd.com`,
-      "Accept-Language": "zh-cn",
-      "Accept-Encoding": "gzip, deflate, br",
-      "User-Agent": `Mozilla/5.0 (iPhone; CPU iPhone OS 14_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1`,
-    },
-  };
-
   init = async () => {
     try {
       await this.TotalBean();
