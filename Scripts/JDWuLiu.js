@@ -15,11 +15,18 @@ const { Runing } = require("./DmYY");
 class Widget extends Base {
   constructor(arg) {
     super(arg);
+    this.JDindex = parseInt(args.widgetParameter) || undefined;
     this.name = "京东物流";
     this.en = "JDWuLiu";
     this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
-    this.JDCookie = this.settings["JDCookie"] || { cookie: "", userName: "" };
-    let _md5 = this.md5(module.filename + this.JDCookie.cookie);
+    this.JDCookie = this.settings[this.en] || {
+      cookie: "",
+      userName: "",
+    };
+    if (this.JDindex !== undefined) {
+      this.JDCookie = this.settings.JDAccount[this.JDindex];
+    }
+    let _md5 = this.md5(module.filename + this.en + this.JDCookie.cookie);
     this.CACHE_KEY = `cache_${_md5}`;
     // 注册操作菜单
     this.registerAction("输入京东 CK", this.inputJDck);
@@ -280,7 +287,7 @@ class Widget extends Base {
     this.JDCookie.userName = a.textFieldValue(0);
     this.JDCookie.cookie = a.textFieldValue(1);
     // 保存到本地
-    this.settings.JDCookie = this.JDCookie;
+    this.settings[this.en] = this.JDCookie;
     this.saveSettings();
   }
 
@@ -295,17 +302,22 @@ class Widget extends Base {
     const table = new UITable();
     // 如果是节点，则先远程获取
     if (i === 0 && this.API[0].length === 0) {
-      await this._load();
+      this.settings.JDAccount = await this._load();
     }
     this.API[0].map((t) => {
       const r = new UITableRow();
       r.addText(t.userName);
       r.onSelect = (n) => {
-        this.settings.JDCookie = t;
+        this.settings[this.en] = t;
         this.saveSettings();
       };
       table.addRow(r);
     });
+    let body = "京东 Ck 缓存成功，根据下标选择相应的 Ck";
+    if (this.settings[this.en]) {
+      body += "，或者使用当前选中Ck：" + this.settings[this.en].userName;
+    }
+    this.notify(this.name, body);
     table.present(false);
   }
 }
