@@ -1,6 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: truck;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: truck;
 
 // iOS 桌面组件脚本 @「小件件」
 // 开发说明：请从 Widget 类开始编写，注释请勿修改
@@ -10,18 +13,19 @@
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
 const { Base, Testing } = require("./「小件件」开发环境");
-
+const { Runing } = require("./DmYY");
 // @组件代码开始
 class Widget extends Base {
   constructor(arg) {
     super(arg);
     this.name = "京东物流";
+    this.en = "JDWuLiu";
     this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
-
     this.JDCookie = this.settings["JDCookie"] || { cookie: "", userName: "" };
     let _md5 = this.md5(module.filename + this.JDCookie.cookie);
     this.CACHE_KEY = `cache_${_md5}`;
     // 注册操作菜单
+    this.registerAction("输入京东 CK", this.inputJDck);
     this.registerAction("选择京东 CK", this.actionSettings);
   }
 
@@ -170,6 +174,7 @@ class Widget extends Base {
       body.setPadding(1, 10, 1, 10);
       body.cornerRadius = 10;
       body.backgroundColor = new Color("#fff", 0.5);
+      textItem.fontColor = new Color("#fff");
       textItem.font = Font.boldSystemFont(15);
       textItem.lineLimit = 1;
       return widget;
@@ -239,6 +244,7 @@ class Widget extends Base {
       headerMore.backgroundColor = new Color("#fff", 0.5);
       const textItem = headerMore.addText(this.JDCookie.userName);
       textItem.font = Font.boldSystemFont(12);
+      textItem.fontColor = new Color("#fff");
       textItem.lineLimit = 1;
     } else {
       await this.renderHeader(header, this.logo, this.name);
@@ -259,6 +265,23 @@ class Widget extends Base {
     return photoLibrary;
   };
 
+  async inputJDck() {
+    const a = new Alert();
+    a.title = "京东账号 Ck";
+    a.message = "手动输入京东 Ck";
+    a.addTextField("昵称", this.JDCookie.userName);
+    a.addTextField("Cookie", this.JDCookie.cookie);
+    a.addAction("确定");
+    a.addCancelAction("取消");
+    const id = await a.presentAlert();
+    if (id === -1) return;
+    this.JDCookie.userName = a.textFieldValue(0);
+    this.JDCookie.cookie = a.textFieldValue(1);
+    // 保存到本地
+    this.settings.JDCookie = this.JDCookie;
+    this.saveSettings();
+  }
+
   async actionSettings() {
     const a = new Alert();
     a.title = "内容设置";
@@ -266,7 +289,6 @@ class Widget extends Base {
     a.addAction("选择京东账号 Ck");
     a.addCancelAction("取消设置");
     const i = await a.presentSheet();
-    console.log(i);
     if (i === -1) return;
     const table = new UITable();
     // 如果是节点，则先远程获取
@@ -285,5 +307,7 @@ class Widget extends Base {
     table.present(false);
   }
 }
+
 // @组件代码结束
-await Testing(Widget);
+// await Runing(Widget, "", false); // 正式环境
+await Runing(Widget, "", true); //远程开发环境
