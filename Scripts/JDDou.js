@@ -1,6 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: truck;
+// icon-color: teal; icon-glyph: comment-dollar;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: comment-dollar;
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: truck;
@@ -29,7 +32,7 @@ class Widget extends Base {
     if (this.JDindex !== undefined) {
       this.JDCookie = this.settings.JDAccount[this.JDindex];
     }
-    let _md5 = this.md5(module.filename + this.JDCookie.cookie);
+    let _md5 = this.md5(module.filename + this.en + this.JDCookie.cookie);
     this.CACHE_KEY = `cache_${_md5}`;
     // 注册操作菜单
     this.registerAction("输入京东 CK", this.inputJDck);
@@ -39,6 +42,7 @@ class Widget extends Base {
   imageBackground = true;
   forceImageUpdate = false;
   API = { 0: [] };
+  prefix = "boxjs.net";
   JDAccount = [];
   beanCount = 0;
   incomeBean = 0;
@@ -175,7 +179,7 @@ class Widget extends Base {
     container.size = new Size(100, 120);
     const viewer = container.addStack();
     viewer.size = new Size(100, 25);
-    const jdD_icon = await this.getBackgroundImage(icon, "IMG");
+    const jdD_icon = await this.getImageByUrl(icon);
     const imageElemView = viewer.addImage(jdD_icon);
     imageElemView.centerAlignImage();
     imageElemView.imageSize = new Size(25, 25);
@@ -185,16 +189,17 @@ class Widget extends Base {
     textview.centerAlignContent();
     textview.size = new Size(100, 40);
     const titleTextItem = textview.addText(text);
+
     titleTextItem.font = Font.boldSystemFont(22);
-    titleTextItem.textColor = new Color("#fff");
+    titleTextItem.textColor = new Color("#ffef03");
     titleTextItem.rightAlignText();
 
     const descView = container.addStack();
     descView.centerAlignContent();
     descView.size = new Size(100, 30);
     const descTextItem = descView.addText(desc);
-    titleTextItem.font = Font.lightSystemFont(14);
-    titleTextItem.textColor = new Color("#fff");
+    descTextItem.textColor = new Color("#fff");
+    descTextItem.font = Font.lightSystemFont(16);
 
     descTextItem.centerAlignText();
 
@@ -232,11 +237,14 @@ class Widget extends Base {
   };
 
   renderSmall = async (w) => {
-    return await this.setWidget(w);
+    return await this.renderLarge(w);
   };
 
   renderLarge = async (w) => {
-    return await this.setWidget(w);
+    const text = w.addText("暂不支持");
+    text.font = Font.boldSystemFont(20);
+    text.textColor = new Color("#fff");
+    return w;
   };
 
   renderMedium = async (w) => {
