@@ -176,7 +176,7 @@ class Widget extends Base {
   setContainer = async (container, { icon, text, desc }) => {
     container.layoutVertically();
     container.centerAlignContent();
-    container.size = new Size(100, 120);
+    container.size = new Size(100, 100);
     const viewer = container.addStack();
     viewer.size = new Size(100, 25);
     const jdD_icon = await this.getImageByUrl(icon);
@@ -276,7 +276,7 @@ class Widget extends Base {
         this.name,
         new Color("#fff")
       );
-      header.addSpacer(140);
+      header.addSpacer(160);
       const headerMore = header.addStack();
       headerMore.url = "https://home.m.jd.com/myJd/home.action";
       headerMore.setPadding(1, 10, 1, 10);
