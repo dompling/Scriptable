@@ -1,0 +1,21 @@
+[
+  {
+    "author": {
+      "name": "dompling",
+      "profileURL": "https://github.com/dompling"
+    },
+    "bugReport": "https://github.com/dompling/Scriptable/issues",
+    "configurationRequired": true,
+    "previewImages": [
+      "https://raw.githubusercontent.com/ThisIsBenny/iOS-Widgets/main/Countdown/previewLight.jpeg",
+      "https://raw.githubusercontent.com/ThisIsBenny/iOS-Widgets/main/Countdown/previewDark.jpeg",
+      "https://raw.githubusercontent.com/ThisIsBenny/iOS-Widgets/main/Countdown/previewLight2.jpeg",
+      "https://raw.githubusercontent.com/ThisIsBenny/iOS-Widgets/main/Countdown/previewDark2.jpeg"
+    ],
+    "version": "1.0.0",
+    "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
+    "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
+    "name": "JDWuLiu",
+    "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md"
+  }
+]

@@ -4,6 +4,5 @@
 /.vscode
 /.idea
 /.history
-*.json
 test.js
 Env.js
