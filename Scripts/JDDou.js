@@ -1,6 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: comment-dollar;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: comment-dollar;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -50,47 +53,48 @@ class Widget extends Base {
     //前一天的0:0:0时间戳
     // console.log(`北京时间零点时间戳:${parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000}`);
     // console.log(`北京时间2020-10-28 06:16:05::${new Date("2020/10/28 06:16:05+08:00").getTime()}`)
-    // const tm =
-    //   parseInt((Date.now() + 28800000) / 86400000) * 86400000 -
-    //   28800000 -
-    //   24 * 60 * 60 * 1000;
-    // // 今天0:0:0时间戳
-    // const tm1 =
-    //   parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000;
-    // let page = 1,
-    //   t = 0;
-    await this.getJingBeanBalanceDetail();
-    // do {
-    //   let response = await this.getJingBeanBalanceDetail(page);
-    //   console.log(`第${page}页`);
-    //   if (response && response.code === "0") {
-    //     page++;
-    //     let detailList = response.detailList;
-    //     if (detailList && detailList.length > 0) {
-    //       for (let item of detailList) {
-    //         const date = item.date.replace(/-/g, "/") + "+08:00";
-    //         if (
-    //           tm <= new Date(date).getTime() &&
-    //           new Date(date).getTime() < tm1
-    //         ) {
-    //           //昨日的
-    //           if (Number(item.amount) > 0) {
-    //             this.incomeBean += Number(item.amount);
-    //           } else if (Number(item.amount) < 0) {
-    //             this.expenseBean += Number(item.amount);
-    //           }
-    //         } else if (tm > new Date(date).getTime()) {
-    //           //前天的
-    //           t = 1;
-    //           break;
-    //         }
-    //       }
-    //     } else {
-    //       console.log(`账号${this.jdIndex}：${this.userName}\n数据异常`);
-    //       t = 1;
-    //     }
-    //   }
-    // } while (t === 0);
+    const tm =
+      parseInt((Date.now() + 28800000) / 86400000) * 86400000 -
+      28800000 -
+      24 * 60 * 60 * 1000;
+    // 今天0:0:0时间戳
+    const tm1 =
+      parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000;
+    let page = 1,
+      t = 0;
+    do {
+      let response = await this.getJingBeanBalanceDetail(page);
+      console.log(`第${page}页`);
+      if (response && response.code === "0") {
+        page++;
+        let detailList = response.detailList;
+        if (detailList && detailList.length > 0) {
+          for (let item of detailList) {
+            const date = item.date.replace(/-/g, "/") + "+08:00";
+            if (
+              tm <= new Date(date).getTime() &&
+              new Date(date).getTime() < tm1
+            ) {
+              //昨日的
+              const amount = Number(item.amount);
+              if (amount > 0) {
+                this.incomeBean += amount;
+              }
+              if (amount < 0) {
+                this.expenseBean += amount;
+              }
+            } else if (tm > new Date(date).getTime()) {
+              //前天的
+              t = 1;
+              break;
+            }
+          }
+        } else {
+          console.log(`账号${this.jdIndex}：${this.userName}\n数据异常`);
+          t = 1;
+        }
+      }
+    } while (t === 0);
     // console.log(`昨日收入：${$.incomeBean}个京豆 🐶`);
     // console.log(`昨日支出：${$.expenseBean}个京豆 🐶`)
   };
@@ -131,18 +135,23 @@ class Widget extends Base {
           JSON.stringify({ pageSize: "20", page: page.toString() })
         )}&appid=ld`,
         headers: {
-          "User-Agent": "JD4iPhone/167169 (iPhone; iOS 13.4.1; Scale/3.00)",
-          Host: "api.m.jd.com",
-          "Content-Type": "application/x-www-form-urlencoded",
-          Cookie: this.JDCookie.cookie,
+          Cookie: `pt_key=AAJffThsADD-Lh7sGPfgMoUZs8HvmVy6IGitMgoFANzW3G_z5pl_sEhWGQhP6fj-zb8WMmLH9bU;pt_pin=jd_52b8729027cde;`,
+          Accept: `*/*`,
+          Connection: `keep-alive`,
+          "Content-Type": `application/x-www-form-urlencoded`,
+          "Accept-Encoding": `gzip, deflate, br`,
+          Host: `api.m.jd.com`,
+          "User-Agent": `JD4iPhone/167169 (iPhone; iOS 13.4.1; Scale/3.00)`,
+          "Accept-Language": `zh-cn`,
+          "X-Requested-With": `Quantumult X`,
         },
       };
       const request = new Request("");
+      request.method = "POST";
       request.url = options.url;
       request.body = options.body;
       request.headers = options.headers;
-      const response = await request.loadString();
-      console.log(request);
+      const response = await request.loadJSON();
       return response;
     } catch (e) {
       console.log(e);
@@ -226,7 +235,7 @@ class Widget extends Base {
     await this.setContainer(rightContainer, {
       icon:
         "https://raw.githubusercontent.com/dompling/Scriptable/master/JD/jdd.png",
-      text: `-${this.incomeBean}`,
+      text: `-${this.expenseBean}`,
       desc: "昨日支出",
     });
     return widget;
