@@ -69,6 +69,9 @@ const renderTableList = async (data) => {
 
       r.addCell(downloadCell);
       table.addRow(r);
+      const descRow = new UITableRow();
+      descRow.addText(item.description);
+      table.addRow(r);
     });
     table.present(false);
   } catch (e) {
