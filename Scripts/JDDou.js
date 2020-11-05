@@ -1,17 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: comment-dollar;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: comment-dollar;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: truck;
-
-// iOS 桌面组件脚本 @「小件件」
-// 开发说明：请从 Widget 类开始编写，注释请勿修改
-// https://x.im3x.cn
-//
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -61,46 +50,47 @@ class Widget extends Base {
     //前一天的0:0:0时间戳
     // console.log(`北京时间零点时间戳:${parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000}`);
     // console.log(`北京时间2020-10-28 06:16:05::${new Date("2020/10/28 06:16:05+08:00").getTime()}`)
-    const tm =
-      parseInt((Date.now() + 28800000) / 86400000) * 86400000 -
-      28800000 -
-      24 * 60 * 60 * 1000;
-    // 今天0:0:0时间戳
-    const tm1 =
-      parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000;
-    let page = 1,
-      t = 0;
-    do {
-      let response = await this.getJingBeanBalanceDetail(page);
-      console.log(`第${page}页`);
-      if (response && response.code === "0") {
-        page++;
-        let detailList = response.detailList;
-        if (detailList && detailList.length > 0) {
-          for (let item of detailList) {
-            const date = item.date.replace(/-/g, "/") + "+08:00";
-            if (
-              tm <= new Date(date).getTime() &&
-              new Date(date).getTime() < tm1
-            ) {
-              //昨日的
-              if (Number(item.amount) > 0) {
-                this.incomeBean += Number(item.amount);
-              } else if (Number(item.amount) < 0) {
-                this.expenseBean += Number(item.amount);
-              }
-            } else if (tm > new Date(date).getTime()) {
-              //前天的
-              t = 1;
-              break;
-            }
-          }
-        } else {
-          console.log(`账号${this.jdIndex}：${this.userName}\n数据异常`);
-          t = 1;
-        }
-      }
-    } while (t === 0);
+    // const tm =
+    //   parseInt((Date.now() + 28800000) / 86400000) * 86400000 -
+    //   28800000 -
+    //   24 * 60 * 60 * 1000;
+    // // 今天0:0:0时间戳
+    // const tm1 =
+    //   parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000;
+    // let page = 1,
+    //   t = 0;
+    await this.getJingBeanBalanceDetail();
+    // do {
+    //   let response = await this.getJingBeanBalanceDetail(page);
+    //   console.log(`第${page}页`);
+    //   if (response && response.code === "0") {
+    //     page++;
+    //     let detailList = response.detailList;
+    //     if (detailList && detailList.length > 0) {
+    //       for (let item of detailList) {
+    //         const date = item.date.replace(/-/g, "/") + "+08:00";
+    //         if (
+    //           tm <= new Date(date).getTime() &&
+    //           new Date(date).getTime() < tm1
+    //         ) {
+    //           //昨日的
+    //           if (Number(item.amount) > 0) {
+    //             this.incomeBean += Number(item.amount);
+    //           } else if (Number(item.amount) < 0) {
+    //             this.expenseBean += Number(item.amount);
+    //           }
+    //         } else if (tm > new Date(date).getTime()) {
+    //           //前天的
+    //           t = 1;
+    //           break;
+    //         }
+    //       }
+    //     } else {
+    //       console.log(`账号${this.jdIndex}：${this.userName}\n数据异常`);
+    //       t = 1;
+    //     }
+    //   }
+    // } while (t === 0);
     // console.log(`昨日收入：${$.incomeBean}个京豆 🐶`);
     // console.log(`昨日支出：${$.expenseBean}个京豆 🐶`)
   };
@@ -133,24 +123,30 @@ class Widget extends Base {
     return response;
   };
 
-  getJingBeanBalanceDetail = async (page) => {
-    const url =
-      "https://api.m.jd.com/client.action?functionId=getJingBeanBalanceDetail";
-    const options = {
-      body: `body=${escape(
-        JSON.stringify({ pageSize: "20", page: page.toString() })
-      )}&appid=ld`,
-      headers: {
-        "User-Agent": "JD4iPhone/167169 (iPhone; iOS 13.4.1; Scale/3.00)",
-        Host: "api.m.jd.com",
-        "Content-Type": "application/x-www-form-urlencoded",
-        Cookie: this.JDCookie.cookie,
-      },
-    };
-    const request = new Request(url, { method: "POST" });
-    request.body = options.body;
-    request.headers = options.headers;
-    return await request.loadJSON();
+  getJingBeanBalanceDetail = async (page = 1) => {
+    try {
+      const options = {
+        url: `https://api.m.jd.com/client.action?functionId=getJingBeanBalanceDetail`,
+        body: `body=${escape(
+          JSON.stringify({ pageSize: "20", page: page.toString() })
+        )}&appid=ld`,
+        headers: {
+          "User-Agent": "JD4iPhone/167169 (iPhone; iOS 13.4.1; Scale/3.00)",
+          Host: "api.m.jd.com",
+          "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: this.JDCookie.cookie,
+        },
+      };
+      const request = new Request("");
+      request.url = options.url;
+      request.body = options.body;
+      request.headers = options.headers;
+      const response = await request.loadString();
+      console.log(request);
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // 加载节点列表
