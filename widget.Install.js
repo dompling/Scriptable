@@ -1,7 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: book-open;
-// Version 1.0.0
+// icon-color: brown; icon-glyph: download;
 
 const mainAlert = new Alert();
 const Files = FileManager.iCloud();
@@ -142,4 +141,14 @@ try {
   await render();
 } catch (e) {
   console.log("缓存读取错误" + e);
+}
+
+const REMOTE_REQ = new Request(
+  "https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js"
+);
+const REMOTE_RES = await REMOTE_REQ.loadString();
+const result = await write("widget.Install", REMOTE_RES);
+console.log(result);
+if (result) {
+  console.log("🤖自我更新成功");
 }
