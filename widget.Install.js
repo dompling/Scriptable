@@ -47,23 +47,26 @@ const renderTableList = async (data) => {
     const apps = subscription.apps;
     apps.forEach((item) => {
       const r = new UITableRow();
-      const imgCell = new UITableCell();
+      r.height = 75;
+      const imgCell = UITableCell.imageAtURL(item.thumb);
       imgCell.centerAligned();
-      imgCell.imageAtURL(item.thumb);
       r.addCell(imgCell);
-      const nameCell = new UITableCell();
+
+      const nameCell = UITableCell.text(item.name);
       nameCell.centerAligned();
-      nameCell.text(item.name);
       r.addCell(nameCell);
-      const downloadCell = new UITableCell();
+
+      const downloadCell = UITableCell.button("下载");
       downloadCell.centerAligned();
-      downloadCell.button("下载");
-      downloadCell.onTap(async () => {
-        const isWrite = await write(item.scriptURL);
+      downloadCell.dismissOnTap = true;
+      downloadCell.onTap = async () => {
+        const res = await new Request(item.scriptURL).loadString();
+        const isWrite = await write(item.name, res);
         if (isWrite) {
           notify("下载提示", `插件:${item.name}.js 下载/更新成功`);
         }
-      });
+      };
+
       r.addCell(downloadCell);
       table.addRow(r);
     });
@@ -78,55 +81,62 @@ mainAlert.title = "组件下载";
 mainAlert.message = "可以自行添加订阅地址";
 try {
   const cacheKey = "subscriptionList";
-  const subscriptionList = [];
-  if (Keychain.contains(cacheKey)) {
-    subscriptionList = Keychain.get(cacheKey);
-  }
-  const _actions = [];
-  subscriptionList.forEach((item) => {
-    const { author } = item;
-    mainAlert.addAction("作者：" + author);
-    _actions.push(async () => {
-      await this.renderTableList(item);
-    });
-  });
-
-  _actions.push(async () => {
-    const a = new Alert();
-    a.title = "订阅地址";
-    a.addTextField("URL");
-    a.addAction("确定");
-    a.addCancelAction("取消");
-    const id = await a.presentAlert();
-    if (id === -1) return;
-    try {
-      const url = a.textFieldValue(0);
-      const response = await new Request().loadJSON();
-      const data = [];
-      for (let _ in subscriptionList) {
-        if (response.author === subscriptionList[i].author) {
-          data.push({ ...response, subscription: url });
-        } else {
-          data.push(subscriptionList[i]);
-        }
-      }
-      if (!subscriptionList.length)
-        data.push({ ...response, subscription: url });
-      Keychain.set(cacheKey, JSON.stringify(response));
-    } catch (e) {
-      console.log(e);
-      notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
+  const render = async () => {
+    let subscriptionList = [];
+    if (Keychain.contains(cacheKey)) {
+      subscriptionList = JSON.parse(Keychain.get(cacheKey));
     }
-  });
+    const _actions = [];
+    subscriptionList.forEach((item) => {
+      const { author } = item;
+      mainAlert.addAction("作者：" + author);
+      _actions.push(async () => {
+        await renderTableList(item);
+      });
+    });
 
-  mainAlert.addAction("添加订阅");
+    _actions.push(async () => {
+      const a = new Alert();
+      a.title = "订阅地址";
+      a.addTextField(
+        "URL",
+        "https://raw.githubusercontent.com/dompling/Scriptable/master/install.json"
+      );
+      a.addAction("确定");
+      a.addCancelAction("取消");
+      const id = await a.presentAlert();
+      if (id === -1) return;
+      try {
+        const url = a.textFieldValue(0);
+        const response = await new Request(url).loadJSON();
+        delete response.apps;
+        const data = [];
+        for (let _ in subscriptionList) {
+          if (response.author === subscriptionList[i].author) {
+            data.push({ ...response, subscription: url });
+          } else {
+            data.push(subscriptionList[i]);
+          }
+        }
+        if (!subscriptionList.length)
+          data.push({ ...response, subscription: url });
+        Keychain.set(cacheKey, JSON.stringify(data));
+        render();
+      } catch (e) {
+        console.log(e);
+        notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
+      }
+    });
 
-  mainAlert.addCancelAction("取消操作");
-  const _actionsIndex = await mainAlert.presentSheet();
-  if (_actions[_actionsIndex]) {
-    const func = _actions[_actionsIndex];
-    await func();
-  }
+    mainAlert.addAction("添加订阅");
+    mainAlert.addCancelAction("取消操作");
+    const _actionsIndex = await mainAlert.presentSheet();
+    if (_actions[_actionsIndex]) {
+      const func = _actions[_actionsIndex];
+      await func();
+    }
+  };
+  await render();
 } catch (e) {
   console.log("缓存读取错误" + e);
 }
