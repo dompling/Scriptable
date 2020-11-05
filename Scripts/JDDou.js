@@ -11,11 +11,11 @@ const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
 class Widget extends DmYY {
-  constructor(arg) {
-    super(arg);
+  constructor(args) {
+    super(args);
     this.name = "京东豆";
     this.en = "JDDou";
-    this.JDRun(module.filename, arg);
+    this.JDRun(module.filename, args);
   }
 
   imageBackground = true;
