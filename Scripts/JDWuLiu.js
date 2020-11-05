@@ -228,7 +228,11 @@ class Widget extends Base {
           ? await this.chooseImgAndCache()
           : isExistImage;
       await this.setBackgroundImage(backImage, false);
-      widget.backgroundImage = await this.shadowImage(backImage);
+      widget.backgroundImage = await this.shadowImage(
+        backImage,
+        "#000",
+        this.isNight ? 0.7 : 0.4
+      );
     }
     const header = widget.addStack();
     if (this.widgetFamily !== "small") {

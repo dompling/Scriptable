@@ -9,6 +9,7 @@
 if (typeof require === "undefined") require = importModule;
 const { Base } = require("./「小件件」开发环境");
 const { Runing } = require("./DmYY");
+
 // @组件代码开始
 class Widget extends Base {
   constructor(arg) {
@@ -31,6 +32,7 @@ class Widget extends Base {
     this.registerAction("选择京东 CK", this.actionSettings);
   }
 
+  isNight = Device.isUsingDarkAppearance();
   imageBackground = true;
   forceImageUpdate = false;
   API = { 0: [] };
@@ -269,7 +271,11 @@ class Widget extends Base {
           ? await this.chooseImgAndCache()
           : isExistImage;
       await this.setBackgroundImage(backImage, false);
-      widget.backgroundImage = await this.shadowImage(backImage);
+      widget.backgroundImage = await this.shadowImage(
+        backImage,
+        "#000",
+        this.isNight ? 0.7 : 0.4
+      );
     }
     const header = widget.addStack();
     if (this.widgetFamily !== "small") {
