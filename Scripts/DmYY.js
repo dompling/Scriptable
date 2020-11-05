@@ -165,7 +165,7 @@ class DmYY extends Base {
       this.name,
       new Color("#fff")
     );
-    header.addSpacer(160);
+    header.addSpacer(155);
     const headerMore = header.addStack();
     headerMore.url = "https://home.m.jd.com/myJd/home.action";
     headerMore.setPadding(1, 10, 1, 10);
@@ -211,7 +211,6 @@ class DmYY extends Base {
     if (this.CookiesData.length === 0) {
       this.settings.JDAccount = await this._loadJDCk();
     }
-    console.log(this.CookiesData);
     this.CookiesData.map((t) => {
       const r = new UITableRow();
       r.addText(t.userName);
