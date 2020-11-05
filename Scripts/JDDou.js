@@ -328,16 +328,9 @@ class Widget extends Base {
   }
 
   async actionSettings() {
-    const a = new Alert();
-    a.title = "内容设置";
-    a.message = "设置组件展示的京东账号";
-    a.addAction("选择京东账号 Ck");
-    a.addCancelAction("取消设置");
-    const i = await a.presentSheet();
-    if (i === -1) return;
     const table = new UITable();
     // 如果是节点，则先远程获取
-    if (i === 0 && this.API[0].length === 0) {
+    if (this.API[0].length === 0) {
       this.settings.JDAccount = await this._load();
     }
     this.API[0].map((t) => {
