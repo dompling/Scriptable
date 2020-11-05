@@ -8,6 +8,227 @@ const { Base } = require("./「小件件」开发环境");
  * Github: https://github.com/dompling
  */
 
+class DmYY extends Base {
+  constructor(arg) {
+    super(arg);
+  }
+
+  name = "";
+  en = "";
+  JDCookie = {
+    cookie: "",
+    userName: "",
+  };
+  prefix = "boxjs.net";
+  CookiesData = [];
+  defaultCacheData = {};
+  isNight = Device.isUsingDarkAppearance();
+  forceImageUpdate = false;
+  imageBackground = true;
+
+  // 获取 Request 对象
+  getRequest = (url = "") => {
+    return new Request(url);
+  };
+
+  // 发起请求
+  http = async (options = { headers: {}, url: "" }, type = "JSON") => {
+    try {
+      let request;
+      if (type !== "IMG") {
+        request = this.getRequest();
+        Object.keys(options).forEach((key) => {
+          request[key] = options[key];
+        });
+        request.headers = { ...this.defaultHeaders, ...options.headers };
+      } else {
+        request = this.getRequest(options.url);
+        return await request.loadImage();
+      }
+      if (type === "JSON") {
+        return await request.loadJSON();
+      }
+      if (type === "STRING") {
+        return await request.loadString();
+      }
+      return await request.loadJSON();
+    } catch (e) {
+      console.log("error:" + e);
+    }
+  };
+
+  //request 接口请求
+  $request = {
+    get: async (url = "", options, type = "JSON") => {
+      const params = { url, ...options, method: "GET" };
+      let _type = type;
+      if (typeof options === "string") _type = options;
+      return await this.http(params, _type);
+    },
+    post: async (url = "", options, type = "JSON") => {
+      const params = { url, ...options, method: "POST" };
+      let _type = type;
+      if (typeof options === "string") _type = options;
+      return await this.http(params, _type);
+    },
+  };
+
+  // 获取 boxJS 缓存
+  getCache = async (key) => {
+    try {
+      const url = `http://${this.prefix}/query/boxdata`;
+      const boxdata = await this.$request.get(url);
+      let data;
+      const cacheKeys = Object.keys(this.defaultCacheData);
+      if (cacheKeys.length) {
+        data = {};
+        cacheKeys.forEach((params) => {
+          const datasKey = `${key}.${params}`;
+          const dataValue = boxdata.datas[datasKey];
+          if (dataValue) {
+            data[params] = dataValue;
+          }
+        });
+      } else {
+        const cacheValue = boxdata.datas[key];
+        if (cacheValue) {
+          data = this.transforJSON(cacheValue);
+        }
+      }
+      return data;
+    } catch (e) {
+      this.notify("2丫消息", "请检查代理是否开启，并接入了 BoxJs");
+      console.log(e);
+      return [];
+    }
+  };
+
+  transforJSON = (str) => {
+    if (typeof str == "string") {
+      try {
+        return JSON.parse(str);
+      } catch (e) {
+        console.log(e);
+        return str;
+      }
+    }
+    console.log("It is not a string!");
+  };
+
+  // 选择图片并缓存
+  chooseImgAndCache = async () => {
+    const photoLibrary = await Photos.fromLibrary();
+    return photoLibrary;
+  };
+
+  // 设置 widget 背景图片
+  setWidgetBackgroundImage = async (widget) => {
+    if (this.imageBackground) {
+      const isExistImage = this.getBackgroundImage();
+      const backImage =
+        !isExistImage && !this.forceImageUpdate
+          ? await this.chooseImgAndCache()
+          : isExistImage;
+      await this.setBackgroundImage(backImage, false);
+      widget.backgroundImage = await this.shadowImage(
+        backImage,
+        "#000",
+        this.isNight ? 0.7 : 0.4
+      );
+    }
+    return widget;
+  };
+
+  JDRun = (filename, args) => {
+    this.JDindex = parseInt(args.widgetParameter) || undefined;
+    this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
+    this.JDCookie = this.settings[this.en] || {
+      cookie: "",
+      userName: "",
+    };
+    if (this.JDindex !== undefined) {
+      this.JDCookie = this.settings.JDAccount[this.JDindex];
+    }
+    let _md5 = this.md5(filename + this.en + this.JDCookie.cookie);
+    this.CACHE_KEY = `cache_${_md5}`;
+    // 注册操作菜单
+    this.registerAction("输入京东 CK", this.inputJDck);
+    this.registerAction("选择京东 CK", this.actionSettings);
+  };
+
+  renderJDHeader = async (header) => {
+    header.centerAlignContent();
+    const headerLogo = header.addStack();
+    await this.renderHeader(
+      headerLogo,
+      this.logo,
+      this.name,
+      new Color("#fff")
+    );
+    header.addSpacer(160);
+    const headerMore = header.addStack();
+    headerMore.url = "https://home.m.jd.com/myJd/home.action";
+    headerMore.setPadding(1, 10, 1, 10);
+    headerMore.cornerRadius = 10;
+    headerMore.backgroundColor = new Color("#fff", 0.5);
+    const textItem = headerMore.addText(this.JDCookie.userName);
+    textItem.font = Font.boldSystemFont(12);
+    textItem.textColor = new Color("#fff");
+    textItem.lineLimit = 1;
+    return header;
+  };
+
+  // 加载京东 Ck 节点列表
+  _loadJDCk = async () => {
+    try {
+      this.CookiesData = await this.getCache("CookiesJD");
+      return this.CookiesData;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  async inputJDck() {
+    const a = new Alert();
+    a.title = "京东账号 Ck";
+    a.message = "手动输入京东 Ck";
+    a.addTextField("昵称", this.JDCookie.userName);
+    a.addTextField("Cookie", this.JDCookie.cookie);
+    a.addAction("确定");
+    a.addCancelAction("取消");
+    const id = await a.presentAlert();
+    if (id === -1) return;
+    this.JDCookie.userName = a.textFieldValue(0);
+    this.JDCookie.cookie = a.textFieldValue(1);
+    // 保存到本地
+    this.settings[this.en] = this.JDCookie;
+    this.saveSettings();
+  }
+
+  async actionSettings() {
+    const table = new UITable();
+    // 如果是节点，则先远程获取
+    if (this.CookiesData.length === 0) {
+      this.settings.JDAccount = await this._loadJDCk();
+    }
+    console.log(this.CookiesData);
+    this.CookiesData.map((t) => {
+      const r = new UITableRow();
+      r.addText(t.userName);
+      r.onSelect = (n) => {
+        this.settings[this.en] = t;
+        this.saveSettings();
+      };
+      table.addRow(r);
+    });
+    let body = "京东 Ck 缓存成功，根据下标选择相应的 Ck";
+    if (this.settings[this.en]) {
+      body += "，或者使用当前选中Ck：" + this.settings[this.en].userName;
+    }
+    this.notify(this.name, body);
+    table.present(false);
+  }
+}
 
 // @base.end
 const Runing = async (Widget, default_args = "", isDebug = true) => {
@@ -122,9 +343,9 @@ const Runing = async (Widget, default_args = "", isDebug = true) => {
                     let NewWidget = null;
                     try {
                       const _func = new Function(
-                        `const _Debugger = Base => {\n${_code}\nreturn Widget\n}\nreturn _Debugger`
+                        `const _Debugger = DmYY => {\n${_code}\nreturn Widget\n}\nreturn _Debugger`
                       );
-                      NewWidget = _func()(Base);
+                      NewWidget = _func()(DmYY);
                     } catch (e) {
                       M.notify("解析失败", e.message);
                     }
@@ -231,4 +452,4 @@ const Runing = async (Widget, default_args = "", isDebug = true) => {
   }
 };
 
-module.exports = { Runing };
+module.exports = { DmYY, Runing };

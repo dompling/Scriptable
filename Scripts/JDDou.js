@@ -1,43 +1,24 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: comment-dollar;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: comment-dollar;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
-const { Base } = require("./「小件件」开发环境");
-const { Runing } = require("./DmYY");
+const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
-class Widget extends Base {
+class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.JDindex = parseInt(args.widgetParameter) || undefined;
     this.name = "京东豆";
     this.en = "JDDou";
-    this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
-    this.JDCookie = this.settings[this.en] || {
-      cookie: "",
-      userName: "",
-    };
-    if (this.JDindex !== undefined) {
-      this.JDCookie = this.settings.JDAccount[this.JDindex];
-    }
-    let _md5 = this.md5(module.filename + this.en + this.JDCookie.cookie);
-    this.CACHE_KEY = `cache_${_md5}`;
-    // 注册操作菜单
-    this.registerAction("输入京东 CK", this.inputJDck);
-    this.registerAction("选择京东 CK", this.actionSettings);
+    this.JDRun(module.filename, arg);
   }
 
-  isNight = Device.isUsingDarkAppearance();
   imageBackground = true;
   forceImageUpdate = false;
-  API = { 0: [] };
-  prefix = "boxjs.net";
-  JDAccount = [];
+  // prefix = "boxjs.com";
+
   beanCount = 0;
   incomeBean = 0;
   expenseBean = 0;
@@ -160,14 +141,6 @@ class Widget extends Base {
     }
   };
 
-  // 加载节点列表
-  _load = async () => {
-    let boxdata = await this.httpGet(`http://${this.prefix}/query/boxdata`);
-    const cacheValue = boxdata.datas["CookiesJD"];
-    this.API[0] = this.transforJSON(cacheValue);
-    return this.API[0];
-  };
-
   transforJSON = (str) => {
     if (typeof str == "string") {
       try {
@@ -264,39 +237,10 @@ class Widget extends Base {
   async render() {
     await this.init();
     const widget = new ListWidget();
-    if (this.imageBackground) {
-      const isExistImage = this.getBackgroundImage();
-      const backImage =
-        !isExistImage && !this.forceImageUpdate
-          ? await this.chooseImgAndCache()
-          : isExistImage;
-      await this.setBackgroundImage(backImage, false);
-      widget.backgroundImage = await this.shadowImage(
-        backImage,
-        "#000",
-        this.isNight ? 0.7 : 0.4
-      );
-    }
+    await this.setWidgetBackgroundImage(widget);
     const header = widget.addStack();
     if (this.widgetFamily !== "small") {
-      header.centerAlignContent();
-      const headerLogo = header.addStack();
-      await this.renderHeader(
-        headerLogo,
-        this.logo,
-        this.name,
-        new Color("#fff")
-      );
-      header.addSpacer(160);
-      const headerMore = header.addStack();
-      headerMore.url = "https://home.m.jd.com/myJd/home.action";
-      headerMore.setPadding(1, 10, 1, 10);
-      headerMore.cornerRadius = 10;
-      headerMore.backgroundColor = new Color("#fff", 0.5);
-      const textItem = headerMore.addText(this.JDCookie.userName);
-      textItem.font = Font.boldSystemFont(12);
-      textItem.textColor = new Color("#fff");
-      textItem.lineLimit = 1;
+      this.renderJDHeader(header);
     } else {
       await this.renderHeader(header, this.logo, this.name);
     }
@@ -308,52 +252,6 @@ class Widget extends Base {
     } else {
       return await this.renderSmall(widget);
     }
-  }
-
-  // 选择图片并缓存
-  chooseImgAndCache = async () => {
-    const photoLibrary = await Photos.fromLibrary();
-    return photoLibrary;
-  };
-
-  async inputJDck() {
-    const a = new Alert();
-    a.title = "京东账号 Ck";
-    a.message = "手动输入京东 Ck";
-    a.addTextField("昵称", this.JDCookie.userName);
-    a.addTextField("Cookie", this.JDCookie.cookie);
-    a.addAction("确定");
-    a.addCancelAction("取消");
-    const id = await a.presentAlert();
-    if (id === -1) return;
-    this.JDCookie.userName = a.textFieldValue(0);
-    this.JDCookie.cookie = a.textFieldValue(1);
-    // 保存到本地
-    this.settings[this.en] = this.JDCookie;
-    this.saveSettings();
-  }
-
-  async actionSettings() {
-    const table = new UITable();
-    // 如果是节点，则先远程获取
-    if (this.API[0].length === 0) {
-      this.settings.JDAccount = await this._load();
-    }
-    this.API[0].map((t) => {
-      const r = new UITableRow();
-      r.addText(t.userName);
-      r.onSelect = (n) => {
-        this.settings[this.en] = t;
-        this.saveSettings();
-      };
-      table.addRow(r);
-    });
-    let body = "京东 Ck 缓存成功，根据下标选择相应的 Ck";
-    if (this.settings[this.en]) {
-      body += "，或者使用当前选中Ck：" + this.settings[this.en].userName;
-    }
-    this.notify(this.name, body);
-    table.present(false);
   }
 }
 
