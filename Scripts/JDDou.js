@@ -1,6 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: comment-dollar;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: comment-dollar;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -156,9 +159,9 @@ class Widget extends DmYY {
   setContainer = async (container, { icon, text, desc }) => {
     container.layoutVertically();
     container.centerAlignContent();
-    container.size = new Size(100, 100);
+
     const viewer = container.addStack();
-    viewer.size = new Size(100, 25);
+    viewer.size = new Size(90, 25);
     const jdD_icon = await this.getImageByUrl(icon);
     const imageElemView = viewer.addImage(jdD_icon);
     imageElemView.centerAlignImage();
@@ -166,21 +169,17 @@ class Widget extends DmYY {
     container.addSpacer(10);
 
     const textview = container.addStack();
-    textview.centerAlignContent();
-    textview.size = new Size(100, 40);
+    textview.size = new Size(90, 30);
     const titleTextItem = textview.addText(text);
-
     titleTextItem.font = Font.boldSystemFont(22);
     titleTextItem.textColor = new Color("#ffef03");
-    titleTextItem.rightAlignText();
+    titleTextItem.centerAlignText();
 
     const descView = container.addStack();
-    descView.centerAlignContent();
-    descView.size = new Size(100, 30);
+    descView.size = new Size(90, 30);
     const descTextItem = descView.addText(desc);
     descTextItem.textColor = new Color("#fff");
     descTextItem.font = Font.lightSystemFont(16);
-
     descTextItem.centerAlignText();
 
     return container;
@@ -197,7 +196,7 @@ class Widget extends DmYY {
       text: `${this.beanCount}`,
       desc: "当前京豆",
     });
-    body.addSpacer(10);
+    body.addSpacer(15);
     const centerContainer = body.addStack();
     await this.setContainer(centerContainer, {
       icon:
@@ -205,7 +204,7 @@ class Widget extends DmYY {
       text: `+${this.incomeBean}`,
       desc: "昨日收入",
     });
-    body.addSpacer(10);
+    body.addSpacer(15);
     const rightContainer = body.addStack();
     await this.setContainer(rightContainer, {
       icon:

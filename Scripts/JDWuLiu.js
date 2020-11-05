@@ -78,55 +78,43 @@ class Widget extends DmYY {
   setListCell = async (cell, data) => {
     const { productList = [], orderDetailLink = "", progressInfo = {} } = data;
     const product = productList[0];
-    cell.url = orderDetailLink;
+    let body = cell.addStack();
+    body.url = orderDetailLink;
     if (this.widgetFamily !== "small") {
-      cell.size = new Size(320, 75);
-      const imageView = cell.addStack();
+      const imageView = body.addStack();
       imageView.size = new Size(75, 75);
       imageView.cornerRadius = 5;
       imageView.url = product.skuLink;
       const image = await this.getImageByUrl(product.image, false);
       image.imageSize = new Size(300, 300);
       imageView.backgroundImage = image;
-      cell.addSpacer(10);
+      body.addSpacer(10);
     }
 
-    const textView = cell.addStack();
-    textView.layoutVertically();
+    const textView = body.addStack();
     textView.url = orderDetailLink;
-    const descView = textView.addStack();
-    const descText = descView.addText(progressInfo.content);
-    descText.font = Font.lightSystemFont(16);
+    textView.layoutVertically();
+
+    const descText = textView.addText(progressInfo.content);
+    descText.font = Font.boldSystemFont(16);
     descText.textColor = Color.white();
     descText.lineLimit = 2;
 
     textView.addSpacer(10);
 
-    const timerView = textView.addStack();
-    const timerText = timerView.addText(progressInfo.tip);
-    timerText.font = Font.lightSystemFont(10);
+    const timerText = textView.addText(progressInfo.tip);
+    timerText.font = Font.lightSystemFont(14);
     timerText.textColor = Color.white();
-    timerText.textOpacity = 0.5;
     timerText.lineLimit = 1;
 
+    cell.addSpacer(10);
     return cell;
   };
 
-  setWidget = async (widget) => {
-    const body = widget.addStack();
+  setWidget = async (body) => {
     body.url =
       "https://wqs.jd.com/order/orderlist_merge.shtml?sceneval=2&orderType=waitReceipt";
     if (!this.orderList.length) {
-      body.centerAlignContent();
-      let bodyHeight = 100,
-        bodyWidth = 320;
-
-      if (this.widgetFamily === "large") {
-        bodyHeight = bodyHeight * 3;
-      } else if (this.widgetFamily === "small") {
-        bodyWidth = bodyHeight;
-      }
-      body.size = new Size(bodyWidth, bodyHeight);
       if (this.widgetFamily !== "small") {
         const bg = await this.getImageByUrl(
           "https://raw.githubusercontent.com/dompling/Scriptable/master/JDWuLiu/cart.png"
@@ -142,31 +130,27 @@ class Widget extends DmYY {
       textItem.textColor = new Color("#fff");
       textItem.font = Font.boldSystemFont(15);
       textItem.lineLimit = 1;
-      return widget;
+      return body;
     }
-    body.layoutVertically();
-    body.topAlignContent();
-
     let orderIndex = 0;
-
+    const container = body.addStack();
+    container.layoutVertically();
     for (let index = 0; index < this.orderList.length; index++) {
       if (this.widgetFamily !== "large" && index === 1) {
-        return widget;
+        return body;
       }
       if (index === 4) {
-        return widget;
+        return body;
       }
       orderIndex = index;
       const data = this.orderList[index];
-      let listItem = body.addStack();
+      let listItem = container.addStack();
       await this.setListCell(listItem, data);
-      body.addSpacer(15);
+      container.addSpacer(10);
     }
-    if (this.widgetFamily === "large") {
-      body.addSpacer((3 - (orderIndex + 1)) * 75 + 40);
-    }
+    body.addSpacer();
 
-    return widget;
+    return body;
   };
 
   renderSmall = async (w) => {

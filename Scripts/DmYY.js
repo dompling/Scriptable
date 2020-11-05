@@ -158,14 +158,8 @@ class DmYY extends Base {
 
   renderJDHeader = async (header) => {
     header.centerAlignContent();
-    const headerLogo = header.addStack();
-    await this.renderHeader(
-      headerLogo,
-      this.logo,
-      this.name,
-      new Color("#fff")
-    );
-    header.addSpacer(155);
+    await this.renderHeader(header, this.logo, this.name, new Color("#fff"));
+    header.addSpacer(140);
     const headerMore = header.addStack();
     headerMore.url = "https://home.m.jd.com/myJd/home.action";
     headerMore.setPadding(1, 10, 1, 10);
@@ -175,6 +169,7 @@ class DmYY extends Base {
     textItem.font = Font.boldSystemFont(12);
     textItem.textColor = new Color("#fff");
     textItem.lineLimit = 1;
+    textItem.rightAlignText();
     return header;
   };
 
