@@ -71,7 +71,7 @@ const renderTableList = async (data) => {
       table.addRow(r);
       const descRow = new UITableRow();
       descRow.addText(item.description);
-      table.addRow(r);
+      table.addRow(descRow);
     });
     table.present(false);
   } catch (e) {
