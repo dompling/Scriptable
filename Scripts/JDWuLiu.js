@@ -7,8 +7,8 @@ if (typeof require === "undefined") require = importModule;
 const { DmYY, Runing } = require("./DmYY");
 // @组件代码开始
 class Widget extends DmYY {
-  constructor(args) {
-    super(args);
+  constructor(arg) {
+    super(arg);
     this.name = "京东物流";
     this.en = "JDWuLiu";
     this.JDRun(module.filename, args);

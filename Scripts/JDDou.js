@@ -11,8 +11,8 @@ const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
 class Widget extends DmYY {
-  constructor(args) {
-    super(args);
+  constructor(arg) {
+    super(arg);
     this.name = "京东豆";
     this.en = "JDDou";
     this.JDRun(module.filename, args);
@@ -209,7 +209,7 @@ class Widget extends DmYY {
     await this.setContainer(rightContainer, {
       icon:
         "https://raw.githubusercontent.com/dompling/Scriptable/master/JD/jdd.png",
-      text: `-${this.expenseBean}`,
+      text: `${this.expenseBean}`,
       desc: "昨日支出",
     });
     return widget;
