@@ -51,7 +51,7 @@ const renderTableList = async (data) => {
       imgCell.centerAligned();
       r.addCell(imgCell);
 
-      const nameCell = UITableCell.text(item.name);
+      const nameCell = UITableCell.text(item.title);
       nameCell.centerAligned();
       r.addCell(nameCell);
 
@@ -62,15 +62,11 @@ const renderTableList = async (data) => {
         const res = await new Request(item.scriptURL).loadString();
         const isWrite = await write(item.name, res);
         if (isWrite) {
-          notify("下载提示", `插件:${item.name}.js 下载/更新成功`);
+          notify("下载提示", `插件:${item.title}下载/更新成功`);
         }
       };
-
       r.addCell(downloadCell);
       table.addRow(r);
-      const descRow = new UITableRow();
-      descRow.addText(item.description);
-      table.addRow(descRow);
     });
     table.present(false);
   } catch (e) {
