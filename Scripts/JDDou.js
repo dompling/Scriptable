@@ -110,7 +110,7 @@ class Widget extends DmYY {
     return response;
   };
 
-  getJingBeanBalanceDetail = async (page = 1) => {
+  getJingBeanBalanceDetail = async (page) => {
     try {
       const options = {
         url: `https://api.m.jd.com/client.action?functionId=getJingBeanBalanceDetail`,
@@ -118,9 +118,9 @@ class Widget extends DmYY {
           JSON.stringify({ pageSize: "20", page: page.toString() })
         )}&appid=ld`,
         headers: {
-          Cookie: `pt_key=AAJffThsADD-Lh7sGPfgMoUZs8HvmVy6IGitMgoFANzW3G_z5pl_sEhWGQhP6fj-zb8WMmLH9bU;pt_pin=jd_52b8729027cde;`,
           Accept: `*/*`,
           Connection: `keep-alive`,
+          Cookie: this.JDCookie.cookie,
           "Content-Type": `application/x-www-form-urlencoded`,
           "Accept-Encoding": `gzip, deflate, br`,
           Host: `api.m.jd.com`,
