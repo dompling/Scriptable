@@ -183,7 +183,7 @@ class Widget extends DmYY {
     const letfContainer = body.addStack();
     await this.setContainer(letfContainer, {
       icon:
-        "https://raw.githubusercontent.com/dompling/Scriptable/master/JD/jdd.png",
+        "https://raw.githubusercontent.com/dompling/Scriptable/master/JDDou/jdd.png",
       text: `${this.beanCount}`,
       desc: "当前京豆",
     });
@@ -191,7 +191,7 @@ class Widget extends DmYY {
     const centerContainer = body.addStack();
     await this.setContainer(centerContainer, {
       icon:
-        "https://raw.githubusercontent.com/dompling/Scriptable/master/JD/jdd.png",
+        "https://raw.githubusercontent.com/dompling/Scriptable/master/JDDou/jdd.png",
       text: `+${this.incomeBean}`,
       desc: "昨日收入",
     });
@@ -199,7 +199,7 @@ class Widget extends DmYY {
     const rightContainer = body.addStack();
     await this.setContainer(rightContainer, {
       icon:
-        "https://raw.githubusercontent.com/dompling/Scriptable/master/JD/jdd.png",
+        "https://raw.githubusercontent.com/dompling/Scriptable/master/JDDou/jdd.png",
       text: `${this.expenseBean}`,
       desc: "昨日支出",
     });
