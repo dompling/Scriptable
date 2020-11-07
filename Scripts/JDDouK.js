@@ -270,6 +270,8 @@ class Widget extends DmYY {
           timer.invalidate();
           this.drawImage();
           widget.backgroundImage = this.drawContext.getImage();
+          widget.url =
+            "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
           w = await this.renderMedium(widget);
           if (config.runsInWidget) {
             Script.setWidget(w);
