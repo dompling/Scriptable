@@ -36,6 +36,14 @@
       "name": "JDDou",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
       "title": "京东豆"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY和[小件件]组件,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
+      "name": "JDDou",
+      "title": "京东豆走势"
     }
   ]
 }

@@ -50,7 +50,7 @@ class Widget extends DmYY {
       console.log(`第${page}页`);
       if (response && response.code === "0") {
         page++;
-        let detailList = response.detailList;
+        let detailList = response.jingDetailList;
         if (detailList && detailList.length > 0) {
           for (let item of detailList) {
             const date = item.date.replace(/-/g, "/") + "+08:00";
@@ -113,29 +113,23 @@ class Widget extends DmYY {
   getJingBeanBalanceDetail = async (page) => {
     try {
       const options = {
-        url: `https://api.m.jd.com/client.action?functionId=getJingBeanBalanceDetail`,
-        body: `body=${escape(
-          JSON.stringify({ pageSize: "20", page: page.toString() })
-        )}&appid=ld`,
+        url: `https://bean.m.jd.com/beanDetail/detail.json`,
+        body: `page=${page}`,
         headers: {
-          Accept: `*/*`,
+          "X-Requested-With": `XMLHttpRequest`,
           Connection: `keep-alive`,
-          Cookie: this.JDCookie.cookie,
-          "Content-Type": `application/x-www-form-urlencoded`,
           "Accept-Encoding": `gzip, deflate, br`,
-          Host: `api.m.jd.com`,
-          "User-Agent": `JD4iPhone/167169 (iPhone; iOS 13.4.1; Scale/3.00)`,
+          "Content-Type": `application/x-www-form-urlencoded; charset=UTF-8`,
+          Origin: `https://bean.m.jd.com`,
+          "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15`,
+          Cookie: this.JDCookie.cookie,
+          Host: `bean.m.jd.com`,
+          Referer: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`,
           "Accept-Language": `zh-cn`,
-          "X-Requested-With": `Quantumult X`,
+          Accept: `application/json, text/javascript, */*; q=0.01`,
         },
       };
-      const request = new Request("");
-      request.method = "POST";
-      request.url = options.url;
-      request.body = options.body;
-      request.headers = options.headers;
-      const response = await request.loadJSON();
-      return response;
+      return await this.$request.post(options.url, options);
     } catch (e) {
       console.log(e);
     }
