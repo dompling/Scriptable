@@ -109,11 +109,11 @@ try {
         const response = await new Request(url).loadJSON();
         delete response.apps;
         const data = [];
-        for (let _ in subscriptionList) {
-          if (response.author === subscriptionList[i].author) {
+        for (let item in subscriptionList) {
+          if (response.author === item.author) {
             data.push({ ...response, subscription: url });
           } else {
-            data.push(subscriptionList[i]);
+            data.push(item);
           }
         }
         if (!subscriptionList.length)
