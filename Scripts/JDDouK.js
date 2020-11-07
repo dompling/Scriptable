@@ -17,11 +17,12 @@ class Widget extends DmYY {
 
   drawContext = new DrawContext();
 
+  forceCache = false; // 重置缓存
+  rangeDay = 5; // 天数范围配置
   widgetFamily = "medium";
   rangeTimer = {};
   timerKeys = [];
   isRender = false;
-  rangeDay = 5; // 天数范围配置
 
   widgetHeight = 338;
   widgetWidth = 720;
@@ -54,7 +55,7 @@ class Widget extends DmYY {
   init = async () => {
     try {
       this.rangeTimer = this.getDay(this.rangeDay);
-      if (Keychain.contains(this.CACHE_KEY)) {
+      if (Keychain.contains(this.CACHE_KEY) && !this.forceCache) {
         const data = JSON.parse(Keychain.get(this.CACHE_KEY));
         Object.keys(data).forEach((key) => {
           this.rangeTimer[key] = data[key];
@@ -263,6 +264,7 @@ class Widget extends DmYY {
       timer.repeats = true;
       timer.timeInterval = 1000;
       timer.schedule(async () => {
+        console.log("数据读取中，请稍后");
         if (this.isRender) {
           console.log("数据读取完毕，加载组件");
           timer.invalidate();
@@ -276,7 +278,6 @@ class Widget extends DmYY {
             await w.presentMedium();
           }
         }
-        console.log("数据读取中，请稍后");
       });
       return;
     } else if (this.widgetFamily === "large") {
