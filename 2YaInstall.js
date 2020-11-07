@@ -51,6 +51,11 @@ const scripts = [
       "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js",
   },
   {
+    moduleName: "JDDouK",
+    url:
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
+  },
+  {
     moduleName: "JDWuLiu",
     url:
       "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
