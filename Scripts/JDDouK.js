@@ -17,24 +17,23 @@ class Widget extends DmYY {
 
   drawContext = new DrawContext();
 
+  widgetFamily = "medium";
   rangeTimer = {};
   timerKeys = [];
-  rangeDay = 6;
+  isRender = false;
+  rangeDay = 5; // 天数范围配置
 
   widgetHeight = 338;
   widgetWidth = 720;
-  lineWeight = 2;
-  vertLineWeight = 0.5;
+  lineWeight = 2; // 线的宽度
+  vertLineWeight = 0.5; // 竖线的宽度
   graphLow = 280;
   graphHeight = 160;
-  spaceBetweenDays = 100;
+  spaceBetweenDays = 120; // 间距
   widgetColor = Color.dynamic(Color.black(), Color.white());
 
   accentColor1 = new Color("#33cc33", 1);
   accentColor2 = Color.lightGray();
-
-  imageBackground = true;
-  forceImageUpdate = false;
 
   drawTextR(text, rect, color, font) {
     this.drawContext.setFont(font);
@@ -55,7 +54,23 @@ class Widget extends DmYY {
   init = async () => {
     try {
       this.rangeTimer = this.getDay(this.rangeDay);
-      this.timerKeys = Object.keys(this.rangeTimer);
+      if (Keychain.contains(this.CACHE_KEY)) {
+        const data = JSON.parse(Keychain.get(this.CACHE_KEY));
+        Object.keys(data).forEach((key) => {
+          this.rangeTimer[key] = data[key];
+        });
+        const date = new Date();
+        const year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        month = month >= 10 ? month : `0${month}`;
+        let day = date.getDate();
+        day = day >= 10 ? day : `0${day}`;
+        const today = `${year}-${month}-${day}`;
+        this.rangeTimer[today] = 0;
+        this.timerKeys = [today];
+      } else {
+        this.timerKeys = Object.keys(this.rangeTimer);
+      }
       await this.getAmountData();
     } catch (e) {
       console.log(e);
@@ -65,7 +80,10 @@ class Widget extends DmYY {
   getAmountData = async () => {
     let i = 0,
       page = 1;
-    do {
+    const timer = new Timer();
+    timer.repeats = true;
+    timer.timeInterval = 1000;
+    timer.schedule(async () => {
       const response = await this.getJingBeanBalanceDetail(page);
       console.log(
         `第${page}页：${response.code === "0" ? "请求成功" : "请求失败"}`
@@ -80,20 +98,19 @@ class Widget extends DmYY {
               const amount = Number(item.amount);
               this.rangeTimer[dates[0]] += amount;
             } else {
-              i = 1;
+              timer.invalidate();
+              this.isRender = true;
+              Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
               break;
             }
           }
-        } else {
-          console.log(`账号：数据异常`);
-          i = 1;
         }
-      } else {
-        console.log(`异常 第${page}页:${JSON.stringify(response)}`);
-        i = 1;
-        break;
       }
-    } while (i === 0);
+    });
+
+    // do {
+
+    // } while (i === 0);
   };
 
   getDay(dayNumber) {
@@ -242,17 +259,117 @@ class Widget extends DmYY {
     const widget = new ListWidget();
     let w;
     if (this.widgetFamily === "medium") {
-      this.drawImage();
-      widget.backgroundImage = this.drawContext.getImage();
-      w = await this.renderMedium(widget);
+      const timer = new Timer();
+      timer.repeats = true;
+      timer.timeInterval = 1000;
+      timer.schedule(async () => {
+        if (this.isRender) {
+          console.log("数据读取完毕，加载组件");
+          timer.invalidate();
+          this.drawImage();
+          widget.backgroundImage = this.drawContext.getImage();
+          w = await this.renderMedium(widget);
+          if (config.runsInWidget) {
+            Script.setWidget(w);
+            Script.complete();
+          } else {
+            await w.presentMedium();
+          }
+        }
+        console.log("数据读取中，请稍后");
+      });
+      return;
     } else if (this.widgetFamily === "large") {
       w = await this.renderLarge(widget);
     } else {
       w = await this.renderSmall(widget);
     }
-    return w;
+    Script.setWidget(w);
+    Script.complete();
   }
 }
-// @组件代码结束
 
-await Runing(Widget, "", true); //远程开发环境
+let M = null;
+
+if (config.runsInWidget) {
+  M = new Widget(args.widgetParameter || "");
+  await M.render();
+} else {
+  let { act, data, __arg, __size } = args.queryParameters;
+  M = new Widget(__arg || "");
+  if (__size) M.init(__size);
+  if (!act || !M["_actions"]) {
+    // 弹出选择菜单
+    const actions = M["_actions"];
+    const _actions = [
+      // 预览组件
+      async (debug = false) => {
+        let a = new Alert();
+        a.title = "预览组件";
+        a.message = "测试桌面组件在各种尺寸下的显示效果";
+        a.addAction("小尺寸 Small");
+        a.addAction("中尺寸 Medium");
+        a.addAction("大尺寸 Large");
+        a.addCancelAction("取消操作");
+        const funcs = [];
+        if (debug) {
+          for (let _ in actions) {
+            a.addAction(_);
+            funcs.push(actions[_].bind(M));
+          }
+          a.addDestructiveAction("停止调试");
+        }
+        let i = await a.presentSheet();
+        if (i === -1) return;
+        let w;
+        switch (i) {
+          case 0:
+            M.widgetFamily = "small";
+            w = await M.render();
+            await w.presentSmall();
+            break;
+          case 1:
+            M.widgetFamily = "medium";
+            await M.render();
+            break;
+          case 2:
+            M.widgetFamily = "large";
+            await M.render();
+            break;
+          default:
+            const func = funcs[i - 3];
+            if (func) await func();
+            break;
+        }
+
+        return i;
+      },
+    ];
+    const alert = new Alert();
+    alert.title = M.name;
+    alert.message = M.desc;
+    alert.addAction("预览组件");
+    for (let _ in actions) {
+      alert.addAction(_);
+      _actions.push(actions[_]);
+    }
+    alert.addCancelAction("取消操作");
+    const idx = await alert.presentSheet();
+    if (_actions[idx]) {
+      const func = _actions[idx];
+      await func();
+    }
+    return;
+  }
+  let _tmp = act
+    .split("-")
+    .map((_) => _[0].toUpperCase() + _.substr(1))
+    .join("");
+  let _act = `action${_tmp}`;
+  if (M[_act] && typeof M[_act] === "function") {
+    const func = M[_act].bind(M);
+    await func(data);
+  }
+}
+
+// @组件代码结束
