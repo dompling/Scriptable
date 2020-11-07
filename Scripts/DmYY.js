@@ -250,8 +250,10 @@ const Runing = async (Widget, default_args = "", isDebug = true) => {
   if (config.runsInWidget) {
     M = new Widget(args.widgetParameter || "");
     const W = await M.render();
-    Script.setWidget(W);
-    Script.complete();
+    if (W) {
+      Script.setWidget(W);
+      Script.complete();
+    }
   } else {
     let { act, data, __arg, __size } = args.queryParameters;
     M = new Widget(__arg || default_args || "");
@@ -402,28 +404,28 @@ const Runing = async (Widget, default_args = "", isDebug = true) => {
             case 0:
               M.widgetFamily = "small";
               w = await M.render();
-              await w.presentSmall();
+              w && (await w.presentSmall());
               break;
             case 1:
               M.widgetFamily = "medium";
               w = await M.render();
-              await w.presentMedium();
+              w && (await w.presentMedium());
               break;
             case 2:
               M.widgetFamily = "large";
               w = await M.render();
-              await w.presentLarge();
+              w && (await w.presentLarge());
               break;
             case 3:
               M.widgetFamily = "small";
               w = await M.render();
-              await w.presentSmall();
+              w && (await w.presentSmall());
               M.widgetFamily = "medium";
               w = await M.render();
-              await w.presentMedium();
+              w && (await w.presentMedium());
               M.widgetFamily = "large";
               w = await M.render();
-              await w.presentLarge();
+              w && (await w.presentLarge());
               break;
             default:
               const func = funcs[i - 4];
