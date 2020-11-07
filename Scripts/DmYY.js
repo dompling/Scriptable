@@ -177,6 +177,25 @@ class DmYY extends Base {
   _loadJDCk = async () => {
     try {
       this.CookiesData = await this.getCache("CookiesJD");
+      const CookieJD = await this.getCache("CookieJD");
+
+      if (CookieJD) {
+        const userName = CookieJD.match(/pt_pin=(.+?);/)[1];
+        const ck1 = {
+          cookie: CookieJD,
+          userName,
+        };
+        this.CookiesData.push(ck1);
+      }
+      const Cookie2JD = await this.getCache("Cookie2JD");
+      if (Cookie2JD) {
+        const userName = Cookie2JD.match(/pt_pin=(.+?);/)[1];
+        const ck2 = {
+          cookie: Cookie2JD,
+          userName,
+        };
+        this.CookiesData.push(ck2);
+      }
       return this.CookiesData;
     } catch (e) {
       console.log(e);
