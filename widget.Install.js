@@ -85,6 +85,7 @@ try {
       subscriptionList = JSON.parse(Keychain.get(cacheKey));
     }
     const _actions = [];
+    console.log(subscriptionList);
     subscriptionList.forEach((item) => {
       const { author } = item;
       mainAlert.addAction("作者：" + author);
@@ -109,7 +110,8 @@ try {
         const response = await new Request(url).loadJSON();
         delete response.apps;
         const data = [];
-        for (let item in subscriptionList) {
+        for (let i in subscriptionList) {
+          const item = subscriptionList[i];
           if (response.author === item.author) {
             data.push({ ...response, subscription: url });
           } else {
@@ -117,9 +119,9 @@ try {
           }
         }
         if (!subscriptionList.length)
-          data.push({ ...response, subscription: url });
+          data.push({ author: response.author, subscription: url });
         Keychain.set(cacheKey, JSON.stringify(data));
-        render();
+        notify("更新成功", "请重新运行本脚本");
       } catch (e) {
         console.log(e);
         notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
