@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: brown; icon-glyph: magic;
+// icon-color: cyan; icon-glyph: chart-line;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -67,6 +67,9 @@ class Widget extends DmYY {
       page = 1;
     do {
       const response = await this.getJingBeanBalanceDetail(page);
+      console.log(
+        `第${page}页：${response.code === "0" ? "请求成功" : "请求失败"}`
+      );
       if (response && response.code === "0") {
         page++;
         let detailList = response.jingDetailList;
