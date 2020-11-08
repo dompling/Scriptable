@@ -108,10 +108,6 @@ class Widget extends DmYY {
         }
       }
     });
-
-    // do {
-
-    // } while (i === 0);
   };
 
   getDay(dayNumber) {

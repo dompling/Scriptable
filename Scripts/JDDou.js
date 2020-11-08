@@ -12,7 +12,7 @@ class Widget extends DmYY {
     super(arg);
     this.name = "京东豆";
     this.en = "JDDou";
-    
+
     this.registerAction("设置背景图", this.setWidgetBackground);
     this.JDRun(module.filename, args);
   }
@@ -21,65 +21,70 @@ class Widget extends DmYY {
   beanCount = 0;
   incomeBean = 0;
   expenseBean = 0;
+  isRender = false;
+  timerKeys = [];
 
   init = async () => {
     try {
       await this.TotalBean();
-      await this.bean();
+      this.timerKeys = this.getDay(1);
+      await this.getAmountData();
     } catch (e) {
       console.log(e);
     }
   };
 
-  bean = async () => {
-    //前一天的0:0:0时间戳
-    // console.log(`北京时间零点时间戳:${parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000}`);
-    // console.log(`北京时间2020-10-28 06:16:05::${new Date("2020/10/28 06:16:05+08:00").getTime()}`)
-    const tm =
-      parseInt((Date.now() + 28800000) / 86400000) * 86400000 -
-      28800000 -
-      24 * 60 * 60 * 1000;
-    // 今天0:0:0时间戳
-    const tm1 =
-      parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000;
-    let page = 1,
-      t = 0;
-    do {
-      let response = await this.getJingBeanBalanceDetail(page);
-      console.log(`第${page}页`);
+
+  getAmountData = async () => {
+    let page = 1;
+    const timer = new Timer();
+    timer.repeats = true;
+    timer.timeInterval = 1000;
+    timer.schedule(async () => {
+      const response = await this.getJingBeanBalanceDetail(page);
+      console.log(
+        `第${page}页：${response.code === "0" ? "请求成功" : "请求失败"}`
+      );
       if (response && response.code === "0") {
         page++;
         let detailList = response.jingDetailList;
         if (detailList && detailList.length > 0) {
           for (let item of detailList) {
-            const date = item.date.replace(/-/g, "/") + "+08:00";
-            if (
-              tm <= new Date(date).getTime() &&
-              new Date(date).getTime() < tm1
-            ) {
-              //昨日的
+            const dates = item.date.split(" ");
+            if (this.timerKeys.indexOf(dates[0]) > -1) {
               const amount = Number(item.amount);
-              if (amount > 0) {
-                this.incomeBean += amount;
-              }
-              if (amount < 0) {
-                this.expenseBean += amount;
-              }
-            } else if (tm > new Date(date).getTime()) {
-              //前天的
-              t = 1;
+              if (amount > 0) this.incomeBean += amount;
+              if (amount < 0) this.expenseBean += amount;
+            } else {
+              timer.invalidate();
+              this.isRender = true;
+              Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
               break;
             }
           }
-        } else {
-          console.log(`账号${this.jdIndex}：${this.userName}\n数据异常`);
-          t = 1;
         }
       }
-    } while (t === 0);
-    // console.log(`昨日收入：${$.incomeBean}个京豆 🐶`);
-    // console.log(`昨日支出：${$.expenseBean}个京豆 🐶`)
+    });
   };
+
+  getDay(dayNumber) {
+    let data = [];
+    let i = dayNumber;
+    do {
+      const today = new Date();
+      const year = today.getFullYear();
+      const targetday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24 * i;
+      today.setTime(targetday_milliseconds); //注意，这行是关键代码
+      let month = today.getMonth() + 1;
+      month = month >= 10 ? month : `0${month}`;
+      let day = today.getDate();
+      day = day >= 10 ? day : `0${day}`;
+      data.push = [`${year}-${month}-${day}`];
+      i--;
+    } while (i >= 0);
+    return data;
+  }
+
 
   TotalBean = async () => {
     const options = {
@@ -235,7 +240,24 @@ class Widget extends DmYY {
     }
     widget.addSpacer(20);
     if (this.widgetFamily === "medium") {
-      return await this.renderMedium(widget);
+      const timer = new Timer();
+      timer.repeats = true;
+      timer.timeInterval = 1000;
+      timer.schedule(async () => {
+        console.log("数据读取中，请稍后");
+        if (this.isRender) {
+          console.log("数据读取完毕，加载组件");
+          timer.invalidate();
+          w = await this.renderMedium(widget);
+          if (config.runsInWidget) {
+            Script.setWidget(w);
+            Script.complete();
+          } else {
+            await w.presentMedium();
+          }
+        }
+      });
+      return;
     } else if (this.widgetFamily === "large") {
       return await this.renderLarge(widget);
     } else {
