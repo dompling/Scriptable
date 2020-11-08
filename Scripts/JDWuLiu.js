@@ -16,8 +16,6 @@ class Widget extends DmYY {
     this.JDRun(module.filename, args);
   }
 
-  imageBackground = true;    // 背景图开启
-  forceImageUpdate = false;  // 更换背景 true ,更换之后自行改为 false
   prefix = "boxjs.net";
 
   orderList = [];
