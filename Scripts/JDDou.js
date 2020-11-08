@@ -249,7 +249,7 @@ class Widget extends DmYY {
         if (this.isRender) {
           console.log("数据读取完毕，加载组件");
           timer.invalidate();
-          w = await this.renderMedium(widget);
+          const w = await this.renderMedium(widget);
           if (config.runsInWidget) {
             Script.setWidget(w);
             Script.complete();
