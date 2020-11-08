@@ -79,7 +79,7 @@ class Widget extends DmYY {
       month = month >= 10 ? month : `0${month}`;
       let day = today.getDate();
       day = day >= 10 ? day : `0${day}`;
-      data.push = [`${year}-${month}-${day}`];
+      data.push([`${year}-${month}-${day}`]);
       i--;
     } while (i >= 0);
     return data;
