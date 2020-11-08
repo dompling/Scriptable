@@ -18,7 +18,7 @@ const scripts = [
   {
     moduleName: "「小件件」开发环境",
     url:
-      "https://gitee.com/im3x/Scriptables/raw/v2-dev/Scripts/%E3%80%8C%E5%B0%8F%E4%BB%B6%E4%BB%B6%E3%80%8D%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.js",
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/%E3%80%8C%E5%B0%8F%E4%BB%B6%E4%BB%B6%E3%80%8D%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.js",
   },
   {
     moduleName: "2YaInstall",
