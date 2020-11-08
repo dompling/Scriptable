@@ -121,8 +121,8 @@ class DmYY extends Base {
 
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
-    const isExistImage = this.getBackgroundImage();
-    if (isExistImage) {
+    const backImage = this.getBackgroundImage();
+    if (backImage) {
       widget.backgroundImage = await this.shadowImage(
         backImage,
         "#000",
@@ -134,7 +134,7 @@ class DmYY extends Base {
 
 
   setWidgetBackground = async () => {
-    const backImage = this.chooseImg();
+    const backImage = await this.chooseImg();
     await this.setBackgroundImage(backImage, false);
     return backImage;
   }
