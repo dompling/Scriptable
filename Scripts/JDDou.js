@@ -12,8 +12,9 @@ class Widget extends DmYY {
     super(arg);
     this.name = "京东豆";
     this.en = "JDDou";
-    this.JDRun(module.filename, args);
+    
     this.registerAction("设置背景图", this.setWidgetBackground);
+    this.JDRun(module.filename, args);
   }
 
   imageBackground = true; // 背景图开启
