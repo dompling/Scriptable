@@ -135,7 +135,7 @@ class DmYY extends Base {
 
   setWidgetBackground = async () => {
     const backImage = await this.chooseImg();
-    await this.setBackgroundImage(backImage, false);
+    await this.setBackgroundImage(backImage, true);
     return backImage;
   }
 
