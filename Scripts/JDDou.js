@@ -13,6 +13,7 @@ class Widget extends DmYY {
     this.name = "京东豆";
     this.en = "JDDou";
     this.JDRun(module.filename, args);
+    this.registerAction("设置背景图", this.setWidgetBackground);
   }
 
   imageBackground = true; // 背景图开启
@@ -227,7 +228,7 @@ class Widget extends DmYY {
   async render() {
     await this.init();
     const widget = new ListWidget();
-    await this.setWidgetBackgroundImage(widget);
+    await this.getWidgetBackgroundImage(widget);
     const header = widget.addStack();
     if (this.widgetFamily !== "small") {
       this.renderJDHeader(header);
