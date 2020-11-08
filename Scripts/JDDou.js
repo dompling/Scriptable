@@ -52,13 +52,14 @@ class Widget extends DmYY {
           for (let item of detailList) {
             const dates = item.date.split(" ");
             if (this.timerKeys.indexOf(dates[0]) > -1) {
-              const amount = Number(item.amount);
-              if (amount > 0) this.incomeBean += amount;
-              if (amount < 0) this.expenseBean += amount;
+              if (this.timerKeys[0] === dates[0]) {
+                const amount = Number(item.amount);
+                if (amount > 0) this.incomeBean += amount;
+                if (amount < 0) this.expenseBean += amount;
+              }
             } else {
               timer.invalidate();
               this.isRender = true;
-              Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
               break;
             }
           }
@@ -67,17 +68,21 @@ class Widget extends DmYY {
     });
   };
 
-  getDay() {
+  getDay(dayNumber) {
     let data = [];
-    const today = new Date();
-    const year = today.getFullYear();
-    const targetday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24 * 1;
-    today.setTime(targetday_milliseconds); //注意，这行是关键代码
-    let month = today.getMonth() + 1;
-    month = month >= 10 ? month : `0${month}`;
-    let day = today.getDate();
-    day = day >= 10 ? day : `0${day}`;
-    data.push(`${year}-${month}-${day}`);
+    let i = dayNumber;
+    do {
+      const today = new Date();
+      const year = today.getFullYear();
+      const targetday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24 * i;
+      today.setTime(targetday_milliseconds); //注意，这行是关键代码
+      let month = today.getMonth() + 1;
+      month = month >= 10 ? month : `0${month}`;
+      let day = today.getDate();
+      day = day >= 10 ? day : `0${day}`;
+      data.push(`${year}-${month}-${day}`);
+      i--;
+    } while (i >= 0);
     return data;
   }
 
