@@ -5,6 +5,14 @@
   "apps": [
     {
       "version": "1.0.0",
+      "description": "一键安装所有包",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
+      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "name": "2YaInstall",
+      "title": "一键安装所有包"
+    },
+    {
+      "version": "1.0.0",
       "description": "小件件作者三行，感谢提供帮助",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/%E3%80%8C%E5%B0%8F%E4%BB%B6%E4%BB%B6%E3%80%8D%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.js",
       "thumb": "https://im3x.cn/images/logo.png",
