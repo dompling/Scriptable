@@ -67,21 +67,17 @@ class Widget extends DmYY {
     });
   };
 
-  getDay(dayNumber) {
+  getDay() {
     let data = [];
-    let i = dayNumber;
-    do {
-      const today = new Date();
-      const year = today.getFullYear();
-      const targetday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24 * i;
-      today.setTime(targetday_milliseconds); //注意，这行是关键代码
-      let month = today.getMonth() + 1;
-      month = month >= 10 ? month : `0${month}`;
-      let day = today.getDate();
-      day = day >= 10 ? day : `0${day}`;
-      data.push([`${year}-${month}-${day}`]);
-      i--;
-    } while (i >= 0);
+    const today = new Date();
+    const year = today.getFullYear();
+    const targetday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24 * 1;
+    today.setTime(targetday_milliseconds); //注意，这行是关键代码
+    let month = today.getMonth() + 1;
+    month = month >= 10 ? month : `0${month}`;
+    let day = today.getDate();
+    day = day >= 10 ? day : `0${day}`;
+    data.push([`${year}-${month}-${day}`]);
     return data;
   }
 
