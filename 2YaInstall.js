@@ -23,12 +23,12 @@ const scripts = [
   {
     moduleName: "Calendar",
     url:
-      "https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/Components/Calendar.js",
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js",
   },
   {
     moduleName: "Birthday",
     url:
-      "https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/index.js",
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js",
   },
   {
     moduleName: "historyToDay",

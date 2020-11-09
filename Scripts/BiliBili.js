@@ -70,7 +70,7 @@ class Widget extends DmYY {
     body.url = url;
     if (this.widgetFamily !== "small") {
       const imageView = body.addStack();
-      imageView.size = new Size(45, 45);
+      imageView.size = new Size(43, 43);
       imageView.cornerRadius = 5;
       const image = await this.$request.get(cover, "IMG");
       imageView.backgroundImage = image;
@@ -81,9 +81,11 @@ class Widget extends DmYY {
     textView.layoutVertically();
 
     const descText = textView.addText(title);
-    descText.font = Font.boldSystemFont(12);
+    descText.font = Font.boldSystemFont(14);
     descText.textColor = this.widgetColor;
     descText.lineLimit = 1;
+
+    textView.addSpacer(3);
 
     const subContent = textView.addText(pub_index);
     subContent.font = Font.boldSystemFont(10);
@@ -141,7 +143,7 @@ class Widget extends DmYY {
     } else {
       await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     }
-    widget.addSpacer(20);
+    widget.addSpacer(10);
     if (this.widgetFamily === "medium") {
       return await this.renderMedium(widget);
     } else if (this.widgetFamily === "large") {

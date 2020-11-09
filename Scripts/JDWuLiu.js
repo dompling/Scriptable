@@ -36,7 +36,6 @@ class Widget extends DmYY {
 
   init = async () => {
     try {
-      await this.JDRun(module.filename, args);
       this.opts.headers.Cookie = this.JDCookie.cookie;
       this.orderList = await this.getOrderList();
     } catch (e) {
@@ -125,7 +124,11 @@ class Widget extends DmYY {
           "IMG"
         );
         const cartView = container.addStack();
-        cartView.size = new Size(285, 50);
+        if (this.widgetFamily === "large") {
+          cartView.size = new Size(285, 150);
+        } else {
+          cartView.size = new Size(285, 50);
+        }
         bg.imageSize = new Size(75, 50);
         cartView.addImage(bg);
       }

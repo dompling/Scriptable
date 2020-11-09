@@ -73,7 +73,8 @@ class DmYY {
     try {
       const url = `http://${this.prefix}/query/boxdata`;
       const boxdata = await this.$request.get(url);
-      return boxdata.datas[key];
+      if (key && boxdata.datas[key]) return boxdata.datas[key];
+      return boxdata.datas;
     } catch (e) {
       console.log(e);
       return false;
@@ -366,7 +367,9 @@ class DmYY {
   async renderHeader(widget, icon, title, color = false) {
     let header = widget.addStack();
     header.centerAlignContent();
-    let _icon = header.addImage(await this.$request.get(icon, "IMG"));
+    const image = await this.$request.get(icon, "IMG");
+    console.log(image);
+    let _icon = header.addImage(image);
     _icon.imageSize = new Size(14, 14);
     _icon.cornerRadius = 4;
     header.addSpacer(10);
