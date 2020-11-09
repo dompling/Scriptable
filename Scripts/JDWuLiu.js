@@ -89,7 +89,6 @@ class Widget extends DmYY {
       imageView.cornerRadius = 5;
       imageView.url = product.skuLink;
       const image = await this.$request.get(product.image, "IMG");
-      image.imageSize = new Size(300, 300);
       imageView.backgroundImage = image;
       body.addSpacer(10);
     }
