@@ -21,7 +21,7 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY和[小件件]组件,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
+      "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDWuLiu",
@@ -30,7 +30,7 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY和[小件件]组件,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
+      "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDou",
@@ -39,11 +39,19 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY和[小件件]组件,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
+      "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDou",
       "title": "京东豆走势"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "name": "BiliBili",
+      "title": "哔哩哔哩今日番剧"
     }
   ]
 }
