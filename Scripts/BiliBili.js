@@ -4,6 +4,7 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
+const { json } = require("body-parser");
 const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
@@ -16,6 +17,7 @@ class Widget extends DmYY {
       "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
     config.runsInApp &&
       this.registerAction("设置背景图", this.setWidgetBackground);
+    this.cacheName = this.md5(`dataSouce_${this.en}`);
   }
 
   today = "";
@@ -27,7 +29,16 @@ class Widget extends DmYY {
       const month = today.getMonth() + 1;
       const day = today.getDate();
       this.today = `${month}-${day}`;
-      this.dataSource = await this.getDramaList();
+      if (Keychain.contains(this.cacheName)) {
+        const dataSource = JSON.parse(Keychain.get(this.cacheName));
+        if (dataSource[this.today]) {
+          this.dataSource = dataSource[this.today].seasons;
+        } else {
+          this.dataSource = await this.getDramaList();
+        }
+      } else {
+        this.dataSource = await this.getDramaList();
+      }
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +51,13 @@ class Widget extends DmYY {
       if (response.code === 0 && response.result.length > 0) {
         const dataSource = response.result;
         const result = dataSource.find((item) => item.date === this.today);
-        if (result) return result.seasons;
+        if (result) {
+          Keychain.set(
+            this.cacheName,
+            JSON.stringify({ [this.today]: result })
+          );
+          return result.seasons;
+        }
       }
       return false;
     } catch (e) {
