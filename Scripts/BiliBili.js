@@ -1,10 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: comment-dollar;
+// icon-color: teal; icon-glyph: tv;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
-const { json } = require("body-parser");
 const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
@@ -143,7 +142,7 @@ class Widget extends DmYY {
     await this.getWidgetBackgroundImage(widget);
     const header = widget.addStack();
     if (this.widgetFamily !== "small") {
-      this.renderJDHeader(header);
+      await this.renderJDHeader(header);
     } else {
       await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     }
