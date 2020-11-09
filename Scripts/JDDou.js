@@ -1,6 +1,12 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: comment-dollar;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: comment-dollar;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: teal; icon-glyph: comment-dollar;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -12,17 +18,21 @@ class Widget extends DmYY {
     super(arg);
     this.name = "京东豆";
     this.en = "JDDou";
-
-    this.registerAction("设置背景图", this.setWidgetBackground);
     this.JDRun(module.filename, args);
   }
 
-  prefix = "boxjs.net"
+  prefix = "boxjs.net";
   beanCount = 0;
   incomeBean = 0;
   expenseBean = 0;
   isRender = false;
   timerKeys = [];
+
+  JDCookie = {
+    cookie: "",
+    userName: "",
+  };
+  CookiesData = [];
 
   init = async () => {
     try {
@@ -33,7 +43,6 @@ class Widget extends DmYY {
       console.log(e);
     }
   };
-
 
   getAmountData = async () => {
     let page = 1;
@@ -85,7 +94,6 @@ class Widget extends DmYY {
     } while (i >= 0);
     return data;
   }
-
 
   TotalBean = async () => {
     const options = {
@@ -146,7 +154,7 @@ class Widget extends DmYY {
         return JSON.parse(str);
       } catch (e) {
         console.log(e);
-        return str;
+        return [];
       }
     }
     console.log("It is not a string!");
@@ -158,7 +166,7 @@ class Widget extends DmYY {
 
     const viewer = container.addStack();
     viewer.size = new Size(90, 25);
-    const jdD_icon = await this.getImageByUrl(icon);
+    const jdD_icon = await this.$request.get(icon, "IMG");
     const imageElemView = viewer.addImage(jdD_icon);
     imageElemView.centerAlignImage();
     imageElemView.imageSize = new Size(25, 25);
@@ -174,7 +182,7 @@ class Widget extends DmYY {
     const descView = container.addStack();
     descView.size = new Size(90, 30);
     const descTextItem = descView.addText(desc);
-    descTextItem.textColor = new Color("#fff");
+    descTextItem.textColor = this.widgetColor;
     descTextItem.font = Font.lightSystemFont(16);
     descTextItem.centerAlignText();
 
@@ -218,7 +226,7 @@ class Widget extends DmYY {
   renderLarge = async (w) => {
     const text = w.addText("暂不支持");
     text.font = Font.boldSystemFont(20);
-    text.textColor = new Color("#fff");
+    text.textColor = this.widgetColor;
     return w;
   };
 
@@ -245,17 +253,20 @@ class Widget extends DmYY {
       timer.repeats = true;
       timer.timeInterval = 1000;
       timer.schedule(async () => {
-        console.log("数据读取中，请稍后");
-        if (this.isRender) {
-          console.log("数据读取完毕，加载组件");
-          timer.invalidate();
-          const w = await this.renderMedium(widget);
-          if (config.runsInWidget) {
-            Script.setWidget(w);
-            Script.complete();
-          } else {
-            await w.presentMedium();
+        try {
+          if (this.isRender) {
+            timer.invalidate();
+            const w = await this.renderMedium(widget);
+            if (config.runsInWidget) {
+              Script.setWidget(w);
+              Script.complete();
+            } else {
+              await w.presentMedium();
+            }
+            console.log("数据读取完毕，加载组件");
           }
+        } catch (e) {
+          console.log(e);
         }
       });
       return;
@@ -265,8 +276,128 @@ class Widget extends DmYY {
       return await this.renderSmall(widget);
     }
   }
+
+  JDRun = (filename, args) => {
+    if (config.runsInApp) {
+      this.registerAction("设置背景图", this.setWidgetBackground);
+      this.registerAction("输入京东 CK", this.inputJDck);
+      this.registerAction("选择京东 CK", this.actionSettings);
+    }
+    let _md5 = this.md5(filename + this.en);
+    this.CACHE_KEY = `cache_${_md5}`;
+    this.JDindex = parseInt(args.widgetParameter) || undefined;
+    this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
+    try {
+      this.JDCookie = this.settings[this.en] || {
+        cookie: "",
+        userName: "",
+      };
+      if (this.JDindex !== undefined) {
+        this.JDCookie = this.settings.JDAccount[this.JDindex];
+      }
+      if (!this.JDCookie.cookie) {
+        throw "京东 CK 获取失败";
+      }
+      return true;
+    } catch (e) {
+      this.notify("错误提示", e);
+      return false;
+    }
+  };
+
+  renderJDHeader = async (header) => {
+    header.centerAlignContent();
+    await this.renderHeader(header, this.logo, this.name, this.widgetColor);
+    header.addSpacer(140);
+    const headerMore = header.addStack();
+    headerMore.url = "https://home.m.jd.com/myJd/home.action";
+    headerMore.setPadding(1, 10, 1, 10);
+    headerMore.cornerRadius = 10;
+    headerMore.backgroundColor = new Color("#fff", 0.5);
+    const textItem = headerMore.addText(this.JDCookie.userName);
+    textItem.font = Font.boldSystemFont(12);
+    textItem.textColor = this.widgetColor;
+    textItem.lineLimit = 1;
+    textItem.rightAlignText();
+    return header;
+  };
+
+  // 加载京东 Ck 节点列表
+  _loadJDCk = async () => {
+    try {
+      const CookiesData = await this.getCache("CookiesJD");
+      if (CookiesData) {
+        this.CookiesData = this.transforJSON(CookiesData);
+      }
+      const CookieJD = await this.getCache("CookieJD");
+      if (CookieJD) {
+        const userName = CookieJD.match(/pt_pin=(.+?);/)[1];
+        const ck1 = {
+          cookie: CookieJD,
+          userName,
+        };
+        this.CookiesData.push(ck1);
+      }
+      const Cookie2JD = await this.getCache("Cookie2JD");
+      if (Cookie2JD) {
+        const userName = Cookie2JD.match(/pt_pin=(.+?);/)[1];
+        const ck2 = {
+          cookie: Cookie2JD,
+          userName,
+        };
+        this.CookiesData.push(ck2);
+      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      this.CookiesData = [];
+      return false;
+    }
+  };
+
+  async inputJDck() {
+    const a = new Alert();
+    a.title = "京东账号 Ck";
+    a.message = "手动输入京东 Ck";
+    a.addTextField("昵称", this.JDCookie.userName);
+    a.addTextField("Cookie", this.JDCookie.cookie);
+    a.addAction("确定");
+    a.addCancelAction("取消");
+    const id = await a.presentAlert();
+    if (id === -1) return;
+    this.JDCookie.userName = a.textFieldValue(0);
+    this.JDCookie.cookie = a.textFieldValue(1);
+    // 保存到本地
+    this.settings[this.en] = this.JDCookie;
+    this.saveSettings();
+  }
+
+  async actionSettings() {
+    try {
+      const table = new UITable();
+      if (!(await this._loadJDCk())) throw "BoxJS 数据读取失败";
+      // 如果是节点，则先远程获取
+      this.CookiesData.map((t) => {
+        const r = new UITableRow();
+        r.addText(t.userName);
+        r.onSelect = (n) => {
+          this.settings[this.en] = t;
+          this.saveSettings();
+        };
+        table.addRow(r);
+      });
+      let body = "京东 Ck 缓存成功，根据下标选择相应的 Ck";
+      if (this.settings[this.en]) {
+        body += "，或者使用当前选中Ck：" + this.settings[this.en].userName;
+      }
+      this.notify(this.name, body);
+      table.present(false);
+    } catch (e) {
+      this.notify(this.name, e);
+    }
+  }
 }
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, "", true); //远程开发环境
+await Runing(Widget, "", false); //远程开发环境

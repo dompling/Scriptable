@@ -1,27 +1,24 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: map-pin;
-if (typeof require === "undefined") require = importModule;
-const { Base } = require("./「小件件」开发环境");
+
 /*
  * Author: 2Ya
  * Github: https://github.com/dompling
  */
 
-class DmYY extends Base {
+class DmYY {
   constructor(arg) {
-    super(arg);
+    this.arg = arg;
+    this._actions = {};
+    this.init();
+    this.backgroundImage = this.getBackgroundImage();
+    this.widgetColor = this.backgroundImage
+      ? new Color("#fff")
+      : Color.dynamic(Color.black(), Color.white());
   }
 
-  name = "";
-  en = "";
-  JDCookie = {
-    cookie: "",
-    userName: "",
-  };
   prefix = "boxjs.net";
-  CookiesData = [];
-  defaultCacheData = {};
   isNight = Device.isUsingDarkAppearance();
 
   // 获取 Request 对象
@@ -76,28 +73,10 @@ class DmYY extends Base {
     try {
       const url = `http://${this.prefix}/query/boxdata`;
       const boxdata = await this.$request.get(url);
-      let data;
-      const cacheKeys = Object.keys(this.defaultCacheData);
-      if (cacheKeys.length) {
-        data = {};
-        cacheKeys.forEach((params) => {
-          const datasKey = `${key}.${params}`;
-          const dataValue = boxdata.datas[datasKey];
-          if (dataValue) {
-            data[params] = dataValue;
-          }
-        });
-      } else {
-        const cacheValue = boxdata.datas[key];
-        if (cacheValue) {
-          data = this.transforJSON(cacheValue);
-        }
-      }
-      return data;
+      return boxdata.datas[key];
     } catch (e) {
-      this.notify("2丫消息", "请检查代理是否开启，并接入了 BoxJs");
       console.log(e);
-      return [];
+      return false;
     }
   };
 
@@ -121,10 +100,9 @@ class DmYY extends Base {
 
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
-    const backImage = this.getBackgroundImage();
-    if (backImage) {
+    if (this.backgroundImage) {
       widget.backgroundImage = await this.shadowImage(
-        backImage,
+        this.backgroundImage,
         "#000",
         this.isNight ? 0.7 : 0.4
       );
@@ -132,114 +110,374 @@ class DmYY extends Base {
     return widget;
   };
 
-
   setWidgetBackground = async () => {
-    const backImage = await this.chooseImg();
-    await this.setBackgroundImage(backImage, true);
-    return backImage;
-  }
-
-  JDRun = (filename, args) => {
-    this.JDindex = parseInt(args.widgetParameter) || undefined;
-    this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
-    this.JDCookie = this.settings[this.en] || {
-      cookie: "",
-      userName: "",
-    };
-    if (this.JDindex !== undefined) {
-      this.JDCookie = this.settings.JDAccount[this.JDindex];
-    }
-    let _md5 = this.md5(filename + this.en + this.JDCookie.cookie);
-    this.CACHE_KEY = `cache_${_md5}`;
-    // 注册操作菜单
-    this.registerAction("输入京东 CK", this.inputJDck);
-    this.registerAction("选择京东 CK", this.actionSettings);
-  };
-
-  renderJDHeader = async (header) => {
-    header.centerAlignContent();
-    await this.renderHeader(header, this.logo, this.name, new Color("#fff"));
-    header.addSpacer(140);
-    const headerMore = header.addStack();
-    headerMore.url = "https://home.m.jd.com/myJd/home.action";
-    headerMore.setPadding(1, 10, 1, 10);
-    headerMore.cornerRadius = 10;
-    headerMore.backgroundColor = new Color("#fff", 0.5);
-    const textItem = headerMore.addText(this.JDCookie.userName);
-    textItem.font = Font.boldSystemFont(12);
-    textItem.textColor = new Color("#fff");
-    textItem.lineLimit = 1;
-    textItem.rightAlignText();
-    return header;
-  };
-
-  // 加载京东 Ck 节点列表
-  _loadJDCk = async () => {
-    try {
-      this.CookiesData = await this.getCache("CookiesJD");
-      const CookieJD = await this.getCache("CookieJD");
-
-      if (CookieJD) {
-        const userName = CookieJD.match(/pt_pin=(.+?);/)[1];
-        const ck1 = {
-          cookie: CookieJD,
-          userName,
-        };
-        this.CookiesData.push(ck1);
-      }
-      const Cookie2JD = await this.getCache("Cookie2JD");
-      if (Cookie2JD) {
-        const userName = Cookie2JD.match(/pt_pin=(.+?);/)[1];
-        const ck2 = {
-          cookie: Cookie2JD,
-          userName,
-        };
-        this.CookiesData.push(ck2);
-      }
-      return this.CookiesData;
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  async inputJDck() {
-    const a = new Alert();
-    a.title = "京东账号 Ck";
-    a.message = "手动输入京东 Ck";
-    a.addTextField("昵称", this.JDCookie.userName);
-    a.addTextField("Cookie", this.JDCookie.cookie);
-    a.addAction("确定");
-    a.addCancelAction("取消");
-    const id = await a.presentAlert();
+    const alert = new Alert();
+    alert.title = "设置背景图";
+    alert.message = "清空或设置新的背景图";
+    alert.addAction("设置新背景图");
+    alert.addAction("清空背景");
+    alert.addCancelAction("取消");
+    const actions = [
+      async () => {
+        const backImage = await this.chooseImg();
+        await this.setBackgroundImage(backImage, true);
+      },
+      () => {
+        this.setBackgroundImage(false, true);
+      },
+    ];
+    const id = await alert.presentAlert();
     if (id === -1) return;
-    this.JDCookie.userName = a.textFieldValue(0);
-    this.JDCookie.cookie = a.textFieldValue(1);
-    // 保存到本地
-    this.settings[this.en] = this.JDCookie;
-    this.saveSettings();
+    actions[id] && actions[id].call(this);
+  };
+
+  init(widgetFamily = config.widgetFamily) {
+    // 组件大小：small,medium,large
+    this.widgetFamily = widgetFamily;
+    this.SETTING_KEY = this.md5(Script.name());
+    // 文件管理器
+    // 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
+    this.FILE_MGR = FileManager[
+      module.filename.includes("Documents/iCloud~") ? "iCloud" : "local"
+    ]();
+    // 本地，用于存储图片等
+    this.FILE_MGR_LOCAL = FileManager.local();
+    this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
+      this.FILE_MGR_LOCAL.documentsDirectory(),
+      `bg_${this.SETTING_KEY}.jpg`
+    );
+    this.settings = this.getSettings();
   }
 
-  async actionSettings() {
-    const table = new UITable();
-    // 如果是节点，则先远程获取
-    if (this.CookiesData.length === 0) {
-      this.settings.JDAccount = await this._loadJDCk();
+  /**
+   * 注册点击操作菜单
+   * @param {string} name 操作函数名
+   * @param {func} func 点击后执行的函数
+   */
+  registerAction(name, func) {
+    this._actions[name] = func.bind(this);
+  }
+
+  /**
+   * base64 编码字符串
+   * @param {string} str 要编码的字符串
+   */
+  base64Encode(str) {
+    const data = Data.fromString(str);
+    return data.toBase64String();
+  }
+
+  /**
+   * base64解码数据 返回字符串
+   * @param {string} b64 base64编码的数据
+   */
+  base64Decode(b64) {
+    const data = Data.fromBase64String(b64);
+    return data.toRawString();
+  }
+
+  /**
+   * md5 加密字符串
+   * @param {string} str 要加密成md5的数据
+   */
+  md5(str) {
+    function d(n, t) {
+      var r = (65535 & n) + (65535 & t);
+      return (((n >> 16) + (t >> 16) + (r >> 16)) << 16) | (65535 & r);
     }
-    this.CookiesData.map((t) => {
-      const r = new UITableRow();
-      r.addText(t.userName);
-      r.onSelect = (n) => {
-        this.settings[this.en] = t;
-        this.saveSettings();
-      };
-      table.addRow(r);
-    });
-    let body = "京东 Ck 缓存成功，根据下标选择相应的 Ck";
-    if (this.settings[this.en]) {
-      body += "，或者使用当前选中Ck：" + this.settings[this.en].userName;
+    function f(n, t, r, e, o, u) {
+      return d(((c = d(d(t, n), d(e, u))) << (f = o)) | (c >>> (32 - f)), r);
+      var c, f;
     }
-    this.notify(this.name, body);
-    table.present(false);
+    function l(n, t, r, e, o, u, c) {
+      return f((t & r) | (~t & e), n, t, o, u, c);
+    }
+    function v(n, t, r, e, o, u, c) {
+      return f((t & e) | (r & ~e), n, t, o, u, c);
+    }
+    function g(n, t, r, e, o, u, c) {
+      return f(t ^ r ^ e, n, t, o, u, c);
+    }
+    function m(n, t, r, e, o, u, c) {
+      return f(r ^ (t | ~e), n, t, o, u, c);
+    }
+    function i(n, t) {
+      var r, e, o, u;
+      (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
+      for (
+        var c = 1732584193,
+          f = -271733879,
+          i = -1732584194,
+          a = 271733878,
+          h = 0;
+        h < n.length;
+        h += 16
+      )
+        (c = l((r = c), (e = f), (o = i), (u = a), n[h], 7, -680876936)),
+          (a = l(a, c, f, i, n[h + 1], 12, -389564586)),
+          (i = l(i, a, c, f, n[h + 2], 17, 606105819)),
+          (f = l(f, i, a, c, n[h + 3], 22, -1044525330)),
+          (c = l(c, f, i, a, n[h + 4], 7, -176418897)),
+          (a = l(a, c, f, i, n[h + 5], 12, 1200080426)),
+          (i = l(i, a, c, f, n[h + 6], 17, -1473231341)),
+          (f = l(f, i, a, c, n[h + 7], 22, -45705983)),
+          (c = l(c, f, i, a, n[h + 8], 7, 1770035416)),
+          (a = l(a, c, f, i, n[h + 9], 12, -1958414417)),
+          (i = l(i, a, c, f, n[h + 10], 17, -42063)),
+          (f = l(f, i, a, c, n[h + 11], 22, -1990404162)),
+          (c = l(c, f, i, a, n[h + 12], 7, 1804603682)),
+          (a = l(a, c, f, i, n[h + 13], 12, -40341101)),
+          (i = l(i, a, c, f, n[h + 14], 17, -1502002290)),
+          (c = v(
+            c,
+            (f = l(f, i, a, c, n[h + 15], 22, 1236535329)),
+            i,
+            a,
+            n[h + 1],
+            5,
+            -165796510
+          )),
+          (a = v(a, c, f, i, n[h + 6], 9, -1069501632)),
+          (i = v(i, a, c, f, n[h + 11], 14, 643717713)),
+          (f = v(f, i, a, c, n[h], 20, -373897302)),
+          (c = v(c, f, i, a, n[h + 5], 5, -701558691)),
+          (a = v(a, c, f, i, n[h + 10], 9, 38016083)),
+          (i = v(i, a, c, f, n[h + 15], 14, -660478335)),
+          (f = v(f, i, a, c, n[h + 4], 20, -405537848)),
+          (c = v(c, f, i, a, n[h + 9], 5, 568446438)),
+          (a = v(a, c, f, i, n[h + 14], 9, -1019803690)),
+          (i = v(i, a, c, f, n[h + 3], 14, -187363961)),
+          (f = v(f, i, a, c, n[h + 8], 20, 1163531501)),
+          (c = v(c, f, i, a, n[h + 13], 5, -1444681467)),
+          (a = v(a, c, f, i, n[h + 2], 9, -51403784)),
+          (i = v(i, a, c, f, n[h + 7], 14, 1735328473)),
+          (c = g(
+            c,
+            (f = v(f, i, a, c, n[h + 12], 20, -1926607734)),
+            i,
+            a,
+            n[h + 5],
+            4,
+            -378558
+          )),
+          (a = g(a, c, f, i, n[h + 8], 11, -2022574463)),
+          (i = g(i, a, c, f, n[h + 11], 16, 1839030562)),
+          (f = g(f, i, a, c, n[h + 14], 23, -35309556)),
+          (c = g(c, f, i, a, n[h + 1], 4, -1530992060)),
+          (a = g(a, c, f, i, n[h + 4], 11, 1272893353)),
+          (i = g(i, a, c, f, n[h + 7], 16, -155497632)),
+          (f = g(f, i, a, c, n[h + 10], 23, -1094730640)),
+          (c = g(c, f, i, a, n[h + 13], 4, 681279174)),
+          (a = g(a, c, f, i, n[h], 11, -358537222)),
+          (i = g(i, a, c, f, n[h + 3], 16, -722521979)),
+          (f = g(f, i, a, c, n[h + 6], 23, 76029189)),
+          (c = g(c, f, i, a, n[h + 9], 4, -640364487)),
+          (a = g(a, c, f, i, n[h + 12], 11, -421815835)),
+          (i = g(i, a, c, f, n[h + 15], 16, 530742520)),
+          (c = m(
+            c,
+            (f = g(f, i, a, c, n[h + 2], 23, -995338651)),
+            i,
+            a,
+            n[h],
+            6,
+            -198630844
+          )),
+          (a = m(a, c, f, i, n[h + 7], 10, 1126891415)),
+          (i = m(i, a, c, f, n[h + 14], 15, -1416354905)),
+          (f = m(f, i, a, c, n[h + 5], 21, -57434055)),
+          (c = m(c, f, i, a, n[h + 12], 6, 1700485571)),
+          (a = m(a, c, f, i, n[h + 3], 10, -1894986606)),
+          (i = m(i, a, c, f, n[h + 10], 15, -1051523)),
+          (f = m(f, i, a, c, n[h + 1], 21, -2054922799)),
+          (c = m(c, f, i, a, n[h + 8], 6, 1873313359)),
+          (a = m(a, c, f, i, n[h + 15], 10, -30611744)),
+          (i = m(i, a, c, f, n[h + 6], 15, -1560198380)),
+          (f = m(f, i, a, c, n[h + 13], 21, 1309151649)),
+          (c = m(c, f, i, a, n[h + 4], 6, -145523070)),
+          (a = m(a, c, f, i, n[h + 11], 10, -1120210379)),
+          (i = m(i, a, c, f, n[h + 2], 15, 718787259)),
+          (f = m(f, i, a, c, n[h + 9], 21, -343485551)),
+          (c = d(c, r)),
+          (f = d(f, e)),
+          (i = d(i, o)),
+          (a = d(a, u));
+      return [c, f, i, a];
+    }
+    function a(n) {
+      for (var t = "", r = 32 * n.length, e = 0; e < r; e += 8)
+        t += String.fromCharCode((n[e >> 5] >>> e % 32) & 255);
+      return t;
+    }
+    function h(n) {
+      var t = [];
+      for (t[(n.length >> 2) - 1] = void 0, e = 0; e < t.length; e += 1)
+        t[e] = 0;
+      for (var r = 8 * n.length, e = 0; e < r; e += 8)
+        t[e >> 5] |= (255 & n.charCodeAt(e / 8)) << e % 32;
+      return t;
+    }
+    function e(n) {
+      for (var t, r = "0123456789abcdef", e = "", o = 0; o < n.length; o += 1)
+        (t = n.charCodeAt(o)),
+          (e += r.charAt((t >>> 4) & 15) + r.charAt(15 & t));
+      return e;
+    }
+    function r(n) {
+      return unescape(encodeURIComponent(n));
+    }
+    function o(n) {
+      return a(i(h((t = r(n))), 8 * t.length));
+      var t;
+    }
+    function u(n, t) {
+      return (function (n, t) {
+        var r,
+          e,
+          o = h(n),
+          u = [],
+          c = [];
+        for (
+          u[15] = c[15] = void 0,
+            16 < o.length && (o = i(o, 8 * n.length)),
+            r = 0;
+          r < 16;
+          r += 1
+        )
+          (u[r] = 909522486 ^ o[r]), (c[r] = 1549556828 ^ o[r]);
+        return (
+          (e = i(u.concat(h(t)), 512 + 8 * t.length)), a(i(c.concat(e), 640))
+        );
+      })(r(n), r(t));
+    }
+    function t(n, t, r) {
+      return t ? (r ? u(t, n) : e(u(t, n))) : r ? o(n) : e(o(n));
+    }
+    return t(str);
+  }
+
+  /**
+   * 渲染标题内容
+   * @param {object} widget 组件对象
+   * @param {string} icon 图标地址
+   * @param {string} title 标题内容
+   * @param {bool|color} color 字体的颜色（自定义背景时使用，默认系统）
+   */
+  async renderHeader(widget, icon, title, color = false) {
+    let header = widget.addStack();
+    header.centerAlignContent();
+    let _icon = header.addImage(await this.$request.get(icon, "IMG"));
+    _icon.imageSize = new Size(14, 14);
+    _icon.cornerRadius = 4;
+    header.addSpacer(10);
+    let _title = header.addText(title);
+    if (color) _title.textColor = color;
+    _title.textOpacity = 0.7;
+    _title.font = Font.boldSystemFont(12);
+    widget.addSpacer(15);
+    return widget;
+  }
+
+  /**
+   * 弹出一个通知
+   * @param {string} title 通知标题
+   * @param {string} body 通知内容
+   * @param {string} url 点击后打开的URL
+   */
+  async notify(title, body, url, opts = {}) {
+    let n = new Notification();
+    n = Object.assign(n, opts);
+    n.title = title;
+    n.body = body;
+    if (url) n.openURL = url;
+    return await n.schedule();
+  }
+
+  /**
+   * 给图片加一层半透明遮罩
+   * @param {Image} img 要处理的图片
+   * @param {string} color 遮罩背景颜色
+   * @param {float} opacity 透明度
+   */
+  async shadowImage(img, color = "#000000", opacity = 0.7) {
+    let ctx = new DrawContext();
+    // 获取图片的尺寸
+    ctx.size = img.size;
+
+    ctx.drawImageInRect(
+      img,
+      new Rect(0, 0, img.size["width"], img.size["height"])
+    );
+    ctx.setFillColor(new Color(color, opacity));
+    ctx.fillRect(new Rect(0, 0, img.size["width"], img.size["height"]));
+
+    let res = await ctx.getImage();
+    return res;
+  }
+
+  /**
+   * 获取当前插件的设置
+   * @param {boolean} json 是否为json格式
+   */
+  getSettings(json = true) {
+    let res = json ? {} : "";
+    let cache = "";
+    if (Keychain.contains(this.SETTING_KEY)) {
+      cache = Keychain.get(this.SETTING_KEY);
+    }
+    if (json) {
+      try {
+        res = JSON.parse(cache);
+      } catch (e) {}
+    } else {
+      res = cache;
+    }
+
+    return res;
+  }
+
+  /**
+   * 存储当前设置
+   * @param {bool} notify 是否通知提示
+   */
+  saveSettings(notify = true) {
+    let res =
+      typeof this.settings === "object"
+        ? JSON.stringify(this.settings)
+        : String(this.settings);
+    Keychain.set(this.SETTING_KEY, res);
+    if (notify) this.notify("设置成功", "桌面组件稍后将自动刷新");
+  }
+
+  /**
+   * 获取当前插件是否有自定义背景图片
+   * @reutrn img | false
+   */
+  getBackgroundImage() {
+    let result = null;
+    if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
+      result = Image.fromFile(this.BACKGROUND_KEY);
+    }
+    return result;
+  }
+
+  /**
+   * 设置当前组件的背景图片
+   * @param {image} img
+   */
+  setBackgroundImage(img, notify = true) {
+    if (!img) {
+      // 移除背景
+      if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
+        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_KEY);
+      }
+      if (notify) this.notify("移除成功", "小组件背景图片已移除，稍后刷新生效");
+    } else {
+      // 设置背景
+      // 全部设置一遍，
+      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_KEY, img);
+      if (notify) this.notify("设置成功", "小组件背景图片已设置！稍后刷新生效");
+    }
   }
 }
 
@@ -264,120 +502,120 @@ const Runing = async (Widget, default_args = "", isDebug = true) => {
       const _actions = [
         ...(isDebug
           ? [
-            // 远程开发
-            async () => {
-              // 1. 获取服务器ip
-              const a = new Alert();
-              a.title = "服务器 IP";
-              a.message = "请输入远程开发服务器（电脑）IP地址";
-              let xjj_debug_server = "192.168.1.3";
-              if (Keychain.contains("xjj_debug_server")) {
-                xjj_debug_server = Keychain.get("xjj_debug_server");
-              }
-              a.addTextField("server-ip", xjj_debug_server);
-              a.addAction("连接");
-              a.addCancelAction("取消");
-              const id = await a.presentAlert();
-              if (id === -1) return;
-              const ip = a.textFieldValue(0);
-              // 保存到本地
-              Keychain.set("xjj_debug_server", ip);
-              const server_api = `http://${ip}:5566`;
-              // 2. 发送当前文件到远程服务器
-              const SELF_FILE = module.filename.replace(
-                "DmYY",
-                Script.name()
-              );
-              const req = new Request(`${server_api}/sync`);
-              req.method = "POST";
-              req.addFileToMultipart(SELF_FILE, "Widget", Script.name());
-              try {
-                const res = await req.loadString();
-                if (res !== "ok") {
-                  return M.notify("连接失败", res);
+              // 远程开发
+              async () => {
+                // 1. 获取服务器ip
+                const a = new Alert();
+                a.title = "服务器 IP";
+                a.message = "请输入远程开发服务器（电脑）IP地址";
+                let xjj_debug_server = "192.168.1.3";
+                if (Keychain.contains("xjj_debug_server")) {
+                  xjj_debug_server = Keychain.get("xjj_debug_server");
                 }
-              } catch (e) {
-                return M.notify("连接错误", e.message);
-              }
-              M.notify("连接成功", "编辑文件后保存即可进行下一步预览操作");
-              // 重写console.log方法，把数据传递到nodejs
-              const rconsole_log = async (data, t = "log") => {
-                const _req = new Request(`${server_api}/console`);
-                _req.method = "POST";
-                _req.headers = {
-                  "Content-Type": "application/json",
-                };
-                _req.body = JSON.stringify({
-                  t,
-                  data,
-                });
-                return await _req.loadString();
-              };
-              const lconsole_log = console.log.bind(console);
-              const lconsole_warn = console.warn.bind(console);
-              const lconsole_error = console.error.bind(console);
-              console.log = (d) => {
-                lconsole_log(d);
-                rconsole_log(d, "log");
-              };
-              console.warn = (d) => {
-                lconsole_warn(d);
-                rconsole_log(d, "warn");
-              };
-              console.error = (d) => {
-                lconsole_error(d);
-                rconsole_log(d, "error");
-              };
-              // 3. 同步
-              while (1) {
-                let _res = "";
+                a.addTextField("server-ip", xjj_debug_server);
+                a.addAction("连接");
+                a.addCancelAction("取消");
+                const id = await a.presentAlert();
+                if (id === -1) return;
+                const ip = a.textFieldValue(0);
+                // 保存到本地
+                Keychain.set("xjj_debug_server", ip);
+                const server_api = `http://${ip}:5566`;
+                // 2. 发送当前文件到远程服务器
+                const SELF_FILE = module.filename.replace(
+                  "DmYY",
+                  Script.name()
+                );
+                const req = new Request(`${server_api}/sync`);
+                req.method = "POST";
+                req.addFileToMultipart(SELF_FILE, "Widget", Script.name());
                 try {
-                  const _req = new Request(
-                    `${server_api}/sync?name=${encodeURIComponent(
-                      Script.name()
-                    )}`
-                  );
-                  _res = await _req.loadString();
-                } catch (e) {
-                  M.notify("停止调试", "与开发服务器的连接已终止");
-                  break;
-                }
-                if (_res === "stop") {
-                  console.log("[!] 停止同步");
-                  break;
-                } else if (_res === "no") {
-                  // console.log("[-] 没有更新内容")
-                } else if (_res.length > 0) {
-                  M.notify("同步成功", "新文件已同步，大小：" + _res.length);
-                  // 重新加载组件
-                  // 1. 读取当前源码
-                  const _code = _res
-                    .split("// @组件代码开始")[1]
-                    .split("// @组件代码结束")[0];
-                  // 2. 解析 widget class
-                  let NewWidget = null;
-                  try {
-                    const _func = new Function(
-                      `const _Debugger = DmYY => {\n${_code}\nreturn Widget\n}\nreturn _Debugger`
-                    );
-                    NewWidget = _func()(DmYY);
-                  } catch (e) {
-                    M.notify("解析失败", e.message);
+                  const res = await req.loadString();
+                  if (res !== "ok") {
+                    return M.notify("连接失败", res);
                   }
-                  if (!NewWidget) continue;
-                  // 3. 重新执行 widget class
-                  delete M;
-                  M = new NewWidget(__arg || default_args || "");
-                  if (__size) M.init(__size);
-                  // 写入文件
-                  FileManager.local().writeString(SELF_FILE, _res);
-                  // 执行预览
-                  let i = await _actions[1](true);
-                  if (i === 4 + Object.keys(actions).length) break;
+                } catch (e) {
+                  return M.notify("连接错误", e.message);
                 }
-              }
-            },
-          ]
+                M.notify("连接成功", "编辑文件后保存即可进行下一步预览操作");
+                // 重写console.log方法，把数据传递到nodejs
+                const rconsole_log = async (data, t = "log") => {
+                  const _req = new Request(`${server_api}/console`);
+                  _req.method = "POST";
+                  _req.headers = {
+                    "Content-Type": "application/json",
+                  };
+                  _req.body = JSON.stringify({
+                    t,
+                    data,
+                  });
+                  return await _req.loadString();
+                };
+                const lconsole_log = console.log.bind(console);
+                const lconsole_warn = console.warn.bind(console);
+                const lconsole_error = console.error.bind(console);
+                console.log = (d) => {
+                  lconsole_log(d);
+                  rconsole_log(d, "log");
+                };
+                console.warn = (d) => {
+                  lconsole_warn(d);
+                  rconsole_log(d, "warn");
+                };
+                console.error = (d) => {
+                  lconsole_error(d);
+                  rconsole_log(d, "error");
+                };
+                // 3. 同步
+                while (1) {
+                  let _res = "";
+                  try {
+                    const _req = new Request(
+                      `${server_api}/sync?name=${encodeURIComponent(
+                        Script.name()
+                      )}`
+                    );
+                    _res = await _req.loadString();
+                  } catch (e) {
+                    M.notify("停止调试", "与开发服务器的连接已终止");
+                    break;
+                  }
+                  if (_res === "stop") {
+                    console.log("[!] 停止同步");
+                    break;
+                  } else if (_res === "no") {
+                    // console.log("[-] 没有更新内容")
+                  } else if (_res.length > 0) {
+                    M.notify("同步成功", "新文件已同步，大小：" + _res.length);
+                    // 重新加载组件
+                    // 1. 读取当前源码
+                    const _code = _res
+                      .split("// @组件代码开始")[1]
+                      .split("// @组件代码结束")[0];
+                    // 2. 解析 widget class
+                    let NewWidget = null;
+                    try {
+                      const _func = new Function(
+                        `const _Debugger = DmYY => {\n${_code}\nreturn Widget\n}\nreturn _Debugger`
+                      );
+                      NewWidget = _func()(DmYY);
+                    } catch (e) {
+                      M.notify("解析失败", e.message);
+                    }
+                    if (!NewWidget) continue;
+                    // 3. 重新执行 widget class
+                    delete M;
+                    M = new NewWidget(__arg || default_args || "");
+                    if (__size) M.init(__size);
+                    // 写入文件
+                    FileManager.local().writeString(SELF_FILE, _res);
+                    // 执行预览
+                    let i = await _actions[1](true);
+                    if (i === 4 + Object.keys(actions).length) break;
+                  }
+                }
+              },
+            ]
           : []),
         // 预览组件
         async (debug = false) => {
