@@ -29,7 +29,7 @@ class Widget extends DmYY {
     userName: "",
   };
   CookiesData = [];
-
+  beanCount = 0;
   widgetHeight = 338;
   widgetWidth = 720;
   lineWeight = 2; // 线的宽度
@@ -60,7 +60,7 @@ class Widget extends DmYY {
 
   init = async () => {
     try {
-      await this.JDRun(module.filename, args);
+      await this.TotalBean();
       this.rangeTimer = this.getDay(this.rangeDay);
       if (Keychain.contains(this.CACHE_KEY) && !this.forceCache) {
         const data = JSON.parse(Keychain.get(this.CACHE_KEY));
@@ -117,6 +117,34 @@ class Widget extends DmYY {
     });
   };
 
+  TotalBean = async () => {
+    const options = {
+      headers: {
+        Accept: "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        Connection: "keep-alive",
+        Cookie: this.JDCookie.cookie,
+        Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent":
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
+      },
+    };
+    const url = "https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2";
+    const request = new Request(url, { method: "POST" });
+    request.body = options.body;
+    request.headers = options.headers;
+
+    const response = await request.loadJSON();
+    if (response.retcode === 0) {
+      this.beanCount = response.base.jdNum;
+    } else {
+      console.log("京东服务器返回空数据");
+    }
+    return response;
+  };
+
   getDay(dayNumber) {
     let data = {};
     let i = dayNumber;
@@ -161,13 +189,16 @@ class Widget extends DmYY {
     }
   };
 
-  drawImage = () => {
+  drawImage = async () => {
     this.drawContext.size = new Size(this.widgetWidth, this.widgetHeight);
     this.drawContext.opaque = false;
     this.drawContext.setFont(Font.mediumSystemFont(26));
     this.drawContext.setTextColor(this.widgetColor);
     this.drawContext.setTextAlignedCenter();
-    this.drawContext.drawText(`🐶京东走势图`, new Point(25, 25));
+    const logo = await this.$request.get(this.logo, "IMG");
+    this.drawContext.drawImageInRect(logo, new Rect(25, 25, 28, 28));
+    this.drawContext.drawText(`京东走势图`, new Point(65, 25));
+    this.drawContext.drawText(`${this.beanCount}🐶`, new Point(250, 27));
     this.drawContext.drawText(
       `${this.JDCookie.userName}`,
       new Point(this.widgetWidth - 200, 25)
@@ -268,21 +299,24 @@ class Widget extends DmYY {
       timer.repeats = true;
       timer.timeInterval = 1000;
       timer.schedule(async () => {
-        console.log("数据读取中，请稍后");
-        if (this.isRender) {
-          console.log("数据读取完毕，加载组件");
-          timer.invalidate();
-          this.drawImage();
-          widget.backgroundImage = this.drawContext.getImage();
-          widget.url =
-            "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-          w = await this.renderMedium(widget);
-          if (config.runsInWidget) {
-            Script.setWidget(w);
-            Script.complete();
-          } else {
-            await w.presentMedium();
+        try {
+          if (this.isRender) {
+            timer.invalidate();
+            await this.drawImage();
+            widget.backgroundImage = this.drawContext.getImage();
+            widget.url =
+              "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
+            w = await this.renderMedium(widget);
+            if (config.runsInWidget) {
+              Script.setWidget(w);
+              Script.complete();
+            } else {
+              await w.presentMedium();
+            }
+            console.log("数据读取完毕，加载组件");
           }
+        } catch (e) {
+          console.log(e);
         }
       });
       return;
@@ -321,23 +355,6 @@ class Widget extends DmYY {
       this.notify("错误提示", e);
       return false;
     }
-  };
-
-  renderJDHeader = async (header) => {
-    header.centerAlignContent();
-    await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-    header.addSpacer(140);
-    const headerMore = header.addStack();
-    headerMore.url = "https://home.m.jd.com/myJd/home.action";
-    headerMore.setPadding(1, 10, 1, 10);
-    headerMore.cornerRadius = 10;
-    headerMore.backgroundColor = new Color("#fff", 0.5);
-    const textItem = headerMore.addText(this.JDCookie.userName);
-    textItem.font = Font.boldSystemFont(12);
-    textItem.textColor = this.widgetColor;
-    textItem.lineLimit = 1;
-    textItem.rightAlignText();
-    return header;
   };
 
   // 加载京东 Ck 节点列表
