@@ -100,14 +100,14 @@ class Widget extends DmYY {
 
     const descText = textView.addText(progressInfo.content);
     descText.font = Font.boldSystemFont(16);
-    descText.textColor = Color.white();
+    descText.textColor = this.widgetColor;
     descText.lineLimit = 2;
 
     textView.addSpacer(10);
 
     const timerText = textView.addText(progressInfo.tip);
     timerText.font = Font.lightSystemFont(14);
-    timerText.textColor = Color.white();
+    timerText.textColor = this.widgetColor;
     timerText.lineLimit = 1;
 
     cell.addSpacer(10);

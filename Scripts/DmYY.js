@@ -54,13 +54,13 @@ class DmYY {
 
   //request 接口请求
   $request = {
-    get: async (url = "", options, type = "JSON") => {
+    get: async (url = "", options = {}, type = "JSON") => {
       const params = { url, ...options, method: "GET" };
       let _type = type;
       if (typeof options === "string") _type = options;
       return await this.http(params, _type);
     },
-    post: async (url = "", options, type = "JSON") => {
+    post: async (url = "", options = {}, type = "JSON") => {
       const params = { url, ...options, method: "POST" };
       let _type = type;
       if (typeof options === "string") _type = options;
