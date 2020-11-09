@@ -197,7 +197,7 @@ class Widget extends DmYY {
     this.drawContext.setTextAlignedCenter();
     const logo = await this.$request.get(this.logo, "IMG");
     this.drawContext.drawImageInRect(logo, new Rect(25, 25, 28, 28));
-    this.drawContext.drawText(`京东走势图`, new Point(65, 25));
+    this.drawContext.drawText(`京东豆收支`, new Point(65, 25));
     this.drawContext.drawText(`${this.beanCount}🐶`, new Point(250, 27));
     this.drawContext.drawText(
       `${this.JDCookie.userName}`,
