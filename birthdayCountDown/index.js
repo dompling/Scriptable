@@ -455,8 +455,6 @@ function provideFont(fontName, fontSize) {
   return new Font(fontName, fontSize);
 }
 
-(async () => {
-  const renderBirthday = new YaYaBirthday({ prefix, data: defaultData });
-  await renderBirthday.init(); //  初始化组件
-  await renderBirthday.render(); // 渲染 widget
-})();
+const renderBirthday = new YaYaBirthday({ prefix, data: defaultData });
+await renderBirthday.init(); //  初始化组件
+await renderBirthday.render(); // 渲染 widget
