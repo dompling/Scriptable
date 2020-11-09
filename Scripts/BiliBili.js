@@ -70,7 +70,7 @@ class Widget extends DmYY {
     body.url = url;
     if (this.widgetFamily !== "small") {
       const imageView = body.addStack();
-      imageView.size = new Size(75, 75);
+      imageView.size = new Size(45, 45);
       imageView.cornerRadius = 5;
       const image = await this.$request.get(cover, "IMG");
       imageView.backgroundImage = image;
@@ -81,19 +81,16 @@ class Widget extends DmYY {
     textView.layoutVertically();
 
     const descText = textView.addText(title);
-    descText.font = Font.boldSystemFont(16);
+    descText.font = Font.boldSystemFont(12);
     descText.textColor = this.widgetColor;
     descText.lineLimit = 1;
 
     const subContent = textView.addText(pub_index);
-    subContent.font = Font.boldSystemFont(14);
+    subContent.font = Font.boldSystemFont(10);
     subContent.textColor = this.widgetColor;
     subContent.lineLimit = 1;
-
-    textView.addSpacer(5);
-
     const timerText = textView.addText(`更新时间：${pub_time}`);
-    timerText.font = Font.lightSystemFont(14);
+    timerText.font = Font.lightSystemFont(10);
     timerText.textColor = this.widgetColor;
     timerText.lineLimit = 1;
 
@@ -103,15 +100,13 @@ class Widget extends DmYY {
   setWidget = async (body) => {
     const container = body.addStack();
     container.layoutVertically();
-    let orderIndex = 0;
     for (let index = 0; index < this.dataSource.length; index++) {
-      if (this.widgetFamily !== "large" && index === 1) {
+      if (this.widgetFamily !== "large" && index === 2) {
         return body;
       }
-      if (index === 3) {
+      if (index === 5) {
         return body;
       }
-      orderIndex = index;
       const data = this.dataSource[index];
       let listItem = container.addStack();
       await this.setListCell(listItem, data);
@@ -146,7 +141,7 @@ class Widget extends DmYY {
     } else {
       await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     }
-    widget.addSpacer(10);
+    widget.addSpacer(20);
     if (this.widgetFamily === "medium") {
       return await this.renderMedium(widget);
     } else if (this.widgetFamily === "large") {
