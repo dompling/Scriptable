@@ -4,6 +4,11 @@
 
 const scripts = [
   {
+    moduleName: "2YaInstall",
+    url:
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
+  },
+  {
     moduleName: "Env",
     url:
       "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Env.js",
@@ -14,11 +19,6 @@ const scripts = [
     url:
       "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Install%20Scripts.js",
     // 感谢G大的 脚本库安装包 (https://github.com/GideonSenku)
-  },
-  {
-    moduleName: "2YaInstall",
-    url:
-      "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
   },
   {
     moduleName: "Calendar",
@@ -101,12 +101,13 @@ class YaYaInstall {
     this.write(`${moduleName}`, `${fileHeader}${content}`);
   };
 
-  install = () => {
+  install = async () => {
     console.log("🤖更新开始!");
-    scripts.forEach(async (script) => {
+    for (const script of scripts) {
       await this.saveFile(script);
-    });
+      console.log(script.moduleName + "：更新成功");
+    }
     console.log("🤖更新结束!");
   };
 }
-new YaYaInstall().install();
+await new YaYaInstall().install();
