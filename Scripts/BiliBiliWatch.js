@@ -102,7 +102,7 @@ class Widget extends DmYY {
     timerText.font = Font.lightSystemFont(10);
     timerText.textColor = this.widgetColor;
     descView.addSpacer(5);
-    
+
     const icon2 = descView.addText("评论：");
     icon2.font = Font.lightSystemFont(10);
     icon2.textColor = this.widgetColor;
@@ -212,6 +212,8 @@ class Widget extends DmYY {
         this.cookie = cookie;
         this.settings[this.en] = this.cookie;
         this.saveSettings();
+      } else {
+        throw "ck 获取失败";
       }
       return true;
     } catch (e) {
