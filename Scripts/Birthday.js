@@ -96,8 +96,12 @@ class Widget extends DmYY {
 
   setLeftView = (w) => {
     const leftImg = this.getLeftImage();
+    const left = w.addStack();
+    left.size = new Size(110, 110);
+    left.cornerRadius = 5;
+    left.borderWidth = 2;
+    left.borderColor = this.widgetColor;
     if (leftImg) {
-      const left = w.addStack();
       const widgetImg = left.addImage(leftImg);
       widgetImg.imageSize = new Size(110, 110);
       widgetImg.applyFillingContentMode();
@@ -143,9 +147,9 @@ class Widget extends DmYY {
   renderLarge = async (w) => {
     w.addSpacer(20);
     const body = w.addStack();
-    const letft = body.addStack();
-    this.setLeftView(letft);
-    body.addSpacer(10);
+    const left = body.addStack();
+    this.setLeftView(left);
+    body.addSpacer(20);
     const right = body.addStack();
     this.setRightView(right);
 
@@ -161,9 +165,9 @@ class Widget extends DmYY {
 
   renderMedium = async (w) => {
     const body = w.addStack();
-    const letft = body.addStack();
-    this.setLeftView(letft);
-    body.addSpacer(10);
+    const left = body.addStack();
+    this.setLeftView(left);
+    body.addSpacer(20);
     const right = body.addStack();
     this.setRightView(right);
     w.addSpacer();
@@ -183,7 +187,7 @@ class Widget extends DmYY {
     } else {
       await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     }
-    widget.addSpacer(5);
+    widget.addSpacer(10);
     if (this.widgetFamily === "medium") {
       return await this.renderMedium(widget);
     } else if (this.widgetFamily === "large") {
