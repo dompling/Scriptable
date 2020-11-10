@@ -55,6 +55,11 @@ const scripts = [
     url:
       "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
   },
+  {
+    moduleName: "BiliBiliWatch",
+    url:
+      "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
+  },
 ];
 
 class YaYaInstall {

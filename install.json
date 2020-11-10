@@ -55,6 +55,14 @@
     },
     {
       "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "name": "BiliBiliWatch",
+      "title": "哔哩哔哩关注中心"
+    },
+    {
+      "version": "1.0.0",
       "description": "依赖DmYY，Canlendar",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Canlendar.js",
       "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
