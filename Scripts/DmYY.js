@@ -513,11 +513,16 @@ class DmYY {
 }
 
 // @base.end
-const Runing = async (Widget, default_args = "", isDebug = true) => {
+const Runing = async (Widget, default_args = "", isDebug = true, extra) => {
   let M = null;
   // 判断hash是否和当前设备匹配
   if (config.runsInWidget) {
     M = new Widget(args.widgetParameter || "");
+    if (extra) {
+      Object.keys(extra).forEach((key) => {
+        M[key] = extra[key];
+      });
+    }
     const W = await M.render();
     if (W) {
       Script.setWidget(W);
@@ -526,6 +531,11 @@ const Runing = async (Widget, default_args = "", isDebug = true) => {
   } else {
     let { act, data, __arg, __size } = args.queryParameters;
     M = new Widget(__arg || default_args || "");
+    if (extra) {
+      Object.keys(extra).forEach((key) => {
+        M[key] = extra[key];
+      });
+    }
     if (__size) M.init(__size);
     if (!act || !M["_actions"]) {
       // 弹出选择菜单
