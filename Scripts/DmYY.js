@@ -130,14 +130,14 @@ class DmYY {
           const a = new Alert();
           a.title = "设置背景透明";
           a.message = "白天和夜间透明";
-          a.addTextField("白天", `${Number(this.settings.opacity[0])}`);
-          a.addTextField("夜间", `${Number(this.settings.opacity[1])}`);
+          a.addTextField("白天", `${Number(this.settings.opacity[1])}`);
+          a.addTextField("夜间", `${Number(this.settings.opacity[0])}`);
           a.addAction("确定");
           a.addCancelAction("取消");
           const id = await a.presentAlert();
           if (id === -1) return;
-          this.settings.opacity[0] = Number(a.textFieldValue(0));
-          this.settings.opacity[1] = Number(a.textFieldValue(1));
+          this.settings.opacity[1] = Number(a.textFieldValue(0));
+          this.settings.opacity[0] = Number(a.textFieldValue(1));
           // 保存到本地
           this.settings[this.en] = this.JDCookie;
           this.saveSettings();
