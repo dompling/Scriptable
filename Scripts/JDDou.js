@@ -42,9 +42,10 @@ class Widget extends DmYY {
       page = 1;
     do {
       const response = await this.getJingBeanBalanceDetail(page);
-      const result = response.code === "0";
-      console.log(`第${page}页：${result ? "请求成功" : "请求失败"}`);
-      if (response && result) {
+      console.log(
+        `第${page}页：${response.code === "0" ? "请求成功" : "请求失败"}`
+      );
+      if (response && response.code === "0") {
         page++;
         let detailList = response.jingDetailList;
         if (detailList && detailList.length > 0) {
@@ -58,7 +59,6 @@ class Widget extends DmYY {
               }
             } else {
               i = 1;
-              Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
               break;
             }
           }
