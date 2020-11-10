@@ -88,15 +88,11 @@ class Widget extends DmYY {
   getAmountData = async () => {
     let i = 0,
       page = 1;
-    const timer = new Timer();
-    timer.repeats = true;
-    timer.timeInterval = 1000;
-    timer.schedule(async () => {
+    do {
       const response = await this.getJingBeanBalanceDetail(page);
-      console.log(
-        `第${page}页：${response.code === "0" ? "请求成功" : "请求失败"}`
-      );
-      if (response && response.code === "0") {
+      const result = response.code === "0";
+      console.log(`第${page}页：${result ? "请求成功" : "请求失败"}`);
+      if (response && result) {
         page++;
         let detailList = response.jingDetailList;
         if (detailList && detailList.length > 0) {
@@ -106,16 +102,15 @@ class Widget extends DmYY {
               const amount = Number(item.amount);
               this.rangeTimer[dates[0]] += amount;
             } else {
-              timer.invalidate();
+              i = 1;
               this.isRender = true;
               Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
-              await this.render();
               break;
             }
           }
         }
       }
-    });
+    } while (i === 0);
   };
 
   TotalBean = async () => {
@@ -198,7 +193,7 @@ class Widget extends DmYY {
     this.drawContext.setTextAlignedCenter();
     const logo = await this.$request.get(this.logo, "IMG");
     this.drawContext.drawImageInRect(logo, new Rect(25, 25, 28, 28));
-    this.drawContext.drawText(`京东豆收支`, new Point(65, 25));
+    this.drawContext.drawText(`京东走势图`, new Point(65, 25));
     this.drawContext.drawText(`${this.beanCount}🐶`, new Point(250, 27));
     this.drawContext.drawText(
       `${this.JDCookie.userName}`,
@@ -280,57 +275,32 @@ class Widget extends DmYY {
     const text = w.addText("暂不支持");
     text.font = Font.boldSystemFont(20);
     text.textColor = this.widgetColor;
-    return w;
+    Script.setWidget(w);
+    Script.complete();
   };
 
   renderMedium = async (w) => {
     return await this.setWidget(w);
   };
 
-  renderWidget = async (widget) => {
-    try {
-      await this.drawImage();
-      widget.backgroundImage = this.drawContext.getImage();
-      widget.url =
-        "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-      console.log("数据读取完毕，加载组件");
-      return widget;
-    } catch (e) {
-      console.log(e);
-    }
-  };
   /**
    * 渲染函数，函数名固定
    * 可以根据 this.widgetFamily 来判断小组件尺寸，以返回不同大小的内容
    */
   async render() {
-    if (!this.isRender) await this.init();
+    await this.init();
     const widget = new ListWidget();
-    let w;
     if (this.widgetFamily === "medium") {
-      if (this.isRender) {
-        await this.renderWidget(widget);
-      } else {
-        await this.renderHeader(widget, this.logo, this.name, this.widgetColor);
-        widget.addSpacer(10);
-        const loadingItem = widget.addText("loading...");
-        loadingItem.textColor = this.widgetColor;
-        widget.addSpacer();
-      }
-      if (config.runsInWidget) {
-        Script.setWidget(widget);
-        Script.complete();
-      } else {
-        await widget.presentMedium();
-      }
-      return;
+      await this.drawImage();
+      widget.backgroundImage = this.drawContext.getImage();
+      widget.url =
+        "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
     } else if (this.widgetFamily === "large") {
-      w = await this.renderLarge(widget);
+      await this.renderLarge(widget);
     } else {
-      w = await this.renderSmall(widget);
+      await this.renderSmall(widget);
     }
-    Script.setWidget(w);
-    Script.complete();
+    return widget;
   }
 
   JDRun = (filename, args) => {

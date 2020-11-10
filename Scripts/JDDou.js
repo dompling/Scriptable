@@ -25,7 +25,6 @@ class Widget extends DmYY {
   beanCount = 0;
   incomeBean = 0;
   expenseBean = 0;
-  isRender = false;
   timerKeys = [];
 
   JDCookie = {
@@ -45,16 +44,13 @@ class Widget extends DmYY {
   };
 
   getAmountData = async () => {
-    let page = 1;
-    const timer = new Timer();
-    timer.repeats = true;
-    timer.timeInterval = 1000;
-    timer.schedule(async () => {
+    let i = 0,
+      page = 1;
+    do {
       const response = await this.getJingBeanBalanceDetail(page);
-      console.log(
-        `第${page}页：${response.code === "0" ? "请求成功" : "请求失败"}`
-      );
-      if (response && response.code === "0") {
+      const result = response.code === "0";
+      console.log(`第${page}页：${result ? "请求成功" : "请求失败"}`);
+      if (response && result) {
         page++;
         let detailList = response.jingDetailList;
         if (detailList && detailList.length > 0) {
@@ -67,15 +63,14 @@ class Widget extends DmYY {
                 if (amount < 0) this.expenseBean += amount;
               }
             } else {
-              timer.invalidate();
-              this.isRender = true;
-              await this.render();
+              i = 1;
+              Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
               break;
             }
           }
         }
       }
-    });
+    } while (i === 0);
   };
 
   getDay(dayNumber) {
@@ -235,29 +230,12 @@ class Widget extends DmYY {
     return await this.setWidget(w);
   };
 
-  renderWidget = async (widget) => {
-    try {
-      console.log("数据读取完毕，加载组件");
-      widget.url =
-        "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-      await this.renderMedium(widget);
-      if (config.runsInWidget) {
-        Script.setWidget(widget);
-        Script.complete();
-      } else {
-        await widget.presentMedium();
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   /**
    * 渲染函数，函数名固定
    * 可以根据 this.widgetFamily 来判断小组件尺寸，以返回不同大小的内容
    */
   async render() {
-    if (!this.isRender) await this.init();
+    await this.init();
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
     const header = widget.addStack();
@@ -268,25 +246,16 @@ class Widget extends DmYY {
     }
     widget.addSpacer(20);
     if (this.widgetFamily === "medium") {
-      if (this.isRender) {
-        await this.renderWidget(widget);
-      } else {
-        const loadingItem = widget.addText("loading...");
-        loadingItem.textColor = this.widgetColor;
-        widget.addSpacer();
-        if (config.runsInWidget) {
-          Script.setWidget(widget);
-          Script.complete();
-        } else {
-          await widget.presentMedium();
-        }
-      }
-      return;
+      this.notify(this.name, "数据加载完毕，加载组件");
+      widget.url =
+        "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
+      await this.renderMedium(widget);
     } else if (this.widgetFamily === "large") {
-      return await this.renderLarge(widget);
+      await this.renderLarge(widget);
     } else {
-      return await this.renderSmall(widget);
+      await this.renderSmall(widget);
     }
+    return widget;
   }
 
   JDRun = (filename, args) => {
