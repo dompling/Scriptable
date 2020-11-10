@@ -271,4 +271,4 @@ class Widget extends DmYY {
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, "", true); //远程开发环境
+await Runing(Widget, "", false); //远程开发环境
