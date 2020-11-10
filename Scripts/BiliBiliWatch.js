@@ -30,7 +30,6 @@ class Widget extends DmYY {
   init = async () => {
     try {
       await this.getDramaList();
-      console.log(this.dataSource);
     } catch (e) {
       console.log(e);
     }
