@@ -24,6 +24,9 @@ class Widget extends DmYY {
   init = async () => {
     try {
       await this.getDramaList();
+      this.dataSource = this.dataSource.filter((item) => {
+        return !item.apiSeasonInfo;
+      });
     } catch (e) {
       console.log(e);
     }
