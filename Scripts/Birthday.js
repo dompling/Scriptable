@@ -4,7 +4,7 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
-const { DmYY, Runing } = require("./DmYY");
+const { DmYY } = require("./DmYY");
 const { Calendar } = require("./Calendar");
 
 const $ = new Calendar();
