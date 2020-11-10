@@ -94,27 +94,17 @@ class Widget extends DmYY {
 
     const descView = textView.addStack();
 
-    const icon1 = descView.addImage(
-      await this.$request.get(
-        "https://pic.90sjimg.com/design/00/21/84/57/58fd7ec075811.png",
-        "IMG"
-      )
-    );
-    icon1.cornerRadius = 5;
-    icon1.imageSize = new Size(14, 14);
+    const icon1 = descView.addText("播放：");
+    icon1.font = Font.lightSystemFont(10);
+    icon1.textColor = this.widgetColor;
     descView.addSpacer(3);
     const timerText = descView.addText(`${play_count}`);
     timerText.font = Font.lightSystemFont(10);
     timerText.textColor = this.widgetColor;
     descView.addSpacer(5);
-    const icon2 = descView.addImage(
-      await this.$request.get(
-        "https://pic.90sjimg.com/design/00/21/84/57/58fd7ec075811.png",
-        "IMG"
-      )
-    );
-    icon2.cornerRadius = 5;
-    icon2.imageSize = new Size(14, 14);
+    const icon2 = descView.addImage("评论：");
+    icon2.font = Font.lightSystemFont(10);
+    icon2.textColor = this.widgetColor;
     descView.addSpacer(3);
     const timerText2 = descView.addText(`${reply_count}`);
     timerText2.font = Font.lightSystemFont(10);
