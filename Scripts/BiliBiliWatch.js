@@ -102,9 +102,11 @@ class Widget extends DmYY {
     timerText.font = Font.lightSystemFont(10);
     timerText.textColor = this.widgetColor;
     descView.addSpacer(5);
-    const icon2 = descView.addImage("评论：");
+    
+    const icon2 = descView.addText("评论：");
     icon2.font = Font.lightSystemFont(10);
     icon2.textColor = this.widgetColor;
+
     descView.addSpacer(3);
     const timerText2 = descView.addText(`${reply_count}`);
     timerText2.font = Font.lightSystemFont(10);
