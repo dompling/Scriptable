@@ -1,6 +1,12 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: gray; icon-glyph: chalkboard;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: gray; icon-glyph: chalkboard;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: gray; icon-glyph: chalkboard;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -24,9 +30,7 @@ class Widget extends DmYY {
   init = async () => {
     try {
       await this.getDramaList();
-      this.dataSource = this.dataSource.filter((item) => {
-        return !item.apiSeasonInfo;
-      });
+      console.log(this.dataSource);
     } catch (e) {
       console.log(e);
     }
@@ -47,30 +51,48 @@ class Widget extends DmYY {
       const { code, data } = response;
       if (code === 0 && data.cards.length > 0) {
         let dataSource = data.cards;
-        dataSource = dataSource.splice(10);
-        this.dataSource = dataSource.map((item) => {
-          return { card: JSON.parse(item.card), desc: item.desc };
+        dataSource.forEach((item) => {
+          const card = JSON.parse(item.card);
+          let temp = false;
+          if (card.apiSeasonInfo) {
+            temp = {};
+            temp.title = card.apiSeasonInfo.title;
+            temp.url = card.url;
+            temp.reply = card.reply_count;
+            temp.play = card.play_count;
+            temp.img = card.cover;
+            temp.desc = card.new_desc;
+            temp.timestamp = item.desc.timestamp;
+          } else if (card.videos === 1) {
+            temp = {};
+            temp.title = card.title;
+            temp.url = card.jump_url;
+            temp.reply = card.stat.reply;
+            temp.play = card.stat.view;
+            temp.desc = card.desc;
+            temp.img = card.pic;
+            temp.timestamp = item.desc.timestamp;
+          }
+          if (temp) this.dataSource.push(temp);
         });
         return this.dataSource;
       }
       return false;
     } catch (e) {
+      console.log(e);
       return false;
     }
   };
 
   setListCell = async (cell, data) => {
-    const {
-      card: { cover, new_desc, play_count, reply_count, url, apiSeasonInfo },
-      desc,
-    } = data;
+    const { title, url, reply, play, desc, img, timestamp } = data;
     let body = cell.addStack();
     body.url = url;
     if (this.widgetFamily !== "small") {
       const imageView = body.addStack();
       imageView.size = new Size(43, 43);
       imageView.cornerRadius = 5;
-      const image = await this.$request.get(cover, "IMG");
+      const image = await this.$request.get(img, "IMG");
       imageView.backgroundImage = image;
       body.addSpacer(10);
     }
@@ -78,7 +100,7 @@ class Widget extends DmYY {
     const textView = body.addStack();
     textView.layoutVertically();
 
-    const descText = textView.addText(`[${apiSeasonInfo.title}] ${new_desc}`);
+    const descText = textView.addText(`${title} ${desc}`);
     descText.font = Font.boldSystemFont(14);
     descText.textColor = this.widgetColor;
     descText.lineLimit = 1;
@@ -86,7 +108,7 @@ class Widget extends DmYY {
     textView.addSpacer(3);
 
     const date = new Date();
-    date.setTime(desc.timestamp * 1000); //注意，这行是关键代码
+    date.setTime(timestamp * 1000); //注意，这行是关键代码
     let month = date.getMonth() + 1;
     let day = date.getDate();
 
@@ -97,11 +119,11 @@ class Widget extends DmYY {
 
     const descView = textView.addStack();
 
-    const icon1 = descView.addText("播放：");
+    const icon1 = descView.addText("浏览：");
     icon1.font = Font.lightSystemFont(10);
     icon1.textColor = this.widgetColor;
     descView.addSpacer(3);
-    const timerText = descView.addText(`${play_count}`);
+    const timerText = descView.addText(`${play}`);
     timerText.font = Font.lightSystemFont(10);
     timerText.textColor = this.widgetColor;
     descView.addSpacer(5);
@@ -111,7 +133,7 @@ class Widget extends DmYY {
     icon2.textColor = this.widgetColor;
 
     descView.addSpacer(3);
-    const timerText2 = descView.addText(`${reply_count}`);
+    const timerText2 = descView.addText(`${reply}`);
     timerText2.font = Font.lightSystemFont(10);
     timerText2.textColor = this.widgetColor;
     return cell;
@@ -249,4 +271,4 @@ class Widget extends DmYY {
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, "", false); //远程开发环境
+await Runing(Widget, "", true); //远程开发环境
