@@ -1,12 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: teal; icon-glyph: comment-dollar;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: comment-dollar;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: comment-dollar;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -246,7 +240,6 @@ class Widget extends DmYY {
     }
     widget.addSpacer(20);
     if (this.widgetFamily === "medium") {
-      this.notify(this.name, "数据加载完毕，加载组件");
       widget.url =
         "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
       await this.renderMedium(widget);
