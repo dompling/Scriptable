@@ -109,6 +109,7 @@ class Widget extends DmYY {
               timer.invalidate();
               this.isRender = true;
               Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
+              await this.render();
               break;
             }
           }
@@ -286,39 +287,42 @@ class Widget extends DmYY {
     return await this.setWidget(w);
   };
 
+  renderWidget = async (widget) => {
+    try {
+      await this.drawImage();
+      widget.backgroundImage = this.drawContext.getImage();
+      widget.url =
+        "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
+      console.log("数据读取完毕，加载组件");
+      return widget;
+    } catch (e) {
+      console.log(e);
+    }
+  };
   /**
    * 渲染函数，函数名固定
    * 可以根据 this.widgetFamily 来判断小组件尺寸，以返回不同大小的内容
    */
   async render() {
-    await this.init();
+    if (!this.isRender) await this.init();
     const widget = new ListWidget();
     let w;
     if (this.widgetFamily === "medium") {
-      const timer = new Timer();
-      timer.repeats = true;
-      timer.timeInterval = 1000;
-      timer.schedule(async () => {
-        try {
-          if (this.isRender) {
-            timer.invalidate();
-            await this.drawImage();
-            widget.backgroundImage = this.drawContext.getImage();
-            widget.url =
-              "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-            w = await this.renderMedium(widget);
-            if (config.runsInWidget) {
-              Script.setWidget(w);
-              Script.complete();
-            } else {
-              await w.presentMedium();
-            }
-            console.log("数据读取完毕，加载组件");
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      });
+      if (this.isRender) {
+        await this.renderWidget(widget);
+      } else {
+        await this.renderHeader(widget, this.logo, this.name, this.widgetColor);
+        widget.addSpacer(10);
+        const loadingItem = widget.addText("loading...");
+        loadingItem.textColor = this.widgetColor;
+        widget.addSpacer();
+      }
+      if (config.runsInWidget) {
+        Script.setWidget(widget);
+        Script.complete();
+      } else {
+        await widget.presentMedium();
+      }
       return;
     } else if (this.widgetFamily === "large") {
       w = await this.renderLarge(widget);
