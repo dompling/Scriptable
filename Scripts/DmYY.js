@@ -103,11 +103,11 @@ class DmYY {
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
     if (this.backgroundImage) {
-      widget.backgroundImage = await this.shadowImage(
-        this.backgroundImage,
-        "#000",
-        this.isNight ? 0.7 : 0.4
-      );
+      const opacity = this.isNight
+        ? Number(this.settings.opacity[0])
+        : Number(this.settings.opacity[1]);
+      const bg = await this.shadowImage(this.backgroundImage, "#000", opacity);
+      widget.backgroundImage = bg;
     }
     return widget;
   };
@@ -117,12 +117,33 @@ class DmYY {
     alert.title = "设置背景图";
     alert.message = "清空或设置新的背景图";
     alert.addAction("设置新背景图");
+    alert.addAction("设置背景透明");
     alert.addAction("清空背景");
     alert.addCancelAction("取消");
     const actions = [
       async () => {
         const backImage = await this.chooseImg();
         await this.setBackgroundImage(backImage, true);
+      },
+      async () => {
+        try {
+          const a = new Alert();
+          a.title = "设置背景透明";
+          a.message = "白天和夜间透明";
+          a.addTextField("白天", `${Number(this.settings.opacity[0])}`);
+          a.addTextField("夜间", `${Number(this.settings.opacity[1])}`);
+          a.addAction("确定");
+          a.addCancelAction("取消");
+          const id = await a.presentAlert();
+          if (id === -1) return;
+          this.settings.opacity[0] = Number(a.textFieldValue(0));
+          this.settings.opacity[1] = Number(a.textFieldValue(1));
+          // 保存到本地
+          this.settings[this.en] = this.JDCookie;
+          this.saveSettings();
+        } catch (e) {
+          console.log(e);
+        }
       },
       () => {
         this.setBackgroundImage(false, true);
@@ -149,6 +170,12 @@ class DmYY {
       `bg_${this.SETTING_KEY}.jpg`
     );
     this.settings = this.getSettings();
+    if (this.settings.opacity) {
+      this.settings.opacity[0] = Number(this.settings.opacity[0]);
+      this.settings.opacity[1] = Number(this.settings.opacity[1]);
+    } else {
+      this.settings.opacity = [0.7, 0.4];
+    }
   }
 
   /**
