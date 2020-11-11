@@ -13,9 +13,10 @@ class DmYY {
     this._actions = {};
     this.init();
     this.backgroundImage = this.getBackgroundImage();
-    this.widgetColor = this.backgroundImage
-      ? new Color("#fff")
-      : Color.dynamic(Color.black(), Color.white());
+    this.widgetColor = Color.dynamic(Color.black(), Color.white());
+    if (this.backgroundImage) {
+      this.widgetColor = Color.white();
+    }
   }
 
   prefix = "boxjs.net";

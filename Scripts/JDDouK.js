@@ -290,10 +290,13 @@ class Widget extends DmYY {
   async render() {
     await this.init();
     const widget = new ListWidget();
+    await this.getWidgetBackgroundImage(widget);
     if (this.widgetFamily === "medium") {
       await this.drawImage();
-      widget.backgroundImage = this.drawContext.getImage();
-      widget.url =
+      const chart = widget.addStack();
+      chart.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2.2);
+      chart.backgroundImage = this.drawContext.getImage();
+      chart.url =
         "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
     } else if (this.widgetFamily === "large") {
       await this.renderLarge(widget);
@@ -305,7 +308,7 @@ class Widget extends DmYY {
 
   JDRun = (filename, args) => {
     if (config.runsInApp) {
-      // this.registerAction("设置背景图", this.setWidgetBackground);
+      this.registerAction("设置背景图", this.setWidgetBackground);
       this.registerAction("输入京东 CK", this.inputJDck);
       this.registerAction("选择京东 CK", this.actionSettings);
     }
