@@ -13,14 +13,12 @@ class DmYY {
     this._actions = {};
     this.init();
     this.backgroundImage = this.getBackgroundImage();
-    this.widgetColor = Color.dynamic(Color.black(), Color.white());
-    if (this.backgroundImage) {
-      this.widgetColor = Color.white();
-    }
+    this.isNight = Device.isUsingDarkAppearance();
+    this.widgetColor = this.isNight ? Color.white() : Color.black();
+    if (this.backgroundImage) this.widgetColor = Color.white();
   }
 
   prefix = "boxjs.net";
-  isNight = Device.isUsingDarkAppearance();
 
   // 获取 Request 对象
   getRequest = (url = "") => {
@@ -109,8 +107,10 @@ class DmYY {
         : Number(this.settings.opacity[1]);
       const bg = await this.shadowImage(this.backgroundImage, "#000", opacity);
       widget.backgroundImage = bg;
+      return true;
+    } else {
+      return false;
     }
-    return widget;
   };
 
   setWidgetBackground = async () => {

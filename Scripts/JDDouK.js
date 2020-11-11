@@ -12,6 +12,7 @@ class Widget extends DmYY {
     super(arg);
     this.name = "京东豆走势";
     this.en = "JDDouK";
+    console.log(this.widgetColor);
     this.JDRun(module.filename, args);
   }
 
@@ -263,10 +264,6 @@ class Widget extends DmYY {
     }
   };
 
-  setWidget = async (widget) => {
-    return widget;
-  };
-
   renderSmall = async (w) => {
     return await this.renderLarge(w);
   };
@@ -275,12 +272,6 @@ class Widget extends DmYY {
     const text = w.addText("暂不支持");
     text.font = Font.boldSystemFont(20);
     text.textColor = this.widgetColor;
-    Script.setWidget(w);
-    Script.complete();
-  };
-
-  renderMedium = async (w) => {
-    return await this.setWidget(w);
   };
 
   /**
@@ -290,14 +281,16 @@ class Widget extends DmYY {
   async render() {
     await this.init();
     const widget = new ListWidget();
-    await this.getWidgetBackgroundImage(widget);
+    if (await this.getWidgetBackgroundImage(widget)) {
+      this.widgetColor = Color.white();
+    }
     if (this.widgetFamily === "medium") {
       await this.drawImage();
       const chart = widget.addStack();
-      chart.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2.2);
-      chart.backgroundImage = this.drawContext.getImage();
       chart.url =
         "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
+      chart.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2.2);
+      chart.addImage(this.drawContext.getImage());
     } else if (this.widgetFamily === "large") {
       await this.renderLarge(widget);
     } else {
