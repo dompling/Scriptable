@@ -11,15 +11,14 @@ class Widget extends DmYY {
 	constructor(arg) {
 		super(arg);
 		this.name = "京东豆收支";
-		this.en = "JDDouK";
-		this.rangeDay = 5; // 天数范围配置
+		this.en = "JDDouBarChart";
 		this.JDRun(module.filename, args);
 	}
 
 	drawContext = new DrawContext();
 
 	forceCache = false; // 重置缓存
-
+	rangeDay = 5; // 天数范围配置
 	widgetFamily = "medium";
 	rangeTimer = {};
 	timerKeys = [];
@@ -31,16 +30,17 @@ class Widget extends DmYY {
 	};
 	CookiesData = [];
 	beanCount = 0;
-	widgetHeight = 248;
-	widgetWidth = 650;
+	widgetHeight = 267;
+	widgetWidth = 720;
 	lineWeight = 2; // 线的宽度
-	vertLineWeight = 0.5; // 竖线的宽度
-	graphLow = 200;
-	graphHeight = 120;
-	spaceBetweenDays = 120; // 间距
+	vertLineWeight = 50; // 竖线的宽度
+	graphLow = 214;
+	graphHeight = 125;
+	spaceBetweenDays = 115; // 间距
 
 	accentColor1 = new Color("#33cc33", 1);
-	accentColor2 = Color.lightGray();
+	accentColor2 = new Color("#75f9c9", 1);
+	accentColor3 = Color.red();
 
 	drawTextR(text, rect, color, font) {
 		this.drawContext.setFont(font);
@@ -60,16 +60,13 @@ class Widget extends DmYY {
 
 	init = async () => {
 		try {
-			await this.TotalBean();
+			// await this.TotalBean();
+			this.rangeTimer = this.getDay(this.rangeDay);
 			if (Keychain.contains(this.CACHE_KEY) && !this.forceCache) {
-				this.rangeTimer = JSON.parse(Keychain.get(this.CACHE_KEY));
-				const timerKeys = Object.keys(this.rangeTimer);
-				if (timerKeys.length >= 15) {
-					delete this.rangeTimer[timerKeys[0]];
-					Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
-					this.spaceBetweenDays = 120 - 120 / timerKeys.length;
-				}
-
+				const data = JSON.parse(Keychain.get(this.CACHE_KEY));
+				Object.keys(this.rangeTimer).forEach((key) => {
+					this.rangeTimer[key] = data[key];
+				});
 				const date = new Date();
 				const year = date.getFullYear();
 				let month = date.getMonth() + 1;
@@ -80,7 +77,6 @@ class Widget extends DmYY {
 				this.rangeTimer[today] = 0;
 				this.timerKeys = [today];
 			} else {
-				this.rangeTimer = this.getDay(this.rangeDay);
 				this.timerKeys = Object.keys(this.rangeTimer);
 			}
 			await this.getAmountData();
@@ -189,6 +185,7 @@ class Widget extends DmYY {
 		}
 	};
 
+
 	drawImage = async () => {
 		this.drawContext.size = new Size(this.widgetWidth, this.widgetHeight);
 		this.drawContext.opaque = false;
@@ -201,51 +198,68 @@ class Widget extends DmYY {
 			min = aux < min || min == undefined ? aux : min;
 			max = aux > max || max == undefined ? aux : max;
 		}
-		diff = max - min;
-		const highestIndex = rangeKeys.length - 1;
 
+		diff = max - min;
+
+		const maxHeight = this.graphLow - this.graphHeight;
+
+		const startY = this.graphHeight - maxHeight + 20;
+		// Vertical Line
+		const axisX = new Point(2, 0);
+		const axisY = new Point(0, this.graphLow - startY);
+		this.drawLine(axisX, axisY, 4, this.accentColor1);
+
+		const axisW = new Point(this.widgetWidth, this.graphLow - startY);
+		this.drawLine(axisY, axisW, 4, this.accentColor1);
+
+
+		const highestIndex = rangeKeys.length - 1;
 		for (let i = 0, j = highestIndex; i < rangeKeys.length; i++, j--) {
 			const rangeKey = rangeKeys[i];
 			const date = rangeKey.split("-");
 			const day = `${date[1]}.${date[2]}`;
-			const rangeItem = this.rangeTimer[rangeKey];
+			const cases = this.rangeTimer[rangeKey];
 
-			const cases = rangeItem;
 			const delta = (cases - min) / diff;
-
-			if (i < highestIndex) {
-				const nextRange = this.rangeTimer[rangeKeys[i + 1]];
-				const nextCases = nextRange;
-				const nextDelta = (nextCases - min) / diff;
-				const point1 = new Point(
-				 this.spaceBetweenDays * i + 50,
-				 this.graphLow - this.graphHeight * delta,
-				);
-				const point2 = new Point(
-				 this.spaceBetweenDays * (i + 1) + 50,
-				 this.graphLow - this.graphHeight * nextDelta,
-				);
-				this.drawLine(point1, point2, this.lineWeight, this.accentColor1);
-			}
-
+			// if (i < highestIndex) {
+			// 	const nextCases = this.rangeTimer[rangeKeys[i + 1]];
+			// 	if (nextCases) {
+			// 		const nextDelta = (nextCases - min) / diff;
+			// 		const point1 = new Point(
+			// 		 this.spaceBetweenDays * i + 50,
+			// 		 this.graphLow - this.graphHeight * delta,
+			// 		);
+			// 		const point2 = new Point(
+			// 		 this.spaceBetweenDays * (i + 1) + 50,
+			// 		 this.graphLow - this.graphHeight * nextDelta,
+			// 		);
+			// 		this.drawLine(point1, point2, this.lineWeight, this.accentColor1);
+			// 	}
+			// }
 			// Vertical Line
 			const point1 = new Point(
 			 this.spaceBetweenDays * i + 50,
-			 this.graphLow - this.graphHeight * delta,
+			 (this.graphLow - this.graphHeight * delta) - startY,
 			);
-			const point2 = new Point(this.spaceBetweenDays * i + 50, this.graphLow);
-			this.drawLine(point1, point2, this.vertLineWeight, this.accentColor2);
+			// const cRect = new Rect(this.spaceBetweenDays * i + 50 - 5, this.graphLow - 2.5 - this.graphHeight * delta, 5, 5);
+			// this.drawContext.setStrokeColor(this.widgetColor);
+			// this.drawContext.strokeEllipse(cRect);
+			const point2Y = cases > 0 ? this.graphLow - startY : this.graphLow - 20;
+			const point2 = new Point(this.spaceBetweenDays * i + 50, point2Y);
+			this.drawLine(point1, point2, this.vertLineWeight, cases > 0 ? this.accentColor2 : this.accentColor3);
 
+			const calculation = (this.graphLow - 40 - this.graphHeight * delta);
+			const casesRectY = cases > 0 ? calculation - 50 : this.graphLow;
 			const casesRect = new Rect(
-			 this.spaceBetweenDays * i + 20,
-			 this.graphLow - 40 - this.graphHeight * delta,
+			 this.spaceBetweenDays * i + 30,
+			 casesRectY,
 			 60,
 			 23,
 			);
 
 			const dayRect = new Rect(
 			 this.spaceBetweenDays * i + 27,
-			 this.graphLow + 10,
+			 cases > 0 ? point2Y + 10 : point2Y - 80,
 			 60,
 			 23,
 			);
@@ -261,6 +275,7 @@ class Widget extends DmYY {
 	};
 
 	renderLarge = async (w) => {
+		w.addSpacer();
 		const text = w.addText("暂不支持");
 		text.font = Font.boldSystemFont(20);
 		text.textColor = this.widgetColor;
@@ -273,34 +288,51 @@ class Widget extends DmYY {
 	async render() {
 		await this.init();
 		const widget = new ListWidget();
-		if (await this.getWidgetBackgroundImage(widget)) {
-			this.widgetColor = Color.white();
-		}
-		widget.addStack(20);
+		await this.getWidgetBackgroundImage(widget);
 		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
 			await this.renderJDHeader(header);
 		} else {
 			await this.renderHeader(header, this.logo, this.name, this.widgetColor);
 		}
+		widget.addSpacer(20);
 		if (this.widgetFamily === "medium") {
 			await this.drawImage();
 			const chart = widget.addStack();
 			chart.addSpacer();
-			const kGraph = chart.addStack();
-			kGraph.url =
+			const graphLine = chart.addStack();
+			graphLine.url =
 			 "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-			kGraph.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2);
-			kGraph.addImage(this.drawContext.getImage());
+			graphLine.size = new Size(this.widgetWidth / 2.4, this.widgetHeight / 2.2);
+			graphLine.addImage(this.drawContext.getImage());
 			chart.addSpacer();
 		} else if (this.widgetFamily === "large") {
+			widget.addSpacer();
 			await this.renderLarge(widget);
 		} else {
+			widget.addSpacer();
 			await this.renderSmall(widget);
 		}
-		widget.addStack();
 		return widget;
 	}
+
+	renderJDHeader = async (header) => {
+		header.centerAlignContent();
+		await this.renderHeader(header, this.logo, this.name, this.widgetColor);
+		header.addSpacer();
+		const headerMore = header.addStack();
+		headerMore.url = "https://home.m.jd.com/myJd/home.action";
+		headerMore.setPadding(1, 10, 1, 10);
+		headerMore.cornerRadius = 10;
+		headerMore.backgroundColor = new Color("#fff", 0.5);
+		const textItem = headerMore.addText(`${this.JDCookie.userName}`);
+		textItem.font = Font.boldSystemFont(12);
+		textItem.textColor = this.widgetColor;
+		textItem.lineLimit = 1;
+		textItem.rightAlignText();
+		return header;
+	};
+
 
 	JDRun = (filename, args) => {
 		if (config.runsInApp) {
@@ -328,24 +360,6 @@ class Widget extends DmYY {
 			this.notify("错误提示", e);
 			return false;
 		}
-	};
-
-
-	renderJDHeader = async (header) => {
-		header.centerAlignContent();
-		await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-		header.addSpacer();
-		const headerMore = header.addStack();
-		headerMore.url = "https://home.m.jd.com/myJd/home.action";
-		headerMore.setPadding(1, 10, 1, 10);
-		headerMore.cornerRadius = 10;
-		headerMore.backgroundColor = new Color("#fff", 0.5);
-		const textItem = headerMore.addText(this.JDCookie.userName);
-		textItem.font = Font.boldSystemFont(12);
-		textItem.textColor = this.widgetColor;
-		textItem.lineLimit = 1;
-		textItem.rightAlignText();
-		return header;
 	};
 
 	// 加载京东 Ck 节点列表
