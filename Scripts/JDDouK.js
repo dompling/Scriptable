@@ -37,7 +37,7 @@ class Widget extends DmYY {
 	vertLineWeight = 0.5; // 竖线的宽度
 	graphLow = 200;
 	graphHeight = 120;
-	spaceBetweenDays = 120; // 间距
+	spaceBetweenDays = 45; // 间距
 
 	accentColor1 = new Color("#33cc33", 1);
 	accentColor2 = Color.lightGray();
@@ -67,8 +67,9 @@ class Widget extends DmYY {
 				if (timerKeys.length >= 15) {
 					delete this.rangeTimer[timerKeys[0]];
 					Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
-					this.spaceBetweenDays = 120 - 120 / timerKeys.length;
 				}
+
+				this.spaceBetweenDays = (667 - this.spaceBetweenDays * timerKeys.length) / timerKeys.length + this.spaceBetweenDays;
 
 				const date = new Date();
 				const year = date.getFullYear();
