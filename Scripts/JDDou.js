@@ -1,7 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: comment-dollar;
-
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
 const { DmYY, Runing } = require("./DmYY");
@@ -190,7 +186,7 @@ class Widget extends DmYY {
 			text: `${this.beanCount}`,
 			desc: "当前京豆",
 		});
-		body.addSpacer(15);
+		body.addSpacer();
 		const centerContainer = body.addStack();
 		await this.setContainer(centerContainer, {
 			icon:
@@ -198,7 +194,7 @@ class Widget extends DmYY {
 			text: `+${this.incomeBean}`,
 			desc: "昨日收入",
 		});
-		body.addSpacer(15);
+		body.addSpacer();
 		const rightContainer = body.addStack();
 		await this.setContainer(rightContainer, {
 			icon:
@@ -282,7 +278,7 @@ class Widget extends DmYY {
 	renderJDHeader = async (header) => {
 		header.centerAlignContent();
 		await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-		header.addSpacer(140);
+		header.addSpacer();
 		const headerMore = header.addStack();
 		headerMore.url = "https://home.m.jd.com/myJd/home.action";
 		headerMore.setPadding(1, 10, 1, 10);

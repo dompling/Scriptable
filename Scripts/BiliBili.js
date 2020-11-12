@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: tv;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -10,12 +7,12 @@ const { DmYY, Runing } = require("./DmYY");
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = "哔哩哔哩今日番剧";
+    this.name = "bilibili今日番剧";
     this.en = "BiliBiliMonitor";
     this.logo =
-      "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
+     "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
     config.runsInApp &&
-      this.registerAction("设置背景图", this.setWidgetBackground);
+    this.registerAction("设置背景图", this.setWidgetBackground);
     this.cacheName = this.md5(`dataSouce_${this.en}`);
   }
 
@@ -52,8 +49,8 @@ class Widget extends DmYY {
         const result = dataSource.find((item) => item.date === this.today);
         if (result) {
           Keychain.set(
-            this.cacheName,
-            JSON.stringify({ [this.today]: result })
+           this.cacheName,
+           JSON.stringify({ [this.today]: result })
           );
           return result.seasons;
         }
@@ -156,7 +153,7 @@ class Widget extends DmYY {
   renderJDHeader = async (header) => {
     header.centerAlignContent();
     await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-    header.addSpacer(140);
+    header.addSpacer();
     const headerMore = header.addStack();
     headerMore.url = "";
     headerMore.setPadding(1, 10, 1, 10);

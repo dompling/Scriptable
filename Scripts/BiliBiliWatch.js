@@ -1,12 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: gray; icon-glyph: chalkboard;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: gray; icon-glyph: chalkboard;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: gray; icon-glyph: chalkboard;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -19,7 +13,7 @@ class Widget extends DmYY {
     this.name = "哔哩哔哩关注";
     this.en = "BiliBiliWatch";
     this.logo =
-      "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
+     "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
     this.Run(module.filename);
     this.cacheName = this.md5(`dataSouce_${this.en}`);
   }
@@ -195,7 +189,7 @@ class Widget extends DmYY {
   renderJDHeader = async (header) => {
     header.centerAlignContent();
     await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-    header.addSpacer(140);
+    header.addSpacer();
     const headerMore = header.addStack();
     headerMore.url = "";
     headerMore.setPadding(1, 10, 1, 10);
@@ -244,9 +238,9 @@ class Widget extends DmYY {
       console.log(e);
       this.cookie = "";
       this.notify(
-        this.name,
-        "BoxJS Cookie 设置失败,点击根据配置获取",
-        "https://raw.githubusercontent.com/dompling/Script/master/BiliBili/bilibili.cookie.js"
+       this.name,
+       "BoxJS Cookie 设置失败,点击根据配置获取",
+       "https://raw.githubusercontent.com/dompling/Script/master/BiliBili/bilibili.cookie.js"
       );
       return false;
     }

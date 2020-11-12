@@ -90,7 +90,7 @@ class Widget extends DmYY {
 			imageView.url = product.skuLink;
 			const image = await this.$request.get(product.image, "IMG");
 			imageView.backgroundImage = image;
-			body.addSpacer(10);
+			body.addSpacer();
 		}
 
 		const textView = body.addStack();
@@ -98,17 +98,17 @@ class Widget extends DmYY {
 		textView.layoutVertically();
 
 		const descText = textView.addText(progressInfo.content);
-		descText.font = Font.boldSystemFont(16);
+		descText.font = Font.boldSystemFont(14);
 		descText.textColor = this.widgetColor;
 		descText.lineLimit = 2;
 
-		textView.addSpacer(10);
+		textView.addSpacer();
 
 		const timerText = textView.addText(progressInfo.tip);
-		timerText.font = Font.lightSystemFont(14);
+		timerText.font = Font.lightSystemFont(12);
 		timerText.textColor = this.widgetColor;
 		timerText.lineLimit = 1;
-
+        textView.addSpacer();
 		cell.addSpacer(10);
 		return cell;
 	};
@@ -227,7 +227,7 @@ class Widget extends DmYY {
 	renderJDHeader = async (header) => {
 		header.centerAlignContent();
 		await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-		header.addSpacer(140);
+		header.addSpacer();
 		const headerMore = header.addStack();
 		headerMore.url = "https://home.m.jd.com/myJd/home.action";
 		headerMore.setPadding(1, 10, 1, 10);
@@ -319,4 +319,4 @@ class Widget extends DmYY {
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, "", false); //远程开发环境
+await Runing(Widget, "", true); //远程开发环境
