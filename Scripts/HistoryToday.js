@@ -122,19 +122,18 @@ class Widget extends DmYY {
 		await this.getWidgetBackgroundImage(widget);
 		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
-			await this.renderNotSmallHeader(header);
+			await this.renderJDHeader(header);
 		} else {
 			await this.renderHeader(header, this.logo, this.name, this.widgetColor);
 		}
 		widget.addSpacer(10);
 		if (this.widgetFamily === "medium") {
-			await this.renderMedium(widget);
+			return await this.renderMedium(widget);
 		} else if (this.widgetFamily === "large") {
-			await this.renderLarge(widget);
+			return await this.renderLarge(widget);
 		} else {
-			await this.renderSmall(widget);
+			return await this.renderSmall(widget);
 		}
-		return widget;
 	}
 
 	renderNotSmallHeader = async (header) => {
