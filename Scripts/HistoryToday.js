@@ -122,7 +122,7 @@ class Widget extends DmYY {
 		await this.getWidgetBackgroundImage(widget);
 		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
-			await this.renderJDHeader(header);
+			await this.renderNotSmallHeader(header);
 		} else {
 			await this.renderHeader(header, this.logo, this.name, this.widgetColor);
 		}
