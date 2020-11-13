@@ -142,7 +142,10 @@ class Widget extends DmYY {
 		await this.renderHeader(header, this.logo, this.name, this.widgetColor);
 		header.addSpacer();
 		const headerMore = header.addStack();
-		headerMore.url = "";
+		let [month, day] = this.today.split(".");
+		month = month >= 10 ? month : `0${month}`;
+		day = day >= 10 ? day : `0${day}`;
+		headerMore.url = `https://m.8684.cn/today_d${month}${day}`;
 		headerMore.setPadding(1, 10, 1, 10);
 		headerMore.cornerRadius = 10;
 		headerMore.backgroundColor = new Color("#fff", 0.5);
