@@ -86,17 +86,12 @@ class Widget extends DmYY {
 		return cell;
 	};
 
-	setWidget = async (body) => {
+	setWidget = async (body, size) => {
 		const container = body.addStack();
 		container.layoutVertically();
-		for (let index = 0; index < this.dataSource.length; index++) {
-			if (this.widgetFamily !== "large" && index === 2) {
-				return body;
-			}
-			if (index === 5) {
-				return body;
-			}
-			const data = this.dataSource[index];
+		const dataSource = this.getRandomArrayElements(this.dataSource, size);
+		for (let index = 0; index < dataSource.length; index++) {
+			const data = dataSource[index];
 			let listItem = container.addStack();
 			await this.setListCell(listItem, data);
 			container.addSpacer(10);
@@ -106,15 +101,15 @@ class Widget extends DmYY {
 	};
 
 	renderSmall = async (w) => {
-		return await this.setWidget(w);
+		return await this.setWidget(w, 2);
 	};
 
 	renderLarge = async (w) => {
-		return await this.setWidget(w);
+		return await this.setWidget(w, 5);
 	};
 
 	renderMedium = async (w) => {
-		return await this.setWidget(w);
+		return await this.setWidget(w, 2);
 	};
 
 	/**
