@@ -167,9 +167,10 @@ class Widget extends DmYY {
 		const body = w.addStack();
 		const left = body.addStack();
 		this.setLeftView(left);
-		body.addSpacer(20);
+		body.addSpacer();
 		const right = body.addStack();
 		this.setRightView(right);
+		body.addSpacer();
 		w.addSpacer();
 		return w;
 	};
@@ -190,18 +191,19 @@ class Widget extends DmYY {
 		}
 		widget.addSpacer(10);
 		if (this.widgetFamily === "medium") {
-			return await this.renderMedium(widget);
+			await this.renderMedium(widget);
 		} else if (this.widgetFamily === "large") {
-			return await this.renderLarge(widget);
+			await this.renderLarge(widget);
 		} else {
-			return await this.renderSmall(widget);
+			await this.renderSmall(widget);
 		}
+		return widget;
 	}
 
 	renderMoreHeader = async (header) => {
 		header.centerAlignContent();
 		await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-		header.addSpacer(140);
+		header.addSpacer();
 		const headerMore = header.addStack();
 		headerMore.setPadding(1, 10, 1, 10);
 		headerMore.cornerRadius = 10;
