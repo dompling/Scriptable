@@ -76,6 +76,14 @@
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
       "name": "Birthday",
       "title": "破壳日"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryDay.js",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
+      "name": "HistoryDay",
+      "title": "历史上的今天"
     }
   ]
 }
