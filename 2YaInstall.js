@@ -33,7 +33,7 @@ const scripts = [
 	{
 		moduleName: "HistoryDay",
 		url:
-		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryDay.js",
+		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js",
 	},
 	{
 		moduleName: "DmYY",
