@@ -1,9 +1,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: subway;
-
-// 使用方式，只面向qx,loon,surge 用户,请自行添加cookie脚本 
-// 教程：https://github.com/chavyleung/scripts/tree/master/zxhc
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: blue; icon-glyph: subway;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -68,6 +68,7 @@ class Widget extends DmYY {
   }
 
   setWidget = async (body) => {
+    let isNone = true;
     for (const item of this.dataSource) {
       let { trainFlights, timeDesc } = item.orders[0];
       const data = trainFlights[0];
@@ -138,11 +139,12 @@ class Widget extends DmYY {
         footerRightText.font = Font.boldSystemFont(12);
         footerRightText.textColor = this.widgetColor;
         footerRightText.textOpacity = 0.8;
-
+        
+        isNone=false;
         break;
       }
     }
-
+    if(isNone) await this.renderNone(body);
     body.addStack();
     return body;
   };
@@ -163,26 +165,30 @@ class Widget extends DmYY {
   };
 
   renderMedium = async (w) => {
-    if (!this.dataSource) return renderNone;
     return await this.setWidget(w);
   };
 
   renderNone = async (widget) => {
     const header = widget.addStack();
     await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-    body.addSpacer(20);
-    const bodyIcon = this.$request.get(
+    widget.addSpacer();
+    const bodyIcon = await this.$request.get(
       "https://images3.c-ctrip.com/ztrip/img/dcx_HUOCHE.png",
       "IMG"
     );
-    const container = widget.addStack();
-    container.addSpacer();
-    container.addImage(bodyIcon);
-    container.addSpacer();
+    
+  const body =  widget.addStack();
+    body.addSpacer();
+    const container = body.addStack();
+    container.layoutVertically();
+ const bodyIconItem = container.addImage(bodyIcon);
+    bodyIconItem.imageSize= new Size(90, 60);
+    container.addSpacer(20);
     const noneView = container.addStack();
     const noneText = noneView.addText("暂无未出行行程");
     noneText.font = Font.boldSystemFont(14);
     noneText.textColor = this.widgetColor;
+    body.addSpacer();
     return widget;
   };
 
@@ -194,7 +200,6 @@ class Widget extends DmYY {
     await this.init();
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
-    widget.addSpacer(10);
     if (this.widgetFamily === "medium") {
       await this.renderMedium(widget);
     } else if (this.widgetFamily === "large") {
