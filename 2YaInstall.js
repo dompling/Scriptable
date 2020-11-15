@@ -60,6 +60,11 @@ const scripts = [
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
 	},
+	{
+		moduleName: "ZXTrains",
+		url:
+		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js",
+	},
 ];
 
 class YaYaInstall {

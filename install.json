@@ -84,6 +84,14 @@
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
       "name": "HistoryDay",
       "title": "历史上的今天"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png",
+      "name": "ZXTrains",
+      "title": "智行火车票提醒"
     }
   ]
 }

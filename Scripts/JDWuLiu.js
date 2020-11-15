@@ -142,7 +142,6 @@ class Widget extends DmYY {
 			body.addSpacer();
 			return body;
 		}
-		let orderIndex = 0;
 		for (let index = 0; index < this.orderList.length; index++) {
 			if (this.widgetFamily !== "large" && index === 1) {
 				return body;
