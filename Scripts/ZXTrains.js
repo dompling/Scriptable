@@ -1,9 +1,10 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: subway;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: blue; icon-glyph: subway;
+
+// 说明：只面向qx,loon,surge 用户,请自行添加cookie脚本
+// 1.获取 cookie：https://github.com/chavyleung/scripts/tree/master/zxhc
+// 2.自动获取待出行列表：https://raw.githubusercontent.com/dompling/Script/master/ZXTrians/ZXTrains.js 按照脚本内容配置
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
@@ -18,6 +19,7 @@ class Widget extends DmYY {
     this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png";
     this.cacheName = this.md5(`dataSouce_${this.en}`);
   }
+
   dataSource = [];
 
   init = async () => {
@@ -139,12 +141,12 @@ class Widget extends DmYY {
         footerRightText.font = Font.boldSystemFont(12);
         footerRightText.textColor = this.widgetColor;
         footerRightText.textOpacity = 0.8;
-        
-        isNone=false;
+
+        isNone = false;
         break;
       }
     }
-    if(isNone) await this.renderNone(body);
+    if (isNone) await this.renderNone(body);
     body.addStack();
     return body;
   };
@@ -176,13 +178,13 @@ class Widget extends DmYY {
       "https://images3.c-ctrip.com/ztrip/img/dcx_HUOCHE.png",
       "IMG"
     );
-    
-  const body =  widget.addStack();
+
+    const body = widget.addStack();
     body.addSpacer();
     const container = body.addStack();
     container.layoutVertically();
- const bodyIconItem = container.addImage(bodyIcon);
-    bodyIconItem.imageSize= new Size(90, 60);
+    const bodyIconItem = container.addImage(bodyIcon);
+    bodyIconItem.imageSize = new Size(90, 60);
     container.addSpacer(20);
     const noneView = container.addStack();
     const noneText = noneView.addText("暂无未出行行程");
