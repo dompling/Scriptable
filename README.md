@@ -16,13 +16,13 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 
 | 名称                          | 说明       | 示例参数                                                                                            |
 | ----------------------------- | ---------- | --------------------------------------------------------------------------------------------------- |
-| [破壳日](Scripts/)            | BoxJs 数据 |                                                                                                     |
+| [破壳日](Scripts/Birthday.js)            | BoxJs 数据 |                                                                                                     |
 | [历史上的今天](historyToDay/) |            |                                                                                                     |
-| [京东豆收支明细](Scripts/)    | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
-| [京东豆收支 K 线图](Scripts/) | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
-| [京东商品物流](Scripts/)      | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
-| [哔哩哔哩今日番剧](Scripts/)  |            |                                                                                                     |
-| [哔哩哔哩关注消息](Scripts/)  | BoxJs 数据 | [哔哩哔哩 CK](https://raw.githubusercontent.com/dompling/Script/master/BiliBili/bilibili.cookie.js) |
+| [京东豆收支明细](Scripts/JDDou.js)    | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
+| [京东豆收支 K 线图](Scripts/JDDouK.js) | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
+| [京东商品物流](Scripts/JDWuLiu.js)      | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
+| [哔哩哔哩今日番剧](Scripts/BiliBili.js)  |            |                                                                                                     |
+| [哔哩哔哩关注消息](Scripts/BiliBiliWatch.js)  | BoxJs 数据 | [哔哩哔哩 CK](https://raw.githubusercontent.com/dompling/Script/master/BiliBili/bilibili.cookie.js) |
 | [智联火车票提醒](Scripts/ZXTrains.js)  | BoxJs 数据，请根据教程来使用   |                                                                                                     |
 
 ## 特别感谢
