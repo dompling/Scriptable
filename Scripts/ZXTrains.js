@@ -85,6 +85,7 @@ class Widget extends DmYY {
 				body.addSpacer();
 
 				const container = body.addStack();
+				container.url = "suanya://";
 				container.layoutVertically();
 				const timeView = container.addStack();
 				timeView.setPadding(10, 10, 10, 10);
