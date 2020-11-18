@@ -276,6 +276,7 @@ class Widget extends DmYY {
 	async render() {
 		await this.init();
 		const widget = new ListWidget();
+		await this.getWidgetBackgroundImage(widget);
 		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
 			await this.renderJDHeader(header);
