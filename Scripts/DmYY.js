@@ -351,7 +351,7 @@ class DmYY {
 			},
 			async () => {
 				const a = new Alert();
-				a.title = "设置肢体颜色";
+				a.title = "白天和夜间的字体颜色";
 				a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
 				const lightColor = this.settings.lightColor || "#000";
 				const darkColor = this.settings.darkColor || "#fff";
