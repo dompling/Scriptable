@@ -24,7 +24,6 @@ class Widget extends DmYY {
 	rangeTimer = {};
 	timerKeys = [];
 	isRender = false;
-	prefix = "boxjs.net";
 	JDCookie = {
 		cookie: "",
 		userName: "",

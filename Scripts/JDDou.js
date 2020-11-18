@@ -15,7 +15,6 @@ class Widget extends DmYY {
 		this.JDRun(module.filename, args);
 	}
 
-	prefix = "boxjs.net";
 	beanCount = 0;
 	incomeBean = 0;
 	expenseBean = 0;

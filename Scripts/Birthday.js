@@ -256,7 +256,7 @@ class Widget extends DmYY {
 		const actions = [
 			async () => {
 				const backImage = await this.chooseImg();
-				if (!this.verifyImage(backImage)) return;
+				if (!await this.verifyImage(backImage)) return;
 				await this.setLeftImage(backImage, true);
 			},
 			() => {

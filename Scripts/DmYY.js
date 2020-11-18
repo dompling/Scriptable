@@ -12,10 +12,9 @@ class DmYY {
 		this.arg = arg;
 		this._actions = {};
 		this.init();
-		this.widgetColor = Color.dynamic(this.settings.lightColor, this.settings.darkColor);
+		this.widgetColor = Color.dynamic(new Color(this.settings.lightColor), new Color(this.settings.darkColor));
 	}
 
-	prefix = "boxjs.net";
 	isNight = Device.isUsingDarkAppearance();
 
 	// 获取 Request 对象
@@ -93,8 +92,7 @@ class DmYY {
 
 	// 选择图片并缓存
 	chooseImg = async () => {
-		const photoLibrary = await Photos.fromLibrary();
-		return photoLibrary;
+		return await Photos.fromLibrary();
 	};
 
 	// 设置 widget 背景图片
@@ -103,8 +101,7 @@ class DmYY {
 			const opacity = this.isNight
 			 ? Number(this.settings.opacity[0])
 			 : Number(this.settings.opacity[1]);
-			const bg = await this.shadowImage(this.backgroundImage, "#000", opacity);
-			widget.backgroundImage = bg;
+			widget.backgroundImage = await this.shadowImage(this.backgroundImage, "#000", opacity);
 			return true;
 		} else {
 			return false;
@@ -330,7 +327,7 @@ class DmYY {
 	}
 
 	/**
-	 * 设置图片背景
+	 * 设置组件内容
 	 * @returns {Promise<void>}
 	 */
 	setWidgetConfig = async () => {
@@ -342,12 +339,13 @@ class DmYY {
 		alert.addAction("透明背景");
 		alert.addAction("蒙层透明");
 		alert.addAction("清空背景");
+		alert.addAction("BoxJS域名");
 		alert.addAction("重置所有");
 		alert.addCancelAction("取消");
 		const actions = [
 			async () => {
 				const backImage = await this.chooseImg();
-				if (!this.verifyImage(backImage)) return;
+				if (!await this.verifyImage(backImage)) return;
 				await this.setBackgroundImage(backImage, true);
 			},
 			async () => {
@@ -393,6 +391,27 @@ class DmYY {
 			() => {
 				this.setBackgroundImage(false, true);
 			},
+			async () => {
+				const a = new Alert();
+				a.title = "BoxJS 域名";
+				a.addTextField("域名", this.settings.boxjsDomain);
+				a.addAction("确定");
+				a.addCancelAction("取消");
+				const id = await a.presentAlert();
+				if (id === -1) return;
+				this.settings.boxjsDomain = a.textFieldValue(0);
+				// 保存到本地
+				this.saveSettings();
+			},
+			async () => {
+				const options = ["取消", "确定"];
+				const message = "该操作不可逆，会清空所有组件配置！";
+				const index = await this.generateAlert(message, options);
+				if (index === 0) return;
+				this.settings = {};
+				// 保存到本地
+				this.saveSettings();
+			},
 		];
 		const id = await alert.presentAlert();
 		if (id === -1) return;
@@ -426,6 +445,8 @@ class DmYY {
 		}
 		this.settings.lightColor = this.settings.lightColor || "#000";
 		this.settings.darkColor = this.settings.darkColor || "#fff";
+		this.settings.boxjsDomain = this.settings.boxjsDomain || "boxjs.net";
+		this.prefix = this.settings.boxjsDomain;
 	}
 
 	/**
@@ -796,13 +817,10 @@ class DmYY {
 		switch (arguments.length) {
 			case 1:
 				return parseInt(Math.random() * minNum + 1, 10);
-				break;
 			case 2:
 				return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-				break;
 			default:
 				return 0;
-				break;
 		}
 	}
 
