@@ -327,6 +327,7 @@ class Widget extends DmYY {
 			if (!this.JDCookie.cookie) {
 				throw "京东 CK 获取失败";
 			}
+			this.JDCookie.userName = decodeURI(this.JDCookie.userName);
 			return true;
 		} catch (e) {
 			this.notify("错误提示", e);
