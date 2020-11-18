@@ -233,11 +233,7 @@ class Widget extends DmYY {
 		} catch (e) {
 			console.log(e);
 			this.cookie = "";
-			this.notify(
-			 this.name,
-			 "BoxJS Cookie 设置失败,点击根据配置获取",
-			 "https://raw.githubusercontent.com/dompling/Script/master/BiliBili/bilibili.cookie.js",
-			);
+			this.notify(this.name, "", "BoxJS 数据读取失败，请点击通知查看教程", "https://chavyleung.gitbook.io/boxjs/awesome/videos");
 			return false;
 		}
 	};

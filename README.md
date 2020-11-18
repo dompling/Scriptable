@@ -1,4 +1,4 @@
-# scriptable
+# scriptable  [Tg电报群](https://t.me/Scriptable_JS)
 
 > 将文件 [2YaInstall.scriptable](https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js) 导入到 scriptable 软件中，点击运行即可
 

@@ -65,6 +65,7 @@ class Widget extends DmYY {
 			if (travels) return travels;
 		} catch (e) {
 			console.log("未找到火车票缓存：" + e);
+			this.notify(this.name, "", "BoxJS 数据读取失败，请点击通知查看教程", "https://chavyleung.gitbook.io/boxjs/awesome/videos");
 		}
 		return false;
 	}
