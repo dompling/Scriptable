@@ -276,10 +276,6 @@ class Widget extends DmYY {
 	async render() {
 		await this.init();
 		const widget = new ListWidget();
-		if (await this.getWidgetBackgroundImage(widget)) {
-			this.widgetColor = Color.white();
-		}
-		widget.addStack(20);
 		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
 			await this.renderJDHeader(header);
