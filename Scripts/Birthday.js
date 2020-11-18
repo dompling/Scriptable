@@ -21,10 +21,12 @@ class Widget extends DmYY {
 		 `left_image_${this.SETTING_KEY}.jpg`,
 		);
 		this.defaultData = { ...this.defaultData, ...this.settings[this.en] };
-		this.registerAction("组件基础内容配置", this.setWidgetConfig);
-		this.registerAction("生日配置", this.setWidgetInitConfig);
-		this.registerAction("头像设置", this.setLeftWidgetImage);
-		this.registerAction("读取BoxJS数据", this.setWidgetBoxJSConfig);
+		if (config.runsInApp) {
+			this.registerAction("组件基础内容配置", this.setWidgetConfig);
+			this.registerAction("生日配置", this.setWidgetInitConfig);
+			this.registerAction("头像设置", this.setLeftWidgetImage);
+			this.registerAction("读取BoxJS数据", this.setWidgetBoxJSConfig);
+		}
 	}
 
 	defaultData = {

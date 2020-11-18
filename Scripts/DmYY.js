@@ -411,6 +411,7 @@ class DmYY {
 				if (index === 0) return;
 				this.settings = {};
 				// 保存到本地
+				await this.setBackgroundImage(false, false);
 				this.saveSettings();
 			},
 		];
