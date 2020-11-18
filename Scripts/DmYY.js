@@ -682,10 +682,14 @@ class DmYY {
 	async renderHeader(widget, icon, title, color = false) {
 		let header = widget.addStack();
 		header.centerAlignContent();
-		const image = await this.$request.get(icon, "IMG");
-		let _icon = header.addImage(image);
-		_icon.imageSize = new Size(14, 14);
-		_icon.cornerRadius = 4;
+		try {
+			const image = await this.$request.get(icon, "IMG");
+			let _icon = header.addImage(image);
+			_icon.imageSize = new Size(14, 14);
+			_icon.cornerRadius = 4;
+		} catch (e) {
+			console.log(e);
+		}
 		header.addSpacer(10);
 		let _title = header.addText(title);
 		if (color) _title.textColor = color;
