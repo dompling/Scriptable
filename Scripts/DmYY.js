@@ -12,13 +12,11 @@ class DmYY {
 		this.arg = arg;
 		this._actions = {};
 		this.init();
-		this.backgroundImage = this.getBackgroundImage();
-		this.isNight = Device.isUsingDarkAppearance();
-		this.widgetColor = this.isNight ? Color.white() : Color.black();
-		if (this.backgroundImage) this.widgetColor = Color.white();
+		this.widgetColor = Color.dynamic(this.settings.lightColor, this.settings.darkColor);
 	}
 
 	prefix = "boxjs.net";
+	isNight = Device.isUsingDarkAppearance();
 
 	// 获取 Request 对象
 	getRequest = (url = "") => {
@@ -113,18 +111,265 @@ class DmYY {
 		}
 	};
 
-	setWidgetBackground = async () => {
+	/**
+	 * 验证图片尺寸： 图片像素超过 1000 左右的时候会导致背景无法加载
+	 * @param img Image
+	 */
+	verifyImage = async (img) => {
+		try {
+			const width = img.size.width;
+			if (width > 1000) {
+				const options = ["取消", "打开图像处理"];
+				const message = `您的图片像素为${width} x ${img.size.height}，设置的背景图内存占用过高，请调整！`;
+				const index = await this.generateAlert(message, options);
+				if (index === 1) Safari.openInApp('https://www.yasuotu.com/size', false);
+				return false;
+			}
+			return true;
+		} catch (e) {
+			return false;
+		}
+	};
+
+	/**
+	 * 获取截图中的组件剪裁图
+	 * 可用作透明背景
+	 * 返回图片image对象
+	 * 代码改自：https://gist.github.com/mzeryck/3a97ccd1e059b3afa3c6666d27a496c9
+	 * @param {string} title 开始处理前提示用户截图的信息，可选（适合用在组件自定义透明背景时提示）
+	 */
+	async getWidgetScreenShot(title = null) {
+		// Crop an image into the specified rect.
+		function cropImage(img, rect) {
+
+			let draw = new DrawContext();
+			draw.size = new Size(rect.width, rect.height);
+
+			draw.drawImageAtPoint(img, new Point(-rect.x, -rect.y));
+			return draw.getImage();
+		}
+
+		// Pixel sizes and positions for widgets on all supported phones.
+		function phoneSizes() {
+			return {
+				// 12 and 12 Pro
+				"2532": {
+					small: 474,
+					medium: 1014,
+					large: 1062,
+					left: 78,
+					right: 618,
+					top: 231,
+					middle: 819,
+					bottom: 1407,
+				},
+
+				// 11 Pro Max, XS Max
+				"2688": {
+					small: 507,
+					medium: 1080,
+					large: 1137,
+					left: 81,
+					right: 654,
+					top: 228,
+					middle: 858,
+					bottom: 1488,
+				},
+
+				// 11, XR
+				"1792": {
+					small: 338,
+					medium: 720,
+					large: 758,
+					left: 54,
+					right: 436,
+					top: 160,
+					middle: 580,
+					bottom: 1000,
+				},
+
+
+				// 11 Pro, XS, X
+				"2436": {
+					small: 465,
+					medium: 987,
+					large: 1035,
+					left: 69,
+					right: 591,
+					top: 213,
+					middle: 783,
+					bottom: 1353,
+				},
+
+				// Plus phones
+				"2208": {
+					small: 471,
+					medium: 1044,
+					large: 1071,
+					left: 99,
+					right: 672,
+					top: 114,
+					middle: 696,
+					bottom: 1278,
+				},
+
+				// SE2 and 6/6S/7/8
+				"1334": {
+					small: 296,
+					medium: 642,
+					large: 648,
+					left: 54,
+					right: 400,
+					top: 60,
+					middle: 412,
+					bottom: 764,
+				},
+
+
+				// SE1
+				"1136": {
+					small: 282,
+					medium: 584,
+					large: 622,
+					left: 30,
+					right: 332,
+					top: 59,
+					middle: 399,
+					bottom: 399,
+				},
+
+				// 11 and XR in Display Zoom mode
+				"1624": {
+					small: 310,
+					medium: 658,
+					large: 690,
+					left: 46,
+					right: 394,
+					top: 142,
+					middle: 522,
+					bottom: 902,
+				},
+
+				// Plus in Display Zoom mode
+				"2001": {
+					small: 444,
+					medium: 963,
+					large: 972,
+					left: 81,
+					right: 600,
+					top: 90,
+					middle: 618,
+					bottom: 1146,
+				},
+			};
+		}
+
+		let message = title || "开始之前，请先前往桌面，截取空白界面的截图。然后回来继续";
+		let exitOptions = ["我已截图", "前去截图 >"];
+		let shouldExit = await this.generateAlert(message, exitOptions);
+		if (shouldExit) return;
+
+		// Get screenshot and determine phone size.
+		let img = await Photos.fromLibrary();
+		let height = img.size.height;
+		let phone = phoneSizes()[height];
+		if (!phone) {
+			message = "好像您选择的照片不是正确的截图，请先前往桌面";
+			await this.generateAlert(message, ["我已知晓"]);
+			return;
+		}
+
+		// Prompt for widget size and position.
+		message = "截图中要设置透明背景组件的尺寸类型是？";
+		let sizes = ["小尺寸", "中尺寸", "大尺寸"];
+		let size = await this.generateAlert(message, sizes);
+		let widgetSize = sizes[size];
+
+		message = "要设置透明背景的小组件在哪个位置？";
+		message += (height === 1136 ? " （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）" : "");
+
+		// Determine image crop based on phone size.
+		let crop = { w: "", h: "", x: "", y: "" };
+		if (widgetSize === "小尺寸") {
+			crop.w = phone.small;
+			crop.h = phone.small;
+			let positions = ["左上角", "右上角", "中间左", "中间右", "左下角", "右下角"];
+			let _posotions = ["Top left", "Top right", "Middle left", "Middle right", "Bottom left", "Bottom right"];
+			let position = await this.generateAlert(message, positions);
+
+			// Convert the two words into two keys for the phone size dictionary.
+			let keys = _posotions[position].toLowerCase().split(' ');
+			crop.y = phone[keys[0]];
+			crop.x = phone[keys[1]];
+
+		} else if (widgetSize === "中尺寸") {
+			crop.w = phone.medium;
+			crop.h = phone.small;
+
+			// Medium and large widgets have a fixed x-value.
+			crop.x = phone.left;
+			let positions = ["顶部", "中间", "底部"];
+			let _positions = ["Top", "Middle", "Bottom"];
+			let position = await this.generateAlert(message, positions);
+			let key = _positions[position].toLowerCase();
+			crop.y = phone[key];
+
+		} else if (widgetSize === "大尺寸") {
+			crop.w = phone.medium;
+			crop.h = phone.large;
+			crop.x = phone.left;
+			let positions = ["顶部", "底部"];
+			let position = await this.generateAlert(message, positions);
+
+			// Large widgets at the bottom have the "middle" y-value.
+			crop.y = position ? phone.middle : phone.top;
+		}
+
+		// Crop image and finalize the widget.
+		return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h));
+	}
+
+	/**
+	 * 设置图片背景
+	 * @returns {Promise<void>}
+	 */
+	setWidgetConfig = async () => {
 		const alert = new Alert();
-		alert.title = "设置背景图";
-		alert.message = "清空或设置新的背景图";
-		alert.addAction("设置新背景图");
-		alert.addAction("设置背景透明");
+		alert.title = "内容配置";
+		alert.message = "设置字体颜色、蒙层透明、背景";
+		alert.addAction("新背景图");
+		alert.addAction("字体颜色");
+		alert.addAction("透明背景");
+		alert.addAction("蒙层透明");
 		alert.addAction("清空背景");
+		alert.addAction("重置所有");
 		alert.addCancelAction("取消");
 		const actions = [
 			async () => {
 				const backImage = await this.chooseImg();
+				if (!this.verifyImage(backImage)) return;
 				await this.setBackgroundImage(backImage, true);
+			},
+			async () => {
+				const a = new Alert();
+				a.title = "设置肢体颜色";
+				a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
+				const lightColor = this.settings.lightColor || "#000";
+				const darkColor = this.settings.darkColor || "#fff";
+				a.addTextField("白天", lightColor);
+				a.addTextField("夜间", darkColor);
+				a.addAction("确定");
+				a.addCancelAction("取消");
+				const id = await a.presentAlert();
+				if (id === -1) return;
+				this.settings.lightColor = a.textFieldValue(0);
+				this.settings.darkColor = a.textFieldValue(1);
+				// 保存到本地
+				this.saveSettings();
+			},
+			async () => {
+				const backImage = await this.getWidgetScreenShot();
+				if (backImage) await this.setBackgroundImage(backImage, true);
 			},
 			async () => {
 				try {
@@ -140,7 +385,6 @@ class DmYY {
 					this.settings.opacity[1] = Number(a.textFieldValue(0));
 					this.settings.opacity[0] = Number(a.textFieldValue(1));
 					// 保存到本地
-					this.settings[this.en] = this.JDCookie;
 					this.saveSettings();
 				} catch (e) {
 					console.log(e);
@@ -159,6 +403,8 @@ class DmYY {
 		// 组件大小：small,medium,large
 		this.widgetFamily = widgetFamily;
 		this.SETTING_KEY = this.md5(Script.name());
+		//用于配置所有的组件相关设置
+
 		// 文件管理器
 		// 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
 		this.FILE_MGR = FileManager[
@@ -170,6 +416,7 @@ class DmYY {
 		 this.FILE_MGR_LOCAL.documentsDirectory(),
 		 `bg_${this.SETTING_KEY}.jpg`,
 		);
+
 		this.settings = this.getSettings();
 		if (this.settings.opacity) {
 			this.settings.opacity[0] = Number(this.settings.opacity[0]);
@@ -177,6 +424,8 @@ class DmYY {
 		} else {
 			this.settings.opacity = [0.7, 0.4];
 		}
+		this.settings.lightColor = this.settings.lightColor || "#000";
+		this.settings.darkColor = this.settings.darkColor || "#fff";
 	}
 
 	/**
@@ -422,6 +671,22 @@ class DmYY {
 		_title.lineLimit = 1;
 		widget.addSpacer(15);
 		return widget;
+	}
+
+	/**
+	 * @param message 描述内容
+	 * @param options 按钮
+	 * @returns {Promise<number>}
+	 */
+
+	async generateAlert(message, options) {
+		let alert = new Alert();
+		alert.message = message;
+
+		for (const option of options) {
+			alert.addAction(option);
+		}
+		return await alert.presentAlert();
 	}
 
 	/**

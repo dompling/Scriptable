@@ -21,11 +21,10 @@ class Widget extends DmYY {
 		 `left_image_${this.SETTING_KEY}.jpg`,
 		);
 		this.defaultData = { ...this.defaultData, ...this.settings[this.en] };
-		console.log(this.defaultData);
-		this.registerAction("组件内部配置", this.setWidgetConfig);
+		this.registerAction("组件基础内容配置", this.setWidgetConfig);
+		this.registerAction("生日配置", this.setWidgetInitConfig);
+		this.registerAction("头像设置", this.setLeftWidgetImage);
 		this.registerAction("读取BoxJS数据", this.setWidgetBoxJSConfig);
-		this.registerAction("设置左侧图", this.setLeftWidgetImage);
-		this.registerAction("设置背景图", this.setWidgetBackground);
 	}
 
 	defaultData = {
@@ -257,6 +256,7 @@ class Widget extends DmYY {
 		const actions = [
 			async () => {
 				const backImage = await this.chooseImg();
+				if (!this.verifyImage(backImage)) return;
 				await this.setLeftImage(backImage, true);
 			},
 			() => {
@@ -268,7 +268,7 @@ class Widget extends DmYY {
 		actions[id] && actions[id].call(this);
 	};
 
-	setWidgetConfig = async () => {
+	setWidgetInitConfig = async () => {
 		const a = new Alert();
 		a.title = "🐣破壳日配置";
 		a.message = "配置破壳日的基础信息";

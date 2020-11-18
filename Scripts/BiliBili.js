@@ -11,7 +11,7 @@ class Widget extends DmYY {
 		this.logo =
 		 "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
 		config.runsInApp &&
-		this.registerAction("设置背景图", this.setWidgetBackground);
+		this.registerAction("组件基础内容配置", this.setWidgetConfig);
 		this.cacheName = this.md5(`dataSouce_${this.en}`);
 	}
 
