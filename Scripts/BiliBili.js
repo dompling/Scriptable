@@ -6,7 +6,7 @@ const { DmYY, Runing } = require("./DmYY");
 class Widget extends DmYY {
 	constructor(arg) {
 		super(arg);
-		this.name = "bilibili今日番剧";
+		this.name = "哔哩哔哩今日番剧";
 		this.en = "BiliBiliMonitor";
 		this.logo =
 		 "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
