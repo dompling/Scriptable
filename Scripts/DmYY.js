@@ -373,8 +373,8 @@ class DmYY {
 			async () => {
 				try {
 					const a = new Alert();
-					a.title = "设置背景透明";
-					a.message = "白天和夜间透明";
+					a.title = "白天和夜间透明";
+					a.message = "若是设置了透明背景，请自行都设置为 0";
 					a.addTextField("白天", `${Number(this.settings.opacity[1])}`);
 					a.addTextField("夜间", `${Number(this.settings.opacity[0])}`);
 					a.addAction("确定");
