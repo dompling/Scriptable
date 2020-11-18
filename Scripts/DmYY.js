@@ -334,7 +334,8 @@ class DmYY {
 	setWidgetConfig = async () => {
 		const alert = new Alert();
 		alert.title = "内容配置";
-		alert.message = "设置字体颜色、蒙层透明、背景";
+		alert.message = "设置字体颜色、蒙层透明、背景、刷新时间";
+		alert.addAction("刷新时间");
 		alert.addAction("新背景图");
 		alert.addAction("字体颜色");
 		alert.addAction("透明背景");
@@ -344,6 +345,19 @@ class DmYY {
 		alert.addAction("重置所有");
 		alert.addCancelAction("取消");
 		const actions = [
+			async () => {
+				const a = new Alert();
+				a.title = "刷新时间（分）";
+				a.message = "默认刷新时间 30 分钟刷新一次，也可自行手动运行";
+				a.addTextField("分钟", this.settings.refreshAfterDate);
+				a.addAction("确定");
+				a.addCancelAction("取消");
+				const id = await a.presentAlert();
+				if (id === -1) return;
+				this.settings.refreshAfterDate = a.textFieldValue(0);
+				// 保存到本地
+				this.saveSettings();
+			},
 			async () => {
 				const backImage = await this.chooseImg();
 				if (!await this.verifyImage(backImage)) return;
@@ -448,6 +462,7 @@ class DmYY {
 		this.settings.lightColor = this.settings.lightColor || "#000";
 		this.settings.darkColor = this.settings.darkColor || "#fff";
 		this.settings.boxjsDomain = this.settings.boxjsDomain || "boxjs.net";
+		this.settings.refreshAfterDate = this.settings.refreshAfterDate || "30";
 		this.prefix = this.settings.boxjsDomain;
 	}
 
@@ -849,12 +864,17 @@ const Runing = async (Widget, default_args = "", isDebug = true, extra) => {
 	// 判断hash是否和当前设备匹配
 	if (config.runsInWidget) {
 		M = new Widget(args.widgetParameter || "");
+
 		if (extra) {
 			Object.keys(extra).forEach((key) => {
 				M[key] = extra[key];
 			});
 		}
 		const W = await M.render();
+
+		if (M.settings.refreshAfterDate) {
+			W.refreshAfterDate = new Date(new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate));
+		}
 		if (W) {
 			Script.setWidget(W);
 			Script.complete();

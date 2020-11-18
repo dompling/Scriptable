@@ -4,9 +4,8 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
-const { DmYY } = require("./DmYY");
+const { DmYY, Runing } = require("./DmYY");
 const { Calendar } = require("./Calendar");
-
 const $ = new Calendar();
 
 class Widget extends DmYY {
@@ -54,7 +53,7 @@ class Widget extends DmYY {
 			cMonth: parseInt(initDay[1]),
 			cDay: parseInt(initDay[2]),
 		};
-		return Math.abs($.daysBetween(obj));
+		return Math.abs(this.$.daysBetween(obj));
 	};
 
 	getCalendarData = () => {
@@ -69,19 +68,19 @@ class Widget extends DmYY {
 		};
 
 		const response = {};
-		response.birthdayText = $.birthday(opt);
+		response.birthdayText = this.$.birthday(opt);
 		response.nextBirthday = response.birthdayText[0];
 
 		const solarData =
 		 nongli === "true"
-			? $.lunar2solar(opt.year, opt.month, opt.day, isLeapMonth)
-			: $.solar2lunar(opt.year, opt.month, opt.day);
+			? this.$.lunar2solar(opt.year, opt.month, opt.day, isLeapMonth)
+			: this.$.solar2lunar(opt.year, opt.month, opt.day);
 		response.gregorian = solarData;
-		response.animal = `${$.getAnimalZodiacToEmoji(solarData.Animal)}-${
+		response.animal = `${this.$.getAnimalZodiacToEmoji(solarData.Animal)}-${
 		 solarData.Animal
 		}`;
-		response.astro = `${$.getAstroToEmoji(solarData.astro)}-${solarData.astro}`;
-		if ($.verifyTime(eday)) {
+		response.astro = `${this.$.getAstroToEmoji(solarData.astro)}-${solarData.astro}`;
+		if (this.$.verifyTime(eday)) {
 			response.meetDay = this.getEdayNumber(eday);
 		}
 		this.contentText = response;
@@ -305,93 +304,4 @@ class Widget extends DmYY {
 	};
 }
 
-let M = null;
-// 判断hash是否和当前设备匹配
-if (config.runsInWidget) {
-	M = new Widget(args.widgetParameter || "");
-	const W = await M.render();
-	if (W) {
-		Script.setWidget(W);
-		Script.complete();
-	}
-} else {
-	let { act, __arg, __size } = args.queryParameters;
-	M = new Widget(__arg || "");
-	if (__size) M.init(__size);
-	if (!act || !M["_actions"]) {
-		// 弹出选择菜单
-		const actions = M["_actions"];
-		const _actions = [
-			// 预览组件
-			async (debug = false) => {
-				let a = new Alert();
-				a.title = "预览组件";
-				a.message = "测试桌面组件在各种尺寸下的显示效果";
-				a.addAction("小尺寸 Small");
-				a.addAction("中尺寸 Medium");
-				a.addAction("大尺寸 Large");
-				a.addAction("全部 All");
-				a.addCancelAction("取消操作");
-				const funcs = [];
-				if (debug) {
-					for (let _ in actions) {
-						a.addAction(_);
-						funcs.push(actions[_].bind(M));
-					}
-					a.addDestructiveAction("停止调试");
-				}
-				let i = await a.presentSheet();
-				if (i === -1) return;
-				let w;
-				switch (i) {
-					case 0:
-						M.widgetFamily = "small";
-						w = await M.render();
-						w && (await w.presentSmall());
-						break;
-					case 1:
-						M.widgetFamily = "medium";
-						w = await M.render();
-						w && (await w.presentMedium());
-						break;
-					case 2:
-						M.widgetFamily = "large";
-						w = await M.render();
-						w && (await w.presentLarge());
-						break;
-					case 3:
-						M.widgetFamily = "small";
-						w = await M.render();
-						w && (await w.presentSmall());
-						M.widgetFamily = "medium";
-						w = await M.render();
-						w && (await w.presentMedium());
-						M.widgetFamily = "large";
-						w = await M.render();
-						w && (await w.presentLarge());
-						break;
-					default:
-						const func = funcs[i - 4];
-						if (func) await func();
-						break;
-				}
-
-				return i;
-			},
-		];
-		const alert = new Alert();
-		alert.title = M.name;
-		alert.message = M.desc;
-		alert.addAction("预览组件");
-		for (let _ in actions) {
-			alert.addAction(_);
-			_actions.push(actions[_]);
-		}
-		alert.addCancelAction("取消操作");
-		const idx = await alert.presentSheet();
-		if (_actions[idx]) {
-			const func = _actions[idx];
-			await func();
-		}
-	}
-}
+Runing(Widget, "", false, { $ });
