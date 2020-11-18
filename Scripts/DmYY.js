@@ -97,11 +97,12 @@ class DmYY {
 
 	// 设置 widget 背景图片
 	getWidgetBackgroundImage = async (widget) => {
-		if (this.backgroundImage) {
+		const backgroundImage = this.getBackgroundImage();
+		if (backgroundImage) {
 			const opacity = this.isNight
 			 ? Number(this.settings.opacity[0])
 			 : Number(this.settings.opacity[1]);
-			widget.backgroundImage = await this.shadowImage(this.backgroundImage, "#000", opacity);
+			widget.backgroundImage = await this.shadowImage(backgroundImage, "#000", opacity);
 			return true;
 		} else {
 			return false;
