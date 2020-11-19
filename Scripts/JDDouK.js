@@ -290,7 +290,7 @@ class Widget extends DmYY {
 			const kGraph = chart.addStack();
 			kGraph.url =
 			 "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-			kGraph.size = new Size(this.widgetWidth / 2.28, this.widgetHeight / 2.15);
+			kGraph.size = new Size(this.widgetWidth / 2.25, this.widgetHeight / 2.15);
 			kGraph.addImage(this.drawContext.getImage());
 			chart.addSpacer();
 		} else if (this.widgetFamily === "large") {
