@@ -90,7 +90,7 @@ class Widget extends DmYY {
 			imageView.cornerRadius = 5;
 			imageView.url = product.skuLink;
 			imageView.backgroundImage = await this.$request.get(product.image, "IMG");
-			body.addSpacer();
+			body.addSpacer(10);
 		}
 
 		const textView = body.addStack();
@@ -110,7 +110,6 @@ class Widget extends DmYY {
 		timerText.lineLimit = 1;
 		textView.addSpacer();
 
-		body.addSpacer();
 		cell.addSpacer(10);
 		return cell;
 	};
