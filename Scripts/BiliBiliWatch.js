@@ -15,7 +15,6 @@ class Widget extends DmYY {
 		this.logo =
 		 "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
 		this.Run(module.filename);
-		this.cacheName = this.md5(`dataSouce_${this.en}`);
 	}
 
 	cookie = "";
