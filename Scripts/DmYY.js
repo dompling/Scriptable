@@ -885,7 +885,7 @@ class DmYY {
 			let returnStack = contentStack.addStack();
 
 			// 添加右边距
-			if (marginRight != undefined && marginRight != 0) {
+			if (marginRight !== undefined && marginRight !== 0) {
 				contentStack.addSpacer(marginRight);
 			}
 
