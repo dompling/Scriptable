@@ -201,8 +201,8 @@ class Widget extends DmYY {
 		for (let i = 0; i < rangeKeys.length; i++) {
 			const key = rangeKeys[i];
 			let aux = this.rangeTimer[key];
-			min = aux < min || min == undefined ? aux : min;
-			max = aux > max || max == undefined ? aux : max;
+			min = aux < min || min === undefined ? aux : min;
+			max = aux > max || max === undefined ? aux : max;
 		}
 		diff = max - min;
 		const highestIndex = rangeKeys.length - 1;
@@ -211,21 +211,19 @@ class Widget extends DmYY {
 			const rangeKey = rangeKeys[i];
 			const date = rangeKey.split("-");
 			const day = `${date[1]}.${date[2]}`;
-			const rangeItem = this.rangeTimer[rangeKey];
 
-			const cases = rangeItem;
+			const cases = this.rangeTimer[rangeKey];
 			const delta = (cases - min) / diff;
 
 			if (i < highestIndex) {
-				const nextRange = this.rangeTimer[rangeKeys[i + 1]];
-				const nextCases = nextRange;
+				const nextCases = this.rangeTimer[rangeKeys[i + 1]];
 				const nextDelta = (nextCases - min) / diff;
 				const point1 = new Point(
-				 this.spaceBetweenDays * i + 50,
+				 this.spaceBetweenDays * i + 30,
 				 this.graphLow - this.graphHeight * delta,
 				);
 				const point2 = new Point(
-				 this.spaceBetweenDays * (i + 1) + 50,
+				 this.spaceBetweenDays * (i + 1) + 30,
 				 this.graphLow - this.graphHeight * nextDelta,
 				);
 				this.drawLine(point1, point2, this.lineWeight, this.accentColor1);
@@ -233,21 +231,21 @@ class Widget extends DmYY {
 
 			// Vertical Line
 			const point1 = new Point(
-			 this.spaceBetweenDays * i + 50,
+			 this.spaceBetweenDays * i + 30,
 			 this.graphLow - this.graphHeight * delta,
 			);
-			const point2 = new Point(this.spaceBetweenDays * i + 50, this.graphLow);
+			const point2 = new Point(this.spaceBetweenDays * i + 30, this.graphLow);
 			this.drawLine(point1, point2, this.vertLineWeight, this.accentColor2);
 
 			const casesRect = new Rect(
-			 this.spaceBetweenDays * i + 20,
+			 this.spaceBetweenDays * i + 10,
 			 this.graphLow - 40 - this.graphHeight * delta,
 			 60,
 			 23,
 			);
 
 			const dayRect = new Rect(
-			 this.spaceBetweenDays * i + 27,
+			 this.spaceBetweenDays * i + 17,
 			 this.graphLow + 10,
 			 60,
 			 23,
@@ -277,6 +275,7 @@ class Widget extends DmYY {
 		await this.init();
 		const widget = new ListWidget();
 		await this.getWidgetBackgroundImage(widget);
+		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
 			await this.renderJDHeader(header);
 		} else {
@@ -289,7 +288,7 @@ class Widget extends DmYY {
 			const kGraph = chart.addStack();
 			kGraph.url =
 			 "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-			kGraph.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2.1);
+			kGraph.size = new Size(this.widgetWidth / 2.28, this.widgetHeight / 2.1);
 			kGraph.addImage(this.drawContext.getImage());
 			chart.addSpacer();
 		} else if (this.widgetFamily === "large") {
