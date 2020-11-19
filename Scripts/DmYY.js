@@ -339,7 +339,7 @@ class DmYY {
 	setWidgetConfig = async () => {
 		const alert = new Alert();
 		alert.title = "内容配置";
-		alert.message = "设置背景设置、刷新时间等";
+		alert.message = "主题设置、刷新时间等";
 		alert.addAction("刷新时间");
 		alert.addAction("背景设置");
 		alert.addAction("BoxJS域名");
@@ -361,7 +361,7 @@ class DmYY {
 			},
 			async () => {
 				const a = new Alert();
-				a.title = "背景设置";
+				a.title = "主题设置";
 				a.message = "请自行搭配相应的字体颜色。\n 若设置透明背景，请将蒙层透明设置为 0";
 				a.addAction("选择背景");
 				a.addAction("字体颜色");
