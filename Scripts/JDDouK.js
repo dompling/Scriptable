@@ -277,7 +277,6 @@ class Widget extends DmYY {
 		await this.init();
 		const widget = new ListWidget();
 		await this.getWidgetBackgroundImage(widget);
-		const header = widget.addStack();
 		if (this.widgetFamily !== "small") {
 			await this.renderJDHeader(header);
 		} else {
@@ -290,7 +289,7 @@ class Widget extends DmYY {
 			const kGraph = chart.addStack();
 			kGraph.url =
 			 "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean";
-			kGraph.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2);
+			kGraph.size = new Size(this.widgetWidth / 2.2, this.widgetHeight / 2.1);
 			kGraph.addImage(this.drawContext.getImage());
 			chart.addSpacer();
 		} else if (this.widgetFamily === "large") {
