@@ -116,11 +116,11 @@ class DmYY {
 	verifyImage = async (img) => {
 		try {
 			const { width, height } = img.size;
-			const direct = width > height;
-			if (width > 1000 || height > 1000) {
+			const direct = true;
+			if (width > 1000) {
 				const options = ["取消", "打开图像处理"];
 				const message = `
-				您的图片像素为${width} x ${img.size.height}\n
+				您的图片像素为${width} x ${height}\n
 				请将图片${direct ? "宽度" : "高度"}调整到 1000 以下\n
 				${!direct ? "宽度" : "高度"} 自动适应
 				`;
