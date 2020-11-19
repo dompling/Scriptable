@@ -65,7 +65,9 @@ class Widget extends DmYY {
 
 				const timerKeys = Object.keys(this.rangeTimer);
 				if (timerKeys.length >= 12) {
-					delete this.rangeTimer[timerKeys[0]];
+					for (let i = 0; i < timerKeys.length - 12; i++) {
+						delete this.rangeTimer[timerKeys[i]];
+					}
 					Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
 				}
 				this.spaceBetweenDays =
