@@ -119,7 +119,11 @@ class DmYY {
 			const direct = width > height;
 			if (width > 1000 || height > 1000) {
 				const options = ["取消", "打开图像处理"];
-				const message = `您的图片像素为${width} x ${img.size.height}，请将图片${direct ? "宽度" : "高度"}压缩在 1000 以下`;
+				const message = `
+				您的图片像素为${width} x ${img.size.height}\n
+				请将图片${direct ? "宽度" : "高度"}调整到 1000 以下\n
+				${!direct ? "宽度" : "高度"} 自动适应
+				`;
 				const index = await this.generateAlert(message, options);
 				if (index === 1) Safari.openInApp('https://www.sojson.com/image/change.html', false);
 				return false;
