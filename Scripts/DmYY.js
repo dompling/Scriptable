@@ -120,7 +120,7 @@ class DmYY {
 				const options = ["取消", "打开图像处理"];
 				const message = `您的图片像素为${width} x ${img.size.height}，设置的背景图内存占用过高，请调整！`;
 				const index = await this.generateAlert(message, options);
-				if (index === 1) Safari.openInApp('https://www.yasuotu.com/size', false);
+				if (index === 1) Safari.openInApp('https://www.sojson.com/image/change.html', false);
 				return false;
 			}
 			return true;
@@ -334,13 +334,9 @@ class DmYY {
 	setWidgetConfig = async () => {
 		const alert = new Alert();
 		alert.title = "内容配置";
-		alert.message = "设置字体颜色、蒙层透明、背景、刷新时间";
+		alert.message = "设置背景设置、刷新时间等";
 		alert.addAction("刷新时间");
-		alert.addAction("新背景图");
-		alert.addAction("字体颜色");
-		alert.addAction("透明背景");
-		alert.addAction("蒙层透明");
-		alert.addAction("清空背景");
+		alert.addAction("背景设置");
 		alert.addAction("BoxJS域名");
 		alert.addAction("重置所有");
 		alert.addCancelAction("取消");
@@ -359,52 +355,66 @@ class DmYY {
 				this.saveSettings();
 			},
 			async () => {
-				const backImage = await this.chooseImg();
-				if (!await this.verifyImage(backImage)) return;
-				await this.setBackgroundImage(backImage, true);
-			},
-			async () => {
 				const a = new Alert();
-				a.title = "白天和夜间的字体颜色";
-				a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
-				const lightColor = this.settings.lightColor || "#000";
-				const darkColor = this.settings.darkColor || "#fff";
-				a.addTextField("白天", lightColor);
-				a.addTextField("夜间", darkColor);
-				a.addAction("确定");
+				a.title = "背景设置";
+				a.message = "请自行搭配相应的字体颜色。\n 若设置透明背景，请将蒙层透明设置为 0";
+				a.addAction("选择背景");
+				a.addAction("字体颜色");
+				a.addAction("透明背景");
+				a.addAction("蒙层透明");
+				a.addAction("清空背景");
 				a.addCancelAction("取消");
-				const id = await a.presentAlert();
-				if (id === -1) return;
-				this.settings.lightColor = a.textFieldValue(0);
-				this.settings.darkColor = a.textFieldValue(1);
-				// 保存到本地
-				this.saveSettings();
-			},
-			async () => {
-				const backImage = await this.getWidgetScreenShot();
-				if (backImage) await this.setBackgroundImage(backImage, true);
-			},
-			async () => {
-				try {
-					const a = new Alert();
-					a.title = "白天和夜间透明";
-					a.message = "若是设置了透明背景，请自行都设置为 0";
-					a.addTextField("白天", `${Number(this.settings.opacity[1])}`);
-					a.addTextField("夜间", `${Number(this.settings.opacity[0])}`);
-					a.addAction("确定");
-					a.addCancelAction("取消");
-					const id = await a.presentAlert();
-					if (id === -1) return;
-					this.settings.opacity[1] = Number(a.textFieldValue(0));
-					this.settings.opacity[0] = Number(a.textFieldValue(1));
-					// 保存到本地
-					this.saveSettings();
-				} catch (e) {
-					console.log(e);
-				}
-			},
-			() => {
-				this.setBackgroundImage(false, true);
+				let i = await a.presentSheet();
+				if (i === -1) return;
+				const _action = [
+					async () => {
+						const backImage = await this.chooseImg();
+						if (!await this.verifyImage(backImage)) return;
+						await this.setBackgroundImage(backImage, true);
+					},
+					async () => {
+						const a = new Alert();
+						a.title = "白天和夜间的字体颜色";
+						a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
+						a.addTextField("白天", this.settings.lightColor);
+						a.addTextField("夜间", this.settings.darkColor);
+						a.addAction("确定");
+						a.addCancelAction("取消");
+						const id = await a.presentAlert();
+						if (id === -1) return;
+						this.settings.lightColor = a.textFieldValue(0);
+						this.settings.darkColor = a.textFieldValue(1);
+						// 保存到本地
+						this.saveSettings();
+					},
+					async () => {
+						const backImage = await this.getWidgetScreenShot();
+						if (backImage) await this.setBackgroundImage(backImage, true);
+					},
+					async () => {
+						try {
+							const a = new Alert();
+							a.title = "白天和夜间透明";
+							a.message = "若是设置了透明背景，请自行都设置为 0";
+							a.addTextField("白天", `${Number(this.settings.opacity[1])}`);
+							a.addTextField("夜间", `${Number(this.settings.opacity[0])}`);
+							a.addAction("确定");
+							a.addCancelAction("取消");
+							const id = await a.presentAlert();
+							if (id === -1) return;
+							this.settings.opacity[1] = Number(a.textFieldValue(0));
+							this.settings.opacity[0] = Number(a.textFieldValue(1));
+							// 保存到本地
+							this.saveSettings();
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					() => {
+						this.setBackgroundImage(false, true);
+					},
+				];
+				_action[i] && _action[i].call(this);
 			},
 			async () => {
 				const a = new Alert();
