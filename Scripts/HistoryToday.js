@@ -40,8 +40,7 @@ class Widget extends DmYY {
 		try {
 			if (response.d.length > 0) {
 				const dataSource = response.d;
-				const result = dataSource.filter((item) => item.j[0]).map((item) => ({ ...item, j: item.j[0] }));
-				this.dataSource = result;
+				this.dataSource = dataSource.filter((item) => item.j[0]).map((item) => ({ ...item, j: item.j[0] }));
 			}
 			return false;
 		} catch (e) {
