@@ -89,8 +89,7 @@ class Widget extends DmYY {
 			imageView.size = new Size(75, 75);
 			imageView.cornerRadius = 5;
 			imageView.url = product.skuLink;
-			const image = await this.$request.get(product.image, "IMG");
-			imageView.backgroundImage = image;
+			imageView.backgroundImage = await this.$request.get(product.image, "IMG");
 			body.addSpacer();
 		}
 
@@ -110,6 +109,8 @@ class Widget extends DmYY {
 		timerText.textColor = this.widgetColor;
 		timerText.lineLimit = 1;
 		textView.addSpacer();
+
+		body.addSpacer();
 		cell.addSpacer(10);
 		return cell;
 	};
