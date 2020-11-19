@@ -115,10 +115,11 @@ class DmYY {
 	 */
 	verifyImage = async (img) => {
 		try {
-			const width = img.size.width;
-			if (width > 1000) {
+			const { width, height } = img.size;
+			const direct = width > height;
+			if (width > 1000 || height > 1000) {
 				const options = ["取消", "打开图像处理"];
-				const message = `您的图片像素为${width} x ${img.size.height}，设置的背景图内存占用过高，请调整！`;
+				const message = `您的图片像素为${width} x ${img.size.height}，请将图片${direct ? "宽度" : "高度"}压缩在 1000 以下`;
 				const index = await this.generateAlert(message, options);
 				if (index === 1) Safari.openInApp('https://www.sojson.com/image/change.html', false);
 				return false;
