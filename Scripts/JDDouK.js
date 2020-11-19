@@ -304,7 +304,7 @@ class Widget extends DmYY {
 
 	JDRun = (filename, args) => {
 		if (config.runsInApp) {
-			this.registerAction("组件基础内容配置", this.setWidgetConfig);
+			this.registerAction("基础设置", this.setWidgetConfig);
 			this.registerAction("输入京东 CK", this.inputJDck);
 			this.registerAction("读取 BoxJS 数据", this.actionSettings);
 		}

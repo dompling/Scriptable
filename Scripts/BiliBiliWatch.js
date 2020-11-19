@@ -201,7 +201,7 @@ class Widget extends DmYY {
 
 	Run = (filename) => {
 		if (config.runsInApp) {
-			this.registerAction("组件基础内容配置", this.setWidgetConfig);
+			this.registerAction("基础设置", this.setWidgetConfig);
 			this.registerAction("设置 Cookie", this.inputCk);
 			this.registerAction("设置 BoxJS Cookie", this._loadCk);
 		}
