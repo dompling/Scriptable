@@ -768,6 +768,7 @@ class DmYY {
 	 * @param {float} opacity 透明度
 	 */
 	async shadowImage(img, color = "#000000", opacity = 0.7) {
+		if (opacity === 0) return img;
 		let ctx = new DrawContext();
 		// 获取图片的尺寸
 		ctx.size = img.size;
