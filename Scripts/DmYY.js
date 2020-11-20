@@ -341,7 +341,7 @@ class DmYY {
 		alert.title = "内容配置";
 		alert.message = "主题设置、刷新时间等";
 		alert.addAction("刷新时间");
-		alert.addAction("背景设置");
+		alert.addAction("主题设置");
 		alert.addAction("BoxJS域名");
 		alert.addAction("重置所有");
 		alert.addCancelAction("取消");
