@@ -351,8 +351,11 @@ if (config.runsFromHomeScreen || config.runsInApp) {
 		const path = fileICloud.documentsDirectory();
 		fileICloud.writeString(path + "/health.txt", JSON.stringify(params));
 	}
+
+	//@注释开始    若不想在捷径里面运行，把下面内容注释
 	(async () => {
 		const M = new Widget();
 		await M.render();
 	})();
+	//@注释结束
 }
