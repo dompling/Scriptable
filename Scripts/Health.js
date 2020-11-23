@@ -348,35 +348,11 @@ Balkenanzeige für Monatsauswertung aufbereiten
 	};
 
 	setWidgetSkin = async () => {
-		const a = new Alert();
-		a.title = "白天和夜间的柱状颜色";
-		a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
-		a.addTextField("白天", this.settings.lightSkinColor);
-		a.addTextField("夜间", this.settings.darkSkinColor);
-		a.addAction("确定");
-		a.addCancelAction("取消");
-		const id = await a.presentAlert();
-		if (id === -1) return;
-		this.settings.lightSkinColor = a.textFieldValue(0);
-		this.settings.darkSkinColor = a.textFieldValue(1);
-		// 保存到本地
-		this.saveSettings();
+		await this.setLightAndDark("柱状颜色", false, "lightSkinColor", "darkSkinColor");
 	};
 
 	setWidgetScale = async () => {
-		const a = new Alert();
-		a.title = "白天和夜间的刻度颜色";
-		a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
-		a.addTextField("白天", this.settings.lightScaleColor);
-		a.addTextField("夜间", this.settings.darkScaleColor);
-		a.addAction("确定");
-		a.addCancelAction("取消");
-		const id = await a.presentAlert();
-		if (id === -1) return;
-		this.settings.lightScaleColor = a.textFieldValue(0);
-		this.settings.darkScaleColor = a.textFieldValue(1);
-		// 保存到本地
-		this.saveSettings();
+		await this.setLightAndDark("刻度颜色", false, "lightScaleColor", "darkScaleColor");
 	};
 }
 
