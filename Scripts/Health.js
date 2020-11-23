@@ -19,12 +19,14 @@ class Widget extends DmYY {
 		super(arg);
 		this.name = "健康行走步数";
 		this.en = "healthCenter";
+		this.Run();
 	}
 
 	widgetFamily = "medium";
 	maxYearDist = 1500;
 	maxMonthDist = 5;
 	color1 = Color.orange();
+	lineColor = new Color("#48484b");
 
 	running = {};
 	stepsCount = 0;
@@ -103,7 +105,7 @@ class Widget extends DmYY {
 		canvas.size = new Size(292, 82);
 		canvas.opaque = false;
 		canvas.respectScreenScale = true;
-		canvas.setFillColor(new Color("#48484b"));
+		canvas.setFillColor(this.lineColor);
 		path = new Path();
 		path.addRect(new Rect(0, 0, 292, 1));
 		canvas.addPath(path);
@@ -124,7 +126,6 @@ class Widget extends DmYY {
 	}
 
 	async buildWidget(widget) {
-		widget.backgroundColor = new Color("#222222");
 		// // Stacks definieren
 		let stackYear = widget.addStack();
 		widget.addSpacer();
@@ -177,7 +178,7 @@ class Widget extends DmYY {
 		stackDesc.size = new Size(30, 0);
 		txt = stackDesc.addText(year);
 		txt.font = Font.systemFont(7);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 		stackDesc.addSpacer();
 
 		// Progress-Bar
@@ -203,7 +204,7 @@ class Widget extends DmYY {
 		stackDist.addSpacer();
 		txt = stackDist.addText(Math.round(dist).toString() + " km");
 		txt.font = Font.systemFont(7);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 	}
 
 	createProgressSteps(stack, year, dist, color) {
@@ -221,7 +222,7 @@ class Widget extends DmYY {
 		stackDesc.size = new Size(30, 0);
 		txt = stackDesc.addText(year);
 		txt.font = Font.systemFont(7);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 		stackDesc.addSpacer();
 
 		// Progress-Bar
@@ -248,7 +249,7 @@ class Widget extends DmYY {
 		const numberText = this.numberFormat(dist);
 		txt = stackDist.addText(numberText.value + ` ${numberText.unit}步`);
 		txt.font = Font.systemFont(7);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 	}
 
 	createTemplateItem(stack, icon, desc) {
@@ -260,7 +261,7 @@ class Widget extends DmYY {
 
 		const txt = stack.addText(desc);
 		txt.font = Font.systemFont(7);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 	}
 
 	/*------------------------------------------------------------------------------
@@ -295,13 +296,13 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		stackDesc.size = new Size(20, 10);
 		txt = stackDesc.addText(month);
 		txt.font = Font.systemFont(7);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 
 		// Distanz aktuelle Jahr
 		stackDist.size = new Size(17, 8);
 		txt = stackDist.addText(Math.round(dist3).toString());
 		txt.font = Font.systemFont(6);
-		txt.textColor = Color.white();
+		txt.textColor = this.widgetColor;
 	}
 
 	setWidget = async (body) => {
@@ -327,16 +328,61 @@ Balkenanzeige für Monatsauswertung aufbereiten
 	async render() {
 		await this.init();
 		const widget = new ListWidget();
+		const isSetBackground = await this.getWidgetBackgroundImage(widget);
+		if (!isSetBackground) widget.backgroundColor = new Color("#222222");
 		await this.buildWidget(widget);
 		await this.renderMedium(widget);
 		await widget.presentMedium();
-		return widget;
 	}
+
+	Run = () => {
+		if (config.runsInApp) {
+			this.registerAction("皮肤颜色", this.setWidgetSkin);
+			this.registerAction("刻度颜色", this.setWidgetScale);
+			this.registerAction("基础设置", this.setWidgetConfig);
+		}
+		const skinColor = !this.isNight ? this.settings.lightSkinColor : this.settings.darkSkinColor;
+		this.color1 = skinColor ? new Color(skinColor) : this.color1;
+		const scaleColor = !this.isNight ? this.settings.lightScaleColor : this.settings.darkScaleColor;
+		this.lineColor = scaleColor ? new Color(scaleColor) : this.lineColor;
+	};
+
+	setWidgetSkin = async () => {
+		const a = new Alert();
+		a.title = "白天和夜间的柱状颜色";
+		a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
+		a.addTextField("白天", this.settings.lightSkinColor);
+		a.addTextField("夜间", this.settings.darkSkinColor);
+		a.addAction("确定");
+		a.addCancelAction("取消");
+		const id = await a.presentAlert();
+		if (id === -1) return;
+		this.settings.lightSkinColor = a.textFieldValue(0);
+		this.settings.darkSkinColor = a.textFieldValue(1);
+		// 保存到本地
+		this.saveSettings();
+	};
+
+	setWidgetScale = async () => {
+		const a = new Alert();
+		a.title = "白天和夜间的刻度颜色";
+		a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
+		a.addTextField("白天", this.settings.lightScaleColor);
+		a.addTextField("夜间", this.settings.darkScaleColor);
+		a.addAction("确定");
+		a.addCancelAction("取消");
+		const id = await a.presentAlert();
+		if (id === -1) return;
+		this.settings.lightScaleColor = a.textFieldValue(0);
+		this.settings.darkScaleColor = a.textFieldValue(1);
+		// 保存到本地
+		this.saveSettings();
+	};
 }
 
 // @组件代码结束
-if (config.runsFromHomeScreen) {
-	Runing(Widget);
+if (config.runsFromHomeScreen || config.runsInApp) {
+	Runing(Widget, "", false);
 } else {
 	(async () => {
 		const M = new Widget();
