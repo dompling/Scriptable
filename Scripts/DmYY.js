@@ -362,7 +362,7 @@ class DmYY {
 			async () => {
 				const a = new Alert();
 				a.title = "主题设置";
-				a.message = "请自行搭配相应的字体颜色。\n 若设置透明背景，请将蒙层透明设置为 0";
+				a.message = "请自行搭配相应的字体颜色。\n 透明背景：白天蒙层透明设置为 0，夜间请自行调整,参考值 0.35";
 				a.addAction("选择背景");
 				a.addAction("字体颜色");
 				a.addAction("透明背景");
@@ -779,9 +779,7 @@ class DmYY {
 		);
 		ctx.setFillColor(new Color(color, opacity));
 		ctx.fillRect(new Rect(0, 0, img.size["width"], img.size["height"]));
-
-		let res = await ctx.getImage();
-		return res;
+		return await ctx.getImage();
 	}
 
 	/**
