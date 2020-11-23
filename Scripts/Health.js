@@ -74,7 +74,7 @@ class Widget extends DmYY {
 						if (item.samples.length - 1 === index) return;
 						const date = run.date;
 						if (!this.running[date]) this.running[date] = 0;
-						this.running[date[0]] += parseFloat(run.value);
+						this.running[date] += parseFloat(run.value);
 					});
 				}
 				if (item.health_type === "Steps") {
