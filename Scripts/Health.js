@@ -248,7 +248,7 @@ class Widget extends DmYY {
 		stackDist.size = new Size(45, 0);
 		stackDist.addSpacer();
 		const numberText = this.numberFormat(dist);
-		txt = stackDist.addText(numberText.value + ` ${numberText.unit}步`);
+		txt = stackDist.addText(numberText.value + ` ${numberText.unit}`);
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
 		stackDist.addSpacer();
