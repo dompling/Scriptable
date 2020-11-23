@@ -90,7 +90,7 @@ class Widget extends DmYY {
 			this.notify(
 			 this.name,
 			 "健康数据读取失败，请点击使用健康数据快捷指令更新步数",
-			 "https://www.icloud.com/shortcuts/2be502d8e9694068ae982cd3a70dea89",
+			 "https://www.icloud.com/shortcuts/beb65db5ea0a474abe7ff080410b9ddf",
 			);
 			return false;
 		}
