@@ -92,6 +92,14 @@
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png",
       "name": "ZXTrains",
       "title": "智行火车票提醒"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Health.js",
+      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "name": "Health",
+      "title": "健康步数"
     }
   ]
 }

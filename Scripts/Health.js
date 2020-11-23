@@ -1,6 +1,13 @@
 // letiables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: orange; icon-glyph: user-plus;
+
+/**
+ * https://www.icloud.com/shortcuts/2be502d8e9694068ae982cd3a70dea89：快捷指令
+ * 组件必须配合快捷指令使用，运行快捷指令时，保存的路径是 Scriptable 下
+ */
+
+
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 
 if (typeof require === "undefined") require = importModule;
@@ -132,6 +139,7 @@ class Widget extends DmYY {
 		img.imageSize = new Size(25, 25);
 		stackYear2.layoutVertically();
 		let stackYearCurr = stackYear2.addStack();
+		stackYear2.addSpacer(10);
 		let stackThemItem = stackYear2.addStack();
 
 		let data = 0;
@@ -146,6 +154,7 @@ class Widget extends DmYY {
 			data += value;
 		});
 		this.createProgressYear(stackYearCurr, "运动", data, this.color1);
+		stackYear2.addSpacer(10);
 		this.createProgressSteps(stackThemItem, "步数", this.stepsCount, this.color1);
 
 		// 50km Linie

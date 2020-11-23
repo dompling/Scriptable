@@ -65,6 +65,11 @@ const scripts = [
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js",
 	},
+	{
+		moduleName: "Health",
+		url:
+		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Health.js",
+	},
 ];
 
 class YaYaInstall {
