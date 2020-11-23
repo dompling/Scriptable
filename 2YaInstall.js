@@ -9,12 +9,6 @@ const scripts = [
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
 	},
 	{
-		moduleName: "Env",
-		url:
-		 "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Env.js",
-		// 感谢G大的 EnvJS (https://github.com/GideonSenku)
-	},
-	{
 		moduleName: "Install",
 		url:
 		 "https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Install%20Scripts.js",
