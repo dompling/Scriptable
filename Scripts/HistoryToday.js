@@ -19,6 +19,7 @@ class Widget extends DmYY {
 		this.cacheName = this.md5(`dataSouce_${this.en}`);
 	}
 
+	useBoxJS = false;
 	today = "";
 	dataSource = [];
 

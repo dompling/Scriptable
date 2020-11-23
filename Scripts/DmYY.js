@@ -12,9 +12,11 @@ class DmYY {
 		this.arg = arg;
 		this._actions = {};
 		this.init();
+		this.backGroundColor = Color.dynamic(new Color(this.settings.lightBgColor || "#000"), new Color(this.settings.darkBgColor || "#fff"));
 		this.widgetColor = Color.dynamic(new Color(this.settings.lightColor), new Color(this.settings.darkColor));
 	}
 
+	useBoxJS = true;
 	isNight = Device.isUsingDarkAppearance();
 
 	// 获取 Request 对象
@@ -98,6 +100,7 @@ class DmYY {
 	// 设置 widget 背景图片
 	getWidgetBackgroundImage = async (widget) => {
 		const backgroundImage = this.getBackgroundImage();
+		widget.backgroundColor = this.backGroundColor;
 		if (backgroundImage) {
 			const opacity = this.isNight
 			 ? Number(this.settings.opacity[0])
@@ -332,6 +335,22 @@ class DmYY {
 		return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h));
 	}
 
+	setLightAndDark = async (title, desc, light, dark) => {
+		const a = new Alert();
+		a.title = "白天和夜间" + title;
+		a.message = !desc ? "请自行去网站上搜寻颜色（Hex 颜色）" : desc;
+		a.addTextField("白天", this.settings[light]);
+		a.addTextField("夜间", this.settings[dark]);
+		a.addAction("确定");
+		a.addCancelAction("取消");
+		const id = await a.presentAlert();
+		if (id === -1) return;
+		this.settings[light] = a.textFieldValue(0);
+		this.settings[dark] = a.textFieldValue(1);
+		// 保存到本地
+		this.saveSettings();
+	};
+
 	/**
 	 * 设置组件内容
 	 * @returns {Promise<void>}
@@ -342,7 +361,7 @@ class DmYY {
 		alert.message = "主题设置、刷新时间等";
 		alert.addAction("刷新时间");
 		alert.addAction("主题设置");
-		alert.addAction("BoxJS域名");
+		if (this.useBoxJS) alert.addAction("BoxJS域名");
 		alert.addAction("重置所有");
 		alert.addCancelAction("取消");
 		const actions = [
@@ -362,8 +381,9 @@ class DmYY {
 			async () => {
 				const a = new Alert();
 				a.title = "主题设置";
-				a.message = "请自行搭配相应的字体颜色。\n 透明背景：白天蒙层透明设置为 0，夜间请自行调整,参考值 0.35";
+				a.message = "请自行搭配相应的字体颜色。\n 透明背景：白天蒙层透明设置为 0 \n 夜间请自行调整,参考值 0.35";
 				a.addAction("选择背景");
+				a.addAction("背景颜色");
 				a.addAction("字体颜色");
 				a.addAction("透明背景");
 				a.addAction("蒙层透明");
@@ -377,51 +397,20 @@ class DmYY {
 						if (!await this.verifyImage(backImage)) return;
 						await this.setBackgroundImage(backImage, true);
 					},
-					async () => {
-						const a = new Alert();
-						a.title = "白天和夜间的字体颜色";
-						a.message = "请自行去网站上搜寻颜色（Hex 颜色）";
-						a.addTextField("白天", this.settings.lightColor);
-						a.addTextField("夜间", this.settings.darkColor);
-						a.addAction("确定");
-						a.addCancelAction("取消");
-						const id = await a.presentAlert();
-						if (id === -1) return;
-						this.settings.lightColor = a.textFieldValue(0);
-						this.settings.darkColor = a.textFieldValue(1);
-						// 保存到本地
-						this.saveSettings();
-					},
+					async () => this.setLightAndDark("背景颜色", false, "lightBgColor", "darkBgColor"),
+					async () => this.setLightAndDark("字体颜色", false, "lightColor", "darkColor"),
 					async () => {
 						const backImage = await this.getWidgetScreenShot();
 						if (backImage) await this.setBackgroundImage(backImage, true);
 					},
-					async () => {
-						try {
-							const a = new Alert();
-							a.title = "白天和夜间透明";
-							a.message = "若是设置了透明背景，请自行都设置为 0";
-							a.addTextField("白天", `${Number(this.settings.opacity[1])}`);
-							a.addTextField("夜间", `${Number(this.settings.opacity[0])}`);
-							a.addAction("确定");
-							a.addCancelAction("取消");
-							const id = await a.presentAlert();
-							if (id === -1) return;
-							this.settings.opacity[1] = Number(a.textFieldValue(0));
-							this.settings.opacity[0] = Number(a.textFieldValue(1));
-							// 保存到本地
-							this.saveSettings();
-						} catch (e) {
-							console.log(e);
-						}
-					},
+					async () => this.setLightAndDark("透明", "若是设置了透明背景，请自行调整", "lightOpacity", "darkOpacity"),
 					() => {
 						this.setBackgroundImage(false, true);
 					},
 				];
 				_action[i] && _action[i].call(this);
 			},
-			async () => {
+			...(this.useBoxJS ? [async () => {
 				const a = new Alert();
 				a.title = "BoxJS 域名";
 				a.addTextField("域名", this.settings.boxjsDomain);
@@ -432,7 +421,7 @@ class DmYY {
 				this.settings.boxjsDomain = a.textFieldValue(0);
 				// 保存到本地
 				this.saveSettings();
-			},
+			}] : []),
 			async () => {
 				const options = ["取消", "确定"];
 				const message = "该操作不可逆，会清空所有组件配置！";

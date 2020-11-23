@@ -27,6 +27,7 @@ class Widget extends DmYY {
 	maxMonthDist = 5;
 	color1 = Color.orange();
 	lineColor = new Color("#48484b");
+	useBoxJS = false;
 
 	running = {};
 	stepsCount = 0;
@@ -328,8 +329,7 @@ Balkenanzeige für Monatsauswertung aufbereiten
 	async render() {
 		await this.init();
 		const widget = new ListWidget();
-		const isSetBackground = await this.getWidgetBackgroundImage(widget);
-		if (!isSetBackground) widget.backgroundColor = new Color("#222222");
+		await this.getWidgetBackgroundImage(widget);
 		await this.buildWidget(widget);
 		await this.renderMedium(widget);
 		await widget.presentMedium();
