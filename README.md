@@ -29,7 +29,7 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 | [健康步数](Scripts/Health.js)  | 需要配合[健康数据](https://www.icloud.com/shortcuts/2be502d8e9694068ae982cd3a70dea89)捷径进行使用 |  捷径运行之后的保存目录请自行选择到 [Scriptable]目录下面，之后会正常显示 |
 # 赞赏码
 ![](https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/2Ya.jpg=200x200)
-
+<img src="https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/2Ya.jpg"  width="200" height="200" align="bottom" />
 ## 特别感谢
 
 - [@GideonSenku](https://github.com/GideonSenku)
