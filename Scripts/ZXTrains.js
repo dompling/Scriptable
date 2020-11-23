@@ -75,81 +75,85 @@ class Widget extends DmYY {
 
 	setWidget = async (body) => {
 		let isNone = true;
-		for (const item of this.dataSource) {
-			let { trainFlights, timeDesc } = item.orders[0];
-			const data = trainFlights[0];
-			const passengerInfos = data.passengerInfos[0];
-			const fromDate = this.dateToUnixTimestamp(data.fromTime);
-			const toDate = this.dateToUnixTimestamp(data.toTime);
-			const nowDate = parseInt(new Date().getTime());
-			if (fromDate - nowDate < 1000 * 60 * 60 * 24 && nowDate < toDate) {
-				const header = body.addStack();
-				this.name = data.title;
-				await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-				body.addSpacer();
+		try {
+			for (const item of this.dataSource) {
+				let { trainFlights, timeDesc } = item.orders[0];
+				const data = trainFlights[0];
+				const passengerInfos = data.passengerInfos[0];
+				const fromDate = this.dateToUnixTimestamp(data.fromTime);
+				const toDate = this.dateToUnixTimestamp(data.toTime);
+				const nowDate = parseInt(new Date().getTime());
+				if (fromDate - nowDate < 1000 * 60 * 60 * 24 && nowDate < toDate) {
+					const header = body.addStack();
+					this.name = data.title;
+					await this.renderHeader(header, this.logo, this.name, this.widgetColor);
+					body.addSpacer();
 
-				const container = body.addStack();
-				container.url = "suanya://";
-				container.layoutVertically();
-				const timeView = container.addStack();
-				timeView.setPadding(10, 10, 10, 10);
-				timeView.backgroundColor = new Color("#1890ff");
-				timeView.cornerRadius = 5;
+					const container = body.addStack();
+					container.url = "suanya://";
+					container.layoutVertically();
+					const timeView = container.addStack();
+					timeView.setPadding(10, 10, 10, 10);
+					timeView.backgroundColor = new Color("#1890ff");
+					timeView.cornerRadius = 5;
 
-				const left = timeView.addStack();
-				left.layoutVertically();
-				left.addSpacer();
-				const leftTimer = left.addText(data.showFromTime);
-				leftTimer.font = Font.boldSystemFont(16);
-				leftTimer.textColor = Color.white();
-				left.addSpacer();
-				const leftDesc = left.addText(data.fromCityName);
-				leftDesc.font = Font.lightSystemFont(12);
-				leftDesc.textColor = Color.white();
-				left.addSpacer();
+					const left = timeView.addStack();
+					left.layoutVertically();
+					left.addSpacer();
+					const leftTimer = left.addText(data.showFromTime);
+					leftTimer.font = Font.boldSystemFont(16);
+					leftTimer.textColor = Color.white();
+					left.addSpacer();
+					const leftDesc = left.addText(data.fromCityName);
+					leftDesc.font = Font.lightSystemFont(12);
+					leftDesc.textColor = Color.white();
+					left.addSpacer();
 
-				timeView.addSpacer();
+					timeView.addSpacer();
 
-				const center = timeView.addStack();
-				center.addSpacer();
-				center.layoutVertically();
-				const image = await this.$request.get(data.trafficIcon, "IMG");
-				const imageView = center.addImage(image);
-				imageView.imageSize = new Size(40, 40);
-				center.addSpacer();
-				timeView.addSpacer();
+					const center = timeView.addStack();
+					center.addSpacer();
+					center.layoutVertically();
+					const image = await this.$request.get(data.trafficIcon, "IMG");
+					const imageView = center.addImage(image);
+					imageView.imageSize = new Size(40, 40);
+					center.addSpacer();
+					timeView.addSpacer();
 
-				const right = timeView.addStack();
-				right.layoutVertically();
-				right.addSpacer();
-				const rightTimer = right.addText(data.showToTime);
-				rightTimer.font = Font.boldSystemFont(16);
-				rightTimer.textColor = Color.white();
-				right.addSpacer();
-				const rightDesc = right.addText(data.toCityName);
-				rightDesc.font = Font.lightSystemFont(12);
-				rightDesc.textColor = Color.white();
-				right.addSpacer();
+					const right = timeView.addStack();
+					right.layoutVertically();
+					right.addSpacer();
+					const rightTimer = right.addText(data.showToTime);
+					rightTimer.font = Font.boldSystemFont(16);
+					rightTimer.textColor = Color.white();
+					right.addSpacer();
+					const rightDesc = right.addText(data.toCityName);
+					rightDesc.font = Font.lightSystemFont(12);
+					rightDesc.textColor = Color.white();
+					right.addSpacer();
 
-				const footerView = container.addStack();
-				footerView.setPadding(10, 10, 10, 10);
-				timeDesc = nowDate < fromDate ? `距离发车还有${this.timeAgo(fromDate)}` : `距离到达还有${this.timeAgo(toDate)}`;
-				const footerLeftText = footerView.addText(timeDesc);
-				footerLeftText.font = Font.boldSystemFont(12);
-				footerLeftText.textColor = this.widgetColor;
-				footerLeftText.textOpacity = 0.8;
+					const footerView = container.addStack();
+					footerView.setPadding(10, 10, 10, 10);
+					timeDesc = nowDate < fromDate ? `距离发车还有${this.timeAgo(fromDate)}` : `距离到达还有${this.timeAgo(toDate)}`;
+					const footerLeftText = footerView.addText(timeDesc);
+					footerLeftText.font = Font.boldSystemFont(12);
+					footerLeftText.textColor = this.widgetColor;
+					footerLeftText.textOpacity = 0.8;
 
-				footerView.addSpacer();
-				const footerRightText = footerView.addText(
-				 `${passengerInfos.seatCategory} ${passengerInfos.carriageNo} ${passengerInfos.seatNo} `,
-				);
-				footerRightText.font = Font.boldSystemFont(12);
-				footerRightText.textColor = this.widgetColor;
-				footerRightText.textOpacity = 0.8;
+					footerView.addSpacer();
+					const footerRightText = footerView.addText(
+					 `${passengerInfos.seatCategory} ${passengerInfos.carriageNo} ${passengerInfos.seatNo} `,
+					);
+					footerRightText.font = Font.boldSystemFont(12);
+					footerRightText.textColor = this.widgetColor;
+					footerRightText.textOpacity = 0.8;
 
-				isNone = false;
-				break;
+					isNone = false;
+					break;
+				}
 			}
+		} catch (e) {
+			console.log(e);
 		}
 		if (isNone) await this.renderNone(body);
 		body.addStack();
