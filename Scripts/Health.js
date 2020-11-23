@@ -68,12 +68,12 @@ class Widget extends DmYY {
 			const path = fileICloud.joinPath(dir, "health.txt");
 			const response = fileICloud.readString(path);
 			let data = JSON.parse(response);
-			if (args.shortcutParameter) data = args.shortcutParameter;
 			data.forEach((item) => {
 				if (item.health_type === "Walking + Running Distance") {
-					item.samples.forEach((run) => {
-						const date = run.date.split("T");
-						if (!this.running[date[0]]) this.running[date[0]] = 0;
+					item.samples.forEach((run, index) => {
+						if (item.samples.length - 1 === index) return;
+						const date = run.date;
+						if (!this.running[date]) this.running[date] = 0;
 						this.running[date[0]] += parseFloat(run.value);
 					});
 				}
@@ -251,6 +251,7 @@ class Widget extends DmYY {
 		txt = stackDist.addText(numberText.value + ` ${numberText.unit}步`);
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
+		stackDist.addSpacer();
 	}
 
 	createTemplateItem(stack, icon, desc) {
@@ -306,21 +307,6 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		txt.textColor = this.widgetColor;
 	}
 
-	setWidget = async (body) => {
-		return body;
-	};
-
-	renderSmall = async (w) => {
-		return await this.setWidget(w);
-	};
-
-	renderLarge = async (w) => {
-		return await this.setWidget(w);
-	};
-
-	renderMedium = async (w) => {
-		return await this.setWidget(w);
-	};
 
 	/**
 	 * 渲染函数，函数名固定
@@ -331,7 +317,6 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		const widget = new ListWidget();
 		await this.getWidgetBackgroundImage(widget);
 		await this.buildWidget(widget);
-		await this.renderMedium(widget);
 		await widget.presentMedium();
 	}
 
@@ -360,6 +345,12 @@ Balkenanzeige für Monatsauswertung aufbereiten
 if (config.runsFromHomeScreen || config.runsInApp) {
 	Runing(Widget, "", false);
 } else {
+	let params = args.shortcutParameter;
+	if (params) {
+		const fileICloud = FileManager.iCloud();
+		const path = fileICloud.documentsDirectory();
+		fileICloud.writeString(path + "/health.txt", JSON.stringify(params));
+	}
 	(async () => {
 		const M = new Widget();
 		await M.render();

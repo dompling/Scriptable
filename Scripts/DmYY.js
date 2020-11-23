@@ -12,7 +12,7 @@ class DmYY {
 		this.arg = arg;
 		this._actions = {};
 		this.init();
-		this.backGroundColor = Color.dynamic(new Color(this.settings.lightBgColor || "#000"), new Color(this.settings.darkBgColor || "#fff"));
+		this.backGroundColor = Color.dynamic(new Color(this.settings.lightBgColor || "#fff"), new Color(this.settings.darkBgColor || "#000"));
 		this.widgetColor = Color.dynamic(new Color(this.settings.lightColor), new Color(this.settings.darkColor));
 	}
 
