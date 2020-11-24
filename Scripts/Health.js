@@ -19,12 +19,13 @@ class Widget extends DmYY {
 		super(arg);
 		this.name = "健康行走步数";
 		this.en = "healthCenter";
+		this.maxMonthDist = parseInt(this.settings.maxMonthDist) || 10;  // 柱状图比例高度，值越大，柱状范围越广
 		this.Run();
 	}
 
 	widgetFamily = "medium";
 	maxYearDist = 1500;
-	maxMonthDist = 10;
+
 	color1 = Color.orange();
 	lineColor = new Color("#48484b");
 	useBoxJS = false;
@@ -320,6 +321,9 @@ Balkenanzeige für Monatsauswertung aufbereiten
 
 	Run = () => {
 		if (config.runsInApp) {
+			this.registerAction("柱状比例", async () => {
+				await this.setAlertInput("设置柱状比例", " 柱状图比例高度，值越大，柱状范围越广", { maxMonthDist: "比例默认值，5" });
+			});
 			this.registerAction("皮肤颜色", this.setWidgetSkin);
 			this.registerAction("刻度颜色", this.setWidgetScale);
 			this.registerAction("基础设置", this.setWidgetConfig);

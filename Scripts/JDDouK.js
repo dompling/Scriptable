@@ -13,7 +13,7 @@ class Widget extends DmYY {
 		this.name = "京东豆收支";
 		this.en = "JDDouK";
 		this.rangeDay = 5; // 天数范围配置
-		this.maxDate = this.settings.maxDate || 12; // 显示最大天数
+		this.maxDate = parseInt(this.settings.maxDate) || 12; // 显示最大天数
 		this.forceCache = false; // 重置缓存
 		this.JDRun(module.filename, args);
 	}
