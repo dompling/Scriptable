@@ -19,7 +19,7 @@ class Widget extends DmYY {
 		super(arg);
 		this.name = "健康行走步数";
 		this.en = "healthCenter";
-		this.maxMonthDist = parseInt(this.settings.maxMonthDist) || 10;  // 柱状图比例高度，值越大，柱状范围越广
+		this.maxMonthDist = parseInt(this.settings.maxMonthDist) || 5;  // 柱状图比例高度，值越大，柱状范围越广
 		this.Run();
 	}
 
