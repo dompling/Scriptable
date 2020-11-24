@@ -115,6 +115,8 @@ class Widget extends DmYY {
 		timerText.textColor = this.widgetColor;
 		timerText.lineLimit = 1;
 
+		textView.addSpacer(3);
+
 		cell.addSpacer(10);
 		return cell;
 	};
