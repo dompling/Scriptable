@@ -108,14 +108,14 @@ class Widget extends DmYY {
 		const timerText = stackDesc.addText(progressInfo.tip);
 		timerText.font = Font.lightSystemFont(12);
 		timerText.textColor = this.widgetColor;
-		timerText.lineLimit = 1;
+		// timerText.lineLimit = 1;
 		stackDesc.addSpacer();
 		const statusText = stackDesc.addText(stateInfo.stateName);
 		statusText.font = Font.lightSystemFont(12);
 		timerText.textColor = this.widgetColor;
 		timerText.lineLimit = 1;
 
-		textView.addSpacer(3);
+		textView.addSpacer(10);
 
 		cell.addSpacer(10);
 		return cell;
