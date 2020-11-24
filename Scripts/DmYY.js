@@ -351,6 +351,32 @@ class DmYY {
 		this.saveSettings();
 	};
 
+
+	/**
+	 * 弹出输入框
+	 * @param title 标题
+	 * @param desc  描述
+	 * @param opt   属性
+	 * @returns {Promise<void>}
+	 */
+	setAlertInput = async (title, desc, opt = {}) => {
+		const a = new Alert();
+		a.title = title;
+		a.message = !desc ? "" : desc;
+		Object.keys(opt).forEach(key => {
+			a.addTextField(opt[key], this.settings[key]);
+		});
+		a.addAction("确定");
+		a.addCancelAction("取消");
+		const id = await a.presentAlert();
+		if (id === -1) return;
+		Object.keys(opt).forEach((key, index) => {
+			this.settings[key] = a.textFieldValue(index);
+		});
+		// 保存到本地
+		this.saveSettings();
+	};
+
 	/**
 	 * 设置组件内容
 	 * @returns {Promise<void>}
@@ -986,9 +1012,12 @@ const Runing = async (Widget, default_args = "", isDebug = true, extra) => {
 			});
 		}
 		const W = await M.render();
-
-		if (M.settings.refreshAfterDate) {
-			W.refreshAfterDate = new Date(new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate));
+		try {
+			if (M.settings.refreshAfterDate) {
+				W.refreshAfterDate = new Date(new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate));
+			}
+		} catch (e) {
+			console.log(e);
 		}
 		if (W) {
 			Script.setWidget(W);

@@ -24,7 +24,7 @@ class Widget extends DmYY {
 
 	widgetFamily = "medium";
 	maxYearDist = 1500;
-	maxMonthDist = 5;
+	maxMonthDist = 10;
 	color1 = Color.orange();
 	lineColor = new Color("#48484b");
 	useBoxJS = false;
@@ -201,8 +201,7 @@ class Widget extends DmYY {
 		img.imageSize = new Size(180, 7);
 
 		// Distanz
-		stackDist.size = new Size(40, 0);
-		stackDist.addSpacer();
+		stackDist.addSpacer(10);
 		txt = stackDist.addText(Math.round(dist).toString() + " km");
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
@@ -245,13 +244,11 @@ class Widget extends DmYY {
 		img.imageSize = new Size(180, 7);
 
 		// Distanz
-		stackDist.size = new Size(45, 0);
-		stackDist.addSpacer();
+		stackDist.addSpacer(10);
 		const numberText = this.numberFormat(dist);
-		txt = stackDist.addText(numberText.value + ` ${numberText.unit}`);
+		txt = stackDist.addText(numberText.value + ` ${numberText.unit}步`);
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
-		stackDist.addSpacer();
 	}
 
 	createTemplateItem(stack, icon, desc) {
@@ -318,6 +315,7 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		await this.getWidgetBackgroundImage(widget);
 		await this.buildWidget(widget);
 		await widget.presentMedium();
+		return widget;
 	}
 
 	Run = () => {
@@ -351,11 +349,9 @@ if (config.runsFromHomeScreen || config.runsInApp) {
 		const path = fileICloud.documentsDirectory();
 		fileICloud.writeString(path + "/health.txt", JSON.stringify(params));
 	}
-
-	//@注释开始    若不想在捷径里面运行，把下面内容注释
 	(async () => {
 		const M = new Widget();
 		await M.render();
+		Script.complete();
 	})();
-	//@注释结束
 }

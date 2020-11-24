@@ -13,12 +13,13 @@ class Widget extends DmYY {
 		this.name = "京东豆收支";
 		this.en = "JDDouK";
 		this.rangeDay = 5; // 天数范围配置
+		this.maxDate = this.settings.maxDate || 12; // 显示最大天数
+		this.forceCache = false; // 重置缓存
 		this.JDRun(module.filename, args);
 	}
 
 	drawContext = new DrawContext();
 
-	forceCache = false; // 重置缓存
 
 	widgetFamily = "medium";
 	rangeTimer = {};
@@ -64,8 +65,8 @@ class Widget extends DmYY {
 				this.rangeTimer = JSON.parse(Keychain.get(this.CACHE_KEY));
 
 				const timerKeys = Object.keys(this.rangeTimer);
-				if (timerKeys.length >= 12) {
-					for (let i = 0; i < timerKeys.length - 12; i++) {
+				if (timerKeys.length >= this.maxDate) {
+					for (let i = 0; i < timerKeys.length - this.maxDate; i++) {
 						delete this.rangeTimer[timerKeys[i]];
 					}
 					Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
@@ -304,6 +305,9 @@ class Widget extends DmYY {
 
 	JDRun = (filename, args) => {
 		if (config.runsInApp) {
+			this.registerAction("显示天数", async () => {
+				await this.setAlertInput("设置显示天数周期范围", false, { maxDate: "天数" });
+			});
 			this.registerAction("基础设置", this.setWidgetConfig);
 			this.registerAction("输入京东 CK", this.inputJDck);
 			this.registerAction("读取 BoxJS 数据", this.actionSettings);
