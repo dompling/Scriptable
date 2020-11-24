@@ -50,6 +50,11 @@ const scripts = [
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
 	},
 	{
+		moduleName: "BiliBili",
+		url:
+		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js",
+	},
+	{
 		moduleName: "BiliBiliWatch",
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
@@ -63,16 +68,6 @@ const scripts = [
 		moduleName: "Health",
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Health.js",
-	},
-	{
-		moduleName: "BiliBili",
-		url:
-		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js",
-	},
-	{
-		moduleName: "BiliBiliWatch",
-		url:
-		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
 	},
 ];
 
