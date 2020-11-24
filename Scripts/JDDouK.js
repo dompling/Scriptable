@@ -19,8 +19,6 @@ class Widget extends DmYY {
 	}
 
 	drawContext = new DrawContext();
-
-
 	widgetFamily = "medium";
 	rangeTimer = {};
 	timerKeys = [];
