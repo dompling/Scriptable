@@ -316,7 +316,7 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		await this.getWidgetBackgroundImage(widget);
 		await this.buildWidget(widget);
 		await widget.presentMedium();
-		return widget;
+		if (config.runsFromHomeScreen) return widget;
 	}
 
 	Run = () => {
