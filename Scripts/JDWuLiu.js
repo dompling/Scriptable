@@ -80,7 +80,7 @@ class Widget extends DmYY {
 	};
 
 	setListCell = async (cell, data) => {
-		const { productList = [], orderDetailLink = "", progressInfo = {} } = data;
+		const { productList = [], orderDetailLink = "", progressInfo = {}, stateInfo } = data;
 		const product = productList[0];
 		let body = cell.addStack();
 		body.url = orderDetailLink;
@@ -104,11 +104,16 @@ class Widget extends DmYY {
 
 		textView.addSpacer();
 
-		const timerText = textView.addText(progressInfo.tip);
+		const stackDesc = textView.addStack();
+		const timerText = stackDesc.addText(progressInfo.tip);
 		timerText.font = Font.lightSystemFont(12);
 		timerText.textColor = this.widgetColor;
 		timerText.lineLimit = 1;
-		textView.addSpacer();
+		stackDesc.addSpacer();
+		const statusText = stackDesc.addText(stateInfo.stateName);
+		statusText.font = Font.lightSystemFont(12);
+		timerText.textColor = this.widgetColor;
+		timerText.lineLimit = 1;
 
 		cell.addSpacer(10);
 		return cell;
