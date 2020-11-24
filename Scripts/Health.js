@@ -321,6 +321,9 @@ Balkenanzeige für Monatsauswertung aufbereiten
 
 	Run = () => {
 		if (config.runsInApp) {
+			this.registerAction("捷径安装", async () => {
+				await this.notify(this.name, "点击安装捷径", "https://www.icloud.com/shortcuts/beb65db5ea0a474abe7ff080410b9ddf");
+			});
 			this.registerAction("柱状比例", async () => {
 				await this.setAlertInput("设置柱状比例", " 柱状图比例高度，值越大，柱状范围越广", { maxMonthDist: "比例默认值，5" });
 			});
