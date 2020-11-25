@@ -123,12 +123,14 @@ class Widget extends DmYY {
 		stackHeader.addSpacer(5);
 
 		const stackRight = stackHeader.addStack();
+		stackRight.addSpacer();
 		Object.keys(this.dataSource.footer).forEach((key, index) => {
 			if (index === 0) {
 				const value = this.dataSource.footer[key];
 				this.setNumberStack(stackRight, { key, value });
 			}
 		});
+		stackRight.addSpacer();
 
 		stackBody.addSpacer();
 		const stackFooter = stackBody.addStack();
