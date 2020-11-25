@@ -119,7 +119,8 @@ class Widget extends DmYY {
     const textFormatNumber = this.textFormat.title;
     textFormatNumber.color = this.widgetColor;
     const title = this.dataSource.title;
-    textFormatNumber.size = title.length > 10 ? 16 : 20;
+    textFormatNumber.size =
+      title.length > 15 || this.widgetFamily === "small" ? 16 : 20;
     const titleItem = this.provideText(title, stack, textFormatNumber);
     titleItem.lineLimit = 1;
   };
