@@ -74,7 +74,7 @@ class Widget extends DmYY {
 		stack.addSpacer();
 		const textFormatNumber = this.textFormat.title;
 		textFormatNumber.color = this.widgetColor;
-		textFormatNumber.size = 14;
+		textFormatNumber.size = 16;
 		const stackTitle = stack.addStack();
 		stackTitle.addSpacer();
 		const valueItem = this.provideText(data.value, stackTitle, textFormatNumber);
@@ -85,7 +85,7 @@ class Widget extends DmYY {
 
 		const textFormatDesc = this.textFormat.defaultText;
 		textFormatDesc.color = new Color("#aaaaaa");
-		textFormatDesc.size = 10;
+		textFormatDesc.size = 12;
 		const stackDesc = stack.addStack();
 		stackDesc.addSpacer();
 		const descItem = this.provideText(data.key, stackDesc, textFormatDesc);
@@ -99,7 +99,7 @@ class Widget extends DmYY {
 	setTitleStack = (stack) => {
 		const textFormatNumber = this.textFormat.title;
 		textFormatNumber.color = this.widgetColor;
-		textFormatNumber.size = 25;
+		textFormatNumber.size = this.dataSource.title.length > 8 ? 20 : 25;
 		const titleItem = this.provideText(this.dataSource.title, stack, textFormatNumber);
 		titleItem.lineLimit = 1;
 	};
@@ -167,7 +167,7 @@ class Widget extends DmYY {
 			const stack = stackFooter.addStack();
 			this.setNumberStack(stack, { key, value });
 			if (Object.keys(this.dataSource.footer).length - 1 !== index) {
-				stackFooter.addSpacer(5);
+				stackFooter.addSpacer(2);
 			}
 		});
 		stackBody.addSpacer();
@@ -205,6 +205,3 @@ class Widget extends DmYY {
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
 await Runing(Widget, args.widgetParameter, false); //远程开发环境
-
-//https://api.bilibili.com/x/space/upstat?mid=63301586&jsonp=jsonp
-//https://api.bilibili.com/x/space/acc/info?mid=63301586&jsonp=jsonp
