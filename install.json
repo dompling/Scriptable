@@ -100,6 +100,14 @@
       "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
       "name": "Health",
       "title": "健康步数"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Contact.js",
+      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "name": "Contact",
+      "title": "桌面联系人"
     }
   ]
 }
