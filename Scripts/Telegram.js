@@ -139,7 +139,7 @@ class Widget extends DmYY {
 
   renderSmall = async (w) => {
     const stackBody = w.addStack();
-    stackBody.url = `https://t.me/${this.inputValue}`;
+    stackBody.url = `tg://resolve?domain=${this.inputValue}`;
     stackBody.layoutVertically();
     stackBody.addSpacer();
     const stackHeader = stackBody.addStack();
