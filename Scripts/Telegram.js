@@ -71,7 +71,7 @@ class Widget extends DmYY {
 
 	setNumberStack = (stack, data) => {
 		stack.layoutVertically();
-
+		stack.addSpacer();
 		const textFormatNumber = this.textFormat.title;
 		textFormatNumber.color = this.widgetColor;
 		textFormatNumber.size = 14;
@@ -91,6 +91,7 @@ class Widget extends DmYY {
 		const descItem = this.provideText(data.key, stackDesc, textFormatDesc);
 		descItem.lineLimit = 1;
 		stackDesc.addSpacer();
+		stack.addSpacer();
 
 		return stack;
 	};
@@ -123,14 +124,12 @@ class Widget extends DmYY {
 		stackHeader.addSpacer(5);
 
 		const stackRight = stackHeader.addStack();
-		stackRight.addSpacer();
 		Object.keys(this.dataSource.footer).forEach((key, index) => {
 			if (index === 0) {
 				const value = this.dataSource.footer[key];
 				this.setNumberStack(stackRight, { key, value });
 			}
 		});
-		stackRight.addSpacer();
 
 		stackBody.addSpacer();
 		const stackFooter = stackBody.addStack();
@@ -154,7 +153,7 @@ class Widget extends DmYY {
 
 		const stackRight = stackHeader.addStack();
 		stackRight.layoutVertically();
-		stackRight.addSpacer();
+		stackRight.addSpacer(10);
 		this.setTitleStack(stackRight);
 		stackRight.addSpacer(5);
 		this.setPathStack(stackRight);
