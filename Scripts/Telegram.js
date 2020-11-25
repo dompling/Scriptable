@@ -185,13 +185,10 @@ class Widget extends DmYY {
     stackBody.addSpacer();
 
     const stackFooter = stackBody.addStack();
-    Object.keys(this.dataSource.footer).forEach((key, index) => {
+    Object.keys(this.dataSource.footer).forEach((key) => {
       const value = this.dataSource.footer[key];
       const stack = stackFooter.addStack();
       this.setNumberStack(stack, { key, value });
-      if (Object.keys(this.dataSource.footer).length - 1 !== index) {
-        stackFooter.addSpacer(5);
-      }
     });
     stackBody.addSpacer();
     return w;
@@ -226,5 +223,5 @@ class Widget extends DmYY {
 }
 
 // @组件代码结束
-// await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, args.widgetParameter, true); //远程开发环境
+// await Runing(Widget, "", true); // 正式环境
+await Runing(Widget, args.widgetParameter); //远程开发环境
