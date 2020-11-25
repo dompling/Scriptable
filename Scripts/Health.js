@@ -28,6 +28,7 @@ class Widget extends DmYY {
 
 	running = {};
 	stepsCount = 0;
+	stepsToday = 0;
 
 	init = async () => {
 		try {
@@ -65,6 +66,14 @@ class Widget extends DmYY {
 			const path = fileICloud.joinPath(dir, "health.txt");
 			const response = fileICloud.readString(path);
 			let data = JSON.parse(response);
+			const dateToday = new Date();
+			const year = dateToday.getFullYear();
+			let month = dateToday.getMonth() + 1;
+			let day = dateToday.getDate();
+			month = month > 10 ? month : `0${month}`;
+			day = day > 10 ? day : `0${day}`;
+			const today = `${year}-${month}-${day}`;
+
 			data.forEach((item) => {
 				if (item.health_type === "Walking + Running Distance") {
 					item.samples.forEach((run, index) => {
@@ -76,6 +85,7 @@ class Widget extends DmYY {
 				}
 				if (item.health_type === "Steps") {
 					item.samples.forEach((step) => {
+						if (step.date === today) this.stepsToday = step.value;
 						this.stepsCount += parseInt(step.value);
 					});
 				}
@@ -138,8 +148,8 @@ class Widget extends DmYY {
 		img.imageSize = new Size(25, 25);
 		stackYear2.layoutVertically();
 		let stackYearCurr = stackYear2.addStack();
-		stackYear2.addSpacer(10);
 		let stackThemItem = stackYear2.addStack();
+		let stackToday = stackYear2.addStack();
 
 		let data = 0;
 		const runningData = Object.keys(this.running);
@@ -153,8 +163,11 @@ class Widget extends DmYY {
 			data += value;
 		});
 		this.createProgressYear(stackYearCurr, "运动", data, this.color1);
-		stackYear2.addSpacer(10);
-		this.createProgressSteps(stackThemItem, "步数", this.stepsCount, this.color1);
+
+		const count = (18 * this.stepsCount) / (20000 * this.maxMonthDist / 4);
+		this.createProgressSteps(stackThemItem, "步数", this.stepsCount, this.color1, count);
+		const today = (18 * this.stepsToday) / (2000 * this.maxMonthDist / 4);
+		this.createProgressSteps(stackToday, "今日", this.stepsToday, this.color1, today);
 
 		// 50km Linie
 		this.createLines(stackMonth);
@@ -204,7 +217,7 @@ class Widget extends DmYY {
 		txt.textColor = this.widgetColor;
 	}
 
-	createProgressSteps(stack, year, dist, color) {
+	createProgressSteps(stack, year, dist, color, rectScale) {
 		let stackDesc, stackPBar, stackDist, canvas, path, txt, img;
 
 		// Initialisierung
@@ -236,7 +249,7 @@ class Widget extends DmYY {
 		path = new Path();
 		const numberText = this.numberFormat(dist);
 
-		path.addRoundedRect(new Rect(0, 0, (18 * dist) / (20000 * this.maxMonthDist / 4), 5), 3, 2);
+		path.addRoundedRect(new Rect(0, 0, rectScale, 5), 3, 2);
 		canvas.addPath(path);
 		canvas.fillPath();
 		img = stackPBar.addImage(canvas.getImage());
@@ -250,13 +263,8 @@ class Widget extends DmYY {
 		txt.textColor = this.widgetColor;
 	}
 
-	createTemplateItem(stack, icon, desc) {
-		let sym = SFSymbol.named(icon);
-		let img = stack.addImage(sym.image);
-		img.tintColor = this.color1;
-		img.imageSize = new Size(10, 10);
-		stack.addSpacer(5);
-
+	createTemplateItem(stack, desc) {
+		// Stacks
 		const txt = stack.addText(desc);
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
