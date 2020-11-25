@@ -41,7 +41,7 @@ class Widget extends DmYY {
 			const phoneNumbers = this.dataSource.phoneNumbers;
 			if (phoneNumbers.length) {
 				this.phoneNumber = phoneNumbers[0];
-				this.phoneNumber.value = this.phoneNumber.value.replaceAll(" ");
+				this.phoneNumber.value = this.phoneNumber.value.replaceAll(" ", "");
 			}
 		} catch (e) {
 			console.log(e);
