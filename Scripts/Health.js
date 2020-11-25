@@ -1,8 +1,11 @@
+// letiables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: orange; icon-glyph: user-plus;
+
 /**
  * https://www.icloud.com/shortcuts/2be502d8e9694068ae982cd3a70dea89：快捷指令
  * 组件必须配合快捷指令使用，运行快捷指令时，保存的路径是 Scriptable 下
  */
-
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 
