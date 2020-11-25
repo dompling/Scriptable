@@ -74,6 +74,11 @@ const scripts = [
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Contact.js",
 	},
+	{
+		moduleName: "Telegram",
+		url:
+		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js",
+	},
 ];
 
 class YaYaInstall {
