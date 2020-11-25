@@ -392,17 +392,7 @@ class DmYY {
 		alert.addCancelAction("取消");
 		const actions = [
 			async () => {
-				const a = new Alert();
-				a.title = "刷新时间（分）";
-				a.message = "默认刷新时间 30 分钟刷新一次，也可自行手动运行";
-				a.addTextField("分钟", this.settings.refreshAfterDate);
-				a.addAction("确定");
-				a.addCancelAction("取消");
-				const id = await a.presentAlert();
-				if (id === -1) return;
-				this.settings.refreshAfterDate = a.textFieldValue(0);
-				// 保存到本地
-				this.saveSettings();
+				await this.setAlertInput("刷新时间（分）", "默认刷新时间 30 分钟刷新一次，也可自行手动运行", { refreshAfterDate: "分钟" });
 			},
 			async () => {
 				const a = new Alert();
