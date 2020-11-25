@@ -1,7 +1,3 @@
-// letiables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: orange; icon-glyph: user-plus;
-
 /**
  * https://www.icloud.com/shortcuts/2be502d8e9694068ae982cd3a70dea89：快捷指令
  * 组件必须配合快捷指令使用，运行快捷指令时，保存的路径是 Scriptable 下
@@ -153,7 +149,7 @@ class Widget extends DmYY {
 			const stackDay = stackMonth.addStack();
 			const value = this.running[date];
 			this.createProgressMonth(stackDay, `${month}.${day}`, value);
-			stackMonth.addSpacer(4);
+			stackMonth.addSpacer(2);
 			data += value;
 		});
 		this.createProgressYear(stackYearCurr, "运动", data, this.color1);
@@ -195,7 +191,7 @@ class Widget extends DmYY {
 		canvas.fillPath();
 		canvas.setFillColor(color);
 		path = new Path();
-		path.addRoundedRect(new Rect(0, 0, (180 * dist) / 200, 5), 3, 2);
+		path.addRoundedRect(new Rect(0, 0, (180 * dist) / (200 * this.maxMonthDist / 4), 5), 3, 2);
 		canvas.addPath(path);
 		canvas.fillPath();
 		img = stackPBar.addImage(canvas.getImage());
@@ -238,7 +234,9 @@ class Widget extends DmYY {
 		canvas.fillPath();
 		canvas.setFillColor(color);
 		path = new Path();
-		path.addRoundedRect(new Rect(0, 0, (18 * dist) / 20000, 5), 3, 2);
+		const numberText = this.numberFormat(dist);
+
+		path.addRoundedRect(new Rect(0, 0, (18 * dist) / (20000 * this.maxMonthDist / 4), 5), 3, 2);
 		canvas.addPath(path);
 		canvas.fillPath();
 		img = stackPBar.addImage(canvas.getImage());
@@ -246,7 +244,7 @@ class Widget extends DmYY {
 
 		// Distanz
 		stackDist.addSpacer(10);
-		const numberText = this.numberFormat(dist);
+
 		txt = stackDist.addText(numberText.value + ` ${numberText.unit}步`);
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
@@ -273,7 +271,7 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		// Stacks definieren
 		stack.layoutVertically();
 		stackPBar = stack.addStack();
-		stack.addSpacer(4);
+		stack.addSpacer(5);
 		stackDesc = stack.addStack();
 		stackDist = stack.addStack();
 
@@ -285,7 +283,7 @@ Balkenanzeige für Monatsauswertung aufbereiten
 
 		canvas.setFillColor(this.color1);
 		path = new Path();
-		s = (60 * dist3) / this.maxMonthDist;
+		s = (50 * dist3) / this.maxMonthDist;
 		path.addRect(new Rect(6, 60 - s, 8, s));
 		canvas.addPath(path);
 		canvas.fillPath();
@@ -293,16 +291,18 @@ Balkenanzeige für Monatsauswertung aufbereiten
 		img.imageSize = new Size(17, 60);
 
 		// Monat
-		stackDesc.size = new Size(20, 10);
+		stackDesc.size = new Size(23, 10);
 		txt = stackDesc.addText(month);
 		txt.font = Font.systemFont(7);
 		txt.textColor = this.widgetColor;
+		txt.centerAlignText();
 
 		// Distanz aktuelle Jahr
-		stackDist.size = new Size(17, 8);
+		stackDist.size = new Size(20, 8);
 		txt = stackDist.addText(Math.round(dist3).toString());
 		txt.font = Font.systemFont(6);
 		txt.textColor = this.widgetColor;
+		txt.centerAlignText();
 	}
 
 
