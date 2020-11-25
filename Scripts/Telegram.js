@@ -85,7 +85,7 @@ class Widget extends DmYY {
 
 		const textFormatDesc = this.textFormat.defaultText;
 		textFormatDesc.color = new Color("#aaaaaa");
-		textFormatDesc.size = 12;
+		textFormatDesc.size = 10;
 		const stackDesc = stack.addStack();
 		stackDesc.addSpacer();
 		const descItem = this.provideText(data.key, stackDesc, textFormatDesc);
