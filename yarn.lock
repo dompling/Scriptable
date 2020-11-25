@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@types/scriptable-ios@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.npm.taobao.org/@types/scriptable-ios/download/@types/scriptable-ios-1.5.0.tgz#bf0545452e8882a4634b279cfc29d7f7dd8cef8d"
-  integrity sha1-vwVFRS6IgqRjSyec/CnX992M740=
+"@types/scriptable-ios@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.npm.taobao.org/@types/scriptable-ios/download/@types/scriptable-ios-1.6.1.tgz#44766b47a0c0c9f92a3c1bf46214288cf3d926f4"
+  integrity sha1-RHZrR6DAyfkqPBv0YhQojPPZJvQ=
 
 accepts@~1.3.7:
   version "1.3.7"

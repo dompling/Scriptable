@@ -997,6 +997,46 @@ class DmYY {
 		},
 	};
 
+
+	textFormat = {
+		defaultText: { size: 14, font: "regular" },
+		battery: { size: 10, font: "bold" },
+		title: { size: 16, font: "semibold" },
+		SFMono: { size: 12, font: "SF Mono" },
+	};
+
+
+	provideFont = (fontName, fontSize) => {
+		const fontGenerator = {
+			"ultralight": function () { return Font.ultraLightSystemFont(fontSize); },
+			"light": function () { return Font.lightSystemFont(fontSize); },
+			"regular": function () { return Font.regularSystemFont(fontSize); },
+			"medium": function () { return Font.mediumSystemFont(fontSize); },
+			"semibold": function () { return Font.semiboldSystemFont(fontSize); },
+			"bold": function () { return Font.boldSystemFont(fontSize); },
+			"heavy": function () { return Font.heavySystemFont(fontSize); },
+			"black": function () { return Font.blackSystemFont(fontSize); },
+			"italic": function () { return Font.italicSystemFont(fontSize); },
+		};
+
+		const systemFont = fontGenerator[fontName];
+		if (systemFont) {
+			return systemFont();
+		}
+		return new Font(fontName, fontSize);
+	};
+
+	provideText = (string, container, format) => {
+		const textItem = container.addText(string);
+		const textFont = format.font;
+		const textSize = format.size;
+		const textColor = format.color;
+
+		textItem.font = this.provideFont(textFont, textSize);
+		textItem.textColor = textColor;
+		return textItem;
+	};
+
 }
 
 // @base.end
