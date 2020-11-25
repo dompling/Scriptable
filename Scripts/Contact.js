@@ -34,7 +34,7 @@ class Widget extends DmYY {
 					 item.nickname === this.userName ||
 					 `${item.familyName}${item.givenName}` === this.userName
 					);
-				}) || {};
+				});
 			}
 			if (!this.dataSource) return this.notify(this.name, "未找到通讯录相关联系人，请重新设置");
 			this.userName = `${this.dataSource.familyName}${this.dataSource.givenName}`;
@@ -116,7 +116,8 @@ class Widget extends DmYY {
 		const email = data.length ? data[0] : {};
 		this.provideText(this.userName || "", stackUsername, textFormat);
 		this.provideText(phoneNumber || "", stackPhoneNumber, textFormat);
-		this.provideText(email.value || "", stackNote, textFormat);
+		const mailTextItem = this.provideText(email.value || "", stackNote, textFormat);
+		mailTextItem.lineLimit = 1;
 
 		stackBody.addSpacer();
 		return stackBody;
