@@ -116,6 +116,7 @@ class Widget extends DmYY {
 		const stackBody = w.addStack();
 		stackBody.url = `https://t.me/${this.inputValue}`;
 		stackBody.layoutVertically();
+		stackBody.addSpacer();
 		const stackHeader = stackBody.addStack();
 		const stackLeft = stackHeader.addStack();
 		await this.setAvatar(stackLeft);
@@ -128,11 +129,14 @@ class Widget extends DmYY {
 				this.setNumberStack(stackRight, { key, value });
 			}
 		});
-		stackBody.addSpacer(20);
+
+		stackBody.addSpacer();
 		const stackFooter = stackBody.addStack();
 		stackFooter.layoutVertically();
 		this.setTitleStack(stackFooter);
+		stackFooter.addSpacer(5);
 		this.setPathStack(stackFooter);
+		stackBody.addSpacer();
 		return w;
 	};
 
@@ -140,6 +144,7 @@ class Widget extends DmYY {
 		const stackBody = w.addStack();
 		stackBody.url = `https://t.me/${this.inputValue}`;
 		stackBody.layoutVertically();
+		stackBody.addSpacer();
 		const stackHeader = stackBody.addStack();
 		const stackLeft = stackHeader.addStack();
 		await this.setAvatar(stackLeft);
@@ -149,10 +154,11 @@ class Widget extends DmYY {
 		stackRight.layoutVertically();
 		stackRight.addSpacer();
 		this.setTitleStack(stackRight);
+		stackRight.addSpacer(5);
 		this.setPathStack(stackRight);
 		stackRight.addSpacer();
 
-		stackBody.addSpacer(20);
+		stackBody.addSpacer();
 
 		const stackFooter = stackBody.addStack();
 		Object.keys(this.dataSource.footer).forEach((key, index) => {
@@ -163,7 +169,7 @@ class Widget extends DmYY {
 				stackFooter.addSpacer(5);
 			}
 		});
-
+		stackBody.addSpacer();
 		return w;
 	};
 
