@@ -39,7 +39,10 @@ class Widget extends DmYY {
 			if (!this.dataSource) return this.notify(this.name, "未找到通讯录相关联系人，请重新设置");
 			this.userName = `${this.dataSource.familyName}${this.dataSource.givenName}`;
 			const phoneNumbers = this.dataSource.phoneNumbers;
-			this.phoneNumber = phoneNumbers.length ? phoneNumbers[0] : {};
+			if (phoneNumbers.length) {
+				this.phoneNumber = phoneNumbers[0];
+				this.phoneNumber.value = this.phoneNumber.value.replaceAll(" ");
+			}
 		} catch (e) {
 			console.log(e);
 		}
