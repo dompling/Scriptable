@@ -53,13 +53,23 @@ class DmYY {
 	//request 接口请求
 	$request = {
 		get: async (url = "", options = {}, type = "JSON") => {
-			const params = { url, ...options, method: "GET" };
+			let params = { ...options, method: "GET" };
+			if (typeof url === "object") {
+				params = { ...params, ...url };
+			} else {
+				params.url = url;
+			}
 			let _type = type;
 			if (typeof options === "string") _type = options;
 			return await this.http(params, _type);
 		},
 		post: async (url = "", options = {}, type = "JSON") => {
-			const params = { url, ...options, method: "POST" };
+			let params = { ...options, method: "POST" };
+			if (typeof url === "object") {
+				params = { ...params, ...url };
+			} else {
+				params.url = url;
+			}
 			let _type = type;
 			if (typeof options === "string") _type = options;
 			return await this.http(params, _type);
@@ -375,6 +385,29 @@ class DmYY {
 		});
 		// 保存到本地
 		this.saveSettings();
+	};
+
+	/**
+	 * 设置当前项目的 boxJS 缓存
+	 * @param opt key value
+	 * @returns {Promise<void>}
+	 */
+	setCacheBoxJSData = async (opt = {}) => {
+		const options = ["取消", "确定"];
+		const message = "代理缓存仅支持 BoxJS 相关的代理！";
+		const index = await this.generateAlert(message, options);
+		if (index === 0) return;
+		try {
+			const boxJSData = await this.getCache();
+			Object.keys(opt).forEach(key => {
+				this.settings[key] = boxJSData[opt[key]] || "";
+			});
+			// 保存到本地
+			this.saveSettings();
+		} catch (e) {
+			console.log(e);
+			this.notify(this.name, "BoxJS 缓存读取失败！点击查看相关教程", "https://chavyleung.gitbook.io/boxjs/awesome/videos");
+		}
 	};
 
 	/**
@@ -877,10 +910,10 @@ class DmYY {
 	}
 
 	textFormat = {
-		defaultText: { size: 14, font: "regular" },
-		battery: { size: 10, font: "bold" },
-		title: { size: 16, font: "semibold" },
-		SFMono: { size: 12, font: "SF Mono" },
+		defaultText: { size: 14, font: "regular", color: this.widgetColor },
+		battery: { size: 10, font: "bold", color: this.widgetColor },
+		title: { size: 16, font: "semibold", color: this.widgetColor },
+		SFMono: { size: 12, font: "SF Mono", color: this.widgetColor },
 	};
 
 
