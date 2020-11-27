@@ -17,9 +17,9 @@ class Widget extends DmYY {
 
 	cookie = "";
 	authToken = "";
-	fgCircleColor = new Color('#dddef3');
+	fgCircleColor = Color.dynamic(new Color('#dddef3'), new Color('#fff'));
 	percentColor = this.widgetColor;
-	textColor1 = new Color("#333");
+	textColor1 = Color.dynamic(new Color("#333"), new Color("#fff"));
 	textColor2 = this.widgetColor;
 
 	circleColor1 = new Color("#ffbb73");
