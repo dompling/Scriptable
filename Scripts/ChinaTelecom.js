@@ -232,17 +232,17 @@ class Widget extends DmYY {
 
 		stack.addSpacer(5);
 		const stackDesc = stack.addStack();
-		stackDesc.layoutVertically();
+		stackDesc.size = new Size(70, 60);
 		stackDesc.centerAlignContent();
+		stackDesc.layoutVertically();
 		stackDesc.addSpacer(10);
 		const textLabel = this.textFormat.defaultText;
 		textLabel.size = 12;
 		textLabel.color = this.textColor2;
 		this.provideText(data.label, stackDesc, textLabel);
 		stackDesc.addSpacer(10);
-		const stackDescFooter = stackDesc.addStack();
 
-		stackDescFooter.size = new Size(70, 20);
+		const stackDescFooter = stackDesc.addStack();
 		stackDescFooter.centerAlignContent();
 		const textCount = this.textFormat.title;
 		textCount.size = 16;
