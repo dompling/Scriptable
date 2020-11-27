@@ -330,15 +330,7 @@ class Widget extends DmYY {
     this.iconColor = icon || this.iconColor;
     this.percentColor = percent || this.percentColor;
 
-    this.loginheader = loginheader ? JSON.parse(loginheader) : {
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Cookie': 't3_token=f48ab0af8fb2f78ecbcee5672c17077a;;ecs_token=eyJkYXRhIjoiNWVjMzc1MzNjZDhiYmJhZTEwYWQ1NDMzYjIyNDJkODc2M2Q4ZWU2M2U4ZjAxYTk5OGEzNTQ2NDcwMDFmNzI3NDUwZTQ0NmFkMmU4OWExOGRjMWM0OTk4NTM4Mjg0MDM4NTYyZTJjM2ViNzQ4YmUwMTliMDFiYWIxODFiZjBlNDY2ZDgyY2Y0ZTVmOTYzZDIyOGVjYmNiMTA0YTQ3MDEwMDBiNjcwOWJiYzA1M2ZlYzY3NWIzY2Y3NWJmZWE4OGJjIiwidmVyc2lvbiI6IjAwIn0=;;cw_mutual=7064d003eb3c8934e769e430ecf3d64aeb88f8b559d080e96f2102c8b70d1b8e4b7fbb8da955cc0d45b7d43353f497b29622c7226fe24ece70f8cbde19c2bd9b;;login_type=06;;c_mobile=13173892339;;c_id=ae792c0ac98923286baca65d6644f2d3e3b787030d2414d6cdc791cc95ce8607;;u_areaCode=367;;c_version=iphone_c@7.0600;;jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIxMzE3Mzg5MjMzOSIsInBybyI6IjAzNiIsImNpdHkiOiIzNjciLCJpZCI6IjhiODhhZWQ5NTMzY2Y4MThiODU1MzYwZmRiMTYwYzE3In0.l41F3nqkf5P0o7SwAPAEw7wjE_ogAVTr8GBuFMavvwU;;wo_family=0;;u_type=11;;u_account=13173892339;;invalid_at=fddbda8ff60ee18d6c3b2e2c48ba63b538bbfff8d6221555fa80cf477cdaff7c;;third_token=eyJkYXRhIjoiMTMyYzJlNGFmOTFiOWU0ZTRmMmMyMDQwOWVkNWU5NDJiNDE5ZjQ2M2VkN2E2ZGY1NzU0OTliZDBiNWM0OGM1MGQ2OTRkZTFiZTdhNTA2MzFkMjhkM2JmMzY3MmFmNGY5MjAzMGUxY2M1NGE5MmQ3ZWFmNmI3NjkzNjVhYmY1MjUwMjAzOGU0MGU4MTczNWI4MmU4NWVmNzE4ZDcyYTY3OCIsInZlcnNpb24iOiIwMCJ9;;random_login=1;;a_token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ4MDE3MjQsInRva2VuIjp7ImxvZ2luVXNlciI6IjEzMTczODkyMzM5IiwicmFuZG9tU3RyIjoieWgwNTRkZmIxNjA0MTk2OTI0In0sImlhdCI6MTYwNDE5NjkyNH0.UWXyQXY1zSMEVyGikxSylB1vLhH_ZvLTXBjlxdsqErWuyBffMHH1eIQPzZJSXnAYBMffNdtuTJkBEDlAI_Pskw;;enc_acc=U4WWZkF2T8Sp3IP9UDUuqlmw24LdO18/bsfHrzGSDxHICwKlQ4Qfw9c/U3brYOhGwE9UXMxp0R3+F78rM5JIxQE7FKbMcK6D6sCiB3MovXZbNeAJqjvrS1ZvCGksf2IGAZvSEegVP0Q2x+O/l3FYzdr4/msShdgVzNvREvvE5Gw=;;ecs_acc=w0ytK9Z1sD1vaS9prh0IGx+0SXFTNwcTc6R24+In7dj/Npy65Q74L3hTuIdksKZ4MCantJL/VnrSHgrgjr39Pg3bLgHTowUBeRtMFLHsuuC1+qVN3b/2ZRBuf1hUjASIYs9RF6vEhMZ8zYiorUb34UD+UskZpadFRNEafcB6xcE=;;channel=GGPD;;devicedId=EFB75CAF-D71E-4C54-8565-8362E708D79F;;city=036|367;',
-      'Connection': 'keep-alive',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Host': 'act.10010.com',
-      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148     unicom{version:iphone_c@8.0001}{systemVersion:dis}{yw_code:}',
-      'Accept-Language': 'zh-cn',
-    };
+    this.loginheader = loginheader ? JSON.parse(loginheader) : {};
   }
 
   /**
