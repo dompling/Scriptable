@@ -201,8 +201,8 @@ class Widget extends DmYY {
 	Run = (filename) => {
 		if (config.runsInApp) {
 			this.registerAction("基础设置", this.setWidgetConfig);
-			this.registerAction("设置 Cookie", this.inputCk);
-			this.registerAction("设置 BoxJS Cookie", this._loadCk);
+			this.registerAction("账号设置", this.inputCk);
+			this.registerAction("代理缓存", this._loadCk);
 		}
 		let _md5 = this.md5(filename + this.en);
 		this.CACHE_KEY = `cache_${_md5}`;
@@ -239,7 +239,7 @@ class Widget extends DmYY {
 
 	async inputCk() {
 		const a = new Alert();
-		a.title = "哔哩哔哩 CK";
+		a.title = "账号设置";
 		a.message = "手动输入 Ck";
 		a.addTextField("Cookie", this.cookie);
 		a.addAction("确定");

@@ -307,8 +307,8 @@ class Widget extends DmYY {
 				await this.setAlertInput("设置显示天数周期范围", false, { maxDate: "天数" });
 			});
 			this.registerAction("基础设置", this.setWidgetConfig);
-			this.registerAction("输入京东 CK", this.inputJDck);
-			this.registerAction("读取 BoxJS 数据", this.actionSettings);
+			this.registerAction("账号设置", this.inputJDck);
+			this.registerAction("代理缓存", this.actionSettings);
 		}
 		let _md5 = this.md5(filename + this.en);
 		this.CACHE_KEY = `cache_${_md5}`;

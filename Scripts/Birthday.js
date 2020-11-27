@@ -24,7 +24,7 @@ class Widget extends DmYY {
 			this.registerAction("基础设置", this.setWidgetConfig);
 			this.registerAction("生日配置", this.setWidgetInitConfig);
 			this.registerAction("头像设置", this.setLeftWidgetImage);
-			this.registerAction("读取BoxJS数据", this.setWidgetBoxJSConfig);
+			this.registerAction("代理缓存", this.setWidgetBoxJSConfig);
 		}
 	}
 
