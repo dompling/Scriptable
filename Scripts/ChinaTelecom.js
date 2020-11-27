@@ -41,6 +41,7 @@ class Widget extends DmYY {
 		this.format(this.date.getMinutes()),
 	];
 
+	// percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
 	phoneBill = {
 		percent: 0,
 		label: "话费剩余",
