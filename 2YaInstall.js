@@ -79,6 +79,11 @@ const scripts = [
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js",
 	},
+	{
+		moduleName: "ChinaTelecom",
+		url:
+		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
+	},
 ];
 
 class YaYaInstall {

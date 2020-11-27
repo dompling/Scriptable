@@ -10,19 +10,17 @@ const { DmYY, Runing } = require("./DmYY");
 class Widget extends DmYY {
 	constructor(arg) {
 		super(arg);
-		this.name = "中国移动";
-		this.en = "ChinaMobile";
+		this.name = "中国电信";
+		this.en = "ChinaTelecom";
 		this.Run();
 	}
 
-	getfee = "";
-	autologin = "";
+	cookie = "";
+	authToken = "";
 	fgCircleColor = new Color('#dddef3');
-
+	percentColor = this.widgetColor;
 	textColor1 = new Color("#333");
-	textColor2 = new Color("#666");
-	textColor3 = new Color("#999");
-
+	textColor2 = this.widgetColor;
 
 	circleColor1 = new Color("#ffbb73");
 	circleColor2 = new Color("#ff0029");
@@ -44,34 +42,34 @@ class Widget extends DmYY {
 	];
 
 	phoneBill = {
-		percent: 180,
+		percent: 0,
 		label: "话费剩余",
-		count: 226.05,
+		count: 0,
 		unit: "元",
 		icon: "yensign.circle",
 		circleColor: this.circleColor1,
 	};
 
 	flow = {
-		percent: 180,
+		percent: 0,
 		label: "流量剩余",
-		count: 226.05,
+		count: 0,
 		unit: "M",
 		icon: "waveform.path.badge.minus",
 		circleColor: this.circleColor2,
 	};
 
 	voice = {
-		percent: 180,
+		percent: 0,
 		label: "语音剩余",
-		count: 20,
+		count: 0,
 		unit: "分钟",
 		icon: "mic",
 		circleColor: this.circleColor3,
 	};
 
 	updateTime = {
-		percent: 180,
+		percent: 0,
 		label: "更新时间",
 		count: `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
 		unit: "",
@@ -85,12 +83,66 @@ class Widget extends DmYY {
 	dayRadiusOffset = 60;
 	canvTextSize = 40;
 
+	options = {
+		headers: {
+			"authToken": "",
+			"type": "alipayMiniApp",
+			"User-Agent": "TYUserCenter/2.8 (iPhone; iOS 14.0; Scale/3.00)",
+		},
+		body: "t=tysuit",
+		method: "POST",
+	};
+
+	fetchUri = {
+		detail: "https://e.189.cn/store/user/package_detail.do",
+		balance: "https://e.189.cn/store/user/balance_new.do",
+		bill: "https://e.189.cn/store/user/bill.do?year=2020&month=11&t=tysuit",
+	};
+
 
 	init = async () => {
 		try {
+			const nowHours = this.date.getHours();
+			const updateHours = nowHours > 12 ? 24 : 12;
+			this.updateTime.percent = Math.floor(nowHours / updateHours * 100);
+			await this.getData();
 		} catch (e) {
 			console.log(e);
 		}
+	};
+
+	// MB 和 GB 自动转换
+	formatFlow(number) {
+		const n = number / 1024;
+		if (n < 1024) {
+			return { count: n.toFixed(2), unit: "M" };
+		}
+		return { count: (n / 1024).toFixed(2), unit: "G" };
+	}
+
+
+	getData = async () => {
+		const detail = await this.http({ url: this.fetchUri.detail, ...this.options });
+		const balance = await this.http({ url: this.fetchUri.balance, ...this.options });
+		const bill = await this.$request.get(this.fetchUri.bill, { headers: { Cookie: this.cookie } });
+		if (detail.result === 0) {
+			// 套餐分钟数
+			this.voice.percent = Math.floor(parseInt(detail.voiceBalance) / parseInt(detail.voiceAmount) * 100);
+			this.voice.count = detail.voiceBalance;
+			this.flow.percent = Math.floor(detail.balanceCommon / detail.totalCommon * 100);
+			const flow = this.formatFlow(detail.balanceCommon);
+			this.flow.count = flow.count;
+			this.flow.unit = flow.unit;
+		}
+		if (balance.result === 0) {
+			// 余额
+			this.phoneBill.count = parseFloat((parseInt(balance.totalBalanceAvailable) / 100).toFixed(2));
+		}
+		if (bill.serviceResultCode === "0") {
+			console.log(this.phoneBill.count);
+			this.phoneBill.percent = Math.floor(this.phoneBill.count / ((bill.items[0].sumCharge / 100) + this.phoneBill.count) * 100);
+		}
+
 	};
 
 	makeCanvas() {
@@ -115,7 +167,7 @@ class Widget extends DmYY {
 		 bgd,
 		);
 		canvas.setStrokeColor(this.fgCircleColor);
-		canvas.setLineWidth(this.canvWidth);
+		canvas.setLineWidth(this.canvWidth - 14);
 		canvas.strokeEllipse(bgr);
 		// Inner circle
 		canvas.setFillColor(color);
@@ -125,8 +177,8 @@ class Widget extends DmYY {
 			const rect_r = new Rect(
 			 rect_x,
 			 rect_y,
-			 this.canvWidth,
-			 this.canvWidth,
+			 this.canvWidth - 4,
+			 this.canvWidth - 4,
 			);
 			canvas.fillEllipse(rect_r);
 		}
@@ -139,14 +191,14 @@ class Widget extends DmYY {
 		 this.canvSize,
 		 this.canvTextSize,
 		);
-		canvas.setTextColor(this.widgetColor);
+		canvas.setTextColor(this.percentColor);
 		canvas.setFont(Font.boldSystemFont(fontSize));
 		canvas.setTextAlignedCenter();
 		canvas.drawTextInRect(`${txt}`, txtRect);
 	}
 
 	drawPointText(txt, canvas, txtPoint, fontSize) {
-		canvas.setTextColor(this.widgetColor);
+		canvas.setTextColor(this.percentColor);
 		canvas.setFont(Font.boldSystemFont(fontSize));
 		canvas.drawText(txt, txtPoint);
 	}
@@ -163,8 +215,7 @@ class Widget extends DmYY {
 		const stackCircle = stack.addStack();
 		const canvas = this.makeCanvas();
 		stackCircle.size = new Size(70, 70);
-		this.makeCircle(canvas, this.dayRadiusOffset, 200, data.circleColor);
-
+		this.makeCircle(canvas, this.dayRadiusOffset, data.percent * 3.6, data.circleColor);
 
 		this.drawText(data.percent, canvas, 170, 42);
 		this.drawPointText(`%`, canvas, new Point(190, 150), 25);
@@ -214,7 +265,11 @@ class Widget extends DmYY {
 		stackFooter.addSpacer();
 		const text = this.textFormat.defaultText;
 		text.color = new Color("#aaa");
-		this.provideText(`更新时间：${this.arrUpdateTime[0]}-${this.arrUpdateTime[1]} ${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`, stackFooter, text);
+		this.provideText(
+		 `更新时间：${this.arrUpdateTime[0]}-${this.arrUpdateTime[1]} ${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+		 stackFooter,
+		 text,
+		);
 		return w;
 	};
 
@@ -236,25 +291,44 @@ class Widget extends DmYY {
 
 	Run() {
 		if (config.runsInApp) {
-			this.registerAction("账号设置", async () => {
-				await this.setAlertInput(`${this.name}账号`, "读取 BoxJS 缓存信息", {
-					autologin: "chavy_autologin_cmcc",
-					getfee: "chavy_getfee_cmcc",
+			const widgetInitConfig = {
+				cookie: "china_telecom_cookie",
+				authToken: "china_telecom_authToken_10000",
+			};
+			this.registerAction("颜色配置", async () => {
+				await this.setAlertInput(`${this.name}颜色配置`, "进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色", {
+					step1: "进度颜色 1",
+					step2: "进度颜色 2",
+					step3: "进度颜色 3",
+					step4: "进度颜色 4",
+					inner: "底圈颜色",
+					icon: "图标颜色",
+					percent: "比值颜色",
+					value: "值颜色",
 				});
+			});
+			this.registerAction("账号设置", async () => {
+				await this.setAlertInput(`${this.name}账号`, "读取 BoxJS 缓存信息", widgetInitConfig);
 			});
 			this.registerAction("代理缓存", async () => {
-				await this.setCacheBoxJSData({
-					autologin: "chavy_autologin_cmcc",
-					getfee: "chavy_getfee_cmcc",
-				});
+				await this.setCacheBoxJSData(widgetInitConfig);
 			});
 			this.registerAction("基础设置", this.setWidgetConfig);
+			if (!this.authToken) return this.notify(this.name, "请获取authToken，自行获取");
 		}
-		this.autologin = this.settings.autologin;
-		if (this.settings.getfee) {
-			this.options = JSON.parse(this.settings.getfee);
-		}
+		const { cookie, authToken, step1, step2, step3, step4, inner, icon, percent, value } = this.settings;
+		this.fgCircleColor = inner || this.fgCircleColor;
+		this.textColor1 = value || this.textColor1;
+		this.circleColor1 = step1 || this.circleColor1;
+		this.circleColor2 = step2 || this.circleColor2;
+		this.circleColor3 = step3 || this.circleColor3;
+		this.circleColor4 = step4 || this.circleColor4;
+		this.iconColor = icon || this.iconColor;
+		this.percentColor = percent || this.percentColor;
 
+		this.cookie = cookie;
+		this.authToken = authToken;
+		this.options.headers.authToken = this.authToken;
 	}
 
 	/**
