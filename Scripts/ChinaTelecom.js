@@ -96,7 +96,7 @@ class Widget extends DmYY {
 	fetchUri = {
 		detail: "https://e.189.cn/store/user/package_detail.do",
 		balance: "https://e.189.cn/store/user/balance_new.do",
-		bill: "https://e.189.cn/store/user/bill.do?year=2020&month=11&t=tysuit",
+		bill: `https://e.189.cn/store/user/bill.do?year=${this.date.getFullYear()}&month=${this.date.getMonth() + 1}&t=tysuit`,
 	};
 
 
