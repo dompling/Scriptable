@@ -261,8 +261,8 @@ class Widget extends DmYY {
 		this.setCircleText(stackTop, this.phoneBill);
 		const stackBottom = stackBody.addStack();
 		this.setCircleText(stackBottom, this.flow);
-		const stackFooter = stackBody.addStack();
 
+		const stackFooter = stackBody.addStack();
 		stackFooter.addSpacer();
 		const text = this.textFormat.defaultText;
 		text.color = new Color("#aaa");
@@ -271,6 +271,7 @@ class Widget extends DmYY {
 		 stackFooter,
 		 text,
 		);
+		stackFooter.addSpacer();
 		return w;
 	};
 
