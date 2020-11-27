@@ -233,13 +233,15 @@ class Widget extends DmYY {
 		stack.addSpacer(5);
 		const stackDesc = stack.addStack();
 		stackDesc.layoutVertically();
-		stackDesc.addSpacer();
+		stackDesc.centerAlignContent();
+		stackDesc.addSpacer(10);
 		const textLabel = this.textFormat.defaultText;
 		textLabel.size = 12;
 		textLabel.color = this.textColor2;
 		this.provideText(data.label, stackDesc, textLabel);
 		stackDesc.addSpacer(10);
 		const stackDescFooter = stackDesc.addStack();
+
 		stackDescFooter.size = new Size(70, 20);
 		stackDescFooter.centerAlignContent();
 		const textCount = this.textFormat.title;
@@ -248,7 +250,6 @@ class Widget extends DmYY {
 		this.provideText(`${data.count}`, stackDescFooter, textCount);
 		stackDescFooter.addSpacer(2);
 		this.provideText(data.unit, stackDescFooter, textLabel);
-		stackDesc.addSpacer();
 	};
 
 
@@ -314,7 +315,6 @@ class Widget extends DmYY {
 				await this.setCacheBoxJSData(widgetInitConfig);
 			});
 			this.registerAction("基础设置", this.setWidgetConfig);
-			if (!this.authToken) return this.notify(this.name, "请获取authToken，自行获取");
 		}
 		const { cookie, authToken, step1, step2, step3, step4, inner, icon, percent, value } = this.settings;
 		this.fgCircleColor = inner || this.fgCircleColor;
