@@ -29,7 +29,7 @@ class Widget extends DmYY {
   iconColor = new Color('#827af1');
 
   format = (str) => {
-    return parseInt(str) > 10 ? str : `0${str}`;
+    return parseInt(str) >= 10 ? str : `0${str}`;
   };
 
   date = new Date();
