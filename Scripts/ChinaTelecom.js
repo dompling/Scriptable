@@ -77,9 +77,9 @@ class Widget extends DmYY {
     circleColor: this.circleColor4,
   };
 
-  canvSize = 282;
-  canvWidth = 20; // circle thickness
-  canvRadius = 160; // circle radius
+  canvSize = 100;
+  canvWidth = 5; // circle thickness
+  canvRadius = 100; // circle radius
   dayRadiusOffset = 60;
   canvTextSize = 40;
 
@@ -127,7 +127,6 @@ class Widget extends DmYY {
         {url: this.fetchUri.balance, ...this.options});
     const bill = await this.$request.get(
         this.fetchUri.bill, {headers: {Cookie: this.cookie}});
-    console.log(detail);
     if (detail.result === 0) {
       // 套餐分钟数
       this.voice.percent = Math.floor(
@@ -172,7 +171,7 @@ class Widget extends DmYY {
         bgd,
     );
     canvas.setStrokeColor(this.fgCircleColor);
-    canvas.setLineWidth(this.canvWidth - 14);
+    canvas.setLineWidth(2);
     canvas.strokeEllipse(bgr);
     // Inner circle
     canvas.setFillColor(color);
@@ -184,8 +183,8 @@ class Widget extends DmYY {
       const rect_r = new Rect(
           rect_x,
           rect_y,
-          this.canvWidth - 4,
-          this.canvWidth - 4,
+          this.canvWidth,
+          this.canvWidth,
       );
       canvas.fillEllipse(rect_r);
     }
@@ -225,8 +224,8 @@ class Widget extends DmYY {
     this.makeCircle(
         canvas, this.dayRadiusOffset, data.percent * 3.6, data.circleColor);
 
-    this.drawText(data.percent, canvas, 170, 42);
-    this.drawPointText(`%`, canvas, new Point(190, 150), 25);
+    this.drawText(data.percent, canvas, 75, 18);
+    this.drawPointText(`%`, canvas, new Point(65, 50), 14);
     stackCircle.backgroundImage = canvas.getImage();
 
     stackCircle.setPadding(20, 0, 0, 0);
@@ -274,7 +273,7 @@ class Widget extends DmYY {
     const text = this.textFormat.defaultText;
     text.color = new Color('#aaa');
     this.provideText(
-        `更新时间：${this.arrUpdateTime[0]}-${this.arrUpdateTime[1]} ${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+        `更新时间：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
         stackFooter,
         text,
     );
@@ -327,14 +326,14 @@ class Widget extends DmYY {
       this.registerAction('基础设置', this.setWidgetConfig);
     }
     const {cookie, authToken, step1, step2, step3, step4, inner, icon, percent, value} = this.settings;
-    this.fgCircleColor = inner? new Color(inner) : this.fgCircleColor;
-    this.textColor1 = value? new Color( value) : this.textColor1;
-    this.circleColor1 = step1? new Color( step1) : this.circleColor1;
-    this.circleColor2 = step2?new Color( step2) : this.circleColor2;
-    this.circleColor3 = step3?new Color( step3) : this.circleColor3;
-    this.circleColor4 = step4? new Color( step4) : this.circleColor4;
-    this.iconColor = icon? new Color( icon) :this.iconColor;
-    this.percentColor = percent? new Color( percent) : this.percentColor;
+    this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
+    this.textColor1 = value ? new Color(value) : this.textColor1;
+    this.circleColor1 = step1 ? new Color(step1) : this.circleColor1;
+    this.circleColor2 = step2 ? new Color(step2) : this.circleColor2;
+    this.circleColor3 = step3 ? new Color(step3) : this.circleColor3;
+    this.circleColor4 = step4 ? new Color(step4) : this.circleColor4;
+    this.iconColor = icon ? new Color(icon) : this.iconColor;
+    this.percentColor = percent ? new Color(percent) : this.percentColor;
 
     this.authToken = authToken;
     this.cookie = cookie;
