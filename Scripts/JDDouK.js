@@ -71,11 +71,11 @@ class Widget extends DmYY {
         yAxes: [   // y轴轴线
           {
             ticks: {
-              beginAtZero: true,
+              beginAtZero: false, // 是否从 0 开始
               fontColor: '#000',
             },
             gridLines: {
-              display: true, // 隐藏 Y 轴
+              display: false, // 隐藏 Y 轴
               color: '#000',
             },
           },
