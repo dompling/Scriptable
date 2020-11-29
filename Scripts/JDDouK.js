@@ -60,7 +60,7 @@ class Widget extends DmYY {
         xAxes: [ // X 轴线
           {
             gridLines: {
-              display: true, // 隐藏 X 轴
+              display: false, // 隐藏 X 轴
               color: '#000',
             },
             ticks: {
