@@ -45,6 +45,8 @@ class Widget extends DmYY {
       ],
     },
     'options': {
+      responsive: true,
+      maintainAspectRatio: true,
       'legend': {
         'display': false,
       },
@@ -55,7 +57,7 @@ class Widget extends DmYY {
         xAxes: [ // X 轴线
           {
             gridLines: {
-              display: true, // 隐藏 X 轴
+              display: true, // 隐藏 X 轴 false
               color: '#000',
             },
             ticks: {
@@ -70,25 +72,12 @@ class Widget extends DmYY {
               fontColor: '#000',
             },
             gridLines: {
-              display: true, // 隐藏 Y 轴
+              display: false, // 隐藏 Y 轴 false
               color: '#000',
             },
           },
         ],
       },
-    },
-  };
-
-  none = {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Users',
-          data: [],
-        },
-      ],
     },
   };
 
@@ -233,7 +222,7 @@ class Widget extends DmYY {
 
   createChart = async (data) => {
     const chartStr = JSON.stringify(data);
-    const url = `https://quickchart.io/chart?w=600&h=200f=png&c=${encodeURIComponent(
+    const url = `https://quickchart.io/chart?w=500&h=150&f=png&c=${encodeURIComponent(
         chartStr)}`;
     return await this.$request.get(url, 'IMG');
   };
