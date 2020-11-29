@@ -31,11 +31,12 @@ class Widget extends DmYY {
   beanCount = 0;
 
   chartConfig = {
-    'type': 'line',
+    'type': 'bar',
     'data': {
       'labels': [],
       'datasets': [
         {
+          type: 'line',
           'borderColor': '#ffc107',
           'borderWidth': 2,
           'fill': false,
@@ -44,23 +45,17 @@ class Widget extends DmYY {
       ],
     },
     'options': {
-      'responsive': true,
       'legend': {
         'display': false,
       },
       'title': {
         'display': false,
       },
-      'tooltips': {
-        'enabled': false,
-        'mode': 'index',
-        'intersect': true,
-      },
       scales: {
         xAxes: [ // X 轴线
           {
             gridLines: {
-              display: false, // 隐藏 X 轴
+              display: true, // 隐藏 X 轴
               color: '#000',
             },
             ticks: {
@@ -238,7 +233,7 @@ class Widget extends DmYY {
 
   createChart = async (data) => {
     const chartStr = JSON.stringify(data);
-    const url = `https://quickchart.io/chart?w=620&h=200f=png&c=${encodeURIComponent(
+    const url = `https://quickchart.io/chart?w=600&h=200f=png&c=${encodeURIComponent(
         chartStr)}`;
     return await this.$request.get(url, 'IMG');
   };
