@@ -70,7 +70,7 @@ class Widget extends DmYY {
               fontColor: '#000',
             },
             gridLines: {
-              display: false, // 隐藏 Y 轴
+              display: true, // 隐藏 Y 轴
               color: '#000',
             },
           },
