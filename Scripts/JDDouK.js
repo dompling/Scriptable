@@ -56,6 +56,31 @@ class Widget extends DmYY {
         'mode': 'index',
         'intersect': true,
       },
+      scales: {
+        xAxes: [ // X 轴线
+          {
+            gridLines: {
+              display: true, // 隐藏 X 轴
+              color: '#000',
+            },
+            ticks: {
+              fontColor: '#000',
+            },
+          },
+        ],
+        yAxes: [   // y轴轴线
+          {
+            ticks: {
+              beginAtZero: true,
+              fontColor: '#000',
+            },
+            gridLines: {
+              display: true, // 隐藏 Y 轴
+              color: '#000',
+            },
+          },
+        ],
+      },
     },
   };
 
@@ -261,8 +286,11 @@ class Widget extends DmYY {
       this.registerAction('显示天数', async () => {
         await this.setAlertInput('设置显示天数周期范围', false, {maxDate: '天数'});
       });
-      this.registerAction('折现颜色', async () => {
-        await this.setLightAndDark('折现颜色', false, 'lightLine', 'darkLine');
+      this.registerAction('折线颜色', async () => {
+        await this.setLightAndDark('折线颜色', false, 'lightLine', 'darkLine');
+      });
+      this.registerAction('轴线字体', async () => {
+        await this.setLightAndDark('轴线字体颜色', false, 'lightAxes', 'darkAxes');
       });
       this.registerAction('基础设置', this.setWidgetConfig);
       this.registerAction('账号设置', this.inputJDck);
@@ -285,12 +313,19 @@ class Widget extends DmYY {
       }
       this.JDCookie.userName = decodeURI(this.JDCookie.userName);
       let borderColor = this.chartConfig.data.datasets[0].borderColor;
+      let axesColor;
       if (this.isNight) {
         borderColor = this.settings.darkLine || borderColor;
+        axesColor = this.settings.darkAxes || '#fff';
       } else {
         borderColor = this.settings.lightLine || borderColor;
+        axesColor = this.settings.lightAxes || '#000';
       }
       this.chartConfig.data.datasets[0].borderColor = borderColor;
+      this.chartConfig.options.scales.xAxes[0].gridLines.color = axesColor;
+      this.chartConfig.options.scales.yAxes[0].gridLines.color = axesColor;
+      this.chartConfig.options.scales.xAxes[0].ticks.fontColor = axesColor;
+      this.chartConfig.options.scales.yAxes[0].ticks.fontColor = axesColor;
       return true;
     } catch (e) {
       this.notify('错误提示', e);
