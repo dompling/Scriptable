@@ -31,7 +31,7 @@ class Widget extends DmYY {
   beanCount = 0;
 
   chartConfig = {
-    'type': 'bar',
+    'type': 'bar', // line 类型为折现类型
     'data': {
       'labels': [],
       'datasets': [
