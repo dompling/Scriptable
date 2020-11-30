@@ -150,7 +150,7 @@ class Widget extends DmYY {
 	};
 
 	renderLarge = async (w) => {
-		return await this.setWidget(w, 5);
+		return await this.setWidget(w, 6);
 	};
 
 	renderMedium = async (w) => {
