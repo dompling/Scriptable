@@ -68,6 +68,7 @@ class Widget extends DmYY {
               color: '#000',
             },
             ticks: {
+              display: true,   // 是否显示 X 轴刻度值
               fontColor: '#000',
             },
           },
@@ -75,6 +76,7 @@ class Widget extends DmYY {
         yAxes: [   // y轴轴线
           {
             ticks: {
+              display: true,   // 是否显示 y 轴刻度值
               beginAtZero: true, // 是否从 0 开始
               fontColor: '#000',
             },
