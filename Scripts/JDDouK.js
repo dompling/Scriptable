@@ -346,7 +346,7 @@ class Widget extends DmYY {
       }
       this.chartConfig.data.datasets[0].borderColor = borderColor;
 
-      const lineColor = this.opacity(axesColor);
+      const lineColor = this.opacity(axesColor, 0.3);
       this.chartConfig.options.scales.xAxes[0].gridLines.color = lineColor;
       this.chartConfig.options.scales.yAxes[0].gridLines.color = lineColor;
 
