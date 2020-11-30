@@ -44,6 +44,10 @@ class Widget extends DmYY {
       console.log(
           `第${page}页：${response.code === '0' ? '请求成功' : '请求失败'}`,
       );
+      if (response.code === '3') {
+        i = 1;
+        console.log(response);
+      }
       if (response && response.code === '0') {
         page++;
         let detailList = response.jingDetailList;
@@ -299,8 +303,6 @@ class Widget extends DmYY {
       return false;
     }
   };
-
-
 
   // 加载京东 Ck 节点列表
   _loadJDCk = async () => {
