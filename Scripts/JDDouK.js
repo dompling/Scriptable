@@ -235,7 +235,7 @@ class Widget extends DmYY {
 
   createChart = async (data) => {
     const chartStr = JSON.stringify(data);
-    const url = `https://quickchart.io/chart?w=500&h=150&f=png&c=${encodeURIComponent(
+    const url = `https://quickchart.io/chart?w=580&h=190&f=png&c=${encodeURIComponent(
         chartStr)}`;
     return await this.$request.get(url, 'IMG');
   };
