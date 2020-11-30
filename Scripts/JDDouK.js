@@ -83,7 +83,7 @@ class Widget extends DmYY {
 
   init = async () => {
     try {
-      await this.TotalBean();
+      if (!this.JDCookie.cookie) return;
       if (Keychain.contains(this.CACHE_KEY) && !this.forceCache) {
         this.rangeTimer = JSON.parse(Keychain.get(this.CACHE_KEY));
 
@@ -149,6 +149,7 @@ class Widget extends DmYY {
   };
 
   TotalBean = async () => {
+    if (!this.JDCookie.cookie) return;
     const options = {
       headers: {
         Accept: 'application/json,text/plain, */*',
@@ -277,24 +278,28 @@ class Widget extends DmYY {
         await this.setLightAndDark('轴线字体颜色', false, 'lightAxes', 'darkAxes');
       });
       this.registerAction('基础设置', this.setWidgetConfig);
-      this.registerAction('账号设置', this.inputJDck);
+      this.registerAction('账号设置', async () => {
+        await this.setAlertInput('账号设置', '京东账号 Ck', {
+          username: '昵称',
+          cookie: 'Cookie',
+        });
+      });
       this.registerAction('代理缓存', this.actionSettings);
     }
     let _md5 = this.md5(filename + this.en);
     this.CACHE_KEY = `cache_${_md5}`;
-    this.JDindex = parseInt(args.widgetParameter) || undefined;
     this.logo = 'https://raw.githubusercontent.com/Orz-3/task/master/jd.png';
+    this.JDindex = typeof args.widgetParameter === 'string' ? parseInt(
+        args.widgetParameter) : false;
     try {
-      this.JDCookie = this.settings[this.en] || {
-        cookie: '',
-        userName: '',
-      };
-      if (this.JDindex !== undefined) {
-        this.JDCookie = this.settings.JDAccount[this.JDindex];
+      const cookieData = this.settings.JDAccount;
+      if (this.JDindex !== false && cookieData[this.JDindex]) {
+        this.JDCookie = cookieData[this.JDindex];
+      } else {
+        this.JDCookie.userName = this.settings.username;
+        this.JDCookie.cookie = this.settings.cookie;
       }
-      if (!this.JDCookie.cookie) {
-        throw '京东 CK 获取失败';
-      }
+      if (!this.JDCookie.cookie) throw '京东 CK 获取失败';
       this.JDCookie.userName = decodeURI(this.JDCookie.userName);
       let borderColor = this.chartConfig.data.datasets[0].borderColor;
       let axesColor;
@@ -338,9 +343,7 @@ class Widget extends DmYY {
   _loadJDCk = async () => {
     try {
       const CookiesData = await this.getCache('CookiesJD');
-      if (CookiesData) {
-        this.CookiesData = this.transforJSON(CookiesData);
-      }
+      if (CookiesData) this.CookiesData = this.transforJSON(CookiesData);
       const CookieJD = await this.getCache('CookieJD');
       if (CookieJD) {
         const userName = CookieJD.match(/pt_pin=(.+?);/)[1];
@@ -350,7 +353,7 @@ class Widget extends DmYY {
         };
         this.CookiesData.push(ck1);
       }
-      const Cookie2JD = await this.getCache('Cookie2JD');
+      const Cookie2JD = await this.getCache('CookieJD2');
       if (Cookie2JD) {
         const userName = Cookie2JD.match(/pt_pin=(.+?);/)[1];
         const ck2 = {
@@ -367,23 +370,6 @@ class Widget extends DmYY {
     }
   };
 
-  async inputJDck() {
-    const a = new Alert();
-    a.title = '京东账号 Ck';
-    a.message = '手动输入京东 Ck';
-    a.addTextField('昵称', this.JDCookie.userName);
-    a.addTextField('Cookie', this.JDCookie.cookie);
-    a.addAction('确定');
-    a.addCancelAction('取消');
-    const id = await a.presentAlert();
-    if (id === -1) return;
-    this.JDCookie.userName = a.textFieldValue(0);
-    this.JDCookie.cookie = a.textFieldValue(1);
-    // 保存到本地
-    this.settings[this.en] = this.JDCookie;
-    this.saveSettings();
-  }
-
   async actionSettings() {
     try {
       const table = new UITable();
@@ -393,14 +379,15 @@ class Widget extends DmYY {
         const r = new UITableRow();
         r.addText(t.userName);
         r.onSelect = (n) => {
-          this.settings[this.en] = t;
+          this.settings.username = t.userName;
+          this.settings.cookie = t.cookie;
           this.saveSettings();
         };
         table.addRow(r);
       });
       let body = '京东 Ck 缓存成功，根据下标选择相应的 Ck';
-      if (this.settings[this.en]) {
-        body += '，或者使用当前选中Ck：' + this.settings[this.en].userName;
+      if (this.settings.cookie) {
+        body += '，或者使用当前选中Ck：' + this.settings.username;
       }
       this.notify(this.name, body);
       table.present(false);
