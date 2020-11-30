@@ -285,7 +285,7 @@ class Widget extends DmYY {
 
   createDivider(w) {
     const drawContext = new DrawContext();
-    drawContext.size = new Size(543, 2);
+    drawContext.size = new Size(543, this.widgetSize === 'small' ? 4 : 2);
     const path = new Path();
     path.addLine(new Point(1000, 20));
     drawContext.addPath(path);
@@ -295,7 +295,7 @@ class Widget extends DmYY {
 
     const stackLine = w.addStack();
     stackLine.borderWidth = 1;
-    stackLine.borderColor = new Color('#000', 0.2);
+    stackLine.borderColor = new Color('#000', 0.4);
     stackLine.addImage(drawContext.getImage());
     w.addSpacer(5);
   }
