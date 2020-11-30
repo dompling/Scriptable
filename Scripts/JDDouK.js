@@ -79,6 +79,7 @@ class Widget extends DmYY {
               fontColor: '#000',
             },
             gridLines: {
+              borderDash: [7, 5],
               display: true, // 隐藏 Y 轴 false
               color: '#000',
             },
@@ -277,6 +278,26 @@ class Widget extends DmYY {
     return widget;
   }
 
+  opacity(str, opacity = 0.8) {
+    let sColor = str.toLowerCase();
+    let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+    if (sColor && reg.test(sColor)) {
+      if (sColor.length === 4) {
+        let sColorNew = '#';
+        for (let i = 1; i < 4; i += 1) {
+          sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+        }
+        sColor = sColorNew;
+      }
+      let sColorChange = [];
+      for (let i = 1; i < 7; i += 2) {
+        sColorChange.push(parseInt('0x' + sColor.slice(i, i + 2)));
+      }
+      return `rgba(${sColorChange.join(',')},${opacity})`;
+    }
+    return sColor;
+  }
+
   JDRun = (filename, args) => {
     if (config.runsInApp) {
       this.registerAction('显示天数', async () => {
@@ -324,8 +345,11 @@ class Widget extends DmYY {
         axesColor = this.settings.lightAxes || '#000';
       }
       this.chartConfig.data.datasets[0].borderColor = borderColor;
-      this.chartConfig.options.scales.xAxes[0].gridLines.color = axesColor;
-      this.chartConfig.options.scales.yAxes[0].gridLines.color = axesColor;
+
+      const lineColor = this.opacity(axesColor);
+      this.chartConfig.options.scales.xAxes[0].gridLines.color = lineColor;
+      this.chartConfig.options.scales.yAxes[0].gridLines.color = lineColor;
+
       this.chartConfig.options.scales.xAxes[0].ticks.fontColor = axesColor;
       this.chartConfig.options.scales.yAxes[0].ticks.fontColor = axesColor;
       this.chartConfig.options.plugins.datalabels.color = axesColor;
