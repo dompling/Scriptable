@@ -84,6 +84,11 @@ const scripts = [
 		url:
 		 "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
 	},
+	{
+		moduleName: "VPNBoard",
+		url:
+				"https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoard.js",
+	},
 ];
 
 class YaYaInstall {
