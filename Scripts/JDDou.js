@@ -284,7 +284,7 @@ class Widget extends DmYY {
         args.widgetParameter) : false;
     this.logo = 'https://raw.githubusercontent.com/Orz-3/task/master/jd.png';
     try {
-      const cookieData = this.settings.JDAccount;
+      const cookieData = this.settings.cookieData;
       if (this.JDindex !== false && cookieData[this.JDindex]) {
         this.JDCookie = cookieData[this.JDindex];
       } else {
@@ -340,6 +340,8 @@ class Widget extends DmYY {
       const table = new UITable();
       if (!(await this._loadJDCk())) throw 'BoxJS 数据读取失败';
       // 如果是节点，则先远程获取
+      this.settings.cookieData = this.CookiesData;
+      this.saveSettings(false);
       this.CookiesData.map((t) => {
         const r = new UITableRow();
         r.addText(t.userName);

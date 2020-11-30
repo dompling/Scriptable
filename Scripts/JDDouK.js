@@ -127,6 +127,10 @@ class Widget extends DmYY {
       const response = await this.getJingBeanBalanceDetail(page);
       const result = response.code === '0';
       console.log(`第${page}页：${result ? '请求成功' : '请求失败'}`);
+      if (response.code === '3') {
+        i = 1;
+        console.log(response);
+      }
       if (response && result) {
         page++;
         let detailList = response.jingDetailList;
@@ -292,7 +296,7 @@ class Widget extends DmYY {
     this.JDindex = typeof args.widgetParameter === 'string' ? parseInt(
         args.widgetParameter) : false;
     try {
-      const cookieData = this.settings.JDAccount;
+      const cookieData = this.settings.cookieData;
       if (this.JDindex !== false && cookieData[this.JDindex]) {
         this.JDCookie = cookieData[this.JDindex];
       } else {
@@ -301,6 +305,7 @@ class Widget extends DmYY {
       }
       if (!this.JDCookie.cookie) throw '京东 CK 获取失败';
       this.JDCookie.userName = decodeURI(this.JDCookie.userName);
+
       let borderColor = this.chartConfig.data.datasets[0].borderColor;
       let axesColor;
       if (this.isNight) {
@@ -375,6 +380,8 @@ class Widget extends DmYY {
       const table = new UITable();
       if (!(await this._loadJDCk())) throw 'BoxJS 数据读取失败';
       // 如果是节点，则先远程获取
+      this.settings.cookieData = this.CookiesData;
+      this.saveSettings(false);
       this.CookiesData.map((t) => {
         const r = new UITableRow();
         r.addText(t.userName);
