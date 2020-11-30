@@ -266,14 +266,19 @@ class Widget extends DmYY {
     return flow[0] + 'B';
   }
 
-  createChart = async () => {
-    const labels = [], data = [];
-    Object.keys(this.range).forEach(key => {
+  createChart = async (size) => {
+    let labels = [], data = [];
+    const rangeKey = Object.keys(this.range);
+    rangeKey.forEach((key) => {
       labels.push(key);
       data.push(this.range[key].todayUsed);
     });
+    if (this.widgetSize === 'small') {
+      labels = labels.slice(-3);
+      data = data.slice(-3);
+    }
     const chart = this.chartConfig(labels, data);
-    const url = `https://quickchart.io/chart?w=390&h=85&f=png&c=${encodeURIComponent(
+    const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
         chart)}`;
     return await this.$request.get(url, 'IMG');
   };
@@ -303,7 +308,7 @@ class Widget extends DmYY {
     vpnName.size = size;
     this.provideText(this.account.title, left, vpnName);
 
-    header.addSpacer(100);
+    header.addSpacer();
 
     const right = header.addStack();
     right.bottomAlignContent();
@@ -316,20 +321,20 @@ class Widget extends DmYY {
     w.addSpacer();
   };
 
-  setLabel(w, data) {
+  setLabel(w, data, size) {
     const stackLabel = w.addStack();
     const textBattery = {...this.textFormat.battery};
-    textBattery.size = 14;
+    textBattery.size = size.label;
     this.provideText(data.label, stackLabel, textBattery);
 
-    textBattery.size = 20;
+    textBattery.size = size.value;
     const stackValue = w.addStack();
     stackValue.centerAlignContent();
     textBattery.color = new Color(data.color);
     this.provideText(data.value, stackValue, textBattery);
   }
 
-  setFooter(w) {
+  setFooter(w, size) {
     const footer = w.addStack();
     footer.centerAlignContent();
 
@@ -339,7 +344,7 @@ class Widget extends DmYY {
           color: '#ff3e3e',
           value: this.dataSource.restData,
           unit: 'GB',
-        });
+        }, size);
     footer.addSpacer();
     this.setLabel(
         footer, {
@@ -347,28 +352,28 @@ class Widget extends DmYY {
           color: '#dc9e28',
           value: this.dataSource.usedData,
           unit: 'GB',
-        });
+        }, size);
   }
 
-  setContent = async (w) => {
-    const imageFlow = await this.createChart();
+  setContent = async (w, size) => {
+    const imageFlow = await this.createChart(size);
     const stackContent = w.addStack();
     stackContent.addImage(imageFlow);
   };
 
   renderSmall = async (w) => {
-    this.setHeader(w, 14);
-    await this.setContent(w);
+    this.setHeader(w, 10);
+    await this.setContent(w, {w: 195, h: 85});
     this.createDivider(w);
-    this.setFooter(w, 14);
+    this.setFooter(w, {label: 6, value: 8});
     return w;
   };
 
   renderMedium = async (w) => {
     this.setHeader(w, 16);
-    await this.setContent(w);
+    await this.setContent(w, {w: 390, h: 85});
     this.createDivider(w);
-    this.setFooter(w);
+    this.setFooter(w, {label: 14, value: 18});
     return w;
   };
 
