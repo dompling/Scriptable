@@ -87,7 +87,7 @@ const scripts = [
 	{
 		moduleName: "VPNBoard",
 		url:
-				"https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoard.js",
+				"https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js",
 	},
 ];
 
