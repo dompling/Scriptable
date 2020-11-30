@@ -291,7 +291,7 @@ class Widget extends DmYY {
       this.registerAction('代理缓存', this.actionSettings);
     }
     let _md5 = this.md5(filename + this.en);
-    this.CACHE_KEY = `cache_${_md5}`;
+
     this.logo = 'https://raw.githubusercontent.com/Orz-3/task/master/jd.png';
     this.JDindex = typeof args.widgetParameter === 'string' ? parseInt(
         args.widgetParameter) : false;
@@ -305,6 +305,7 @@ class Widget extends DmYY {
       }
       if (!this.JDCookie.cookie) throw '京东 CK 获取失败';
       this.JDCookie.userName = decodeURI(this.JDCookie.userName);
+      this.CACHE_KEY = `cache_${_md5}_` + this.JDCookie.userName;
 
       let borderColor = this.chartConfig.data.datasets[0].borderColor;
       let axesColor;
