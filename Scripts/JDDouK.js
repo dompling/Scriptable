@@ -45,6 +45,13 @@ class Widget extends DmYY {
       ],
     },
     'options': {
+      plugins: {
+        datalabels: {
+          display: true,
+          align: 'bottom',
+          color: '#000',
+        },
+      },
       responsive: true,
       maintainAspectRatio: true,
       'legend': {
@@ -68,7 +75,7 @@ class Widget extends DmYY {
         yAxes: [   // y轴轴线
           {
             ticks: {
-              beginAtZero: false, // 是否从 0 开始
+              beginAtZero: true, // 是否从 0 开始
               fontColor: '#000',
             },
             gridLines: {
@@ -321,6 +328,8 @@ class Widget extends DmYY {
       this.chartConfig.options.scales.yAxes[0].gridLines.color = axesColor;
       this.chartConfig.options.scales.xAxes[0].ticks.fontColor = axesColor;
       this.chartConfig.options.scales.yAxes[0].ticks.fontColor = axesColor;
+      this.chartConfig.options.plugins.datalabels.color = axesColor;
+
       return true;
     } catch (e) {
       this.notify('错误提示', e);
