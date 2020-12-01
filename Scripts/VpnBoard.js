@@ -134,29 +134,38 @@ module.exports = template;`;
     password: '',
   };
 
-  range = {};
+  range = {
+    '11.1': {todayUsed: '30M'},
+    '11.2': {todayUsed: '130M'},
+    '11.3': {todayUsed: '300M'},
+    '11.4': {todayUsed: '30M'},
+    '11.5': {todayUsed: '2g'},
+    '11.6': {todayUsed: '3G'},
+  };
   max = 6;
 
   init = async () => {
     try {
-      await this.login();
-      await this.checkin();
-      await this.dataResults();
-      if (Keychain.contains(this.CACHE_KEY)) {
-        this.range = JSON.parse(Keychain.get(this.CACHE_KEY));
-      }
-      const date = new Date();
-      const format = new DateFormatter();
-      format.dateFormat = 'MM.dd';
-      const dateDay = format.string(date);
-      this.range[dateDay] = this.dataSource;
-      const rangeKey = Object.keys(this.range);
-      if (rangeKey.length > this.max) {
-        for (let i = 0; i <= rangeKey.length - this.max; i++) {
-          delete this.range[rangeKey[i]];
+      if (this.account.url) {
+        await this.login();
+        await this.checkin();
+        await this.dataResults();
+        if (Keychain.contains(this.CACHE_KEY)) {
+          this.range = JSON.parse(Keychain.get(this.CACHE_KEY));
         }
+        const date = new Date();
+        const format = new DateFormatter();
+        format.dateFormat = 'MM.dd';
+        const dateDay = format.string(date);
+        this.range[dateDay] = this.dataSource;
+        const rangeKey = Object.keys(this.range);
+        if (rangeKey.length > this.max) {
+          for (let i = 0; i <= rangeKey.length - this.max; i++) {
+            delete this.range[rangeKey[i]];
+          }
+        }
+        Keychain.set(this.CACHE_KEY, JSON.stringify(this.range));
       }
-      Keychain.set(this.CACHE_KEY, JSON.stringify(this.range));
     } catch (e) {
       console.log(e);
     }
@@ -296,7 +305,7 @@ module.exports = template;`;
   translateFlow(value) {
     const unit = [
       {unit: 'T', value: 1024 * 1024},
-      {unit: 'T', value: 1024},
+      {unit: 'G', value: 1024},
       {unit: 'M', value: 1},
       {unit: 'K', value: 1 / 1024},
     ];
@@ -307,6 +316,7 @@ module.exports = template;`;
         data.value = Math.floor((parseFloat(value) * item.value) * 100) / 100;
       }
     });
+
     return data;
   }
 
@@ -321,9 +331,11 @@ module.exports = template;`;
       text.push(value);
     });
     if (this.widgetSize === 'small') {
-      labels = labels.slice(-3);
-      data = data.slice(-3);
+
     }
+    labels = labels.slice(-3);
+    data = data.slice(-3);
+    console.log(data);
     const chart = this.chartConfig(labels, data, text);
     const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
         chart)}`;
