@@ -85,7 +85,7 @@ class Widget extends DmYY {
           {
             ticks: {
               display: false,
-              beginAtZero: false,
+              beginAtZero: true,
               fontColor: '${color}',
             },
             gridLines: {
@@ -300,10 +300,24 @@ class Widget extends DmYY {
     w.addSpacer(5);
   }
 
-  setHeader(w, size) {
+  async setHeader(w, size) {
     const header = w.addStack();
     header.addSpacer();
     const left = header.addStack();
+    left.centerAlignContent();
+    let icon = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
+    if (this.account.icon) icon = this.account.icon;
+    const stackIcon = left.addStack();
+    try {
+      const imgIcon = await this.$request.get(icon, 'IMG');
+      const imgIconItem = stackIcon.addImage(imgIcon);
+      imgIconItem.imageSize = new Size(10, 10);
+      imgIconItem.cornerRadius = 4;
+      left.addSpacer(5);
+    } catch (e) {
+      console.log(e);
+    }
+
     const vpnName = {...this.textFormat.title};
     vpnName.size = size;
     this.provideText(this.account.title, left, vpnName);
@@ -362,7 +376,7 @@ class Widget extends DmYY {
   };
 
   renderSmall = async (w) => {
-    this.setHeader(w, 10);
+    await this.setHeader(w, 10);
     await this.setContent(w, {w: 195, h: 85});
     this.createDivider(w);
     this.setFooter(w, {label: 6, value: 8});
@@ -370,7 +384,7 @@ class Widget extends DmYY {
   };
 
   renderMedium = async (w) => {
-    this.setHeader(w, 16);
+    await this.setHeader(w, 16);
     await this.setContent(w, {w: 390, h: 85});
     this.createDivider(w);
     this.setFooter(w, {label: 14, value: 18});
@@ -406,6 +420,7 @@ class Widget extends DmYY {
         const account = await this.setAlertInput(
             '添加账号', '添加账号数据，添加完成之后请去设置默认账号', {
               title: '机场名',
+              icon: '图标',
               url: '登陆地址',
               email: '邮箱账号',
               password: '密码',
