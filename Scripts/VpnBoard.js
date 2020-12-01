@@ -26,12 +26,13 @@ class Widget extends DmYY {
     isCheckIn: false,
   };
 
-  chartConfig = (labels = [], datas = []) => {
+  chartConfig = (labels = [], datas = [], text = []) => {
     const color = `#${this.widgetColor.hex}`;
     return `{
     'type': 'bar', // line 类型为折现类型
     'data': {
       'labels': ${JSON.stringify(labels)},
+      'tips': ${JSON.stringify(text)},
       'datasets': [
         {
           type: 'line',
@@ -52,6 +53,9 @@ class Widget extends DmYY {
           color: '${color}',
           font: {
              size: '16'
+          },
+          formatter: function(value, context) {
+            return context.chart.data.tips[context.dataIndex];
           }
         },
       },
@@ -271,17 +275,18 @@ class Widget extends DmYY {
   }
 
   createChart = async (size) => {
-    let labels = [], data = [];
+    let labels = [], data = [], text = [];
     const rangeKey = Object.keys(this.range);
     rangeKey.forEach((key) => {
       labels.push(key);
-      data.push(parseInt(this.range[key].todayUsed));
+      data.push(parseFloat(this.range[key].todayUsed));
+      text.push(this.range[key].todayUsed);
     });
     if (this.widgetSize === 'small') {
       labels = labels.slice(-3);
       data = data.slice(-3);
     }
-    const chart = this.chartConfig(labels, data);
+    const chart = this.chartConfig(labels, data, text);
     const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
         chart)}`;
     return await this.$request.get(url, 'IMG');
