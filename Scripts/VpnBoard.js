@@ -302,7 +302,6 @@ class Widget extends DmYY {
 
   async setHeader(w, size) {
     const header = w.addStack();
-    header.addSpacer();
     const left = header.addStack();
     left.centerAlignContent();
     let icon = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
@@ -311,7 +310,7 @@ class Widget extends DmYY {
     try {
       const imgIcon = await this.$request.get(icon, 'IMG');
       const imgIconItem = stackIcon.addImage(imgIcon);
-      let iconSize = new Size(20, 20);
+      let iconSize = new Size(16, 16);
       if (this.widgetSize === 'small') iconSize = new Size(12, 12);
       imgIconItem.imageSize = iconSize;
       imgIconItem.cornerRadius = 4;
@@ -333,7 +332,6 @@ class Widget extends DmYY {
     vpnFlow.color = new Color('#26c5bc');
     vpnFlow.size = size;
     this.provideText(this.dataSource.isCheckIn ? '已签到' : '未签到', right, vpnFlow);
-    header.addSpacer();
 
     w.addSpacer();
   };
