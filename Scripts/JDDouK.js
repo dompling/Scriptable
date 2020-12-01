@@ -410,9 +410,9 @@ class Widget extends DmYY {
       // 如果是节点，则先远程获取
       this.settings.cookieData = this.CookiesData;
       this.saveSettings(false);
-      this.CookiesData.map((t) => {
+      this.CookiesData.map((t, index) => {
         const r = new UITableRow();
-        r.addText(t.userName);
+        r.addText(`parameter:${index}    ${t.userName}`);
         r.onSelect = (n) => {
           this.settings.username = t.userName;
           this.settings.cookie = t.cookie;
