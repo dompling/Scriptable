@@ -346,7 +346,7 @@ class Widget extends DmYY {
       this.saveSettings(false);
       this.CookiesData.map((t, index) => {
         const r = new UITableRow();
-        r.addText(`parameter:${index}    ${t.userName}`);
+        r.addText(`parameter：${index}    ${t.userName}`);
         r.onSelect = (n) => {
           this.settings.username = t.userName;
           this.settings.cookie = t.cookie;

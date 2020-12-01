@@ -514,7 +514,7 @@ module.exports = template;`;
       const dataSource = this.settings.dataSource || [];
       dataSource.map((t, index) => {
         const r = new UITableRow();
-        r.addText(`parameter:${index}  机场名：${t.title}     账号：${t.email}`);
+        r.addText(`parameter：${index}  机场名：${t.title}     账号：${t.email}`);
         r.onSelect = (n) => {
           this.settings.account = t;
           this.notify(t.title, `默认账号设置成功\n账号：${t.email}`);

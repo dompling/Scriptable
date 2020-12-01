@@ -421,7 +421,7 @@ module.exports = template;`;
       const dataSource = this.settings.dataSource || [];
       dataSource.map((t, index) => {
         const r = new UITableRow();
-        r.addText(`parameter:${index}  机场名：${t.title}     订阅：${t.url}`);
+        r.addText(`parameter：${index}  机场名：${t.title}     订阅：${t.url}`);
         r.onSelect = (n) => {
           this.settings.account = t;
           this.notify(t.title, `默认订阅设置成功\n订阅：${t.url}`);
