@@ -28,29 +28,36 @@ class Widget extends DmYY {
 
   chartConfig = (labels = [], datas = [], text = []) => {
     const color = `#${this.widgetColor.hex}`;
-    return `{
-    'type': 'bar', // line 类型为折现类型
-    'data': {
-      'labels': ${JSON.stringify(labels)},
-      'tips': ${JSON.stringify(text)},
-      'datasets': [
-        {
-          type: 'line',
-          backgroundColor: '#fff',
-          borderColor: getGradientFillHelper('vertical', ['#c8e3fa', '#e62490']),
-          'borderWidth': 2,
-          pointRadius: 5,
-          'fill': false,
-          'data': ${JSON.stringify(datas)},
-        },
-      ],
-    },
-    'options': {
+    let template;
+    let path = this.FILE_MGR.documentsDirectory();
+    path = path + '/VPNBoardTemplate.js';
+    if (this.FILE_MGR.fileExists(path)) {
+      template = require('./VPNBoardTemplate');
+    } else {
+      template = `
+{
+  'type': 'bar',
+  'data': {
+    'labels': __LABELS__,
+    'tips': __TEXT__,
+    'datasets': [
+      {
+        type: 'line',
+        backgroundColor: '#fff',
+        borderColor: getGradientFillHelper('vertical', ['#c8e3fa', '#e62490']),
+        'borderWidth': 2,
+        pointRadius: 5,
+        'fill': false,
+        'data': __DATAS__,
+      },
+    ],
+  },
+  'options': {
       plugins: {
         datalabels: {
           display: true,
           align: 'top',
-          color: '${color}',
+          color: __COLOR__,
           font: {
              size: '16'
           },
@@ -80,11 +87,11 @@ class Widget extends DmYY {
           {
             gridLines: {
               display: false,
-              color: '${color}',
+              color: __COLOR__,
             },
             ticks: {
               display: true, 
-              fontColor: '${color}',
+              fontColor: __COLOR__,
               fontSize: '16',
             },
           },
@@ -94,18 +101,30 @@ class Widget extends DmYY {
             ticks: {
               display: false,
               beginAtZero: true,
-              fontColor: '${color}',
+              fontColor: __COLOR__,
             },
             gridLines: {
               borderDash: [7, 5],
               display: false,
-              color: '${color}',
+              color: __COLOR__,
             },
           },
         ],
       },
     },
-  }`;
+ }`;
+      const content = `// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: deep-gray; icon-glyph: ellipsis-v;
+const template = \`${template}\`;
+module.exports = template;`;
+      this.FILE_MGR.writeString(path, content);
+    }
+    template = template.replaceAll('__COLOR__', `'${color}'`);
+    template = template.replace('__LABELS__', `${JSON.stringify(labels)}`);
+    template = template.replace('__TEXT__', `${JSON.stringify(text)}`);
+    template = template.replace('__DATAS__', `${JSON.stringify(datas)}`);
+    return template;
   };
 
   account = {
@@ -274,13 +293,32 @@ class Widget extends DmYY {
     return flow[0];
   }
 
+  translateFlow(value) {
+    const unit = [
+      {unit: 'T', value: 1024 * 1024},
+      {unit: 'T', value: 1024},
+      {unit: 'M', value: 1},
+      {unit: 'K', value: 1 / 1024},
+    ];
+    const data = {unit: '', value: parseFloat(value)};
+    unit.forEach(item => {
+      if (value.indexOf(item.unit) > -1) {
+        data.unit = item.unit;
+        data.value = Math.floor((parseFloat(value) * item.value) * 100) / 100;
+      }
+    });
+    return data;
+  }
+
   createChart = async (size) => {
     let labels = [], data = [], text = [];
     const rangeKey = Object.keys(this.range);
     rangeKey.forEach((key) => {
       labels.push(key);
-      data.push(parseFloat(this.range[key].todayUsed));
-      text.push(this.range[key].todayUsed);
+      const value = this.range[key].todayUsed.toLocaleUpperCase();
+      const valueUnit = this.translateFlow(value);
+      data.push(valueUnit.value);
+      text.push(value);
     });
     if (this.widgetSize === 'small') {
       labels = labels.slice(-3);
