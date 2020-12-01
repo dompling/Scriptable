@@ -223,6 +223,7 @@ module.exports = template;`;
         `${this.flow.percent}%`, this.dataSource.restData,
         this.dataSource.usedData,
     );
+    console.log(chart);
     const url = `https://quickchart.io/chart?w=680&h=240&f=png&c=${encodeURIComponent(
         chart)}`;
     try {

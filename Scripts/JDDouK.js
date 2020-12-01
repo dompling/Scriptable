@@ -273,6 +273,7 @@ module.exports = template;`;
       data.push(value);
     });
     const chartStr = this.chartConfig(labels, data);
+    console.log(chart);
     const url = `https://quickchart.io/chart?w=580&h=190&f=png&c=${encodeURIComponent(
         chartStr)}`;
     return await this.$request.get(url, 'IMG');

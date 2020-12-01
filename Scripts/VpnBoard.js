@@ -337,6 +337,7 @@ module.exports = template;`;
     data = data.slice(-3);
     console.log(data);
     const chart = this.chartConfig(labels, data, text);
+    console.log(chart);
     const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
         chart)}`;
     return await this.$request.get(url, 'IMG');
