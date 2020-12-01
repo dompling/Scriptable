@@ -30,17 +30,21 @@ class Widget extends DmYY {
   CookiesData = [];
   beanCount = 0;
 
-  chartConfig = {
+  chartConfig = (labels = [], datas = []) => {
+    const color = `#${this.widgetColor.hex}`;
+    return `{
     'type': 'bar', // line 类型为折现类型
     'data': {
-      'labels': [],
+      'labels': ${JSON.stringify(labels)},
       'datasets': [
         {
           type: 'line',
-          'borderColor': '#ffc107',
+          backgroundColor: '#fff',
+          borderColor: getGradientFillHelper('vertical', ['#c8e3fa', '#e62490']),
           'borderWidth': 2,
+          pointRadius: 5,
           'fill': false,
-          'data': [],
+          'data': ${JSON.stringify(datas)},
         },
       ],
     },
@@ -49,16 +53,19 @@ class Widget extends DmYY {
         datalabels: {
           display: true,
           align: 'top',
-          color: '#000',
+          color: '${color}',
+          font: {
+             size: "20"
+          }
         },
       },
       layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 30,
-          bottom: 0,
-        },
+          padding: {
+              left: 0,
+              right: 10,
+              top: 30,
+              bottom: 0
+          }
       },
       responsive: true,
       maintainAspectRatio: true,
@@ -72,33 +79,33 @@ class Widget extends DmYY {
         xAxes: [ // X 轴线
           {
             gridLines: {
-              display: false, // 隐藏 X 轴 false
-              color: '#000',
+              display: false,
+              color: '${color}',
             },
             ticks: {
-              display: true,   // 是否显示 X 轴刻度值
-              fontColor: '#000',
-              fontSize: '20',
+              display: true, 
+              fontColor: '${color}',
+              fontSize: "20"
             },
           },
         ],
-        yAxes: [   // y轴轴线
+        yAxes: [
           {
             ticks: {
-              display: true,   // 是否显示 y 轴刻度值
-              beginAtZero: true, // 是否从 0 开始
-              fontColor: '#000',
-              fontSize: '16',
+              display: false,
+              beginAtZero: true,
+              fontColor: '${color}',
             },
             gridLines: {
               borderDash: [7, 5],
-              display: true, // 隐藏 Y 轴 false
-              color: '#000',
+              display: false,
+              color: '${color}',
             },
           },
         ],
       },
     },
+  }`;
   };
 
   init = async () => {
@@ -128,13 +135,6 @@ class Widget extends DmYY {
         this.timerKeys = Object.keys(this.rangeTimer);
       }
       await this.getAmountData();
-      Object.keys(this.rangeTimer).forEach((month) => {
-        const value = this.rangeTimer[month];
-        const arrMonth = month.split('-');
-        this.chartConfig.data.labels.push(`${arrMonth[1]}.${arrMonth[2]}`);
-        this.chartConfig.data.datasets[0].data.push(value);
-      });
-
     } catch (e) {
       console.log(e);
     }
@@ -245,8 +245,15 @@ class Widget extends DmYY {
     }
   };
 
-  createChart = async (data) => {
-    const chartStr = JSON.stringify(data);
+  createChart = async () => {
+    let labels = [], data = [];
+    Object.keys(this.rangeTimer).forEach((month) => {
+      const value = this.rangeTimer[month];
+      const arrMonth = month.split('-');
+      labels.push(`${arrMonth[1]}.${arrMonth[2]}`);
+      data.push(value);
+    });
+    const chartStr = this.chartConfig(labels, data);
     const url = `https://quickchart.io/chart?w=580&h=190&f=png&c=${encodeURIComponent(
         chartStr)}`;
     return await this.$request.get(url, 'IMG');
@@ -279,7 +286,7 @@ class Widget extends DmYY {
     widget.addSpacer(10);
     const stackChart = widget.addStack();
     if (this.widgetFamily === 'medium') {
-      const chart = await this.createChart(this.chartConfig);
+      const chart = await this.createChart();
       stackChart.addImage(chart);
     } else if (this.widgetFamily === 'large') {
       await this.renderLarge(widget);
@@ -315,12 +322,6 @@ class Widget extends DmYY {
       this.registerAction('显示天数', async () => {
         await this.setAlertInput('设置显示天数周期范围', false, {maxDate: '天数'});
       });
-      this.registerAction('折线颜色', async () => {
-        await this.setLightAndDark('折线颜色', false, 'lightLine', 'darkLine');
-      });
-      this.registerAction('轴线字体', async () => {
-        await this.setLightAndDark('轴线字体颜色', false, 'lightAxes', 'darkAxes');
-      });
       this.registerAction('基础设置', this.setWidgetConfig);
       this.registerAction('账号设置', async () => {
         await this.setAlertInput('账号设置', '京东账号 Ck', {
@@ -346,25 +347,6 @@ class Widget extends DmYY {
       if (!this.JDCookie.cookie) throw '京东 CK 获取失败';
       this.JDCookie.userName = decodeURI(this.JDCookie.userName);
       this.CACHE_KEY = `cache_${_md5}_` + this.JDCookie.userName;
-
-      let borderColor = this.chartConfig.data.datasets[0].borderColor;
-      let axesColor;
-      if (this.isNight) {
-        borderColor = this.settings.darkLine || borderColor;
-        axesColor = this.settings.darkAxes || '#fff';
-      } else {
-        borderColor = this.settings.lightLine || borderColor;
-        axesColor = this.settings.lightAxes || '#000';
-      }
-      this.chartConfig.data.datasets[0].borderColor = borderColor;
-
-      const lineColor = this.opacity(axesColor, 0.3);
-      this.chartConfig.options.scales.xAxes[0].gridLines.color = lineColor;
-      this.chartConfig.options.scales.yAxes[0].gridLines.color = lineColor;
-
-      this.chartConfig.options.scales.xAxes[0].ticks.fontColor = axesColor;
-      this.chartConfig.options.scales.yAxes[0].ticks.fontColor = axesColor;
-      this.chartConfig.options.plugins.datalabels.color = axesColor;
 
       return true;
     } catch (e) {
