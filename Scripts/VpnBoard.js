@@ -50,6 +50,9 @@ class Widget extends DmYY {
           display: true,
           align: 'top',
           color: '${color}',
+          font: {
+             size: '16'
+          }
         },
       },
       layout: {
@@ -57,7 +60,7 @@ class Widget extends DmYY {
               left: 0,
               right: 0,
               top: 30,
-              bottom: 0
+              bottom: 5
           }
       },
       responsive: true,
@@ -78,6 +81,7 @@ class Widget extends DmYY {
             ticks: {
               display: true, 
               fontColor: '${color}',
+              fontSize: '16',
             },
           },
         ],
