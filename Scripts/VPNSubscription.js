@@ -83,14 +83,14 @@ class Widget extends DmYY {
       "doughnutlabel": {
         "labels": [
           {
-            "text": '\\n剩余',
+            "text": '剩余',
             "color": __COLOR__,
             "font": {
               "size": "30"
             },
           },
           {
-            "text": '\\n__PERCENT__',
+            "text": '__PERCENT__',
             "color": __COLOR__,
             "font": {
               "size": "45"
@@ -109,7 +109,8 @@ module.exports = template;`;
       this.FILE_MGR.writeString(path, content);
     }
     template = template.replaceAll('__COLOR__', `'${color}'`);
-    template = template.replace('__PERCENT__', percent);
+    template = template.replace('__PERCENT__', `\\n${percent}`);
+    template = template.replace('剩余', `\\n剩余`);
     template = template.replace('__DATAS__', `${JSON.stringify([rest, use])}`);
     return template;
   };
