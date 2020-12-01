@@ -263,7 +263,7 @@ class Widget extends DmYY {
   flowFormat(data) {
     data = data.replace(/\d+(\.\d+)*%/, '');
     let flow = data.match(/\d+(\.\d+)*\w*/);
-    return flow[0] + 'B';
+    return flow[0];
   }
 
   createChart = async (size) => {
@@ -271,7 +271,7 @@ class Widget extends DmYY {
     const rangeKey = Object.keys(this.range);
     rangeKey.forEach((key) => {
       labels.push(key);
-      data.push(this.range[key].todayUsed);
+      data.push(parseInt(this.range[key].todayUsed));
     });
     if (this.widgetSize === 'small') {
       labels = labels.slice(-3);
@@ -311,7 +311,9 @@ class Widget extends DmYY {
     try {
       const imgIcon = await this.$request.get(icon, 'IMG');
       const imgIconItem = stackIcon.addImage(imgIcon);
-      imgIconItem.imageSize = new Size(10, 10);
+      let iconSize = new Size(20, 20);
+      if (this.widgetSize === 'small') iconSize = new Size(12, 12);
+      imgIconItem.imageSize = iconSize;
       imgIconItem.cornerRadius = 4;
       left.addSpacer(5);
     } catch (e) {
@@ -320,6 +322,7 @@ class Widget extends DmYY {
 
     const vpnName = {...this.textFormat.title};
     vpnName.size = size;
+    vpnName.color = this.widgetColor;
     this.provideText(this.account.title, left, vpnName);
 
     header.addSpacer();
@@ -339,6 +342,7 @@ class Widget extends DmYY {
     const stackLabel = w.addStack();
     const textBattery = {...this.textFormat.battery};
     textBattery.size = size.label;
+    textBattery.color = this.widgetColor;
     this.provideText(data.label, stackLabel, textBattery);
 
     textBattery.size = size.value;
@@ -416,6 +420,7 @@ class Widget extends DmYY {
   Run = () => {
     if (config.runsInApp) {
       this.registerAction('默认账号', this.actionSettings);
+      this.registerAction('清除账号', this.deletedVpn);
       this.registerAction('新增账号', async () => {
         const account = await this.setAlertInput(
             '添加账号', '添加账号数据，添加完成之后请去设置默认账号', {
@@ -455,6 +460,27 @@ class Widget extends DmYY {
         r.onSelect = (n) => {
           this.settings.account = t;
           this.notify(t.title, `默认账号设置成功\n账号：${t.email}`);
+          this.saveSettings(false);
+        };
+        table.addRow(r);
+      });
+      table.present(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async deletedVpn() {
+    try {
+      const table = new UITable();
+      const dataSource = this.settings.dataSource || [];
+      dataSource.map((t, index) => {
+        const r = new UITableRow();
+        r.addText(`❌   机场名：${t.title}     账号：${t.email}`);
+        r.onSelect = (n) => {
+          dataSource.splice(index, 1);
+          this.settings.dataSource = dataSource;
+          this.notify(t.title, `❌\n账号：${t.email}`);
           this.saveSettings(false);
         };
         table.addRow(r);
