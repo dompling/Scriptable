@@ -48,8 +48,16 @@ class Widget extends DmYY {
       plugins: {
         datalabels: {
           display: true,
-          align: 'bottom',
+          align: 'top',
           color: '#000',
+        },
+      },
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 30,
+          bottom: 0,
         },
       },
       responsive: true,
@@ -70,7 +78,7 @@ class Widget extends DmYY {
             ticks: {
               display: true,   // 是否显示 X 轴刻度值
               fontColor: '#000',
-              fontSize: "20",
+              fontSize: '20',
             },
           },
         ],
@@ -80,7 +88,7 @@ class Widget extends DmYY {
               display: true,   // 是否显示 y 轴刻度值
               beginAtZero: true, // 是否从 0 开始
               fontColor: '#000',
-              fontSize: "16",
+              fontSize: '16',
             },
             gridLines: {
               borderDash: [7, 5],
