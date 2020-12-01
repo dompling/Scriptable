@@ -53,6 +53,67 @@ class Widget extends DmYY {
   range = {};
   max = 6;
 
+  chartConfig = (percent, rest, use) => {
+    const color = `#${this.widgetColor.hex}`;
+    let template;
+    let path = this.FILE_MGR.documentsDirectory();
+    const name = `/${this.en}Template`;
+    path = path + name + '.js';
+    if (this.FILE_MGR.fileExists(path)) {
+      template = require('.' + name);
+    } else {
+      template = `
+{
+  "type": "doughnut",
+  "data": {
+    "datasets": [{
+      "label": "foo",
+      "data": __DATAS__,
+      "backgroundColor": ["#8376f9","#dddef3"],
+      "textcolor":["#8376f9","#dddef3"],
+      "borderWidth": 0,
+    }] 
+  },
+  "options": {
+    "rotation": Math.PI,
+    "circumference": Math.PI,
+    "cutoutPercentage": 75,
+    "plugins": {
+      "datalabels": { "display": false },
+      "doughnutlabel": {
+        "labels": [
+          {
+            "text": "\\n剩余",
+            "color": __COLOR__,
+            "font": {
+              "size": "30"
+            },
+          },
+          {
+            "text": "\\n__PERCENT__",
+            "color": __COLOR__,
+            "font": {
+              "size": "45"
+            },
+          },
+        ]
+      }
+    }
+  }
+}`;
+      const content = `// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: deep-gray; icon-glyph: ellipsis-v;
+const template = \`${template}\`;
+module.exports = template;`;
+      this.FILE_MGR.writeString(path, content);
+    }
+    template = template.replaceAll('__COLOR__', `'${color}'`);
+    template = template.replace('__PERCENT__', percent);
+    template = template.replace('__DATAS__', `${JSON.stringify([rest, use])}`);
+    return template;
+  };
+
   init = async () => {
     try {
       const data = await this.getdata(this.account.url);
@@ -157,45 +218,25 @@ class Widget extends DmYY {
     stack.addSpacer();
   };
 
-  creatProgress(stack) {
-    let width;
-    if (config.widgetFamily === 'small') {
-      width = 100;
-    } else {
-      width = 300;
+  createChart = async (w) => {
+    const chart = this.chartConfig(
+        `${this.flow.percent}%`, this.dataSource.restData,
+        this.dataSource.usedData,
+    );
+    const url = `https://quickchart.io/chart?w=680&h=240&f=png&c=${encodeURIComponent(
+        chart)}`;
+    try {
+      const img = await this.$request.get(url, 'IMG');
+      const stackAlign = w.addStack();
+      stackAlign.addSpacer();
+      stackAlign.centerAlignContent();
+      const stackImg = stackAlign.addStack();
+      stackImg.addImage(img);
+      stackAlign.addSpacer();
+    } catch (e) {
+      console.log(e);
     }
-    const h = 10;
-    const context = new DrawContext();
-    context.size = new Size(width, h);
-    context.opaque = false;
-    context.respectScreenScale = true;
-    context.setFillColor(this.fgCircleColor);
-    const path = new Path();
-    path.addRoundedRect(new Rect(0, 0, width, h), 3, 2);
-    context.addPath(path);
-    context.fillPath();
-    context.setFillColor(this.circleColor4);
-    const path1 = new Path();
-    const path1width = width * (this.flow.percent / 100);
-    path1.addRoundedRect(new Rect(0, 0, path1width, h), 3, 2);
-    context.addPath(path1);
-    context.fillPath();
-
-    const stackProgress = stack.addStack();
-    stackProgress.layoutVertically();
-    const imgProgressItem = stackProgress.addImage(context.getImage());
-    imgProgressItem.cornerRadius = 10;
-    const textFormat = {...this.textFormat.title};
-    textFormat.color = this.widgetColor;
-    stackProgress.addSpacer(10);
-    const stackText = stackProgress.addStack();
-    stackText.addSpacer();
-    this.provideText(
-        `${this.flow.percent}%`, stackText, textFormat);
-    stackText.addSpacer();
-
-    stack.addSpacer();
-  }
+  };
 
   drawPointText(txt, canvas, txtPoint, fontSize) {
     canvas.setTextColor(this.percentColor);
@@ -315,7 +356,7 @@ class Widget extends DmYY {
 
   renderMedium = async (w) => {
     await this.setHeader(w, 16);
-    this.creatProgress(w);
+    await this.createChart(w);
     this.createDivider(w);
     this.setFooter(w, {label: 14, value: 18});
     return w;
