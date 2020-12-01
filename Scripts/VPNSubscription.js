@@ -77,9 +77,9 @@ class Widget extends DmYY {
     await req.load();
     let resp = req.response.headers['subscription-userinfo'];
     resp = [
-      (parseInt(resp.match(/upload=(.*?);/)[1]) / 1048576).toFixed(2),
-      (parseInt(resp.match(/download=(.*?);/)[1]) / 1048576).toFixed(2),
-      (parseInt(resp.match(/total=(.*?);/)[1]) / 1048576).toFixed(2),
+      (parseInt(resp.match(/upload=([0-9]+);?/)[1]) / 1048576).toFixed(2),
+      (parseInt(resp.match(/download=([0-9]+);?/)[1]) / 1048576).toFixed(2),
+      (parseInt(resp.match(/total=([0-9]+);?/)[1]) / 1048576).toFixed(2),
     ];
     console.log(resp);
     return resp;
