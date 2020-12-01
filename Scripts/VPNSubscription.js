@@ -83,14 +83,14 @@ class Widget extends DmYY {
       "doughnutlabel": {
         "labels": [
           {
-            "text": "\\n剩余",
+            "text": '\\n剩余',
             "color": __COLOR__,
             "font": {
               "size": "30"
             },
           },
           {
-            "text": "\\n__PERCENT__",
+            "text": '\\n__PERCENT__',
             "color": __COLOR__,
             "font": {
               "size": "45"
