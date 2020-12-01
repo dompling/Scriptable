@@ -355,7 +355,7 @@ class Widget extends DmYY {
             }, false);
         if (!this.settings.dataSource) this.settings.dataSource = [];
         if (!account) return;
-        if (account.title && account.url && account.email && account.password) {
+        if (account.title && account.url) {
           this.settings.dataSource.push(account);
         }
         this.settings.dataSource = this.settings.dataSource.filter(
@@ -419,5 +419,3 @@ class Widget extends DmYY {
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
 await Runing(Widget, '', false); //远程开发环境
-
-
