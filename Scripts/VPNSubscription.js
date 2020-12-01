@@ -39,7 +39,7 @@ class Widget extends DmYY {
   };
 
   flow = {
-    percent: 0,
+    percent: 30,
     count: 0,
     icon: 'waveform.path.badge.minus',
     circleColor: this.circleColor4,
@@ -157,7 +157,7 @@ class Widget extends DmYY {
     stack.addSpacer();
   };
 
-  creatProgress(stack, total, havegone) {
+  creatProgress(stack) {
     let width;
     if (config.widgetFamily === 'small') {
       width = 100;
@@ -176,11 +176,11 @@ class Widget extends DmYY {
     context.fillPath();
     context.setFillColor(this.circleColor4);
     const path1 = new Path();
-    const path1width = (havegone / total > width) ? width : width *
-        havegone / total;
+    const path1width = width * (this.flow.percent / 100);
     path1.addRoundedRect(new Rect(0, 0, path1width, h), 3, 2);
     context.addPath(path1);
     context.fillPath();
+
     const stackProgress = stack.addStack();
     stackProgress.layoutVertically();
     const imgProgressItem = stackProgress.addImage(context.getImage());
@@ -314,7 +314,7 @@ class Widget extends DmYY {
 
   renderMedium = async (w) => {
     await this.setHeader(w, 16);
-    this.creatProgress(w, this.dataSource.todayUsed, this.dataSource.restData);
+    this.creatProgress(w);
     this.createDivider(w);
     this.setFooter(w, {label: 14, value: 18});
     return w;
