@@ -30,51 +30,87 @@ class Widget extends DmYY {
   CookiesData = [];
   beanCount = 0;
 
-  chartConfig = {
-    'type': 'line',
+  chartConfig = (labels = [], datas = []) => {
+    const color = `#${this.widgetColor.hex}`;
+    return `{
+    'type': 'bar', // line 类型为折现类型
     'data': {
-      'labels': [],
+      'labels': ${JSON.stringify(labels)},
       'datasets': [
         {
-          'borderColor': '#ffc107',
+          type: 'line',
+          backgroundColor: '#fff',
+          borderColor: getGradientFillHelper('vertical', ['#c8e3fa', '#e62490']),
           'borderWidth': 2,
+          pointRadius: 5,
           'fill': false,
-          'data': [],
+          'data': ${JSON.stringify(datas)},
         },
       ],
     },
     'options': {
-      'responsive': true,
+      plugins: {
+        datalabels: {
+          display: true,
+          align: 'top',
+          color: '${color}',
+          font: {
+             size: "20"
+          }
+        },
+      },
+      layout: {
+          padding: {
+              left: 0,
+              right: 10,
+              top: 30,
+              bottom: 0
+          }
+      },
+      responsive: true,
+      maintainAspectRatio: true,
       'legend': {
         'display': false,
       },
       'title': {
         'display': false,
       },
-      'tooltips': {
-        'enabled': false,
-        'mode': 'index',
-        'intersect': true,
+      scales: {
+        xAxes: [ // X 轴线
+          {
+            gridLines: {
+              display: false,
+              color: '${color}',
+            },
+            ticks: {
+              display: true, 
+              fontColor: '${color}',
+              fontSize: "20"
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              display: false,
+              beginAtZero: true,
+              fontColor: '${color}',
+            },
+            gridLines: {
+              borderDash: [7, 5],
+              display: false,
+              color: '${color}',
+            },
+          },
+        ],
       },
     },
-  };
-
-  none = {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Users',
-          data: [],
-        },
-      ],
-    },
+  }`;
   };
 
   init = async () => {
     try {
-      await this.TotalBean();
+      if (!this.JDCookie.cookie) return;
       if (Keychain.contains(this.CACHE_KEY) && !this.forceCache) {
         this.rangeTimer = JSON.parse(Keychain.get(this.CACHE_KEY));
 
@@ -99,13 +135,6 @@ class Widget extends DmYY {
         this.timerKeys = Object.keys(this.rangeTimer);
       }
       await this.getAmountData();
-      Object.keys(this.rangeTimer).forEach((month) => {
-        const value = this.rangeTimer[month];
-        const arrMonth = month.split('-');
-        this.chartConfig.data.labels.push(`${arrMonth[1]}.${arrMonth[2]}`);
-        this.chartConfig.data.datasets[0].data.push(value);
-      });
-
     } catch (e) {
       console.log(e);
     }
@@ -118,6 +147,10 @@ class Widget extends DmYY {
       const response = await this.getJingBeanBalanceDetail(page);
       const result = response.code === '0';
       console.log(`第${page}页：${result ? '请求成功' : '请求失败'}`);
+      if (response.code === '3') {
+        i = 1;
+        console.log(response);
+      }
       if (response && result) {
         page++;
         let detailList = response.jingDetailList;
@@ -140,6 +173,7 @@ class Widget extends DmYY {
   };
 
   TotalBean = async () => {
+    if (!this.JDCookie.cookie) return;
     const options = {
       headers: {
         Accept: 'application/json,text/plain, */*',
@@ -211,9 +245,16 @@ class Widget extends DmYY {
     }
   };
 
-  createChart = async (data) => {
-    const chartStr = JSON.stringify(data);
-    const url = `https://quickchart.io/chart?w=620&h=200f=png&c=${encodeURIComponent(
+  createChart = async () => {
+    let labels = [], data = [];
+    Object.keys(this.rangeTimer).forEach((month) => {
+      const value = this.rangeTimer[month];
+      const arrMonth = month.split('-');
+      labels.push(`${arrMonth[1]}.${arrMonth[2]}`);
+      data.push(value);
+    });
+    const chartStr = this.chartConfig(labels, data);
+    const url = `https://quickchart.io/chart?w=580&h=190&f=png&c=${encodeURIComponent(
         chartStr)}`;
     return await this.$request.get(url, 'IMG');
   };
@@ -245,7 +286,7 @@ class Widget extends DmYY {
     widget.addSpacer(10);
     const stackChart = widget.addStack();
     if (this.widgetFamily === 'medium') {
-      const chart = await this.createChart(this.chartConfig);
+      const chart = await this.createChart();
       stackChart.addImage(chart);
     } else if (this.widgetFamily === 'large') {
       await this.renderLarge(widget);
@@ -256,41 +297,57 @@ class Widget extends DmYY {
     return widget;
   }
 
+  opacity(str, opacity = 0.8) {
+    let sColor = str.toLowerCase();
+    let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+    if (sColor && reg.test(sColor)) {
+      if (sColor.length === 4) {
+        let sColorNew = '#';
+        for (let i = 1; i < 4; i += 1) {
+          sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+        }
+        sColor = sColorNew;
+      }
+      let sColorChange = [];
+      for (let i = 1; i < 7; i += 2) {
+        sColorChange.push(parseInt('0x' + sColor.slice(i, i + 2)));
+      }
+      return `rgba(${sColorChange.join(',')},${opacity})`;
+    }
+    return sColor;
+  }
+
   JDRun = (filename, args) => {
     if (config.runsInApp) {
       this.registerAction('显示天数', async () => {
         await this.setAlertInput('设置显示天数周期范围', false, {maxDate: '天数'});
       });
-      this.registerAction('折现颜色', async () => {
-        await this.setLightAndDark('折现颜色', false, 'lightLine', 'darkLine');
-      });
       this.registerAction('基础设置', this.setWidgetConfig);
-      this.registerAction('账号设置', this.inputJDck);
+      this.registerAction('账号设置', async () => {
+        await this.setAlertInput('账号设置', '京东账号 Ck', {
+          username: '昵称',
+          cookie: 'Cookie',
+        });
+      });
       this.registerAction('代理缓存', this.actionSettings);
     }
     let _md5 = this.md5(filename + this.en);
-    this.CACHE_KEY = `cache_${_md5}`;
-    this.JDindex = parseInt(args.widgetParameter) || undefined;
+
     this.logo = 'https://raw.githubusercontent.com/Orz-3/task/master/jd.png';
+    this.JDindex = typeof args.widgetParameter === 'string' ? parseInt(
+        args.widgetParameter) : false;
     try {
-      this.JDCookie = this.settings[this.en] || {
-        cookie: '',
-        userName: '',
-      };
-      if (this.JDindex !== undefined) {
-        this.JDCookie = this.settings.JDAccount[this.JDindex];
-      }
-      if (!this.JDCookie.cookie) {
-        throw '京东 CK 获取失败';
-      }
-      this.JDCookie.userName = decodeURI(this.JDCookie.userName);
-      let borderColor = this.chartConfig.data.datasets[0].borderColor;
-      if (this.isNight) {
-        borderColor = this.settings.darkLine || borderColor;
+      const cookieData = this.settings.cookieData;
+      if (this.JDindex !== false && cookieData[this.JDindex]) {
+        this.JDCookie = cookieData[this.JDindex];
       } else {
-        borderColor = this.settings.lightLine || borderColor;
+        this.JDCookie.userName = this.settings.username;
+        this.JDCookie.cookie = this.settings.cookie;
       }
-      this.chartConfig.data.datasets[0].borderColor = borderColor;
+      if (!this.JDCookie.cookie) throw '京东 CK 获取失败';
+      this.JDCookie.userName = decodeURI(this.JDCookie.userName);
+      this.CACHE_KEY = `cache_${_md5}_` + this.JDCookie.userName;
+
       return true;
     } catch (e) {
       this.notify('错误提示', e);
@@ -319,9 +376,7 @@ class Widget extends DmYY {
   _loadJDCk = async () => {
     try {
       const CookiesData = await this.getCache('CookiesJD');
-      if (CookiesData) {
-        this.CookiesData = this.transforJSON(CookiesData);
-      }
+      if (CookiesData) this.CookiesData = this.transforJSON(CookiesData);
       const CookieJD = await this.getCache('CookieJD');
       if (CookieJD) {
         const userName = CookieJD.match(/pt_pin=(.+?);/)[1];
@@ -331,7 +386,7 @@ class Widget extends DmYY {
         };
         this.CookiesData.push(ck1);
       }
-      const Cookie2JD = await this.getCache('Cookie2JD');
+      const Cookie2JD = await this.getCache('CookieJD2');
       if (Cookie2JD) {
         const userName = Cookie2JD.match(/pt_pin=(.+?);/)[1];
         const ck2 = {
@@ -348,40 +403,26 @@ class Widget extends DmYY {
     }
   };
 
-  async inputJDck() {
-    const a = new Alert();
-    a.title = '京东账号 Ck';
-    a.message = '手动输入京东 Ck';
-    a.addTextField('昵称', this.JDCookie.userName);
-    a.addTextField('Cookie', this.JDCookie.cookie);
-    a.addAction('确定');
-    a.addCancelAction('取消');
-    const id = await a.presentAlert();
-    if (id === -1) return;
-    this.JDCookie.userName = a.textFieldValue(0);
-    this.JDCookie.cookie = a.textFieldValue(1);
-    // 保存到本地
-    this.settings[this.en] = this.JDCookie;
-    this.saveSettings();
-  }
-
   async actionSettings() {
     try {
       const table = new UITable();
       if (!(await this._loadJDCk())) throw 'BoxJS 数据读取失败';
       // 如果是节点，则先远程获取
+      this.settings.cookieData = this.CookiesData;
+      this.saveSettings(false);
       this.CookiesData.map((t) => {
         const r = new UITableRow();
         r.addText(t.userName);
         r.onSelect = (n) => {
-          this.settings[this.en] = t;
+          this.settings.username = t.userName;
+          this.settings.cookie = t.cookie;
           this.saveSettings();
         };
         table.addRow(r);
       });
       let body = '京东 Ck 缓存成功，根据下标选择相应的 Ck';
-      if (this.settings[this.en]) {
-        body += '，或者使用当前选中Ck：' + this.settings[this.en].userName;
+      if (this.settings.cookie) {
+        body += '，或者使用当前选中Ck：' + this.settings.username;
       }
       this.notify(this.name, body);
       table.present(false);
