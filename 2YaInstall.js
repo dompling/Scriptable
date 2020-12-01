@@ -89,6 +89,11 @@ const scripts = [
 		url:
 				"https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js",
 	},
+	{
+		moduleName: "VPNSubscription",
+		url:
+				"https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNSubscription.js",
+	},
 ];
 
 class YaYaInstall {
