@@ -361,19 +361,23 @@ class DmYY {
   }
 
   setLightAndDark = async (title, desc, light, dark) => {
-    const a = new Alert();
-    a.title = '白天和夜间' + title;
-    a.message = !desc ? '请自行去网站上搜寻颜色（Hex 颜色）' : desc;
-    a.addTextField('白天', this.settings[light]);
-    a.addTextField('夜间', this.settings[dark]);
-    a.addAction('确定');
-    a.addCancelAction('取消');
-    const id = await a.presentAlert();
-    if (id === -1) return;
-    this.settings[light] = a.textFieldValue(0);
-    this.settings[dark] = a.textFieldValue(1);
-    // 保存到本地
-    this.saveSettings();
+    try {
+      const a = new Alert();
+      a.title = '白天和夜间' + title;
+      a.message = !desc ? '请自行去网站上搜寻颜色（Hex 颜色）' : desc;
+      a.addTextField('白天', `${this.settings[light]}`);
+      a.addTextField('夜间', `${this.settings[dark]}`);
+      a.addAction('确定');
+      a.addCancelAction('取消');
+      const id = await a.presentAlert();
+      if (id === -1) return;
+      this.settings[light] = a.textFieldValue(0);
+      this.settings[dark] = a.textFieldValue(1);
+      // 保存到本地
+      this.saveSettings();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   /**
@@ -540,8 +544,8 @@ class DmYY {
     this.settings.darkColor = this.settings.darkColor || '#fff';
     this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
     this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
-    this.settings.lightOpacity = this.settings.lightOpacity || 0.7;
-    this.settings.darkOpacity = this.settings.darkOpacity || 0.4;
+    this.settings.lightOpacity = this.settings.lightOpacity || '0.7';
+    this.settings.darkOpacity = this.settings.darkOpacity || '0.4';
     this.prefix = this.settings.boxjsDomain;
   }
 
