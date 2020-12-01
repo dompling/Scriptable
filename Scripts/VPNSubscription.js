@@ -410,7 +410,8 @@ module.exports = template;`;
     this.CACHE_KEY += '_' + this.account.title;
     const index = typeof args.widgetParameter === 'string' ? parseInt(
         args.widgetParameter) : false;
-    if (this.settings.dataSource[index] && index !== false) {
+    if (this.settings.dataSource && this.settings.dataSource[index] && index !==
+        false) {
       this.account = this.settings[index];
     }
   };
