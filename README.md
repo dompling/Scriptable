@@ -30,6 +30,8 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 | [桌面联系人](Scripts/Contact.js)            | 显示桌面联系人 |  parameter：YaYa   (输入相应的手机联系人的名字，会自动关联搜索通讯录，可以是姓，可以是名字，可以是姓+名字 )                                                                                                  |
 | [Telegram](Scripts/Telegram.js)            | 显示桌面订阅 |  parameter： Durov  (输入相应的电报名)                                                                                                  |
 | [中国电信](Scripts/ChinaTelecom.js)            | BoxJs 数据 |  本组件读取 boxjs 缓存，其他用户请自行抓取 authToken，Cookie                                                                                            |
+| [机场+签到](Scripts/VpnBoard.js)            | 手动新增账号 |  parameter：下标                                                                                          |
+| [机场订阅流量](Scripts/VPNSubscription.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 # 赞赏码
 <img src="https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/2Ya.jpg"  width="200" height="200" align="bottom" />
 
@@ -38,3 +40,5 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 - [@NobyDa](https://github.com/NobyDa)
 - [@chavyleung](https://github.com/chavyleung)
 - [@lxk0301](https://github.com/lxk0301)
+- [@『Hell Cell』](https://t.me/HellCellZC123)
+- [@xinian] 提供 UI 帮助
