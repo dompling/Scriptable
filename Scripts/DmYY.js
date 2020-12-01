@@ -119,8 +119,8 @@ class DmYY {
     widget.backgroundColor = this.backGroundColor;
     if (backgroundImage) {
       const opacity = this.isNight
-          ? Number(this.settings.opacity[0])
-          : Number(this.settings.opacity[1]);
+          ? Number(this.settings.darkOpacity)
+          : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
           backgroundImage, '#000', opacity);
       return true;
@@ -469,16 +469,18 @@ class DmYY {
             if (!await this.verifyImage(backImage)) return;
             await this.setBackgroundImage(backImage, true);
           },
-          async () => this.setLightAndDark(
+          async () => await this.setLightAndDark(
               '背景颜色', false, 'lightBgColor', 'darkBgColor'),
-          async () => this.setLightAndDark(
+          async () => await this.setLightAndDark(
               '字体颜色', false, 'lightColor', 'darkColor'),
           async () => {
             const backImage = await this.getWidgetScreenShot();
             if (backImage) await this.setBackgroundImage(backImage, true);
           },
-          async () => this.setLightAndDark(
-              '透明', '若是设置了透明背景，请自行调整', 'lightOpacity', 'darkOpacity'),
+          async () => {
+            await this.setLightAndDark(
+                '透明', '若是设置了透明背景，请自行调整', 'lightOpacity', 'darkOpacity');
+          },
           () => {
             this.setBackgroundImage(false, true);
           },
@@ -534,16 +536,12 @@ class DmYY {
     );
 
     this.settings = this.getSettings();
-    if (this.settings.opacity) {
-      this.settings.opacity[0] = Number(this.settings.opacity[0]);
-      this.settings.opacity[1] = Number(this.settings.opacity[1]);
-    } else {
-      this.settings.opacity = [0.7, 0.4];
-    }
     this.settings.lightColor = this.settings.lightColor || '#000';
     this.settings.darkColor = this.settings.darkColor || '#fff';
     this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
     this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
+    this.settings.lightOpacity = this.settings.lightOpacity || 0.7;
+    this.settings.darkOpacity = this.settings.darkOpacity || 0.4;
     this.prefix = this.settings.boxjsDomain;
   }
 
