@@ -235,6 +235,7 @@ class Widget extends DmYY {
 
   async setHeader(w, size) {
     const header = w.addStack();
+    header.centerAlignContent();
     const left = header.addStack();
     left.centerAlignContent();
     let icon = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
