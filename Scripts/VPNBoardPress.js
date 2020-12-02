@@ -478,7 +478,7 @@ class Widget extends DmYY {
     const stackBody = w.addStack();
     const stackLeft = stackBody.addStack();
     await this.setContent(stackLeft, {w: 360, h: 360}, new Size(140, 140));
-    stackBody.addSpacer(10);
+    stackBody.addSpacer();
     const stackRight = stackBody.addStack();
     stackRight.layoutVertically();
     await this.setLabelCell(
