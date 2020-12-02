@@ -136,6 +136,14 @@
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoardPress.js",
+      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "name": "VPNBoardPress",
+      "title": "VPN 面板+签到 第二版"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNSubscription.js",
       "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
       "name": "VPNSubscription",

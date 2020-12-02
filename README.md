@@ -31,6 +31,7 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 | [Telegram](Scripts/Telegram.js)            | 显示桌面订阅 |  parameter： Durov  (输入相应的电报名)                                                                                                  |
 | [中国电信](Scripts/ChinaTelecom.js)            | BoxJs 数据 |  本组件读取 boxjs 缓存，其他用户请自行抓取 authToken，Cookie                                                                                            |
 | [机场+签到](Scripts/VpnBoard.js)            | 手动新增账号 |  parameter：下标                                                                                          |
+| [机场+签到 第二版](Scripts/VPNBoardPress.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 | [机场订阅流量](Scripts/VPNSubscription.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 # 赞赏码
 <img src="https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/2Ya.jpg"  width="200" height="200" align="bottom" />
