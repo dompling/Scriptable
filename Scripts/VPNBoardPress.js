@@ -32,7 +32,7 @@ class Widget extends DmYY {
   color2 = ['#ff54fa', '#fad126'];
   color3 = ['#28cfb3', '#72d7cc'];
 
-  chartConfig = (data, color) => {
+  chartConfig = (data, color, value) => {
     console.log(data);
     const template1 = `
 {
@@ -123,7 +123,10 @@ class Widget extends DmYY {
       centerArea: {
         displayText: true,
         fontColor: "#fff",
-        fontSize: 40,
+        fontSize: 30,
+        text:(value)=>{
+          return ${value}
+        }
       }
   }
 }
@@ -137,16 +140,6 @@ class Widget extends DmYY {
     email: '',
     password: '',
   };
-
-  range = {
-    '11.1': {todayUsed: '30M'},
-    '11.2': {todayUsed: '130M'},
-    '11.3': {todayUsed: '300M'},
-    '11.4': {todayUsed: '30M'},
-    '11.5': {todayUsed: '2g'},
-    '11.6': {todayUsed: '3G'},
-  };
-  max = 6;
 
   init = async () => {
     try {
@@ -326,7 +319,7 @@ class Widget extends DmYY {
     const data3 = Math.floor((today.value / total) * 100);
     const {template1, template2, template3} = this.chartConfig([
       data1, data2, data3,
-    ], [this.color1, this.color2, this.color3]);
+    ], [this.color1, this.color2, this.color3], this.dataSource.todayUsed);
 
     const stackContent = w.addStack();
     stackContent.centerAlignContent();
