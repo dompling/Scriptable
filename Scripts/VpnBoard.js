@@ -71,7 +71,7 @@ class Widget extends DmYY {
               left: 0,
               right: 0,
               top: 30,
-              bottom: 5
+              bottom: 10
           }
       },
       responsive: true,
