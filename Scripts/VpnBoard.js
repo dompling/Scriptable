@@ -331,10 +331,9 @@ module.exports = template;`;
       text.push(value);
     });
     if (this.widgetSize === 'small') {
-
+      labels = labels.slice(-3);
+      data = data.slice(-3);
     }
-    labels = labels.slice(-3);
-    data = data.slice(-3);
     console.log(data);
     const chart = this.chartConfig(labels, data, text);
     console.log(chart);
