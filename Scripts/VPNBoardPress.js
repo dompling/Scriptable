@@ -386,16 +386,17 @@ class Widget extends DmYY {
     title.color = this.widgetColor;
     title.size = 10;
 
-    const stackLeftCell = stack.addStack();
-    stackLeftCell.layoutVertically();
-    stackLeftCell.addSpacer();
-    const stackViewIcon = stackLeftCell.addStack();
+    const stackCell = stack.addStack();
+    stackCell.layoutVertically();
+
+    const stackIcon = stackCell.addStack();
+    stackIcon.addSpacer();
+    const stackViewIcon = stackIcon.addStack();
     stackViewIcon.size = new Size(10, 10);
     stackViewIcon.cornerRadius = 50;
     stackViewIcon.backgroundGradient = this.gradient(data.color);
-    stackLeftCell.addSpacer();
+    stackIcon.addSpacer();
 
-    const stackCell = stack.addStack();
     stackCell.layoutVertically();
     const stackText = stackCell.addStack();
     stackText.addSpacer();
@@ -432,7 +433,9 @@ class Widget extends DmYY {
     title.size = 12;
     this.provideText(this.account.title, stackLeft, title);
     stackHeader.addSpacer();
+
     const stackRight = stackHeader.addStack();
+    stackRight.centerAlignContent();
     const calendar = SFSymbol.named('calendar');
     const imgCalendar = stackRight.addImage(calendar.image);
     imgCalendar.imageSize = new Size(12, 12);
