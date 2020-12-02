@@ -132,11 +132,18 @@ class Widget extends DmYY {
       this.voice.percent = Math.floor(
           parseInt(detail.voiceBalance) / parseInt(detail.voiceAmount) * 100);
       this.voice.count = detail.voiceBalance;
-      this.flow.percent = Math.floor(
-          detail.balance / (detail.total || 1) * 100);
-      const flow = this.formatFlow(detail.balance);
-      this.flow.count = flow.count;
-      this.flow.unit = flow.unit;
+      detail.items.forEach((data) => {
+        if (data.offerType !== 19) {
+          const item = data.items.find(child => {
+            return child.nameType === '331101' || child.nameType === '331100';
+          });
+          this.flow.percent = Math.floor(
+              item.balanceAmount / (item.ratableAmount || 1) * 100);
+          const flow = this.formatFlow(item.balanceAmount);
+          this.flow.count = flow.count;
+          this.flow.unit = flow.unit;
+        }
+      });
     }
     if (balance.result === 0) {
       // 余额
