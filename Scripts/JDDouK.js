@@ -141,6 +141,7 @@ module.exports = template;`;
           Keychain.set(this.CACHE_KEY, JSON.stringify(this.rangeTimer));
         }
         const date = new Date();
+        date.setHours(date.getHours() + date.getTimezoneOffset()/60 + 8);
         const year = date.getFullYear();
         let month = date.getMonth() + 1;
         month = month >= 10 ? month : `0${month}`;
@@ -225,6 +226,7 @@ module.exports = template;`;
     let i = dayNumber;
     do {
       const today = new Date();
+      today.setHours(today.getHours() + today.getTimezoneOffset()/60 + 8);
       const year = today.getFullYear();
       const targetday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24 * i;
       today.setTime(targetday_milliseconds); //注意，这行是关键代码
