@@ -85,6 +85,11 @@ const scripts = [
         'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js',
   },
   {
+    moduleName: 'ChinaMobile',
+    url:
+        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaMobile.js',
+  },
+  {
     moduleName: 'VPNBoard',
     url:
         'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js',
