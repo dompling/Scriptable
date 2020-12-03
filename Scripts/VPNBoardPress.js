@@ -320,6 +320,7 @@ class Widget extends DmYY {
     const rest = this.translateFlow(this.dataSource.restData);
     const use = this.translateFlow(this.dataSource.usedData);
     const today = this.translateFlow(this.dataSource.todayUsed);
+    console.log(this.dataSource);
     const total = rest.value + use.value;
     const data1 = Math.floor(rest.value / total * 100);
     const data2 = Math.floor(use.value / total * 100);
