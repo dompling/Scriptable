@@ -173,14 +173,15 @@ class Widget extends DmYY {
               {value: flowRes.allTotalRes, code: flowRes.allUnit});
           const remain = this.translateFlow(
               {value: flowRes.allRemainRes, code: flowRes.remUnit});
-          this.flow.percent = Math.floor((remain.value / total.value) * 100);
+          this.flow.percent = Math.floor(
+              (remain.value / (total.value || 1)) * 100);
           this.flow.count = flowRes.allRemainRes;
           this.flow.unit = remain.unit;
           flowResValue = `${flowRes.allRemainRes}${remain.unit}`;
         }
         if (voiceRes) {
           this.voice.percent = Math.floor(
-              voiceRes.allRemainRes / voiceRes.allTotalRes * 100);
+              voiceRes.allRemainRes / (voiceRes.allTotalRes || 1) * 100);
           this.voice.count = voiceRes.allRemainRes;
           voiceResValue = voiceRes.allRemainRes;
         }
