@@ -5,7 +5,7 @@
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
 const {DmYY, Runing} = require('./DmYY');
-const CryptoJS = require('./crypto-js.min');
+const CryptoJS = require('./crypto-js');
 
 // @组件代码开始
 class Widget extends DmYY {
