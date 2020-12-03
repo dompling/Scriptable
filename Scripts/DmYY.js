@@ -22,6 +22,8 @@ class DmYY {
     );
   }
 
+  widgetColor;
+  backGroundColor;
   useBoxJS = true;
   isNight = Device.isUsingDarkAppearance();
 

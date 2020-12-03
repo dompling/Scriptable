@@ -44,7 +44,7 @@ class Widget extends DmYY {
   "data": {
     "datasets": [
       {
-        "data": [${data[0]}],
+        "data": [${parseFloat(data[0])}],
         "borderWidth": 0,
         "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
         color[0])}),
@@ -70,7 +70,7 @@ class Widget extends DmYY {
   "data": {
     "datasets": [
       {
-       "data": [${data[1]}],
+       "data": [${parseFloat(data[1])}],
         "borderWidth": 0,
         "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
         color[1])}),
@@ -103,7 +103,7 @@ class Widget extends DmYY {
   "data": {
     "datasets": [
       {
-        "data": [${data[2]}],
+        "data": [${parseFloat(data[2])}],
         "borderWidth": 0,
         "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
         color[2])}),
@@ -135,6 +135,9 @@ class Widget extends DmYY {
   }
 }
       `;
+    console.log(template1);
+    console.log(template2);
+    console.log(template3);
     return {template1, template2, template3};
   };
 
