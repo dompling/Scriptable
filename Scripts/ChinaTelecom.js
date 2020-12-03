@@ -40,6 +40,8 @@ class Widget extends DmYY {
     this.format(this.date.getMinutes()),
   ];
 
+  monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
   // percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
   phoneBill = {
     percent: 0,
@@ -102,9 +104,11 @@ class Widget extends DmYY {
 
   init = async () => {
     try {
-      const nowHours = this.date.getHours();
-      const updateHours = nowHours > 12 ? 24 : 12;
-      this.updateTime.percent = Math.floor(nowHours / updateHours * 100);
+      const nowHours = (this.date.getDate() - 1) * 24 + this.date.getHours();
+      //闰年简单判断，本世纪内直接用4取模没问题的
+      const totalHours = this.monthDays[this.date.getMonth()] * 24 
+                          + (this.date.getFullYear() % 4 == 0 && this.date.getMonth() == 1 ? 24 : 0);
+      this.updateTime.percent = Math.floor(nowHours / totalHours * 100);
       await this.getData();
     } catch (e) {
       console.log(e);
