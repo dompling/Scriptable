@@ -238,9 +238,9 @@ module.exports = template;`;
           let usedData = flowData[0];
           let todatUsed = flowData[1];
           let restData = flowData[2];
-          this.dataSource.todayUsed = `${flowData[1]}`;
-          this.dataSource.usedData = `${flowData[0]}`;
-          this.dataSource.restData = `${flowData[2]}`;
+          this.dataSource.todayUsed = todatUsed;
+          this.dataSource.usedData = usedData;
+          this.dataSource.restData = restData;
           result.push(
               `今日：${todatUsed}\n已用：${usedData}\n剩余：${restData}`,
           );
