@@ -80,6 +80,11 @@ const scripts = [
         'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js',
   },
   {
+    moduleName: 'YouTube',
+    url:
+        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js',
+  },
+  {
     moduleName: 'ChinaTelecom',
     url:
         'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js',

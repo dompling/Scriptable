@@ -120,6 +120,14 @@
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js",
+      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "name": "YouTube",
+      "title": "油管视频"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
       "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
       "name": "ChinaTelecom",
