@@ -129,7 +129,7 @@ class Widget extends DmYY {
         fontColor: "#fff",
         fontSize: 30,
         text:(value)=>{
-          return ${value}
+          return '${value}';
         }
       }
   }
@@ -478,7 +478,7 @@ class Widget extends DmYY {
     const stackBody = w.addStack();
     const stackLeft = stackBody.addStack();
     await this.setContent(stackLeft, {w: 360, h: 360}, new Size(140, 140));
-    stackBody.addSpacer();
+    stackBody.addSpacer(10);
     const stackRight = stackBody.addStack();
     stackRight.layoutVertically();
     await this.setLabelCell(
