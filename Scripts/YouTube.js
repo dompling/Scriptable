@@ -12,7 +12,7 @@ class Widget extends DmYY {
     super(arg);
     this.name = 'YouTube';
     this.en = 'YouTube';
-    this.inputValue = arg || 'HellCell';
+    this.inputValue = arg || 'NetflixAsia';
     this.Run();
   }
 
@@ -43,7 +43,9 @@ class Widget extends DmYY {
     let videos = [];
     homeContent.forEach((item) => {
       const contents = item.itemSectionRenderer.contents;
+      // console.log(contents);
       contents.forEach(video => {
+        if (!video.shelfRenderer) return;
         const cateVideo = video.shelfRenderer.content.horizontalListRenderer;
         if (cateVideo) {
           videos = [
@@ -114,14 +116,19 @@ class Widget extends DmYY {
       if (i === 1) stack.addSpacer();
       const video = datas[i];
       const stackVideo = stack.addStack();
+      stackVideo.setPadding(10, 10, 10, 10);
       stackVideo.url = this.baseUrl + video.url;
       stackVideo.backgroundColor = this.widgetColor;
       stackVideo.centerAlignContent();
+      stackVideo.layoutVertically();
       const img = await this.$request.get(video.thumb, 'IMG');
       stackVideo.backgroundImage = await this.shadowImage(img, '#000', 0.3);
       const title = {...this.textFormat.defaultText};
       title.size = 8;
       title.color = new Color('#fff');
+      this.provideText(video.title, stackVideo, title);
+      stackVideo.addSpacer();
+      title.color = new Color('#fff', 0.7);
       this.provideText(video.view, stackVideo, title);
       stackVideo.size = new Size(80, 56);
       stackVideo.cornerRadius = 4;
