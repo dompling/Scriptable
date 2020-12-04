@@ -110,27 +110,20 @@ class Widget extends DmYY {
     title.color = this.backGroundColor;
     title.size = 12;
     const stackContent = stack.addStack();
-    stackContent.centerAlignContent();
     stackContent.layoutVertically();
-    const stackTop = stackContent.addStack();
-    this.provideText(info.data, stackTop, title);
+    stackContent.centerAlignContent();
     stackContent.addSpacer();
-    const stackBottom = stackContent.addStack();
-    stackBottom.addSpacer();
-    const stackDesc = stackBottom.addStack();
-
-    const desc = this.textFormat.title;
-    desc.color = this.backGroundColor;
-    desc.size = 10;
-    const textDesc = this.provideText(`浏览：${info.view}`, stackDesc, desc);
-    textDesc.textOpacity = 0.7;
+    this.provideText(info.data, stackContent, title);
+    stackContent.addSpacer();
   };
 
   setCalendar(stack) {
     const today = this.format.string(this.date);
     const todays = today.split('-');
     const response = $calendar.solar2lunar(todays[0], todays[1], todays[2]);
+    stack.layoutVertically();
     const stackCalendar = stack.addStack();
+    stackCalendar.setPadding(5, 0, 5, 0);
     stackCalendar.centerAlignContent();
     stackCalendar.cornerRadius = 4;
     stackCalendar.backgroundColor = this.backGroundColor;
@@ -144,14 +137,13 @@ class Widget extends DmYY {
     const text = this.textFormat.defaultText;
     text.color = this.widgetColor;
     text.size = 8;
-    stackYear.addSpacer();
+
     const animal = $calendar.getAnimalZodiacToEmoji(response.Animal);
     this.provideText(response.Animal + animal, stackYear, text);
     stackYear.addSpacer(2);
     this.provideText(response.IMonthCn, stackYear, text);
     stackYear.addSpacer(2);
     this.provideText(response.IDayCn, stackYear, text);
-    stackYear.addSpacer();
   }
 
   renderSmall = async (w) => {
