@@ -35,6 +35,7 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 | [机场+签到](Scripts/VpnBoard.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 | [机场+签到 第二版](Scripts/VPNBoardPress.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 | [机场订阅流量](Scripts/VPNSubscription.js)            | 手动新增账号 |  parameter：下标                                                                                          |
+| [毒汤日历](Scripts/PoisonCalendar.js)            | BoxJS数据 |[cookie 获取方式](https://raw.githubusercontent.com/dompling/Script/master/DJT/djt.cookie.js)  |
 # 赞赏码
 <img src="https://raw.githubusercontent.com/dompling/Scriptable/master/birthdayCountDown/2Ya.jpg"  width="200" height="200" align="bottom" />
 

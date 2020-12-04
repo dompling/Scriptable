@@ -164,6 +164,14 @@
       "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
       "name": "VPNSubscription",
       "title": "VPN 机场订阅流量"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendar.js",
+      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "name": "PoisonCalendar",
+      "title": "📆毒汤日历"
     }
   ]
 }

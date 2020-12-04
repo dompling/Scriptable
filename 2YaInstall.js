@@ -109,6 +109,11 @@ const scripts = [
     url:
         'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoardPress.js',
   },
+  {
+    moduleName: 'PoisonCalendar',
+    url:
+        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendar.js',
+  },
 ];
 
 class YaYaInstall {
