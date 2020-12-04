@@ -211,6 +211,7 @@ class Widget extends DmYY {
       });
       this.registerAction('基础设置', this.setWidgetConfig);
     }
+    this.cookie = this.settings.cookie || this.cookie;
   }
 
   /**
