@@ -12,7 +12,7 @@ class Widget extends DmYY {
     super(arg);
     this.name = 'YouTube';
     this.en = 'YouTube';
-    this.inputValue = arg || 'NetflixAsia';
+    this.inputValue = arg || 'BillieEilish';
     this.Run();
   }
 
@@ -48,9 +48,14 @@ class Widget extends DmYY {
         if (!video.shelfRenderer) return;
         const cateVideo = video.shelfRenderer.content.horizontalListRenderer;
         if (cateVideo) {
+          const data = [];
+          cateVideo.items.forEach(cell => {
+            const cellVideo = this.getCellVideo(cell);
+            if (cellVideo) data.push(cellVideo);
+          });
           videos = [
             ...videos,
-            ...cateVideo.items.map(cell => this.getCellVideo(cell)),
+            ...data,
           ];
         }
       });
@@ -60,6 +65,7 @@ class Widget extends DmYY {
 
   getCellVideo(data) {
     const {gridVideoRenderer} = data;
+    if (!gridVideoRenderer) return;
     return {
       thumb: gridVideoRenderer.thumbnail.thumbnails[0].url,
       title: gridVideoRenderer.title.simpleText,
