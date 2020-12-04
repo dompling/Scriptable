@@ -36,7 +36,7 @@ class Widget extends DmYY {
 
   getUserInfo = async () => {
     try {
-      const url = `${this.baseUrl}/u/wx_login?code=&os=iOS&unid=${cookie}&version=3.5.2`;
+      const url = `${this.baseUrl}/u/wx_login?code=&os=iOS&unid=${this.cookie}&version=3.5.2`;
       const response = await this.$request.get(url);
       if (response.code === 0) {
         console.log('✅用户信息获取成功');
