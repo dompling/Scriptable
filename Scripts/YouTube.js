@@ -16,6 +16,7 @@ class Widget extends DmYY {
     this.Run();
   }
 
+
   useBoxJS = false;
   ytInitialData = {};
   videos = [];
