@@ -9,10 +9,9 @@ const scripts = [
         'https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js',
   },
   {
-    moduleName: 'Install',
+    moduleName: 'widget.install',
     url:
-        'https://raw.githubusercontent.com/GideonSenku/Scriptable/master/Install%20Scripts.js',
-    // 感谢G大的 脚本库安装包 (https://github.com/GideonSenku)
+        'https://raw.githubusercontent.com/dompling/Scriptable/master/widget.install.js',
   },
   {
     moduleName: 'Calendar',
