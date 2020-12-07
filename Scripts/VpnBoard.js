@@ -505,7 +505,7 @@ module.exports = template;`;
         args.widgetParameter) : false;
     if (this.settings.dataSource && this.settings.dataSource[index] && index !==
         false) {
-      this.account = this.settings[index];
+      this.account = this.settings.dataSource[index];
     }
   };
 
