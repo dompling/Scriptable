@@ -151,12 +151,12 @@ try {
   console.log('缓存读取错误' + e);
 }
 
-const REMOTE_REQ = new Request(
-    'https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js',
-);
-const REMOTE_RES = await REMOTE_REQ.loadString();
-const result = await write('widget.Install', REMOTE_RES);
-console.log(result);
-if (result) {
-  console.log('🤖自我更新成功');
-}
+(async () => {
+  const REMOTE_REQ = new Request(
+      'https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js',
+  );
+  const REMOTE_RES = await REMOTE_REQ.loadString();
+  const result = await write('widget.Install', REMOTE_RES);
+  console.log(result);
+  if (result) console.log('🤖自我更新成功');
+})();
