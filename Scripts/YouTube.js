@@ -12,7 +12,7 @@ class Widget extends DmYY {
     super(arg);
     this.name = 'YouTube';
     this.en = 'YouTube';
-    this.inputValue = arg || 'BillieEilish';
+    this.inputValue = arg || 'Ustv';
     this.Run();
   }
 
@@ -71,7 +71,7 @@ class Widget extends DmYY {
 
   getCellVideo(data) {
     const {gridVideoRenderer} = data;
-    if (!gridVideoRenderer) return;
+    if (!gridVideoRenderer || !gridVideoRenderer.title) return;
     return {
       thumb: gridVideoRenderer.thumbnail.thumbnails[0].url,
       title: gridVideoRenderer.title.simpleText,
@@ -83,8 +83,8 @@ class Widget extends DmYY {
   setAvatar = async (stack) => {
     stack.size = new Size(50, 50);
     stack.cornerRadius = 5;
-    const {metadata: {channelMetadataRenderer}} = this.ytInitialData;
-    const avatar = channelMetadataRenderer.avatar.thumbnails.find(
+    const {microformat: {microformatDataRenderer}} = this.ytInitialData;
+    const avatar = microformatDataRenderer.thumbnail.thumbnails.find(
         item => item.url);
     const imgLogo = await this.$request.get(avatar, 'IMG');
     const imgLogoItem = stack.addImage(imgLogo);
@@ -123,7 +123,7 @@ class Widget extends DmYY {
   };
 
   setFooterCell = async (stack) => {
-    const datas = this.videos.splice(0, 3);
+    const datas = this.getRandomArrayElements(this.videos, 3);
     for (let i = 0; i < datas.length; i++) {
       if (i === 1) stack.addSpacer();
       const video = datas[i];
@@ -153,13 +153,8 @@ class Widget extends DmYY {
   };
 
   renderMedium = async (w) => {
-    const {metadata} = this.ytInitialData;
     const stackBody = w.addStack();
-    try {
-      stackBody.url = metadata.vanityChannelUrl;
-    } catch (e) {
-      console.log(e);
-    }
+    stackBody.url = `${this.baseUrl}/c/${this.inputValue}`;
     stackBody.layoutVertically();
     const stackHeader = stackBody.addStack();
     stackHeader.setPadding(5, 10, 5, 10);
