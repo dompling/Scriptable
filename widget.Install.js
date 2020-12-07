@@ -6,18 +6,18 @@ const mainAlert = new Alert();
 const Files = FileManager.iCloud();
 const RootPath = Files.documentsDirectory();
 
-const saveFile = async ({ moduleName, url }) => {
+const saveFile = async ({moduleName, url}) => {
   const header = `// Variables used by Scriptable.
   // These must be at the very top of the file. Do not edit.
   // icon-color: deep-gray; icon-glyph: file-code;\n`;
   const req = new Request(url);
   const content = await req.loadString();
-  const fileHeader = content.includes("icon-color") ? `` : header;
+  const fileHeader = content.includes('icon-color') ? `` : header;
   write(`${moduleName}`, `${fileHeader}${content}`);
 };
 
 const saveFileName = (fileName) => {
-  const hasSuffix = fileName.lastIndexOf(".") + 1;
+  const hasSuffix = fileName.lastIndexOf('.') + 1;
   return !hasSuffix ? `${fileName}.js` : fileName;
 };
 
@@ -55,14 +55,24 @@ const renderTableList = async (data) => {
       nameCell.centerAligned();
       r.addCell(nameCell);
 
-      const downloadCell = UITableCell.button("下载");
+      const downloadCell = UITableCell.button('下载');
       downloadCell.centerAligned();
       downloadCell.dismissOnTap = true;
       downloadCell.onTap = async () => {
+        if (item.depend) {
+          for (let i = 0; i < item.depend.length; i++) {
+            const relyItem = item.depend;
+            const rely = await new Request(relyItem.scriptURL).loadString();
+            const _isWrite = await write(item.relyItem, rely);
+            if (_isWrite) {
+              notify('下载提示', `依赖插件:${item.title}下载/更新成功`);
+            }
+          }
+        }
         const res = await new Request(item.scriptURL).loadString();
         const isWrite = await write(item.name, res);
         if (isWrite) {
-          notify("下载提示", `插件:${item.title}下载/更新成功`);
+          notify('下载提示', `插件:${item.title}下载/更新成功`);
         }
       };
       r.addCell(downloadCell);
@@ -71,14 +81,14 @@ const renderTableList = async (data) => {
     table.present(false);
   } catch (e) {
     console.log(e);
-    notify("错误提示", "订阅获取失败");
+    notify('错误提示', '订阅获取失败');
   }
 };
 
-mainAlert.title = "组件下载";
-mainAlert.message = "可以自行添加订阅地址";
+mainAlert.title = '组件下载';
+mainAlert.message = '可以自行添加订阅地址';
 try {
-  const cacheKey = "subscriptionList";
+  const cacheKey = 'subscriptionList';
   const render = async () => {
     let subscriptionList = [];
     if (Keychain.contains(cacheKey)) {
@@ -87,8 +97,8 @@ try {
     const _actions = [];
     console.log(subscriptionList);
     subscriptionList.forEach((item) => {
-      const { author } = item;
-      mainAlert.addAction("作者：" + author);
+      const {author} = item;
+      mainAlert.addAction('作者：' + author);
       _actions.push(async () => {
         await renderTableList(item);
       });
@@ -96,13 +106,13 @@ try {
 
     _actions.push(async () => {
       const a = new Alert();
-      a.title = "订阅地址";
+      a.title = '订阅地址';
       a.addTextField(
-        "URL",
-        "https://raw.githubusercontent.com/dompling/Scriptable/master/install.json"
+          'URL',
+          'https://raw.githubusercontent.com/dompling/Scriptable/master/install.json',
       );
-      a.addAction("确定");
-      a.addCancelAction("取消");
+      a.addAction('确定');
+      a.addCancelAction('取消');
       const id = await a.presentAlert();
       if (id === -1) return;
       try {
@@ -113,23 +123,23 @@ try {
         for (let i in subscriptionList) {
           const item = subscriptionList[i];
           if (response.author === item.author) {
-            data.push({ ...response, subscription: url });
+            data.push({...response, subscription: url});
           } else {
             data.push(item);
           }
         }
         if (!subscriptionList.length)
-          data.push({ author: response.author, subscription: url });
+          data.push({author: response.author, subscription: url});
         Keychain.set(cacheKey, JSON.stringify(data));
-        notify("更新成功", "请重新运行本脚本");
+        notify('更新成功', '请重新运行本脚本');
       } catch (e) {
         console.log(e);
-        notify("错误提示", "订阅地址错误，不是一个 JSON 格式");
+        notify('错误提示', '订阅地址错误，不是一个 JSON 格式');
       }
     });
 
-    mainAlert.addAction("添加订阅");
-    mainAlert.addCancelAction("取消操作");
+    mainAlert.addAction('添加订阅');
+    mainAlert.addCancelAction('取消操作');
     const _actionsIndex = await mainAlert.presentSheet();
     if (_actions[_actionsIndex]) {
       const func = _actions[_actionsIndex];
@@ -138,15 +148,15 @@ try {
   };
   await render();
 } catch (e) {
-  console.log("缓存读取错误" + e);
+  console.log('缓存读取错误' + e);
 }
 
 const REMOTE_REQ = new Request(
-  "https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js"
+    'https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js',
 );
 const REMOTE_RES = await REMOTE_REQ.loadString();
-const result = await write("widget.Install", REMOTE_RES);
+const result = await write('widget.Install', REMOTE_RES);
 console.log(result);
 if (result) {
-  console.log("🤖自我更新成功");
+  console.log('🤖自我更新成功');
 }
