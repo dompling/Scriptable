@@ -19,7 +19,7 @@ class Widget extends DmYY {
   useBoxJS = false;
   ytInitialData = {};
   videos = [];
-  baseUrl = 'https://www.youtube.com/';
+  baseUrl = 'https://www.youtube.com';
 
   init = async () => {
     try {
@@ -31,9 +31,14 @@ class Widget extends DmYY {
 
   getData = async () => {
     const url = `${this.baseUrl}/c/${this.inputValue}`;
-    const response = await this.$request.get(url, 'STRING');
-    const regx = /ytInitialData.*?({.*?});/;
-    this.ytInitialData = JSON.parse(response.match(regx)[1]);
+    const response = await this.$request.get(url, {
+      headers: {
+        'user-agent': `Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36`,
+      },
+    }, 'STRING');
+    const regx = /window\[\"ytInitialData\"\] = (\{[\s\S]*\});[\s\S]*window\[\"ytInitialPlayerResponse\"\]/;
+    const result = response.match(regx);
+    this.ytInitialData = JSON.parse(result[1]);
     this.getCell();
   };
 
@@ -149,7 +154,11 @@ class Widget extends DmYY {
   renderMedium = async (w) => {
     const {metadata} = this.ytInitialData;
     const stackBody = w.addStack();
-    stackBody.url = metadata.vanityChannelUrl;
+    try {
+      stackBody.url = metadata.vanityChannelUrl;
+    } catch (e) {
+      console.log(e);
+    }
     stackBody.layoutVertically();
     const stackHeader = stackBody.addStack();
     stackHeader.setPadding(5, 10, 5, 10);
