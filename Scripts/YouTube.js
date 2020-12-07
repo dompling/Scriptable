@@ -38,31 +38,45 @@ class Widget extends DmYY {
     this.ytInitialData = await webView.evaluateJavaScript(javascript, true).
         then(
             async (e) => {
-              return e;
+              return typeof e === 'string' ? JSON.parse(e) : e;
             });
     this.getCell();
   };
 
   getCell() {
-    const {contents: {twoColumnBrowseResultsRenderer}} = this.ytInitialData;
-    const homeContent = twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.sectionListRenderer.contents;
+    const {contents} = this.ytInitialData;
     let videos = [];
-    homeContent.forEach((item) => {
-      const contents = item.itemSectionRenderer.contents;
-      // console.log(contents);
-      contents.forEach(video => {
-        if (!video.shelfRenderer) return;
-        const cateVideo = video.shelfRenderer.content.horizontalListRenderer;
-        if (cateVideo) {
-          const data = [];
-          cateVideo.items.forEach(cell => {
-            const cellVideo = this.getCellVideo(cell);
-            if (cellVideo) data.push(cellVideo);
+    Object.keys(contents).forEach(key => {
+      const result = contents[key];
+      const homeContent = result.tabs[0].tabRenderer.content.sectionListRenderer.contents;
+      homeContent.forEach((item) => {
+        let contents;
+        if (item.itemSectionRenderer) {
+          contents = item.itemSectionRenderer.contents;
+          contents.forEach(video => {
+            if (!video.shelfRenderer) return;
+            const cateVideo = video.shelfRenderer.content;
+            if (cateVideo) {
+              const data = [];
+              Object.keys(cateVideo).forEach(cv => {
+                cateVideo[cv].items.forEach(cell => {
+                  const cellVideo = this.getCellVideo(cell);
+                  if (cellVideo) data.push(cellVideo);
+                });
+                videos = [
+                  ...videos,
+                  ...data,
+                ];
+              });
+            }
           });
-          videos = [
-            ...videos,
-            ...data,
-          ];
+        } else if (item.shelfRenderer) {
+          contents = item.shelfRenderer;
+          contents = contents.content.verticalListRenderer.items;
+          contents.forEach(compactVideoRenderer => {
+            const data = this.getCellVideo2(compactVideoRenderer);
+            if (data) videos.push(data);
+          });
         }
       });
     });
@@ -71,20 +85,33 @@ class Widget extends DmYY {
 
   getCellVideo(data) {
     const {gridVideoRenderer} = data;
-    if (!gridVideoRenderer || !gridVideoRenderer.title) return;
-    return {
-      thumb: gridVideoRenderer.thumbnail.thumbnails[0].url,
-      title: gridVideoRenderer.title.simpleText,
-      view: gridVideoRenderer.viewCountText.simpleText,
-      url: gridVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
-    };
+    if (gridVideoRenderer && gridVideoRenderer.thumbnail) {
+      return {
+        thumb: gridVideoRenderer.thumbnail.thumbnails[0].url,
+        title: gridVideoRenderer.title.simpleText,
+        view: gridVideoRenderer.viewCountText.simpleText,
+        url: gridVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
+      };
+    }
+  }
+
+  getCellVideo2(data) {
+    const {compactVideoRenderer} = data;
+    if (compactVideoRenderer && compactVideoRenderer.thumbnail) {
+      return {
+        thumb: compactVideoRenderer.thumbnail.thumbnails[0].url,
+        title: compactVideoRenderer.title.runs[0].text,
+        view: compactVideoRenderer.viewCountText.runs[0].text,
+        url: compactVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
+      };
+    }
   }
 
   setAvatar = async (stack) => {
     stack.size = new Size(50, 50);
     stack.cornerRadius = 5;
-    const {microformat: {microformatDataRenderer}} = this.ytInitialData;
-    const avatar = microformatDataRenderer.thumbnail.thumbnails.find(
+    const {metadata: {channelMetadataRenderer}} = this.ytInitialData;
+    const avatar = channelMetadataRenderer.avatar.thumbnails.find(
         item => item.url);
     const imgLogo = await this.$request.get(avatar, 'IMG');
     const imgLogoItem = stack.addImage(imgLogo);
@@ -110,8 +137,11 @@ class Widget extends DmYY {
     let simpleText = '';
     Object.keys(header).forEach(key => {
       const item = header[key];
-      if (item.subscriberCountText.simpleText) {
+      if (item.subscriberCountText && !simpleText) {
         simpleText = item.subscriberCountText.simpleText;
+      }
+      if (!simpleText && item.subscribeButton) {
+        simpleText = item.subscriberCountText.runs[0].text;
       }
     });
     const titleItem = this.provideText(
