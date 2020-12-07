@@ -30,7 +30,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -45,7 +45,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -59,7 +59,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -73,7 +73,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -87,7 +87,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -109,11 +109,11 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         },
         {
           "name": "Calendar",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js"
         }
       ]
     },
@@ -127,7 +127,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -141,7 +141,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -155,7 +155,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -169,7 +169,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -183,7 +183,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -193,11 +193,11 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js",
       "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "YouTube",
-      "title": "油管视频",
+      "title": "YouTube",
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -211,7 +211,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -225,7 +225,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -239,7 +239,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -253,7 +253,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -267,7 +267,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     },
@@ -281,7 +281,7 @@
       "depend": [
         {
           "name": "DmYY",
-          "scriptUrl": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
     }

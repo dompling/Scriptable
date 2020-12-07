@@ -60,13 +60,17 @@ const renderTableList = async (data) => {
       downloadCell.dismissOnTap = true;
       downloadCell.onTap = async () => {
         if (item.depend) {
-          for (let i = 0; i < item.depend.length; i++) {
-            const relyItem = item.depend;
-            const rely = await new Request(relyItem.scriptURL).loadString();
-            const _isWrite = await write(item.relyItem, rely);
-            if (_isWrite) {
-              notify('下载提示', `依赖插件:${item.title}下载/更新成功`);
+          try {
+            for (let i = 0; i < item.depend.length; i++) {
+              const relyItem = item.depend[i];
+              const rely = await new Request(relyItem.scriptURL).loadString();
+              const _isWrite = await write(relyItem.name, rely);
+              if (_isWrite) {
+                notify('下载提示', `依赖插件:${item.title}下载/更新成功`);
+              }
             }
+          } catch (e) {
+            console.log(e);
           }
         }
         const res = await new Request(item.scriptURL).loadString();
