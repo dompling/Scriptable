@@ -31,14 +31,15 @@ class Widget extends DmYY {
 
   getData = async () => {
     const url = `${this.baseUrl}/c/${this.inputValue}`;
-    const response = await this.$request.get(url, {
-      headers: {
-        'user-agent': `Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36`,
-      },
-    }, 'STRING');
-    const regx = /window\[\"ytInitialData\"\] = (\{[\s\S]*\});[\s\S]*window\[\"ytInitialPlayerResponse\"\]/;
-    const result = response.match(regx);
-    this.ytInitialData = JSON.parse(result[1]);
+
+    const webView = new WebView();
+    await webView.loadURL(url);
+    const javascript = `completion(ytInitialData||window['ytInitialData']);`;
+    const response = await webView.evaluateJavaScript(javascript, true).then(
+        async (e) => {
+          return e;
+        });
+    this.ytInitialData = response;
     this.getCell();
   };
 
