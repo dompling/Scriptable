@@ -1,4 +1,4 @@
-// Variables used by Scriptable.
+// letiables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: deep-gray; icon-glyph: paper-plane;
 
@@ -18,31 +18,14 @@ class Widget extends DmYY {
 
   useBoxJS = false;
   today = '';
-
-  fgCircleColor = Color.dynamic(new Color('#dddef3'), new Color('#fff'));
-  percentColor = this.widgetColor;
-  textColor1 = Color.dynamic(new Color('#333'), new Color('#fff'));
-  textColor2 = this.widgetColor;
-
-  circleColor4 = new Color('#8376f9');
-  iconColor = new Color('#ff3e3e');
-  canvSize = 100;
-  canvWidth = 5; // circle thickness
-  canvRadius = 100; // circle radius
-  dayRadiusOffset = 60;
-  canvTextSize = 40;
+  logo = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
 
   dataSource = {
     restData: '0',
     usedData: '0',
-    todayUsed: '0',
-  };
-
-  flow = {
-    percent: 30,
-    count: 0,
-    icon: 'waveform.path.badge.minus',
-    circleColor: this.circleColor4,
+    totalData: '0',
+    todayData: '0',
+    isCheckIn: false,
   };
 
   account = {
@@ -50,84 +33,128 @@ class Widget extends DmYY {
     url: '',
   };
 
-  range = {};
-  max = 6;
+  color1 = ['#ef0a6a', '#b6359c'];
+  color2 = ['#ff54fa', '#fad126'];
+  color3 = ['#28cfb3', '#72d7cc'];
 
-  chartConfig = (percent, rest, use) => {
-    const color = `#${this.widgetColor.hex}`;
-    let template;
-    let path = this.FILE_MGR.documentsDirectory();
-    const name = `/${this.en}Template`;
-    path = path + name + '.js';
-    if (this.FILE_MGR.fileExists(path)) {
-      template = require('.' + name);
-    } else {
-      template = `
+  chartConfig = (data, color, value) => {
+    console.log(data);
+    const template1 = `
 {
-  "type": "doughnut",
+  "type": "radialGauge",
   "data": {
-    "datasets": [{
-      "label": "foo",
-      "data": __DATAS__,
-      "backgroundColor": ["#8376f9","#dddef3"],
-      "textcolor":["#8376f9","#dddef3"],
-      "borderWidth": 0,
-    }] 
+    "datasets": [
+      {
+        "data": [${parseFloat(data[0])}],
+        "borderWidth": 0,
+        "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
+        color[0])}),
+      }
+    ]
   },
   "options": {
-    "rotation": Math.PI,
-    "circumference": Math.PI,
-    "cutoutPercentage": 75,
-    "plugins": {
-      "datalabels": { "display": false },
-      "doughnutlabel": {
-        "labels": [
-          {
-            "text": '剩余',
-            "color": __COLOR__,
-            "font": {
-              "size": "30"
-            },
-          },
-          {
-            "text": '__PERCENT__',
-            "color": __COLOR__,
-            "font": {
-              "size": "45"
-            },
-          },
-        ]
+      centerPercentage: 86,
+      rotation: Math.PI / 2,
+      centerArea: {
+        displayText: false,
+      }, 
+      options:{
+      	trackColor: '#f4f4f4',
       }
-    }
   }
-}`;
-      const content = `// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: deep-gray; icon-glyph: ellipsis-v;
-const template = \`${template}\`;
-module.exports = template;`;
-      this.FILE_MGR.writeString(path, content);
-    }
-    template = template.replaceAll('__COLOR__', `'${color}'`);
-    template = template.replace('__PERCENT__', `\\n${percent}`);
-    template = template.replace('剩余', `\\n剩余`);
-    template = template.replace('__DATAS__', `${JSON.stringify([rest, use])}`);
-    return template;
+}
+      `;
+
+    const template2 = `
+{
+  "type": "radialGauge",
+  "data": {
+    "datasets": [
+      {
+       "data": [${parseFloat(data[1])}],
+        "borderWidth": 0,
+        "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
+        color[1])}),
+      }
+    ]
+  },
+  "options": {
+      layout: {
+          padding: {
+              left: 47,
+              right: 47,
+              top: 47,
+              bottom: 47
+          }
+      },
+      options:{
+      	trackColor: '#f4f4f4',
+      },
+      centerPercentage: 80,
+      rotation: Math.PI / 2,
+      centerArea: {
+        displayText: false,
+      }
+  }
+}
+      `;
+    const template3 = `
+{
+  "type": "radialGauge",
+  "data": {
+    "datasets": [
+      {
+        "data": [${parseFloat(data[2])}],
+        "borderWidth": 0,
+        "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
+        color[2])}),
+      }
+    ]
+  },
+  "options": {
+      layout: {
+          padding: {
+              left: 94,
+              right: 94,
+              top: 94,
+              bottom: 94
+          }
+      },
+      options:{
+      	trackColor: '#f4f4f4',
+      },
+      centerPercentage: 70,
+      rotation: Math.PI / 2,
+      centerArea: {
+        displayText: true,
+        fontColor: "#fff",
+        fontSize: 30,
+        text:(value)=>{
+          return '${value}';
+        }
+      }
+  }
+}
+      `;
+    console.log(template1);
+    console.log(template2);
+    console.log(template3);
+    return {template1, template2, template3};
   };
 
   init = async () => {
     try {
       const data = await this.getdata(this.account.url);
-      const total = (data[2] / 1024).toFixed(0);
-      const remain = ((data[2] - data[0] - data[1]) / 1024).toFixed(2);
-      const use = (total - remain).toFixed(2);
+      console.log(data);
+      const total = data[2];
+      const today = data[0];
+      const remain = data[2] - data[0] - data[1];
+      const use = total - remain;
       this.dataSource.restData = remain;
-      this.dataSource.todayUsed = total;
+      this.dataSource.totalData = total;
       this.dataSource.usedData = use;
-
-      this.flow.count = this.dataSource.restData;
-      this.flow.percent = Math.floor((this.flow.count / total) * 100);
-      console.log(this.flow.percent);
+      this.dataSource.todayData = today;
+      console.log(this.dataSource);
     } catch (e) {
       console.log(e);
     }
@@ -139,228 +166,245 @@ module.exports = template;`;
     await req.load();
     let resp = req.response.headers['subscription-userinfo'];
     resp = [
-      (parseInt(resp.match(/upload=([0-9]+);?/)[1]) / 1048576).toFixed(2),
-      (parseInt(resp.match(/download=([0-9]+);?/)[1]) / 1048576).toFixed(2),
-      (parseInt(resp.match(/total=([0-9]+);?/)[1]) / 1048576).toFixed(2),
+      (parseInt(resp.match(/upload=([0-9]+);?/)[1])).toFixed(2),
+      (parseInt(resp.match(/download=([0-9]+);?/)[1])).toFixed(2),
+      (parseInt(resp.match(/total=([0-9]+);?/)[1])).toFixed(2),
     ];
     console.log(resp);
     return resp;
   }
 
-  makeCanvas() {
-    const canvas = new DrawContext();
-    canvas.opaque = false;
-    canvas.respectScreenScale = true;
-    canvas.size = new Size(this.canvSize, this.canvSize);
-    return canvas;
-  }
+  gradient = (color) => {
+    const linear = new LinearGradient();
+    linear.colors = color.map(item => new Color(item));
+    linear.locations = [0, 0.5];
+    return linear;
+  };
 
-  makeCircle(canvas, radiusOffset, degree, color) {
-    let ctr = new Point(this.canvSize / 2, this.canvSize / 2);
-    // Outer circle
-    const bgx = ctr.x - (this.canvRadius - radiusOffset);
-    const bgy = ctr.y - (this.canvRadius - radiusOffset);
-    const bgd = 2 * (this.canvRadius - radiusOffset);
-    const bgr = new Rect(
-        bgx,
-        bgy,
-        bgd,
-        bgd,
-    );
-    canvas.setStrokeColor(this.fgCircleColor);
-    canvas.setLineWidth(2);
-    canvas.strokeEllipse(bgr);
-    // Inner circle
-    canvas.setFillColor(color);
-    for (let t = 0; t < degree; t++) {
-      const rect_x = ctr.x + (this.canvRadius - radiusOffset) * this.sinDeg(t) -
-          this.canvWidth / 2;
-      const rect_y = ctr.y - (this.canvRadius - radiusOffset) * this.cosDeg(t) -
-          this.canvWidth / 2;
-      const rect_r = new Rect(
-          rect_x,
-          rect_y,
-          this.canvWidth,
-          this.canvWidth,
-      );
-      canvas.fillEllipse(rect_r);
+  formatFileSize(fileSize) {
+    if (fileSize < (1024 * 1024)) {
+      let temp = fileSize / 1024;
+      temp = temp.toFixed(2);
+      return temp + 'KB';
+    } else if (fileSize < (1024 * 1024 * 1024)) {
+      let temp = fileSize / (1024 * 1024);
+      temp = temp.toFixed(2);
+      return temp + 'MB';
+    } else {
+      let temp = fileSize / (1024 * 1024 * 1024);
+      temp = temp.toFixed(2);
+      return temp + 'GB';
     }
   }
 
-  sinDeg(deg) {
-    return Math.sin((deg * Math.PI) / 180);
-  }
+  createChart = async (size, chart) => {
+    const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
+        chart)}`;
+    return await this.$request.get(url, 'IMG');
+  };
 
-  cosDeg(deg) {
-    return Math.cos((deg * Math.PI) / 180);
-  }
+  setContent = async (w, size, viewSize) => {
+    const rest = this.dataSource.restData;
+    const use = this.dataSource.usedData;
+    const today = this.dataSource.todayData;
+    const total = this.dataSource.totalData;
+    const data1 = Math.floor(rest / total * 100);
+    const data2 = Math.floor(use / total * 100);
+    const data3 = Math.floor((today / total) * 100);
+    const data = [
+      data1 || 0, data2 || 0, data3 || 0,
+    ];
+    const {template1, template2, template3} = this.chartConfig(
+        data,
+        [this.color1, this.color2, this.color3],
+        this.formatFileSize(this.dataSource.restData),
+    );
 
-  setCircleText = (stack, data) => {
-    const stackView = stack.addStack();
-    stackView.addSpacer();
-    const stackCircle = stackView.addStack();
+    const stackContent = w.addStack();
+    stackContent.centerAlignContent();
+    const stackSize = viewSize;
+    stackContent.size = stackSize;
+    stackContent.backgroundImage = await this.createChart(size, template1);
 
-    const canvas = this.makeCanvas();
-    stackCircle.size = new Size(70, 70);
-    this.makeCircle(
-        canvas, this.dayRadiusOffset, data.percent * 3.6, data.circleColor);
-    this.drawText(data.percent, canvas, 75, 18);
-    this.drawPointText(`%`, canvas, new Point(65, 50), 14);
-    stackCircle.backgroundImage = canvas.getImage();
-    stackCircle.setPadding(20, 0, 0, 0);
-    const icon = SFSymbol.named(data.icon);
-    const imageIcon = stackCircle.addImage(icon.image);
-    imageIcon.tintColor = this.iconColor;
-    imageIcon.imageSize = new Size(15, 15);
-    // canvas.drawImageInRect(icon.image, new Rect(110, 80, 60, 60));
+    const stackContent2 = stackContent.addStack();
+    stackContent2.size = stackSize;
+    stackContent2.backgroundImage = await this.createChart(size, template2);
 
-    stackView.addSpacer();
+    const stackContent3 = stackContent2.addStack();
+    stackContent3.size = stackSize;
+    stackContent3.backgroundImage = await this.createChart(size, template3);
+
+  };
+
+  setLabelCell = async (stack, data) => {
+    stack.addSpacer();
+
+    const stackCell = stack.addStack();
+    stackCell.centerAlignContent();
+    const stackIcon = stackCell.addStack();
+    stackIcon.centerAlignContent();
+    stackIcon.size = new Size(15, 15);
+    stackIcon.cornerRadius = 50;
+    if (data.isImg) {
+      try {
+        const icon = await this.$request.get(data.icon, 'IMG');
+        stackIcon.addImage(icon);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      stackIcon.backgroundGradient = data.icon;
+    }
+
+    stackCell.addSpacer(5);
+
+    const stackTitle = stackCell.addStack();
+    const title = {...this.textFormat.title};
+    title.color = this.widgetColor;
+    this.provideText(data.title, stackTitle, title);
+
+    stackCell.addSpacer(5);
+
+    const stackValue = stackCell.addStack();
+    const value = {...this.textFormat.defaultText};
+    value.color = this.widgetColor;
+    this.provideText(data.value, stackValue, title);
 
     stack.addSpacer();
   };
 
-  createChart = async (w) => {
-    const chart = this.chartConfig(
-        `${this.flow.percent}%`, this.dataSource.restData,
-        this.dataSource.usedData,
-    );
-    console.log(chart);
-    const url = `https://quickchart.io/chart?w=680&h=240&f=png&c=${encodeURIComponent(
-        chart)}`;
-    try {
-      const img = await this.$request.get(url, 'IMG');
-      const stackAlign = w.addStack();
-      stackAlign.addSpacer();
-      stackAlign.centerAlignContent();
-      const stackImg = stackAlign.addStack();
-      stackImg.addImage(img);
-      stackAlign.addSpacer();
-    } catch (e) {
-      console.log(e);
-    }
+  setFooterCell = (stack, data) => {
+    const title = {...this.textFormat.title};
+    title.color = this.widgetColor;
+    title.size = 10;
+
+    const stackCell = stack.addStack();
+    stackCell.layoutVertically();
+
+    const stackIcon = stackCell.addStack();
+    stackIcon.addSpacer();
+    const stackViewIcon = stackIcon.addStack();
+    stackViewIcon.size = new Size(10, 10);
+    stackViewIcon.cornerRadius = 50;
+    stackViewIcon.backgroundGradient = this.gradient(data.color);
+    stackIcon.addSpacer();
+
+    stackCell.layoutVertically();
+    const stackText = stackCell.addStack();
+    stackText.addSpacer();
+    this.provideText(data.value, stackText, title);
+    stackText.addSpacer();
+
+    const desc = {...this.textFormat.defaultText};
+    desc.color = this.widgetColor;
+    desc.size = 8;
+
+    const stackTip = stackCell.addStack();
+    stackTip.addSpacer();
+    this.provideText(data.label, stackTip, desc);
+    stackTip.addSpacer();
   };
-
-  drawPointText(txt, canvas, txtPoint, fontSize) {
-    canvas.setTextColor(this.percentColor);
-    canvas.setFont(Font.boldSystemFont(fontSize));
-    canvas.drawText(txt, txtPoint);
-  }
-
-  drawText(txt, canvas, txtOffset, fontSize) {
-    const txtRect = new Rect(
-        this.canvTextSize / 2 - 20,
-        txtOffset - this.canvTextSize / 2,
-        this.canvSize,
-        this.canvTextSize,
-    );
-    canvas.setTextColor(this.percentColor);
-    canvas.setFont(Font.boldSystemFont(fontSize));
-    canvas.setTextAlignedCenter();
-    canvas.drawTextInRect(`${txt}`, txtRect);
-  }
-
-  createDivider(w) {
-    const drawContext = new DrawContext();
-    drawContext.size = new Size(543, this.widgetSize === 'small' ? 4 : 2);
-    const path = new Path();
-    path.addLine(new Point(1000, 20));
-    drawContext.addPath(path);
-    drawContext.setStrokeColor(new Color('#000', 1));
-    drawContext.setLineWidth(2);
-    drawContext.strokePath();
-
-    const stackLine = w.addStack();
-    stackLine.borderWidth = 1;
-    stackLine.borderColor = new Color('#000', 0.4);
-    stackLine.addImage(drawContext.getImage());
-    w.addSpacer(5);
-  }
-
-  async setHeader(w, size) {
-    const header = w.addStack();
-    header.centerAlignContent();
-    const left = header.addStack();
-    left.centerAlignContent();
-    let icon = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
-    if (this.account.icon) icon = this.account.icon;
-    const stackIcon = left.addStack();
-    try {
-      const imgIcon = await this.$request.get(icon, 'IMG');
-      const imgIconItem = stackIcon.addImage(imgIcon);
-      let iconSize = new Size(16, 16);
-      if (this.widgetSize === 'small') iconSize = new Size(12, 12);
-      imgIconItem.imageSize = iconSize;
-      imgIconItem.cornerRadius = 4;
-      left.addSpacer(5);
-    } catch (e) {
-      console.log(e);
-    }
-
-    const vpnName = {...this.textFormat.title};
-    vpnName.size = size;
-    vpnName.color = this.widgetColor;
-    this.provideText(this.account.title, left, vpnName);
-
-    header.addSpacer();
-
-    const right = header.addStack();
-    right.bottomAlignContent();
-    const vpnFlow = {...this.textFormat.title};
-    vpnFlow.color = new Color('#26c5bc');
-    vpnFlow.size = size;
-    this.provideText(`${this.dataSource.todayUsed}GB`, right, vpnFlow);
-
-    w.addSpacer();
-  };
-
-  setLabel(w, data, size) {
-    const stackLabel = w.addStack();
-    const textBattery = {...this.textFormat.battery};
-    textBattery.size = size.label;
-    textBattery.color = this.widgetColor;
-    this.provideText(data.label, stackLabel, textBattery);
-
-    textBattery.size = size.value;
-    const stackValue = w.addStack();
-    stackValue.centerAlignContent();
-    textBattery.color = new Color(data.color);
-    this.provideText(data.value + data.unit, stackValue, textBattery);
-  }
-
-  setFooter(w, size) {
-    const footer = w.addStack();
-    footer.centerAlignContent();
-
-    this.setLabel(
-        footer, {
-          label: '剩余：',
-          color: '#ff3e3e',
-          value: this.dataSource.restData,
-          unit: 'GB',
-        }, size);
-    footer.addSpacer();
-    this.setLabel(
-        footer, {
-          label: '累计：',
-          color: '#dc9e28',
-          value: this.dataSource.usedData,
-          unit: 'GB',
-        }, size);
-  }
 
   renderSmall = async (w) => {
-    await this.setHeader(w, 10);
-    this.setCircleText(w, this.flow);
-    this.createDivider(w);
-    this.setFooter(w, {label: 6, value: 8});
+    const stackHeader = w.addStack();
+    const stackLeft = stackHeader.addStack();
+    stackHeader.centerAlignContent();
+    stackLeft.centerAlignContent();
+    try {
+      const imgIcon = await this.$request.get(
+          this.account.icon || this.logo, 'IMG');
+      const stackImgItem = stackLeft.addImage(imgIcon);
+      stackImgItem.imageSize = new Size(12, 12);
+      stackImgItem.cornerRadius = 4;
+      stackLeft.addSpacer(5);
+    } catch (e) {
+      console.log(e);
+    }
+    const title = {...this.textFormat.title};
+    title.color = this.widgetColor;
+    title.size = 12;
+    this.provideText(this.account.title, stackLeft, title);
+    stackHeader.addSpacer();
+
+    const stackRight = stackHeader.addStack();
+    stackRight.centerAlignContent();
+    const calendar = SFSymbol.named('waveform.path.badge.minus');
+    const imgCalendar = stackRight.addImage(calendar.image);
+    imgCalendar.imageSize = new Size(12, 12);
+    imgCalendar.tintColor = new Color('#00b800');
+    stackRight.addSpacer(5);
+    this.provideText(
+        this.formatFileSize(this.dataSource.todayData), stackRight, title);
+    w.addSpacer();
+
+    const stackContent = w.addStack();
+    stackContent.addSpacer();
+    await this.setContent(stackContent, {w: 360, h: 360}, new Size(80, 80));
+    stackContent.addSpacer();
+
+    w.addSpacer();
+
+    const stackFooter = w.addStack();
+    stackFooter.centerAlignContent();
+    const stackFooterLeft = stackFooter.addStack();
+    this.setFooterCell(stackFooterLeft, {
+      value: this.formatFileSize(this.dataSource.restData),
+      label: '剩余',
+      color: this.color1,
+    });
+
+    stackFooter.addSpacer();
+
+    const stackFooterRight = stackFooter.addStack();
+    this.setFooterCell(stackFooterRight, {
+      value: this.formatFileSize(this.dataSource.usedData),
+      label: '累计',
+      color: this.color2,
+    });
+
     return w;
   };
 
   renderMedium = async (w) => {
-    await this.setHeader(w, 16);
-    await this.createChart(w);
-    this.createDivider(w);
-    this.setFooter(w, {label: 14, value: 18});
+    const stackBody = w.addStack();
+    const stackLeft = stackBody.addStack();
+    await this.setContent(stackLeft, {w: 360, h: 360}, new Size(140, 140));
+    stackBody.addSpacer(10);
+    const stackRight = stackBody.addStack();
+    stackRight.layoutVertically();
+    await this.setLabelCell(
+        stackRight, {
+          icon: this.account.icon || this.logo,
+          title: this.account.title,
+          value: ``,
+          isImg: true,
+        });
+    await this.setLabelCell(
+        stackRight,
+        {
+          icon: this.gradient(this.color3),
+          title: '今日',
+          value: this.formatFileSize(this.dataSource.todayData),
+        },
+    );
+    await this.setLabelCell(
+        stackRight,
+        {
+          icon: this.gradient(this.color2),
+          title: '累计',
+          value: this.formatFileSize(this.dataSource.usedData),
+        },
+    );
+
+    await this.setLabelCell(
+        stackRight,
+        {
+          icon: this.gradient(this.color1),
+          title: '剩余',
+          value: this.formatFileSize(this.dataSource.restData),
+        },
+    );
+
     return w;
   };
 
