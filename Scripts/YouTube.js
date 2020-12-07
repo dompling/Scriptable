@@ -35,11 +35,11 @@ class Widget extends DmYY {
     const webView = new WebView();
     await webView.loadURL(url);
     const javascript = `completion(ytInitialData||window['ytInitialData']);`;
-    const response = await webView.evaluateJavaScript(javascript, true).then(
-        async (e) => {
-          return e;
-        });
-    this.ytInitialData = response;
+    this.ytInitialData = await webView.evaluateJavaScript(javascript, true).
+        then(
+            async (e) => {
+              return e;
+            });
     this.getCell();
   };
 
