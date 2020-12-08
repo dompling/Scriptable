@@ -470,13 +470,13 @@ class DmYY {
         const _action = [
           async () => {
             const message = '白天和夜间背景';
-            const options = ['取消', '白天', '夜间'];
+            const options = ['白天', '夜间', '取消'];
             const index = await this.generateAlert(message, options);
-            if (index === 0) return;
+            if (index === 2) return;
             const backImage = await this.chooseImg();
             if (!await this.verifyImage(backImage)) return;
-            if (index === 1) await this.setBackgroundImage(backImage, true);
-            if (index === 2) await this.setBackgroundNightImage(
+            if (index === 0) await this.setBackgroundImage(backImage, true);
+            if (index === 1) await this.setBackgroundNightImage(
                 backImage, true);
           },
           async () => await this.setLightAndDark(
