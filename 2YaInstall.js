@@ -2,118 +2,8 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: brown; icon-glyph: download;
 
-const scripts = [
-  {
-    moduleName: '2YaInstall',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js',
-  },
-  {
-    moduleName: 'widget.install',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/widget.install.js',
-  },
-  {
-    moduleName: 'Calendar',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js',
-  },
-  {
-    moduleName: 'Birthday',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js',
-  },
-  {
-    moduleName: 'HistoryDay',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js',
-  },
-  {
-    moduleName: 'DmYY',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.min.js',
-  },
-  {
-    moduleName: 'JDDou',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js',
-  },
-  {
-    moduleName: 'JDDouK',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js',
-  },
-  {
-    moduleName: 'JDWuLiu',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js',
-  },
-  {
-    moduleName: 'BiliBili',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js',
-  },
-  {
-    moduleName: 'BiliBiliWatch',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js',
-  },
-  {
-    moduleName: 'ZXTrains',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js',
-  },
-  {
-    moduleName: 'Health',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Health.js',
-  },
-  {
-    moduleName: 'Contact',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Contact.js',
-  },
-  {
-    moduleName: 'Telegram',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js',
-  },
-  {
-    moduleName: 'YouTube',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js',
-  },
-  {
-    moduleName: 'ChinaTelecom',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js',
-  },
-  {
-    moduleName: 'ChinaMobile',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaMobile.js',
-  },
-  {
-    moduleName: 'VPNBoard',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js',
-  },
-  {
-    moduleName: 'VPNSubscription',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNSubscription.js',
-  },
-  {
-    moduleName: 'VPNBoardPress',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoardPress.js',
-  },
-  {
-    moduleName: 'PoisonCalendar',
-    url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendar.js',
-  },
-];
+//订阅地址
+const subscriptionURL = 'https://raw.githubusercontent.com/dompling/Scriptable/master/install.json';
 
 class YaYaInstall {
   constructor() {
@@ -161,9 +51,12 @@ class YaYaInstall {
 
   install = async () => {
     console.log('🤖更新开始!');
-    for (const script of scripts) {
-      await this.saveFile(script);
-      console.log(script.moduleName + '：更新成功');
+    const req = new Request(subscriptionURL);
+    const subscription = await req.loadJSON();
+    const apps = subscription.apps;
+    for (const script of apps) {
+      await this.saveFile({moduleName: script.name, url: script.scriptURL});
+      // console.log(script.moduleName + '：更新成功');
     }
     console.log('🤖更新结束!');
   };

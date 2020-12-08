@@ -66,7 +66,7 @@ const renderTableList = async (data) => {
               const rely = await new Request(relyItem.scriptURL).loadString();
               const _isWrite = await write(relyItem.name, rely);
               if (_isWrite) {
-                notify('下载提示', `依赖插件:${item.title}下载/更新成功`);
+                notify('下载提示', `依赖插件:${relyItem.title}下载/更新成功`);
               }
             }
           } catch (e) {
