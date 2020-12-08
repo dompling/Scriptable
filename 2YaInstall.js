@@ -31,7 +31,7 @@ const scripts = [
   {
     moduleName: 'DmYY',
     url:
-        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js',
+        'https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.min.js',
   },
   {
     moduleName: 'JDDou',

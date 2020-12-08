@@ -88,7 +88,7 @@ class DmYY {
   // 获取 boxJS 缓存
   getCache = async (key) => {
     try {
-      const url = `http://${this.prefix}/query/boxdata`;
+      const url = 'http://' + this.prefix + '/query/boxdata';
       const boxdata = await this.$request.get(url);
       console.log(boxdata.datas[key]);
       if (key) return boxdata.datas[key];
@@ -142,11 +142,9 @@ class DmYY {
       const direct = true;
       if (width > 1000) {
         const options = ['取消', '打开图像处理'];
-        const message = `
-				您的图片像素为${width} x ${height}\n
-				请将图片${direct ? '宽度' : '高度'}调整到 1000 以下\n
-				${!direct ? '宽度' : '高度'} 自动适应
-				`;
+        const message = '您的图片像素为' + width + ' x ' + height + '\n' +
+            '请将图片' + (direct ? '宽度' : '高度') + '调整到 1000 以下\n' +
+            (!direct ? '宽度' : '高度') + '自动适应';
         const index = await this.generateAlert(message, options);
         if (index === 1) Safari.openInApp(
             'https://www.sojson.com/image/change.html', false);
@@ -368,8 +366,8 @@ class DmYY {
       const a = new Alert();
       a.title = '白天和夜间' + title;
       a.message = !desc ? '请自行去网站上搜寻颜色（Hex 颜色）' : desc;
-      a.addTextField('白天', `${this.settings[light]}`);
-      a.addTextField('夜间', `${this.settings[dark]}`);
+      a.addTextField('白天', (this.settings[light] || '') + '');
+      a.addTextField('夜间', (this.settings[dark] || '') + '');
       a.addAction('确定');
       a.addCancelAction('取消');
       const id = await a.presentAlert();
@@ -460,7 +458,6 @@ class DmYY {
       async () => {
         const a = new Alert();
         a.title = '主题设置';
-        a.message = '请自行搭配相应的字体颜色。\n 透明背景：白天蒙层透明设置为 0 \n 夜间请自行调整,参考值 0.35';
         a.addAction('背景设置');
         a.addAction('背景颜色');
         a.addAction('字体颜色');
@@ -487,6 +484,13 @@ class DmYY {
           async () => await this.setLightAndDark(
               '字体颜色', false, 'lightColor', 'darkColor'),
           async () => {
+            const message = '请自行搭配相应的字体颜色。\n' +
+                '白天蒙层透明设置为 0\n' +
+                '夜间请自行调整参考值 0.26\n' +
+                '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
+            const options = ['取消', '确定'];
+            const index = await this.generateAlert(message, options);
+            if (index === 0) return;
             const backImage = await this.getWidgetScreenShot();
             if (backImage) await this.setBackgroundImage(backImage, true);
           },
@@ -545,12 +549,12 @@ class DmYY {
     this.FILE_MGR_LOCAL = FileManager.local();
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
         this.FILE_MGR_LOCAL.documentsDirectory(),
-        `bg_${this.SETTING_KEY}.jpg`,
+        'bg_' + this.SETTING_KEY + '.jpg',
     );
 
     this.BACKGROUND_NIGHT_KEY = this.FILE_MGR_LOCAL.joinPath(
         this.FILE_MGR_LOCAL.documentsDirectory(),
-        `bg_${this.SETTING_KEY}_night.jpg`,
+        'bg_' + this.SETTING_KEY + 'night.jpg',
     );
 
     this.settings = this.getSettings();
@@ -1039,122 +1043,6 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       // 弹出选择菜单
       const actions = M['_actions'];
       const _actions = [
-        ...(isDebug
-            ? [
-              // 远程开发
-              async () => {
-                // 1. 获取服务器ip
-                const a = new Alert();
-                a.title = '服务器 IP';
-                a.message = '请输入远程开发服务器（电脑）IP地址';
-                let xjj_debug_server = '192.168.1.3';
-                if (Keychain.contains('xjj_debug_server')) {
-                  xjj_debug_server = Keychain.get('xjj_debug_server');
-                }
-                a.addTextField('server-ip', xjj_debug_server);
-                a.addAction('连接');
-                a.addCancelAction('取消');
-                const id = await a.presentAlert();
-                if (id === -1) return;
-                const ip = a.textFieldValue(0);
-                // 保存到本地
-                Keychain.set('xjj_debug_server', ip);
-                const server_api = `http://${ip}:5566`;
-                // 2. 发送当前文件到远程服务器
-                const SELF_FILE = module.filename.replace(
-                    'DmYY',
-                    Script.name(),
-                );
-                const req = new Request(`${server_api}/sync`);
-                req.method = 'POST';
-                req.addFileToMultipart(SELF_FILE, 'Widget', Script.name());
-                try {
-                  const res = await req.loadString();
-                  if (res !== 'ok') {
-                    return M.notify('连接失败', res);
-                  }
-                } catch (e) {
-                  return M.notify('连接错误', e.message);
-                }
-                M.notify('连接成功', '编辑文件后保存即可进行下一步预览操作');
-                // 重写console.log方法，把数据传递到nodejs
-                const rconsole_log = async (data, t = 'log') => {
-                  const _req = new Request(`${server_api}/console`);
-                  _req.method = 'POST';
-                  _req.headers = {
-                    'Content-Type': 'application/json',
-                  };
-                  _req.body = JSON.stringify({
-                    t,
-                    data,
-                  });
-                  return await _req.loadString();
-                };
-                const lconsole_log = console.log.bind(console);
-                const lconsole_warn = console.warn.bind(console);
-                const lconsole_error = console.error.bind(console);
-                console.log = (d) => {
-                  lconsole_log(d);
-                  rconsole_log(d, 'log');
-                };
-                console.warn = (d) => {
-                  lconsole_warn(d);
-                  rconsole_log(d, 'warn');
-                };
-                console.error = (d) => {
-                  lconsole_error(d);
-                  rconsole_log(d, 'error');
-                };
-                // 3. 同步
-                while (1) {
-                  let _res = '';
-                  try {
-                    const _req = new Request(
-                        `${server_api}/sync?name=${encodeURIComponent(
-                            Script.name(),
-                        )}`,
-                    );
-                    _res = await _req.loadString();
-                  } catch (e) {
-                    M.notify('停止调试', '与开发服务器的连接已终止');
-                    break;
-                  }
-                  if (_res === 'stop') {
-                    console.log('[!] 停止同步');
-                    break;
-                  } else if (_res === 'no') {
-                    // console.log("[-] 没有更新内容")
-                  } else if (_res.length > 0) {
-                    M.notify('同步成功', '新文件已同步，大小：' + _res.length);
-                    // 重新加载组件
-                    // 1. 读取当前源码
-                    const _code = _res.split('// @组件代码开始')[1].split(
-                        '// @组件代码结束')[0];
-                    // 2. 解析 widget class
-                    let NewWidget = null;
-                    try {
-                      const _func = new Function(
-                          `const _Debugger = DmYY => {\n${_code}\nreturn Widget\n}\nreturn _Debugger`,
-                      );
-                      NewWidget = _func()(DmYY);
-                    } catch (e) {
-                      M.notify('解析失败', e.message);
-                    }
-                    if (!NewWidget) continue;
-                    // 3. 重新执行 widget class
-                    delete M;
-                    M = new NewWidget(__arg || default_args || '');
-                    if (__size) M.init(__size);
-                    // 写入文件
-                    FileManager.local().writeString(SELF_FILE, _res);
-                    // 执行预览
-                    let i = await _actions[1](true);
-                    if (i === 4 + Object.keys(actions).length) break;
-                  }
-                }
-              },
-            ]
-            : []),
         // 预览组件
         async (debug = false) => {
           let a = new Alert();
@@ -1215,9 +1103,6 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const alert = new Alert();
       alert.title = M.name;
       alert.message = M.desc;
-      if (isDebug) {
-        alert.addAction('远程开发');
-      }
       alert.addAction('预览组件');
       for (let _ in actions) {
         alert.addAction(_);
@@ -1233,7 +1118,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     }
     let _tmp = act.split('-').map((_) => _[0].toUpperCase() + _.substr(1)).join(
         '');
-    let _act = `action${_tmp}`;
+    let _act = 'action' + _tmp;
     if (M[_act] && typeof M[_act] === 'function') {
       const func = M[_act].bind(M);
       await func(data);
