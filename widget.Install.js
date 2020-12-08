@@ -2,6 +2,8 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: brown; icon-glyph: download;
 
+// version '1.0.0';
+
 const mainAlert = new Alert();
 const Files = FileManager.iCloud();
 const RootPath = Files.documentsDirectory();
