@@ -474,7 +474,7 @@ class DmYY {
             const index = await this.generateAlert(message, options);
             if (index === 2) return;
             const backImage = await this.chooseImg();
-            if (!await this.verifyImage(backImage)) return;
+            if (!backImage || !await this.verifyImage(backImage)) return;
             if (index === 0) await this.setBackgroundImage(backImage, true);
             if (index === 1) await this.setBackgroundNightImage(
                 backImage, true);
