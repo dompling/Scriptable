@@ -22,6 +22,7 @@ class DmYY {
     );
   }
 
+  BACKGROUND_NIGHT_KEY;
   widgetColor;
   backGroundColor;
   useBoxJS = true;
@@ -460,7 +461,7 @@ class DmYY {
         const a = new Alert();
         a.title = '主题设置';
         a.message = '请自行搭配相应的字体颜色。\n 透明背景：白天蒙层透明设置为 0 \n 夜间请自行调整,参考值 0.35';
-        a.addAction('选择背景');
+        a.addAction('背景设置');
         a.addAction('背景颜色');
         a.addAction('字体颜色');
         a.addAction('透明背景');
@@ -471,9 +472,15 @@ class DmYY {
         if (i === -1) return;
         const _action = [
           async () => {
+            const message = '白天和夜间背景';
+            const options = ['取消', '白天', '夜间'];
+            const index = await this.generateAlert(message, options);
+            if (index === 0) return;
             const backImage = await this.chooseImg();
             if (!await this.verifyImage(backImage)) return;
-            await this.setBackgroundImage(backImage, true);
+            if (index === 1) await this.setBackgroundImage(backImage, true);
+            if (index === 2) await this.setBackgroundNightImage(
+                backImage, true);
           },
           async () => await this.setLightAndDark(
               '背景颜色', false, 'lightBgColor', 'darkBgColor'),
@@ -539,6 +546,11 @@ class DmYY {
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
         this.FILE_MGR_LOCAL.documentsDirectory(),
         `bg_${this.SETTING_KEY}.jpg`,
+    );
+
+    this.BACKGROUND_NIGHT_KEY = this.FILE_MGR_LOCAL.joinPath(
+        this.FILE_MGR_LOCAL.documentsDirectory(),
+        `bg_${this.SETTING_KEY}_night.jpg`,
     );
 
     this.settings = this.getSettings();
@@ -896,12 +908,16 @@ class DmYY {
     if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
       result = Image.fromFile(this.BACKGROUND_KEY);
     }
+    if (this.isNight &&
+        this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)) {
+      result = Image.fromFile(this.BACKGROUND_NIGHT_KEY);
+    }
     return result;
   }
 
   /**
    * 设置当前组件的背景图片
-   * @param {image} img
+   * @param {Image} img
    */
   setBackgroundImage(img, notify = true) {
     if (!img) {
@@ -909,23 +925,27 @@ class DmYY {
       if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
         this.FILE_MGR_LOCAL.remove(this.BACKGROUND_KEY);
       }
-      if (notify) this.notify('移除成功', '小组件背景图片已移除，稍后刷新生效');
+      if (notify) this.notify('移除成功', '小组件白天背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
       // 全部设置一遍，
       this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_KEY, img);
-      if (notify) this.notify('设置成功', '小组件背景图片已设置！稍后刷新生效');
+      if (notify) this.notify('设置成功', '小组件白天背景图片已设置！稍后刷新生效');
     }
   }
 
-  randomNum(minNum, maxNum) {
-    switch (arguments.length) {
-      case 1:
-        return parseInt(Math.random() * minNum + 1, 10);
-      case 2:
-        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-      default:
-        return 0;
+  setBackgroundNightImage(img, notify = true) {
+    if (!img) {
+      // 移除背景
+      if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)) {
+        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_NIGHT_KEY);
+      }
+      if (notify) this.notify('移除成功', '小组件夜间背景图片已移除，稍后刷新生效');
+    } else {
+      // 设置背景
+      // 全部设置一遍，
+      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_NIGHT_KEY, img);
+      if (notify) this.notify('设置成功', '小组件夜间背景图片已设置！稍后刷新生效');
     }
   }
 
