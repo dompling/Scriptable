@@ -1,7 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: paper-plane;
-
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
 const {DmYY, Runing} = require('./DmYY');
@@ -12,15 +8,20 @@ class Widget extends DmYY {
     super(arg);
     this.name = 'YouTube';
     this.en = 'YouTube';
-    this.inputValue = arg || 'Ustv';
+    this.inputValue = arg ||
+        'https://m.youtube.com/channel/UCMUnInmOkrWN4gof9KlhNmQ';
+    this.url = `${this.baseUrl}/c/${this.inputValue}`;
+    if (this.inputValue.includes('m.youtube.com')) {
+      this.url = this.inputValue;
+    }
     this.Run();
   }
-
 
   useBoxJS = false;
   ytInitialData = {};
   videos = [];
-  baseUrl = 'https://www.youtube.com';
+  baseUrl = 'https://m.youtube.com';
+  url;
 
   init = async () => {
     try {
@@ -31,7 +32,7 @@ class Widget extends DmYY {
   };
 
   getData = async () => {
-    const url = `${this.baseUrl}/c/${this.inputValue}`;
+    const url = this.url;
 
     const webView = new WebView();
     await webView.loadURL(url);
@@ -85,26 +86,30 @@ class Widget extends DmYY {
   }
 
   getCellVideo(data) {
-    const {gridVideoRenderer} = data;
-    if (gridVideoRenderer && gridVideoRenderer.thumbnail) {
+    try {
+      const {gridVideoRenderer} = data;
       return {
         thumb: gridVideoRenderer.thumbnail.thumbnails[0].url,
         title: gridVideoRenderer.title.simpleText,
         view: gridVideoRenderer.viewCountText.simpleText,
         url: gridVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
       };
+    } catch (e) {
+      console.log(e);
     }
   }
 
   getCellVideo2(data) {
-    const {compactVideoRenderer} = data;
-    if (compactVideoRenderer && compactVideoRenderer.thumbnail) {
+    try {
+      const {compactVideoRenderer} = data;
       return {
         thumb: compactVideoRenderer.thumbnail.thumbnails[0].url,
         title: compactVideoRenderer.title.runs[0].text,
         view: compactVideoRenderer.viewCountText.runs[0].text,
         url: compactVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
       };
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -123,7 +128,8 @@ class Widget extends DmYY {
   setTitleStack = (stack) => {
     const textFormatNumber = this.textFormat.title;
     textFormatNumber.color = this.backGroundColor;
-    const title = this.inputValue;
+    const {metadata: {channelMetadataRenderer}} = this.ytInitialData;
+    const title = channelMetadataRenderer.title;
     textFormatNumber.size =
         title.length > 20 || this.widgetFamily === 'small' ? 16 : 20;
     const titleItem = this.provideText(title, stack, textFormatNumber);
@@ -173,7 +179,7 @@ class Widget extends DmYY {
       stackVideo.addSpacer();
       title.color = new Color('#fff', 0.7);
       this.provideText(video.view, stackVideo, title);
-      stackVideo.size = new Size(80, 56);
+      stackVideo.size = new Size(87, 56);
       stackVideo.cornerRadius = 4;
       if (i === 1) stack.addSpacer();
     }
@@ -185,7 +191,7 @@ class Widget extends DmYY {
 
   renderMedium = async (w) => {
     const stackBody = w.addStack();
-    stackBody.url = `${this.baseUrl}/c/${this.inputValue}`;
+    stackBody.url = this.url;
     stackBody.layoutVertically();
     const stackHeader = stackBody.addStack();
     stackHeader.setPadding(5, 10, 5, 10);
