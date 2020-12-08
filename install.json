@@ -226,6 +226,10 @@
         {
           "name": "DmYY",
           "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.min.js"
+        },
+        {
+          "name": "crypto-js",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/crypto-js.min.js"
         }
       ]
     },
