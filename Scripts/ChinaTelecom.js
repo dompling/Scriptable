@@ -135,7 +135,8 @@ class Widget extends DmYY {
       detail.items.forEach((data) => {
         if (data.offerType !== 19) {
           const item = data.items.find(child => {
-            return child.nameType === '331101' || child.nameType === '331100';
+            return child.nameType === '331101' || child.nameType === '331100' ||
+                child.nameType === '131100';
           });
           this.flow.percent = Math.floor(
               item.balanceAmount / (item.ratableAmount || 1) * 100);
@@ -332,7 +333,18 @@ class Widget extends DmYY {
       });
       this.registerAction('基础设置', this.setWidgetConfig);
     }
-    const {cookie, authToken, step1, step2, step3, step4, inner, icon, percent, value} = this.settings;
+    const {
+      cookie,
+      authToken,
+      step1,
+      step2,
+      step3,
+      step4,
+      inner,
+      icon,
+      percent,
+      value,
+    } = this.settings;
     this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
     this.textColor1 = value ? new Color(value) : this.textColor1;
     this.circleColor1 = step1 ? new Color(step1) : this.circleColor1;
