@@ -1,8 +1,10 @@
 # scriptable  [Tg电报群](https://t.me/Scriptable_JS)
 
-> 将文件 [2YaInstall](https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js) 导入到 scriptable 软件中，点击运行即可
+>首先安装 TF版的 [scriptable](https://testflight.apple.com/join/uN1vTqxk)
 
-> 如果需要单个安装 [widget.Install](https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js) 安装导入到 scriptable，添加订阅，然后选择即可获取安装列表
+> 单个安装：[widget.Install](https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js) 安装导入到 scriptable，添加订阅，然后选择即可获取安装列表
+
+> 全量安装：[2YaInstall](https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js) 导入到 scriptable 软件中，点击运行即可
 
 ##### BoxJs 简单说明可看作者[BoxJs 仓库地址](https://github.com/chavyleung/scripts/)
 
