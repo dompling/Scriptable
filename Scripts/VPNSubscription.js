@@ -39,6 +39,7 @@ class Widget extends DmYY {
 
   chartConfig = (data, color, value) => {
     console.log(data);
+    const fontColor = `#${this.widgetColor.hex}`;
     const template1 = `
 {
   "type": "radialGauge",
@@ -127,8 +128,8 @@ class Widget extends DmYY {
       rotation: Math.PI / 2,
       centerArea: {
         displayText: true,
-        fontColor: "#fff",
-        fontSize: 30,
+        fontColor: '${fontColor}',
+        fontSize: 20,
         text:(value)=>{
           return '${value}';
         }
@@ -189,10 +190,14 @@ class Widget extends DmYY {
       let temp = fileSize / (1024 * 1024);
       temp = temp.toFixed(2);
       return temp + 'MB';
-    } else {
+    } else if (fileSize < (1024 * 1024 * 1024 * 1024)) {
       let temp = fileSize / (1024 * 1024 * 1024);
       temp = temp.toFixed(2);
       return temp + 'GB';
+    } else {
+      let temp = fileSize / (1024 * 1024 * 1024 * 1024);
+      temp = temp.toFixed(2);
+      return temp + 'TB';
     }
   }
 

@@ -38,6 +38,7 @@ class Widget extends DmYY {
 
   chartConfig = (data, color, value) => {
     console.log(data);
+    const fontColor = `#${this.widgetColor.hex}`;
     const template1 = `
 {
   "type": "radialGauge",
@@ -126,8 +127,8 @@ class Widget extends DmYY {
       rotation: Math.PI / 2,
       centerArea: {
         displayText: true,
-        fontColor: "#fff",
-        fontSize: 30,
+        fontColor: '${fontColor}',
+        fontSize: 12,
         text:(value)=>{
           return '${value}';
         }
