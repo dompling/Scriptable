@@ -19,7 +19,7 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 | 名称                          | 说明       | 备注                                                                                            |
 | ----------------------------- | ---------- | --------------------------------------------------------------------------------------------------- |
 | [破壳日](Scripts/Birthday.js)            | BoxJs 数据 |                                                                                                     |
-| [历史上的今天](historyToDay/) |            |                                                                                                     |
+| [历史上的今天](Scripts/HistoryToday.js) |            |                                                                                                     |
 | [京东豆收支明细](Scripts/JDDou.js)    | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
 | [京东豆收支 K 线图](Scripts/JDDouK.js) | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
 | [京东商品物流](Scripts/JDWuLiu.js)      | BoxJs 数据 | parameter: 0 京东 ck 下标 ,也可根据 APP 提示自行选择                                                |
