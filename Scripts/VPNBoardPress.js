@@ -351,9 +351,8 @@ class Widget extends DmYY {
     const stackCell = stack.addStack();
     stackCell.centerAlignContent();
     const stackIcon = stackCell.addStack();
-    stackIcon.centerAlignContent();
-    stackIcon.size = new Size(15, 15);
-    stackIcon.cornerRadius = 50;
+    stackIcon.size = new Size(16, 16);
+    stackIcon.cornerRadius = 8;
     if (data.isImg) {
       try {
         const icon = await this.$request.get(data.icon, 'IMG');
