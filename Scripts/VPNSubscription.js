@@ -145,7 +145,6 @@ class Widget extends DmYY {
   init = async () => {
     try {
       const data = await this.getdata(this.account.url);
-      console.log(data);
       const total = data[2];
       const today = data[0];
       const remain = data[2] - data[0] - data[1];
@@ -242,9 +241,8 @@ class Widget extends DmYY {
     const stackCell = stack.addStack();
     stackCell.centerAlignContent();
     const stackIcon = stackCell.addStack();
-    stackIcon.centerAlignContent();
-    stackIcon.size = new Size(15, 15);
-    stackIcon.cornerRadius = 50;
+    stackIcon.size = new Size(16, 16);
+    stackIcon.cornerRadius = 8;
     if (data.isImg) {
       try {
         const icon = await this.$request.get(data.icon, 'IMG');
@@ -469,7 +467,7 @@ class Widget extends DmYY {
       dataSource.map((t, index) => {
         const r = new UITableRow();
         r.addText(`parameter：${index}  机场名：${t.title}     订阅：${t.url}`);
-        r.onSelect = (n) => {
+        r.onSelect = () => {
           this.settings.account = t;
           this.notify(t.title, `默认订阅设置成功\n订阅：${t.url}`);
           this.saveSettings(false);
@@ -489,7 +487,7 @@ class Widget extends DmYY {
       dataSource.map((t, index) => {
         const r = new UITableRow();
         r.addText(`❌   机场名：${t.title}     订阅：${t.url}`);
-        r.onSelect = (n) => {
+        r.onSelect = () => {
           dataSource.splice(index, 1);
           this.settings.dataSource = dataSource;
           this.notify(t.title, `❌\n订阅：${t.url}`);
