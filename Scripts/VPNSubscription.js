@@ -434,34 +434,39 @@ class Widget extends DmYY {
   }
 
   Run = () => {
-    if (config.runsInApp) {
-      this.registerAction('默认订阅', this.actionSettings);
-      this.registerAction('清除订阅', this.deletedVpn);
-      this.registerAction('新增订阅', async () => {
-        const account = await this.setAlertInput(
-            '添加订阅', '添加订阅数据，添加完成之后请去设置默认订阅', {
-              title: '机场名',
-              icon: '图标',
-              url: '订阅地址',
-            }, false);
-        if (!this.settings.dataSource) this.settings.dataSource = [];
-        if (!account) return;
-        if (account.title && account.url) {
-          this.settings.dataSource.push(account);
-        }
-        this.settings.dataSource = this.settings.dataSource.filter(
-            item => item);
-        this.saveSettings();
-      });
-      this.registerAction('基础设置', this.setWidgetConfig);
-    }
-    this.account = this.settings.account || this.account;
-    this.CACHE_KEY += '_' + this.account.title;
-    const index = typeof args.widgetParameter === 'string' ? parseInt(
-        args.widgetParameter) : false;
-    if (this.settings.dataSource && this.settings.dataSource[index] && index !==
-        false) {
-      this.account = this.settings.dataSource[index];
+    try {
+      if (config.runsInApp) {
+        this.registerAction('默认订阅', this.actionSettings);
+        this.registerAction('清除订阅', this.deletedVpn);
+        this.registerAction('新增订阅', async () => {
+          const account = await this.setAlertInput(
+              '添加订阅', '添加订阅数据，添加完成之后请去设置默认订阅', {
+                title: '机场名',
+                icon: '图标',
+                url: '订阅地址',
+              }, false);
+          if (!this.settings.dataSource) this.settings.dataSource = [];
+          if (!account) return;
+          if (account.title && account.url) {
+            this.settings.dataSource.push(account);
+          }
+          this.settings.dataSource = this.settings.dataSource.filter(
+              item => item);
+          this.saveSettings();
+        });
+        this.registerAction('基础设置', this.setWidgetConfig);
+      }
+      this.account = this.settings.account || this.account;
+      this.CACHE_KEY += '_' + this.account.title;
+      const index = typeof args.widgetParameter === 'string' ? parseInt(
+          args.widgetParameter) : false;
+      if (this.settings.dataSource && this.settings.dataSource[index] &&
+          index !==
+          false) {
+        this.account = this.settings.dataSource[index];
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
