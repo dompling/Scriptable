@@ -47,4 +47,4 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 - [@chavyleung](https://github.com/chavyleung)
 - [@lxk0301](https://github.com/lxk0301)
 - [@『Hell Cell』](https://t.me/HellCellZC123)
-- [@xinian]() 提供 UI 帮助
+- [@xinian](https://github.com/58xinian) 提供 UI 帮助
