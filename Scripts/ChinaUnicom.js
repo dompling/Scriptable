@@ -71,10 +71,10 @@ class Widget extends DmYY {
 
   updateTime = {
     percent: 0,
-    label: '更新时间',
+    label: '联通更新',
     count: `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
     unit: '',
-    icon: 'clock',
+    urlIcon: 'https://raw.githubusercontent.com/Orz-3/mini/master/10010.png',
     circleColor: this.circleColor4,
   };
 
@@ -244,8 +244,10 @@ class Widget extends DmYY {
 
     stackCircle.setPadding(20, 0, 0, 0);
     stackCircle.addSpacer();
-    const icon = SFSymbol.named(data.icon);
+
+    const icon = data.urlIcon ? {image: data.icon} : SFSymbol.named(data.icon);
     const imageIcon = stackCircle.addImage(icon.image);
+
     imageIcon.tintColor = this.iconColor;
     imageIcon.imageSize = new Size(15, 15);
     // canvas.drawImageInRect(icon.image, new Rect(110, 80, 60, 60));
@@ -303,6 +305,8 @@ class Widget extends DmYY {
     this.setCircleText(stackTop, this.flow);
     const stackBottom = stackBody.addStack();
     this.setCircleText(stackBottom, this.voice);
+    this.updateTime.icon = await this.$request.get(
+        this.updateTime.urlIcon, 'IMG');
     this.setCircleText(stackBottom, this.updateTime);
     return w;
   };
