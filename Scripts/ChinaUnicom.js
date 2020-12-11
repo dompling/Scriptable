@@ -128,6 +128,7 @@ class Widget extends DmYY {
           if (item.type === 'flow') {
             this.flow.count = item.number;
             this.flow.unit = item.unit;
+            this.flow.percent = percent;
             this.flow.label = item.remainTitle;
           }
           if (item.type === 'fee') {
