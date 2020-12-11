@@ -56,6 +56,11 @@ class YaYaInstall {
     const apps = subscription.apps;
     for (const script of apps) {
       await this.saveFile({moduleName: script.name, url: script.scriptURL});
+      if (script.depend) {
+        for (const item of script.depend) {
+          await this.saveFile({moduleName: item.name, url: item.scriptURL});
+        }
+      }
       // console.log(script.moduleName + '：更新成功');
     }
     console.log('🤖更新结束!');
