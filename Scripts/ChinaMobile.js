@@ -79,7 +79,7 @@ class Widget extends DmYY {
     icon: 'clock',
     circleColor: this.circleColor4,
   };
-
+  maxFee = 100;
   canvSize = 100;
   canvWidth = 5; // circle thickness
   canvRadius = 100; // circle radius
@@ -137,6 +137,8 @@ class Widget extends DmYY {
         console.log('✅费用信息获取成功');
         const {rspBody} = data;
         this.phoneBill.count = rspBody.curFee;
+        this.phoneBill.percent = parseFloat(
+            (this.phoneBill.count / this.maxFee).toFixed(2)) * 100;
       } else {
         console.log('❌费用信息获取失败，请检查 Ck 配置' + data.retDesc);
       }
@@ -380,6 +382,10 @@ class Widget extends DmYY {
 
   Run() {
     if (config.runsInApp) {
+      this.registerAction('费用进度', async () => {
+        await this.setAlertInput(
+            `${this.name}`, '预计当月费用使用值', {maxFee: '默认 100 元'});
+      });
       const widgetInitConfig = {
         getfee: 'chavy_getfee_cmcc',
         autologin: 'chavy_autologin_cmcc',
@@ -418,6 +424,7 @@ class Widget extends DmYY {
         icon,
         percent,
         value,
+        maxFee,
       } = this.settings;
       this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
       this.textColor1 = value ? new Color(value) : this.textColor1;
@@ -427,6 +434,7 @@ class Widget extends DmYY {
       this.circleColor4 = step4 ? new Color(step4) : this.circleColor4;
       this.iconColor = icon ? new Color(icon) : this.iconColor;
       this.percentColor = percent ? new Color(percent) : this.percentColor;
+      this.maxFee = parseFloat(maxFee) || this.maxFee;
 
       this.getfee = JSON.parse(getfee || '{}');
       this.autologin = JSON.parse(autologin || '{}');

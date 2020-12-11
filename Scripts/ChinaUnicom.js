@@ -40,6 +40,7 @@ class Widget extends DmYY {
     this.format(this.date.getMinutes()),
   ];
 
+  maxFee = 100;
   // percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
   phoneBill = {
     percent: 0,
@@ -127,17 +128,21 @@ class Widget extends DmYY {
           if (item.type === 'flow') {
             this.flow.count = item.number;
             this.flow.unit = item.unit;
+            this.flow.label = item.remainTitle;
           }
           if (item.type === 'fee') {
             this.phoneBill.count = item.number;
             this.phoneBill.unit = item.unit;
-            this.phoneBill.percent = parseFloat((item.number / 100).toFixed(2)) *
+            this.phoneBill.percent = parseFloat(
+                (item.number / this.maxFee).toFixed(2)) *
                 100;
+            this.phoneBill.label = item.remainTitle;
           }
           if (item.type === 'voice') {
             this.voice.count = item.number;
             this.voice.unit = item.unit;
             this.voice.percent = percent;
+            this.voice.label = item.remainTitle;
           }
         });
       } else {
@@ -308,6 +313,10 @@ class Widget extends DmYY {
 
   Run() {
     if (config.runsInApp) {
+      this.registerAction('费用进度', async () => {
+        await this.setAlertInput(
+            `${this.name}`, '预计当月费用使用值', {maxFee: '默认 100 元'});
+      });
       const widgetInitConfig = {
         loginheader: 'chavy_tokenheader_10010',
       };
@@ -345,6 +354,7 @@ class Widget extends DmYY {
         icon,
         percent,
         value,
+        maxFee,
       } = this.settings;
       this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
       this.textColor1 = value ? new Color(value) : this.textColor1;
@@ -355,6 +365,7 @@ class Widget extends DmYY {
       this.iconColor = icon ? new Color(icon) : this.iconColor;
       this.percentColor = percent ? new Color(percent) : this.percentColor;
       this.loginheader = loginheader ? JSON.parse(loginheader) : {};
+      this.maxFee = parseFloat(maxFee) || this.maxFee;
     } catch (e) {
       console.log(e);
     }
