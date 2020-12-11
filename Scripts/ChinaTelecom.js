@@ -281,7 +281,7 @@ class Widget extends DmYY {
     const text = this.textFormat.defaultText;
     text.color = new Color('#aaa');
     this.provideText(
-        `更新时间：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+        `电信更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
         stackFooter,
         text,
     );

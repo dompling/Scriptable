@@ -290,7 +290,7 @@ class Widget extends DmYY {
     const text = this.textFormat.defaultText;
     text.color = new Color('#aaa');
     this.provideText(
-        `更新时间：${this.arrUpdateTime[0]}-${this.arrUpdateTime[1]} ${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+        `联通更新：${this.arrUpdateTime[0]}-${this.arrUpdateTime[1]} ${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
         stackFooter,
         text,
     );
