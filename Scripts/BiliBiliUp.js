@@ -152,7 +152,7 @@ class Widget extends DmYY {
 
   renderMedium = async (w) => {
     const stackBody = w.addStack();
-    stackBody.url = this.url;
+    stackBody.url = `https://space.bilibili.com/${this.inputValue}/`;
     stackBody.layoutVertically();
     const stackHeader = stackBody.addStack();
     stackHeader.setPadding(5, 10, 5, 10);
