@@ -29,7 +29,7 @@ class Widget extends DmYY {
   iconColor = new Color('#827af1');
 
   format = (str) => {
-    return parseInt(str) > 10 ? str : `0${str}`;
+    return parseInt(str) >= 10 ? str : `0${str}`;
   };
 
   date = new Date();
@@ -52,7 +52,7 @@ class Widget extends DmYY {
 
   flow = {
     percent: 0,
-    label: '流量剩余',
+    label: '已用流量',
     count: 0,
     unit: 'M',
     icon: 'waveform.path.badge.minus',
@@ -104,35 +104,48 @@ class Widget extends DmYY {
   }
 
   async getinfo() {
-    const telNum = this.gettel();
-    const url = {
-      url: `https://m.client.10010.com/mobileService/home/queryUserInfoSeven.htm?version=iphone_c@7.0403&desmobiel=${telNum}&showType=3`,
-      headers: {
-        Cookie: this.loginheader.Cookie,
-      },
-    };
-    const signinfo = await this.$request.get(url);
-    if (signinfo.code === 'Y') {
-      signinfo.data.dataList.forEach(item => {
-        if (item.type === 'flow') {
-          this.flow.count = item.number;
-          this.flow.unit = item.unit;
-        }
-        if (item.type === 'fee') {
-          this.phoneBill.count = item.number;
-          this.phoneBill.unit = item.unit;
-        }
-        if (item.type === 'voice') {
-          this.voice.count = item.number;
-          this.voice.unit = item.unit;
-        }
-        if (item.type === 'voice') {
-          this.voice.count = item.number;
-          this.voice.unit = item.unit;
-        }
-      });
-    }
+    try {
+      const telNum = this.gettel();
+      const url = {
+        url: `https://m.client.10010.com/mobileService/home/queryUserInfoSeven.htm?version=iphone_c@7.0403&desmobiel=${telNum}&showType=3`,
+        headers: {
+          Cookie: this.loginheader.Cookie,
+        },
+      };
+      const signinfo = await this.$request.get(url);
+      if (signinfo.code === 'Y') {
+        console.log('✅获取信息成功');
+        console.log(signinfo.data);
+        signinfo.data.dataList.forEach(item => {
+          let percent = 0;
+          if (item.usedTitle.includes('剩余')) percent = item.usedTitle.replace(
+              '剩余', '').replace('%');
+          if (item.usedTitle.includes('已用')) percent = 100 -
+              parseFloat(item.usedTitle.replace(
+                  '已用', '').replace('%'));
 
+          if (item.type === 'flow') {
+            this.flow.count = item.number;
+            this.flow.unit = item.unit;
+          }
+          if (item.type === 'fee') {
+            this.phoneBill.count = item.number;
+            this.phoneBill.unit = item.unit;
+            this.phoneBill.percent = parseFloat((item.number / 100).toFixed(2)) *
+                100;
+          }
+          if (item.type === 'voice') {
+            this.voice.count = item.number;
+            this.voice.unit = item.unit;
+            this.voice.percent = percent;
+          }
+        });
+      } else {
+        throw 'cookie错误';
+      }
+    } catch (e) {
+      console.log('❌获取信息失败：' + e);
+    }
   }
 
   gettel() {
