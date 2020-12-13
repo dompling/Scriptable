@@ -64,7 +64,7 @@ const renderTableList = async (data) => {
               const _isWrite = await saveFile(
                   {moduleName: relyItem.name, url: relyItem.scriptURL});
               if (_isWrite) {
-                notify('下载提示', `依赖插件:${relyItem.title}下载/更新成功`);
+                notify('下载提示', `依赖插件:${relyItem.name}下载/更新成功`);
               }
             }
           } catch (e) {
