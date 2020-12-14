@@ -166,7 +166,5 @@ const Run = async () => {
   } catch (e) {
     console.log(e);
   }
-})().finally(async () => {
-  console.log('✅获取订阅列表');
-  await Run();
-});
+})();
+await Run();
