@@ -3,30 +3,30 @@
 // icon-color: pink; icon-glyph: paper-plane;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === 'undefined') require = importModule;
-const {DmYY, Runing} = require('./DmYY');
+if (typeof require === "undefined") require = importModule;
+const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = '中国电信';
-    this.en = 'ChinaTelecom';
+    this.name = "中国电信";
+    this.en = "ChinaTelecom";
     this.Run();
   }
 
-  cookie = '';
-  authToken = '';
-  fgCircleColor = Color.dynamic(new Color('#dddef3'), new Color('#fff'));
+  cookie = "";
+  authToken = "";
+  fgCircleColor = Color.dynamic(new Color("#dddef3"), new Color("#fff"));
   percentColor = this.widgetColor;
-  textColor1 = Color.dynamic(new Color('#333'), new Color('#fff'));
+  textColor1 = Color.dynamic(new Color("#333"), new Color("#fff"));
   textColor2 = this.widgetColor;
 
-  circleColor1 = new Color('#ffbb73');
-  circleColor2 = new Color('#ff0029');
-  circleColor3 = new Color('#00b800');
-  circleColor4 = new Color('#8376f9');
-  iconColor = new Color('#827af1');
+  circleColor1 = new Color("#ffbb73");
+  circleColor2 = new Color("#ff0029");
+  circleColor3 = new Color("#00b800");
+  circleColor4 = new Color("#8376f9");
+  iconColor = new Color("#827af1");
 
   format = (str) => {
     return parseInt(str) >= 10 ? str : `0${str}`;
@@ -43,37 +43,37 @@ class Widget extends DmYY {
   // percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
   phoneBill = {
     percent: 0,
-    label: '话费剩余',
+    label: "话费剩余",
     count: 0,
-    unit: '元',
-    icon: 'yensign.circle',
+    unit: "元",
+    icon: "yensign.circle",
     circleColor: this.circleColor1,
   };
 
   flow = {
     percent: 0,
-    label: '流量剩余',
+    label: "流量剩余",
     count: 0,
-    unit: 'M',
-    icon: 'waveform.path.badge.minus',
+    unit: "M",
+    icon: "waveform.path.badge.minus",
     circleColor: this.circleColor2,
   };
 
   voice = {
     percent: 0,
-    label: '语音剩余',
+    label: "语音剩余",
     count: 0,
-    unit: '分钟',
-    icon: 'mic',
+    unit: "分钟",
+    icon: "mic",
     circleColor: this.circleColor3,
   };
 
   updateTime = {
     percent: 0,
-    label: '电信更新',
+    label: "电信更新",
     count: `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
-    unit: '',
-    urlIcon: 'https://raw.githubusercontent.com/Orz-3/mini/master/10000.png',
+    unit: "",
+    urlIcon: "https://raw.githubusercontent.com/Orz-3/mini/master/10000.png",
     circleColor: this.circleColor4,
   };
 
@@ -85,26 +85,27 @@ class Widget extends DmYY {
 
   options = {
     headers: {
-      'authToken': '',
-      'type': 'alipayMiniApp',
-      'User-Agent': 'TYUserCenter/2.8 (iPhone; iOS 14.0; Scale/3.00)',
+      authToken: "",
+      type: "alipayMiniApp",
+      "User-Agent": "TYUserCenter/2.8 (iPhone; iOS 14.0; Scale/3.00)",
     },
-    body: 't=tysuit',
-    method: 'POST',
+    body: "t=tysuit",
+    method: "POST",
   };
 
   fetchUri = {
-    detail: 'https://e.189.cn/store/user/package_detail.do',
-    balance: 'https://e.189.cn/store/user/balance_new.do',
+    detail: "https://e.189.cn/store/user/package_detail.do",
+    balance: "https://e.189.cn/store/user/balance_new.do",
     bill: `https://e.189.cn/store/user/bill.do?year=${this.date.getFullYear()}&month=${this.format(
-        this.date.getMonth() + 1)}&t=tysuit`,
+      this.date.getMonth() + 1
+    )}&t=tysuit`,
   };
 
   init = async () => {
     try {
       const nowHours = this.date.getHours();
       const updateHours = nowHours > 12 ? 24 : 12;
-      this.updateTime.percent = Math.floor(nowHours / updateHours * 100);
+      this.updateTime.percent = Math.floor((nowHours / updateHours) * 100);
       await this.getData();
     } catch (e) {
       console.log(e);
@@ -115,47 +116,72 @@ class Widget extends DmYY {
   formatFlow(number) {
     const n = number / 1024;
     if (n < 1024) {
-      return {count: n.toFixed(2), unit: 'M'};
+      return { count: n.toFixed(2), unit: "M" };
     }
-    return {count: (n / 1024).toFixed(2), unit: 'G'};
+    return { count: (n / 1024).toFixed(2), unit: "G" };
   }
 
   getData = async () => {
-    const detail = await this.http(
-        {url: this.fetchUri.detail, ...this.options});
-    const balance = await this.http(
-        {url: this.fetchUri.balance, ...this.options});
-    const bill = await this.$request.get(
-        this.fetchUri.bill, {headers: {Cookie: this.cookie}});
+    const detail = await this.http({
+      url: this.fetchUri.detail,
+      ...this.options,
+    });
+    const balance = await this.http({
+      url: this.fetchUri.balance,
+      ...this.options,
+    });
+    const bill = await this.$request.get(this.fetchUri.bill, {
+      headers: { Cookie: this.cookie },
+    });
     if (detail.result === 0) {
       // 套餐分钟数
       this.voice.percent = Math.floor(
-          parseInt(detail.voiceBalance) / parseInt(detail.voiceAmount) * 100);
+        (parseInt(detail.voiceBalance) / parseInt(detail.voiceAmount)) * 100
+      );
       this.voice.count = detail.voiceBalance;
+      console.log(detail.items);
       detail.items.forEach((data) => {
         if (data.offerType !== 19) {
-          const item = data.items.find(child => {
-            return child.nameType === '331101' || child.nameType === '331100' ||
-                child.nameType === '131100';
+          data.items.forEach((item) => {
+            if (
+              item.nameType === "331101" ||
+              item.nameType === "331100" ||
+              item.nameType === "131100" ||
+              item.nameType === "331200"
+            ) {
+              if (
+                this.flow.max &&
+                this.flow.max < parseInt(item.ratableAmount) &&
+                item.usageAmount !== "0"
+              ) {
+                this.flow.percent = Math.floor(
+                  (item.balanceAmount / (item.ratableAmount || 1)) * 100
+                );
+                const flow = this.formatFlow(item.balanceAmount);
+                this.flow.count = flow.count;
+                this.flow.unit = flow.unit;
+                this.flow.max = item.ratableAmount;
+              }
+              if (!this.flow.max) this.flow.max = parseInt(item.ratableAmount);
+            }
           });
-          this.flow.percent = Math.floor(
-              item.balanceAmount / (item.ratableAmount || 1) * 100);
-          const flow = this.formatFlow(item.balanceAmount);
-          this.flow.count = flow.count;
-          this.flow.unit = flow.unit;
         }
       });
     }
+    console.log(balance);
     if (balance.result === 0) {
       // 余额
       this.phoneBill.count = parseFloat(
-          (parseInt(balance.totalBalanceAvailable) / 100).toFixed(2));
+        (parseInt(balance.totalBalanceAvailable) / 100).toFixed(2)
+      );
     }
-    if (bill.serviceResultCode === '0') {
-      this.phoneBill.percent = Math.floor(this.phoneBill.count /
-          ((bill.items[0].sumCharge / 100) + this.phoneBill.count) * 100);
+    if (bill.serviceResultCode === "0") {
+      this.phoneBill.percent = Math.floor(
+        (this.phoneBill.count /
+          (bill.items[0].sumCharge / 100 + this.phoneBill.count)) *
+          100
+      );
     }
-
   };
 
   makeCanvas() {
@@ -172,38 +198,32 @@ class Widget extends DmYY {
     const bgx = ctr.x - (this.canvRadius - radiusOffset);
     const bgy = ctr.y - (this.canvRadius - radiusOffset);
     const bgd = 2 * (this.canvRadius - radiusOffset);
-    const bgr = new Rect(
-        bgx,
-        bgy,
-        bgd,
-        bgd,
-    );
+    const bgr = new Rect(bgx, bgy, bgd, bgd);
     canvas.setStrokeColor(this.fgCircleColor);
     canvas.setLineWidth(2);
     canvas.strokeEllipse(bgr);
     // Inner circle
     canvas.setFillColor(color);
     for (let t = 0; t < degree; t++) {
-      const rect_x = ctr.x + (this.canvRadius - radiusOffset) * this.sinDeg(t) -
-          this.canvWidth / 2;
-      const rect_y = ctr.y - (this.canvRadius - radiusOffset) * this.cosDeg(t) -
-          this.canvWidth / 2;
-      const rect_r = new Rect(
-          rect_x,
-          rect_y,
-          this.canvWidth,
-          this.canvWidth,
-      );
+      const rect_x =
+        ctr.x +
+        (this.canvRadius - radiusOffset) * this.sinDeg(t) -
+        this.canvWidth / 2;
+      const rect_y =
+        ctr.y -
+        (this.canvRadius - radiusOffset) * this.cosDeg(t) -
+        this.canvWidth / 2;
+      const rect_r = new Rect(rect_x, rect_y, this.canvWidth, this.canvWidth);
       canvas.fillEllipse(rect_r);
     }
   }
 
   drawText(txt, canvas, txtOffset, fontSize) {
     const txtRect = new Rect(
-        this.canvTextSize / 2 - 20,
-        txtOffset - this.canvTextSize / 2,
-        this.canvSize,
-        this.canvTextSize,
+      this.canvTextSize / 2 - 20,
+      txtOffset - this.canvTextSize / 2,
+      this.canvSize,
+      this.canvTextSize
     );
     canvas.setTextColor(this.percentColor);
     canvas.setFont(Font.boldSystemFont(fontSize));
@@ -230,7 +250,11 @@ class Widget extends DmYY {
     const canvas = this.makeCanvas();
     stackCircle.size = new Size(70, 70);
     this.makeCircle(
-        canvas, this.dayRadiusOffset, data.percent * 3.6, data.circleColor);
+      canvas,
+      this.dayRadiusOffset,
+      data.percent * 3.6,
+      data.circleColor
+    );
 
     this.drawText(data.percent, canvas, 75, 18);
     this.drawPointText(`%`, canvas, new Point(65, 50), 14);
@@ -238,7 +262,9 @@ class Widget extends DmYY {
 
     stackCircle.setPadding(20, 0, 0, 0);
     stackCircle.addSpacer();
-    const icon = data.urlIcon ? {image: data.icon} : SFSymbol.named(data.icon);
+    const icon = data.urlIcon
+      ? { image: data.icon }
+      : SFSymbol.named(data.icon);
     const imageIcon = stackCircle.addImage(icon.image);
     imageIcon.tintColor = this.iconColor;
     imageIcon.imageSize = new Size(15, 15);
@@ -279,11 +305,11 @@ class Widget extends DmYY {
     const stackFooter = stackBody.addStack();
     stackFooter.addSpacer();
     const text = this.textFormat.defaultText;
-    text.color = new Color('#aaa');
+    text.color = new Color("#aaa");
     this.provideText(
-        `电信更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
-        stackFooter,
-        text,
+      `电信更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+      stackFooter,
+      text
     );
     stackFooter.addSpacer();
     return w;
@@ -298,7 +324,9 @@ class Widget extends DmYY {
     const stackBottom = stackBody.addStack();
     this.setCircleText(stackBottom, this.voice);
     this.updateTime.icon = await this.$request.get(
-        this.updateTime.urlIcon, 'IMG');
+      this.updateTime.urlIcon,
+      "IMG"
+    );
     this.setCircleText(stackBottom, this.updateTime);
     return w;
   };
@@ -310,30 +338,36 @@ class Widget extends DmYY {
   Run() {
     if (config.runsInApp) {
       const widgetInitConfig = {
-        cookie: 'china_telecom_cookie',
-        authToken: 'china_telecom_authToken_10000',
+        cookie: "china_telecom_cookie",
+        authToken: "china_telecom_authToken_10000",
       };
-      this.registerAction('颜色配置', async () => {
+      this.registerAction("颜色配置", async () => {
         await this.setAlertInput(
-            `${this.name}颜色配置`, '进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色', {
-              step1: '进度颜色 1',
-              step2: '进度颜色 2',
-              step3: '进度颜色 3',
-              step4: '进度颜色 4',
-              inner: '底圈颜色',
-              icon: '图标颜色',
-              percent: '比值颜色',
-              value: '值颜色',
-            });
+          `${this.name}颜色配置`,
+          "进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色",
+          {
+            step1: "进度颜色 1",
+            step2: "进度颜色 2",
+            step3: "进度颜色 3",
+            step4: "进度颜色 4",
+            inner: "底圈颜色",
+            icon: "图标颜色",
+            percent: "比值颜色",
+            value: "值颜色",
+          }
+        );
       });
-      this.registerAction('账号设置', async () => {
+      this.registerAction("账号设置", async () => {
         await this.setAlertInput(
-            `${this.name}账号`, '读取 BoxJS 缓存信息', widgetInitConfig);
+          `${this.name}账号`,
+          "读取 BoxJS 缓存信息",
+          widgetInitConfig
+        );
       });
-      this.registerAction('代理缓存', async () => {
+      this.registerAction("代理缓存", async () => {
         await this.setCacheBoxJSData(widgetInitConfig);
       });
-      this.registerAction('基础设置', this.setWidgetConfig);
+      this.registerAction("基础设置", this.setWidgetConfig);
     }
     const {
       cookie,
@@ -371,9 +405,9 @@ class Widget extends DmYY {
     const widget = new ListWidget();
     widget.setPadding(0, 0, 0, 0);
     await this.getWidgetBackgroundImage(widget);
-    if (this.widgetFamily === 'medium') {
+    if (this.widgetFamily === "medium") {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === 'large') {
+    } else if (this.widgetFamily === "large") {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
