@@ -122,8 +122,9 @@ class Widget extends DmYY {
           if (item.usedTitle.includes("剩余"))
             percent = item.usedTitle.replace("剩余", "").replace("%");
           if (item.usedTitle.includes("已用"))
-            percent =
-              100 - parseFloat(item.usedTitle.replace("已用", "").replace("%"));
+            percent = (
+              100 - parseFloat(item.usedTitle.replace("已用", "").replace("%"))
+            ).toFixed(2);
 
           if (item.type === "flow") {
             this.flow.count = item.number;
