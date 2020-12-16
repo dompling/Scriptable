@@ -288,7 +288,7 @@ class Widget extends DmYY {
     stackIcon.addSpacer();
     const stackViewIcon = stackIcon.addStack();
     stackViewIcon.size = new Size(10, 10);
-    stackViewIcon.cornerRadius = 50;
+    stackViewIcon.cornerRadius = 5;
     stackViewIcon.backgroundGradient = this.gradient(data.color);
     stackIcon.addSpacer();
 
