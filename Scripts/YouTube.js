@@ -3,19 +3,19 @@
 // icon-color: deep-gray; icon-glyph: magnet;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === 'undefined') require = importModule;
-const {DmYY, Runing} = require('./DmYY');
+if (typeof require === "undefined") require = importModule;
+const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = 'YouTube';
-    this.en = 'YouTube';
-    this.inputValue = arg ||
-        'https://m.youtube.com/channel/UCMUnInmOkrWN4gof9KlhNmQ';
+    this.name = "YouTube";
+    this.en = "YouTube";
+    this.inputValue =
+      arg || "https://m.youtube.com/channel/UCZVThl_MRppEdGUPGjXSSdg";
     this.url = `${this.baseUrl}/c/${this.inputValue}`;
-    if (this.inputValue.includes('m.youtube.com')) {
+    if (this.inputValue.includes("m.youtube.com")) {
       this.url = this.inputValue;
     }
     this.Run();
@@ -24,7 +24,7 @@ class Widget extends DmYY {
   useBoxJS = false;
   ytInitialData = {};
   videos = [];
-  baseUrl = 'https://m.youtube.com';
+  baseUrl = "https://m.youtube.com";
   url;
 
   init = async () => {
@@ -41,45 +41,43 @@ class Widget extends DmYY {
     const webView = new WebView();
     await webView.loadURL(url);
     const javascript = `completion(ytInitialData||window['ytInitialData']);`;
-    this.ytInitialData = await webView.evaluateJavaScript(javascript, true).
-        then(
-            async (e) => {
-              return typeof e === 'string' ? JSON.parse(e) : e;
-            });
+    this.ytInitialData = await webView
+      .evaluateJavaScript(javascript, true)
+      .then(async (e) => {
+        return typeof e === "string" ? JSON.parse(e) : e;
+      });
     this.getCell();
   };
 
   getCell() {
-    const {contents} = this.ytInitialData;
+    const { contents } = this.ytInitialData;
     let videos = [];
-    Object.keys(contents).forEach(key => {
+    Object.keys(contents).forEach((key) => {
       const result = contents[key];
-      const homeContent = result.tabs[0].tabRenderer.content.sectionListRenderer.contents;
+      const homeContent =
+        result.tabs[0].tabRenderer.content.sectionListRenderer.contents;
       homeContent.forEach((item) => {
         let contents;
         if (item.itemSectionRenderer) {
           contents = item.itemSectionRenderer.contents;
-          contents.forEach(video => {
+          contents.forEach((video) => {
             if (!video.shelfRenderer) return;
             const cateVideo = video.shelfRenderer.content;
             if (cateVideo) {
               const data = [];
-              Object.keys(cateVideo).forEach(cv => {
-                cateVideo[cv].items.forEach(cell => {
+              Object.keys(cateVideo).forEach((cv) => {
+                cateVideo[cv].items.forEach((cell) => {
                   const cellVideo = this.getCellVideo(cell);
                   if (cellVideo) data.push(cellVideo);
                 });
-                videos = [
-                  ...videos,
-                  ...data,
-                ];
+                videos = [...videos, ...data];
               });
             }
           });
         } else if (item.shelfRenderer) {
           contents = item.shelfRenderer;
           contents = contents.content.verticalListRenderer.items;
-          contents.forEach(compactVideoRenderer => {
+          contents.forEach((compactVideoRenderer) => {
             const data = this.getCellVideo2(compactVideoRenderer);
             if (data) videos.push(data);
           });
@@ -91,12 +89,14 @@ class Widget extends DmYY {
 
   getCellVideo(data) {
     try {
-      const {gridVideoRenderer} = data;
+      const { gridVideoRenderer } = data;
       return {
         thumb: gridVideoRenderer.thumbnail.thumbnails[0].url,
         title: gridVideoRenderer.title.simpleText,
         view: gridVideoRenderer.viewCountText.simpleText,
-        url: gridVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
+        url:
+          gridVideoRenderer.navigationEndpoint.commandMetadata
+            .webCommandMetadata.url,
       };
     } catch (e) {
       console.log(e);
@@ -105,12 +105,14 @@ class Widget extends DmYY {
 
   getCellVideo2(data) {
     try {
-      const {compactVideoRenderer} = data;
+      const { compactVideoRenderer } = data;
       return {
         thumb: compactVideoRenderer.thumbnail.thumbnails[0].url,
         title: compactVideoRenderer.title.runs[0].text,
         view: compactVideoRenderer.viewCountText.runs[0].text,
-        url: compactVideoRenderer.navigationEndpoint.commandMetadata.webCommandMetadata.url,
+        url:
+          compactVideoRenderer.navigationEndpoint.commandMetadata
+            .webCommandMetadata.url,
       };
     } catch (e) {
       console.log(e);
@@ -120,10 +122,13 @@ class Widget extends DmYY {
   setAvatar = async (stack) => {
     stack.size = new Size(50, 50);
     stack.cornerRadius = 5;
-    const {metadata: {channelMetadataRenderer}} = this.ytInitialData;
+    const {
+      metadata: { channelMetadataRenderer },
+    } = this.ytInitialData;
     const avatar = channelMetadataRenderer.avatar.thumbnails.find(
-        item => item.url);
-    const imgLogo = await this.$request.get(avatar, 'IMG');
+      (item) => item.url
+    );
+    const imgLogo = await this.$request.get(avatar, "IMG");
     const imgLogoItem = stack.addImage(imgLogo);
     imgLogoItem.imageSize = new Size(50, 50);
     return stack;
@@ -132,21 +137,23 @@ class Widget extends DmYY {
   setTitleStack = (stack) => {
     const textFormatNumber = this.textFormat.title;
     textFormatNumber.color = this.backGroundColor;
-    const {metadata: {channelMetadataRenderer}} = this.ytInitialData;
+    const {
+      metadata: { channelMetadataRenderer },
+    } = this.ytInitialData;
     const title = channelMetadataRenderer.title;
     textFormatNumber.size =
-        title.length > 20 || this.widgetFamily === 'small' ? 16 : 20;
+      title.length > 20 || this.widgetFamily === "small" ? 16 : 20;
     const titleItem = this.provideText(title, stack, textFormatNumber);
     titleItem.lineLimit = 1;
   };
 
   setPathStack = (stack) => {
     const textFormatNumber = this.textFormat.defaultText;
-    textFormatNumber.color = new Color('#2481cc');
+    textFormatNumber.color = new Color("#2481cc");
     textFormatNumber.size = 12;
-    const {header} = this.ytInitialData;
-    let simpleText = '';
-    Object.keys(header).forEach(key => {
+    const { header } = this.ytInitialData;
+    let simpleText = "";
+    Object.keys(header).forEach((key) => {
       const item = header[key];
       if (item.subscriberCountText && !simpleText) {
         simpleText = item.subscriberCountText.simpleText;
@@ -155,11 +162,7 @@ class Widget extends DmYY {
         simpleText = item.subscriberCountText.runs[0].text;
       }
     });
-    const titleItem = this.provideText(
-        simpleText,
-        stack,
-        textFormatNumber,
-    );
+    const titleItem = this.provideText(simpleText, stack, textFormatNumber);
     titleItem.lineLimit = 1;
   };
 
@@ -174,14 +177,14 @@ class Widget extends DmYY {
       stackVideo.backgroundColor = this.widgetColor;
       stackVideo.centerAlignContent();
       stackVideo.layoutVertically();
-      const img = await this.$request.get(video.thumb, 'IMG');
-      stackVideo.backgroundImage = await this.shadowImage(img, '#000', 0.3);
-      const title = {...this.textFormat.defaultText};
+      const img = await this.$request.get(video.thumb, "IMG");
+      stackVideo.backgroundImage = await this.shadowImage(img, "#000", 0.3);
+      const title = { ...this.textFormat.defaultText };
       title.size = 8;
-      title.color = new Color('#fff');
+      title.color = new Color("#fff");
       this.provideText(video.title, stackVideo, title);
       stackVideo.addSpacer();
-      title.color = new Color('#fff', 0.7);
+      title.color = new Color("#fff", 0.7);
       this.provideText(video.view, stackVideo, title);
       stackVideo.size = new Size(87, 56);
       stackVideo.cornerRadius = 4;
@@ -231,7 +234,7 @@ class Widget extends DmYY {
 
   Run() {
     if (config.runsInApp) {
-      this.registerAction('基础设置', this.setWidgetConfig);
+      this.registerAction("基础设置", this.setWidgetConfig);
     }
   }
 
@@ -243,9 +246,9 @@ class Widget extends DmYY {
     await this.init();
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
-    if (this.widgetFamily === 'medium') {
+    if (this.widgetFamily === "medium") {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === 'large') {
+    } else if (this.widgetFamily === "large") {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
