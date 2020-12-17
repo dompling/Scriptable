@@ -47,7 +47,7 @@ BoxJS 数据，是根据 圈 X，Loon , Surge 做的代理功能，教程如下�
 | [机场订阅流量](Scripts/VPNSubscription.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 | [v2board机场模板](Scripts/VPNV2Bord.js)            | 手动新增账号 |  parameter：下标                                                                                          |
 | [毒汤日历](Scripts/PoisonCalendar.js)            | BoxJS数据 |[cookie 获取方式](https://raw.githubusercontent.com/dompling/Script/master/DJT/djt.cookie.js)  |
-| [疫情日报](https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/COVID-19.js)            | 地区拼音，cd|xian |一般城市直接首字母，可能不显示的时候试试全部拼音  |
+| [疫情日报](https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/COVID-19.js)            | 地区拼音，cd|xian 般城市直接首字母，可能不显示的时候试试全部拼音  |
 | [今日油价](https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/TodayOilPrice.js)            | BoxJS数据 | 自行申请腾讯地图的 token，以显示附近加油站 |
 
 # 赞赏码
