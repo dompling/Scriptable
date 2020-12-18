@@ -143,14 +143,7 @@ class Widget extends DmYY {
       detail.items.forEach((data) => {
         if (data.offerType !== 19) {
           data.items.forEach((item) => {
-            if (
-              (item.nameType === "331101" ||
-                item.nameType === "331100" ||
-                item.nameType === "131100" ||
-                item.nameType === "331200" ||
-                item.nameType === "332100") &&
-              item.unitTypeId === "3"
-            ) {
+            if (item.unitTypeId === "3") {
               if (item.usageAmount !== "0" && item.balanceAmount !== "0") {
                 this.flow.percent = Math.floor(
                   (item.balanceAmount / (item.ratableAmount || 1)) * 100
