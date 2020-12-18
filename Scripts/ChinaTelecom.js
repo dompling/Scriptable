@@ -144,16 +144,14 @@ class Widget extends DmYY {
         if (data.offerType !== 19) {
           data.items.forEach((item) => {
             if (
-              item.nameType === "331101" ||
-              item.nameType === "331100" ||
-              item.nameType === "131100" ||
-              item.nameType === "331200"
+              (item.nameType === "331101" ||
+                item.nameType === "331100" ||
+                item.nameType === "131100" ||
+                item.nameType === "331200" ||
+                item.nameType === "332100") &&
+              item.unitTypeId === "3"
             ) {
-              if (
-                this.flow.max &&
-                this.flow.max < parseInt(item.ratableAmount) &&
-                item.usageAmount !== "0"
-              ) {
+              if (item.usageAmount !== "0" && item.balanceAmount !== "0") {
                 this.flow.percent = Math.floor(
                   (item.balanceAmount / (item.ratableAmount || 1)) * 100
                 );
@@ -162,13 +160,11 @@ class Widget extends DmYY {
                 this.flow.unit = flow.unit;
                 this.flow.max = item.ratableAmount;
               }
-              if (!this.flow.max) this.flow.max = parseInt(item.ratableAmount);
             }
           });
         }
       });
     }
-    console.log(balance);
     if (balance.result === 0) {
       // 余额
       this.phoneBill.count = parseFloat(
