@@ -1,0 +1,16 @@
+{
+  "name": "scriptable-types",
+  "version": "1.0.0",
+  "author": "2Ya",
+  "description": "",
+  "main": "index.js",
+  "keywords": [
+    "scriptable",
+    "ios",
+    "widget"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "@types/scriptable-ios": "^1.6.1"
+  }
+}

@@ -271,14 +271,57 @@ class Widget extends DmYY {
     return header;
   };
 
+  jdWebView = async () => {
+    const webView = new WebView();
+    const url = 'https://mcr.jd.com/credit_home/pages/index.html?btPageType=BT&channelName=024';
+    await webView.loadURL(url);
+    // 循环，获取cookie
+    const tm = new Timer();
+    tm.timeInterval = 1000;
+    tm.repeats = true;
+    tm.schedule(async () => {
+      const req = new Request(
+          'https://ms.jr.jd.com/gw/generic/bt/h5/m/firstScreenNew');
+      req.method = 'POST';
+      req.body = 'reqData={"clientType":"ios","clientVersion":"13.2.3","deviceId":"","environment":"3"}';
+      await req.loadJSON();
+      const cookies = req.response.cookies;
+      const account = {username: '', cookie: ''};
+      const cookie = [];
+      cookies.forEach(item => {
+        const value = `${item.name}=${item.value}`;
+        if (item.name === 'pt_key') cookie.push(value);
+        if (item.name === 'pt_pin') {
+          account.username = item.value;
+          cookie.push(value);
+        }
+      });
+      account.cookie = cookie.join('; ');
+      console.log(account);
+
+      if (account.cookie) {
+        this.settings = {...this.settings, ...account};
+        this.saveSettings(false);
+        console.log(`${this.name}: cookie获取成功，请关闭窗口！`);
+        this.notify(this.name, 'cookie获取成功，请关闭窗口！');
+        tm.invalidate();
+      }
+    });
+    await webView.present(false);
+    tm.invalidate();
+  };
+
   JDRun = (filename, args) => {
     if (config.runsInApp) {
       this.registerAction('基础设置', this.setWidgetConfig);
       this.registerAction('账号设置', async () => {
-        await this.setAlertInput('账号设置', '京东账号 Ck', {
-          username: '昵称',
-          cookie: 'Cookie',
-        });
+        const index = await this.generateAlert('设置账号信息', ['网站登录', '手动输入']);
+        if (index === 0) {
+          await this.jdWebView();
+        } else {
+          await this.setAlertInput(
+              '账号设置', '京东账号 Ck', {username: '昵称', cookie: 'Cookie'});
+        }
       });
       this.registerAction('代理缓存', this.actionSettings);
     }
