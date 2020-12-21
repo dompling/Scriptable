@@ -85,20 +85,16 @@ class Widget extends DmYY {
 
   options = {
     headers: {
-      authToken: "",
-      type: "alipayMiniApp",
-      "User-Agent": "TYUserCenter/2.8 (iPhone; iOS 14.0; Scale/3.00)",
+      // type: "alipayMiniApp",
+      // "User-Agent": "TYUserCenter/2.8 (iPhone; iOS 14.0; Scale/3.00)",
     },
-    body: "t=tysuit",
+    // body: "t=tysuit",
     method: "POST",
   };
 
   fetchUri = {
     detail: "https://e.189.cn/store/user/package_detail.do",
     balance: "https://e.189.cn/store/user/balance_new.do",
-    bill: `https://e.189.cn/store/user/bill.do?year=${this.date.getFullYear()}&month=${this.format(
-      this.date.getMonth() + 1
-    )}&t=tysuit`,
   };
 
   init = async () => {
@@ -126,13 +122,12 @@ class Widget extends DmYY {
       url: this.fetchUri.detail,
       ...this.options,
     });
+    console.log(detail);
     const balance = await this.http({
       url: this.fetchUri.balance,
       ...this.options,
     });
-    const bill = await this.$request.get(this.fetchUri.bill, {
-      headers: { Cookie: this.cookie },
-    });
+
     if (detail.result === 0) {
       // 套餐分钟数
       this.voice.percent = Math.floor(
@@ -164,13 +159,7 @@ class Widget extends DmYY {
         (parseInt(balance.totalBalanceAvailable) / 100).toFixed(2)
       );
     }
-    if (bill.serviceResultCode === "0") {
-      this.phoneBill.percent = Math.floor(
-        (this.phoneBill.count /
-          (bill.items[0].sumCharge / 100 + this.phoneBill.count)) *
-          100
-      );
-    }
+    this.phoneBill.percent = Math.floor((this.phoneBill.count / 100) * 100);
   };
 
   makeCanvas() {
@@ -324,12 +313,25 @@ class Widget extends DmYY {
     return await this.renderMedium(w);
   };
 
+  renderWebView = async () => {
+    const webView = new WebView();
+    await webView.loadURL("https://e.189.cn/user/index.do");
+    await webView.present(false);
+    const request = new Request(this.fetchUri.detail);
+    request.method = "POST";
+    const response = await request.loadJSON();
+    const cookies = request.response.cookies;
+    let cookie = [];
+    cookie = cookies.map((item) => `${item.name}=${item.value}`);
+    cookie = cookie.join("; ");
+    this.settings.cookie = cookie;
+    this.saveSettings();
+    console.log(response);
+  };
+
   Run() {
     if (config.runsInApp) {
-      const widgetInitConfig = {
-        cookie: "china_telecom_cookie",
-        authToken: "china_telecom_authToken_10000",
-      };
+      const widgetInitConfig = { cookie: "china_telecom_cookie" };
       this.registerAction("颜色配置", async () => {
         await this.setAlertInput(
           `${this.name}颜色配置`,
@@ -347,11 +349,12 @@ class Widget extends DmYY {
         );
       });
       this.registerAction("账号设置", async () => {
-        await this.setAlertInput(
-          `${this.name}账号`,
-          "读取 BoxJS 缓存信息",
-          widgetInitConfig
-        );
+        const index = await this.generateAlert("设置账号信息", [
+          "取消",
+          "网站登录",
+        ]);
+        if (index === 0) return;
+        await this.renderWebView();
       });
       this.registerAction("代理缓存", async () => {
         await this.setCacheBoxJSData(widgetInitConfig);
@@ -359,8 +362,6 @@ class Widget extends DmYY {
       this.registerAction("基础设置", this.setWidgetConfig);
     }
     const {
-      cookie,
-      authToken,
       step1,
       step2,
       step3,
@@ -369,6 +370,8 @@ class Widget extends DmYY {
       icon,
       percent,
       value,
+      // authToken,
+      cookie,
     } = this.settings;
     this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
     this.textColor1 = value ? new Color(value) : this.textColor1;
@@ -379,10 +382,10 @@ class Widget extends DmYY {
     this.iconColor = icon ? new Color(icon) : this.iconColor;
     this.percentColor = percent ? new Color(percent) : this.percentColor;
 
-    this.authToken = authToken;
     this.cookie = cookie;
-
-    this.options.headers.authToken = this.authToken;
+    if (this.cookie) this.options.headers.cookie = this.cookie;
+    // this.authToken = authToken;
+    // if (this.authToken) this.options.headers.authToken = this.authToken;
   }
 
   /**
