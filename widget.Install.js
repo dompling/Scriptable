@@ -15,13 +15,13 @@ const saveFileName = (fileName) => {
 const write = (fileName, content) => {
   let file = saveFileName(fileName);
   const filePath = Files.joinPath(RootPath, file);
-  Files.write(filePath, content);
+  Files.writeString(filePath, content);
   return true;
 };
 
 const saveFile = async ({ moduleName, url }) => {
-  const req = new Request(url);
-  const content = await req.load();
+  const req = new Request(encodeURI(url));
+  const content = await req.loadString();
   write(`${moduleName}`, content);
   return true;
 };
