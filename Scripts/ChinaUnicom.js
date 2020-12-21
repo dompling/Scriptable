@@ -370,10 +370,12 @@ class Widget extends DmYY {
       } = this.settings;
       this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
       this.textColor1 = value ? new Color(value) : this.textColor1;
-      this.circleColor1 = step1 ? new Color(step1) : this.circleColor1;
-      this.circleColor2 = step2 ? new Color(step2) : this.circleColor2;
-      this.circleColor3 = step3 ? new Color(step3) : this.circleColor3;
-      this.circleColor4 = step4 ? new Color(step4) : this.circleColor4;
+      
+      this.phoneBill.circleColor = step1 ? new Color(step1) : this.circleColor1;
+      this.flow.circleColor = step2 ? new Color(step2) : this.circleColor2;
+      this.voice.circleColor = step3 ? new Color(step3) : this.circleColor3;
+      this.updateTime.circleColor = step4 ? new Color(step4) : this.circleColor4;
+
       this.iconColor = icon ? new Color(icon) : this.iconColor;
       this.percentColor = percent ? new Color(percent) : this.percentColor;
       this.loginheader = loginheader ? JSON.parse(loginheader) : {};
