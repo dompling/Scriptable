@@ -324,6 +324,8 @@ class Widget extends DmYY {
     const response = await request.loadJSON();
     console.log(response);
     if (response.result === -10001) {
+      const index = await this.generateAlert("未获取到用户信息", ["取消","重试"]);
+      if (index === 0) return;
       await this.renderWebView();
     } else {
       const cookies = request.response.cookies;
