@@ -315,18 +315,24 @@ class Widget extends DmYY {
 
   renderWebView = async () => {
     const webView = new WebView();
-    await webView.loadURL("https://e.189.cn/user/index.do");
+    const url = "https://e.189.cn/index.do";
+    await webView.loadURL(url);
     await webView.present(false);
+
     const request = new Request(this.fetchUri.detail);
     request.method = "POST";
     const response = await request.loadJSON();
-    const cookies = request.response.cookies;
-    let cookie = [];
-    cookie = cookies.map((item) => `${item.name}=${item.value}`);
-    cookie = cookie.join("; ");
-    this.settings.cookie = cookie;
-    this.saveSettings();
     console.log(response);
+    if (response.result === -10001) {
+      await this.renderWebView();
+    } else {
+      const cookies = request.response.cookies;
+      let cookie = [];
+      cookie = cookies.map((item) => `${item.name}=${item.value}`);
+      cookie = cookie.join("; ");
+      this.settings.cookie = cookie;
+      this.saveSettings();
+    }
   };
 
   Run() {
