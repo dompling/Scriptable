@@ -329,7 +329,6 @@ module.exports = template;`;
       this.saveSettings(false);
       console.log(`${this.name}: cookie获取成功，请关闭窗口！`);
       this.notify(this.name, "cookie获取成功，请关闭窗口！");
-      tm.invalidate();
     }
   };
 
