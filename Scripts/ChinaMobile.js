@@ -201,6 +201,7 @@ class Widget extends DmYY {
             value: flowRes.allRemainRes,
             code: flowRes.remUnit,
           });
+
           this.flow.percent = Math.floor(
             (remain.value / (total.value || 1)) * 100
           );
@@ -257,6 +258,7 @@ class Widget extends DmYY {
           Math.floor(parseFloat(data.value) * item.value * 100) / 100;
       }
     });
+    data.value = parseInt(data.value);
     return data;
   }
 
