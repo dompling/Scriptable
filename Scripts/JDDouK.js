@@ -211,11 +211,21 @@ module.exports = template;`;
 
   getJingBeanBalanceDetail = async (page) => {
     try {
-      const options = {
+          const options = {
         url: `https://bean.m.jd.com/beanDetail/detail.json`,
         body: `page=${page}`,
+          headers: {
+        Accept: "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        Connection: "keep-alive",
+        Cookie: this.JDCookie.cookie,
+        Referer: "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent":
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
+      },
       };
-      console.log(options);
       return await this.$request.post(options.url, options);
     } catch (e) {
       console.log(e);
