@@ -45,7 +45,8 @@ class DmYY {
         request.headers = { ...this.defaultHeaders, ...options.headers };
       } else {
         request = this.getRequest(options.url);
-        return await request.loadImage();
+        const response = await request.loadImage();
+        return response ? response : SFSymbol.named("photo").image;
       }
       if (type === "JSON") {
         return await request.loadJSON();
