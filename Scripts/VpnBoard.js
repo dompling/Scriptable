@@ -180,6 +180,7 @@ module.exports = template;`;
     request.body = table.body;
     request.method = 'POST';
     const data = await request.loadString();
+    console.log(data);
     try {
       if (
           JSON.parse(data).msg.match(
@@ -188,6 +189,8 @@ module.exports = template;`;
       ) {
         this.notify(this.name, '邮箱或者密码错误');
         console.log('登陆失败');
+        this.cookie = request.response.cookies(
+            item => `${item.name}=${item.value}`).join('; ');
       } else {
         console.log('登陆成功');
       }
@@ -202,6 +205,9 @@ module.exports = template;`;
         url.indexOf('auth/login') !== -1 ? 'user/checkin' : 'user/_checkin.php';
     const checkinreqest = {
       url: url.replace(/(auth|user)\/login(.php)*/g, '') + checkinPath,
+      headers: {
+        cookie: this.cookie,
+      },
     };
     const data = await this.$request.post(checkinreqest, 'STRING');
     if (data.match(/\"msg\"\:/)) {
@@ -213,16 +219,20 @@ module.exports = template;`;
   }
 
   async dataResults() {
-    const url = this.account.url;
+    let url = this.account.url;
+    const userPath = url.indexOf('auth/login') !== -1
+        ? 'user'
+        : 'user/index.php';
+    url = url.replace(/(auth|user)\/login(.php)*/g, '') + userPath;
     const webView = new WebView();
     await webView.loadURL(url);
     const js = `
 var response = {todayUsed: "0KB", usedData: "0KB", restData: "0KB"};
 if($('.progressbar').length){
-  response.todayUsed = $('.progressbar .label-flex:eq(0) .card-tag').text();;
-  response.usedData =  $('.progressbar .label-flex:eq(1) .card-tag').text();;
-  response.restData =  $('.progressbar .label-flex:eq(2) .card-tag').text();;
-} else if($('.card.card-statistic-2').length){
+  response.todayUsed = $('.progressbar .label-flex:eq(0) .card-tag').text();
+  response.usedData =  $('.progressbar .label-flex:eq(1) .card-tag').text();
+  response.restData =  $('.progressbar .label-flex:eq(2) .card-tag').text();
+} else if(document.body.innerHTML.includes('trafficDountChat')){
   response.todayUsed =  $('.card.card-statistic-2:eq(1) .breadcrumb-item').text().split(' ')[1];
   response.restData =  $('.card.card-statistic-2:eq(1) .card-body').text().trim();
   response.usedData = document.body.innerHTML.match(/trafficDountChat\\s*\\(([^\\)]+)/)[1].match(/\\d[^\\']+/g)[0];
