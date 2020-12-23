@@ -135,23 +135,34 @@ class Widget extends DmYY {
       );
       this.voice.count = detail.voiceBalance;
       console.log(detail.items);
-      detail.items.forEach((data) => {
-        if (data.offerType !== 19) {
-          data.items.forEach((item) => {
-            if (item.unitTypeId === "3") {
-              if (item.usageAmount !== "0" && item.balanceAmount !== "0") {
-                this.flow.percent = Math.floor(
-                  (item.balanceAmount / (item.ratableAmount || 1)) * 100
-                );
-                const flow = this.formatFlow(item.balanceAmount);
-                this.flow.count = flow.count;
-                this.flow.unit = flow.unit;
-                this.flow.max = item.ratableAmount;
+      if (!detail.count && !detail.total) {
+        detail.items.forEach((data) => {
+          if (data.offerType !== 19) {
+            data.items.forEach((item) => {
+              if (item.unitTypeId === "3") {
+                if (item.usageAmount !== "0" && item.balanceAmount !== "0") {
+                  this.flow.percent = Math.floor(
+                    (item.balanceAmount / (item.ratableAmount || 1)) * 100
+                  );
+                  const flow = this.formatFlow(item.balanceAmount);
+                  this.flow.count = flow.count;
+                  this.flow.unit = flow.unit;
+                  this.flow.max = item.ratableAmount;
+                }
               }
-            }
-          });
-        }
-      });
+            });
+          }
+        });
+      } else {
+        this.flow.percent = Math.floor(
+          (detail.balance / (detail.total || 1)) * 100
+        );
+        const flow = this.formatFlow(detail.balance);
+        this.flow.count = flow.count;
+        this.flow.unit = flow.unit;
+        this.flow.max = detail.total;
+      }
+
     }
     if (balance.result === 0) {
       // 余额
