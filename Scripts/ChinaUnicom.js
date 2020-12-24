@@ -3,30 +3,30 @@
 // icon-color: pink; icon-glyph: paper-plane;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === "undefined") require = importModule;
-const { DmYY, Runing } = require("./DmYY");
+if (typeof require === 'undefined') require = importModule;
+const {DmYY, Runing} = require('./DmYY');
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = "中国联通";
-    this.en = "ChinaUnicom";
+    this.name = '中国联通';
+    this.en = 'ChinaUnicom';
     this.Run();
   }
 
   loginheader = {};
 
-  fgCircleColor = Color.dynamic(new Color("#dddef3"), new Color("#fff"));
+  fgCircleColor = Color.dynamic(new Color('#dddef3'), new Color('#fff'));
   percentColor = this.widgetColor;
-  textColor1 = Color.dynamic(new Color("#333"), new Color("#fff"));
+  textColor1 = Color.dynamic(new Color('#333'), new Color('#fff'));
   textColor2 = this.widgetColor;
 
-  circleColor1 = new Color("#ffbb73");
-  circleColor2 = new Color("#ff0029");
-  circleColor3 = new Color("#00b800");
-  circleColor4 = new Color("#8376f9");
-  iconColor = new Color("#827af1");
+  circleColor1 = new Color('#ffbb73');
+  circleColor2 = new Color('#ff0029');
+  circleColor3 = new Color('#00b800');
+  circleColor4 = new Color('#8376f9');
+  iconColor = new Color('#827af1');
 
   format = (str) => {
     return parseInt(str) >= 10 ? str : `0${str}`;
@@ -44,37 +44,37 @@ class Widget extends DmYY {
   // percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
   phoneBill = {
     percent: 0,
-    label: "话费剩余",
+    label: '话费剩余',
     count: 0,
-    unit: "元",
-    icon: "yensign.circle",
+    unit: '元',
+    icon: 'yensign.circle',
     circleColor: this.circleColor1,
   };
 
   flow = {
     percent: 0,
-    label: "已用流量",
+    label: '已用流量',
     count: 0,
-    unit: "M",
-    icon: "waveform.path.badge.minus",
+    unit: 'M',
+    icon: 'waveform.path.badge.minus',
     circleColor: this.circleColor2,
   };
 
   voice = {
     percent: 0,
-    label: "语音剩余",
+    label: '语音剩余',
     count: 0,
-    unit: "分钟",
-    icon: "mic",
+    unit: '分钟',
+    icon: 'mic',
     circleColor: this.circleColor3,
   };
 
   updateTime = {
     percent: 0,
-    label: "联通更新",
+    label: '联通更新',
     count: `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
-    unit: "",
-    urlIcon: "https://raw.githubusercontent.com/Orz-3/mini/master/10010.png",
+    unit: '',
+    urlIcon: 'https://raw.githubusercontent.com/Orz-3/mini/master/10010.png',
     circleColor: this.circleColor4,
   };
 
@@ -95,15 +95,6 @@ class Widget extends DmYY {
     }
   };
 
-  // MB 和 GB 自动转换
-  formatFlow(number) {
-    const n = number / 1024;
-    if (n < 1024) {
-      return { count: n.toFixed(2), unit: "M" };
-    }
-    return { count: (n / 1024).toFixed(2), unit: "G" };
-  }
-
   async getinfo() {
     try {
       const telNum = this.gettel();
@@ -114,32 +105,32 @@ class Widget extends DmYY {
         },
       };
       const signinfo = await this.$request.get(url);
-      if (signinfo.code === "Y") {
-        console.log("✅获取信息成功");
+      if (signinfo.code === 'Y') {
+        console.log('✅获取信息成功');
         console.log(signinfo.data);
         signinfo.data.dataList.forEach((item) => {
           let percent = 0;
-          if (item.usedTitle.includes("剩余"))
-            percent = item.usedTitle.replace("剩余", "").replace("%");
-          if (item.usedTitle.includes("已用"))
+          if (item.usedTitle.includes('剩余'))
+            percent = item.usedTitle.replace('剩余', '').replace('%');
+          if (item.usedTitle.includes('已用'))
             percent = (
-              100 - parseFloat(item.usedTitle.replace("已用", "").replace("%"))
+                100 - parseFloat(item.usedTitle.replace('已用', '').replace('%'))
             ).toFixed(2);
 
-          if (item.type === "flow") {
+          if (item.type === 'flow') {
             this.flow.count = item.number;
             this.flow.unit = item.unit;
             this.flow.percent = percent;
             this.flow.label = item.remainTitle;
           }
-          if (item.type === "fee") {
+          if (item.type === 'fee') {
             this.phoneBill.count = item.number;
             this.phoneBill.unit = item.unit;
             this.phoneBill.percent =
-              parseFloat((item.number / this.maxFee).toFixed(2)) * 100;
+                Math.floor((item.number / this.maxFee).toFixed(2) * 100);
             this.phoneBill.label = item.remainTitle;
           }
-          if (item.type === "voice") {
+          if (item.type === 'voice') {
             this.voice.count = item.number;
             this.voice.unit = item.unit;
             this.voice.percent = percent;
@@ -147,19 +138,19 @@ class Widget extends DmYY {
           }
         });
       } else {
-        throw "cookie错误";
+        throw 'cookie错误';
       }
     } catch (e) {
-      console.log("❌获取信息失败：" + e);
+      console.log('❌获取信息失败：' + e);
     }
   }
 
   gettel() {
     const reqCookie = this.loginheader.Cookie;
-    let tel = "";
-    if (tel === "" && reqCookie.indexOf(`u_account=`) >= 0)
+    let tel = '';
+    if (tel === '' && reqCookie.indexOf(`u_account=`) >= 0)
       tel = reqCookie.match(/u_account=(.*?);/)[1];
-    if (tel === "" && reqCookie.indexOf(`c_mobile=`) >= 0) {
+    if (tel === '' && reqCookie.indexOf(`c_mobile=`) >= 0) {
       tel = reqCookie.match(/c_mobile=(.*?);/)[1];
     }
     return tel;
@@ -187,13 +178,13 @@ class Widget extends DmYY {
     canvas.setFillColor(color);
     for (let t = 0; t < degree; t++) {
       const rect_x =
-        ctr.x +
-        (this.canvRadius - radiusOffset) * this.sinDeg(t) -
-        this.canvWidth / 2;
+          ctr.x +
+          (this.canvRadius - radiusOffset) * this.sinDeg(t) -
+          this.canvWidth / 2;
       const rect_y =
-        ctr.y -
-        (this.canvRadius - radiusOffset) * this.cosDeg(t) -
-        this.canvWidth / 2;
+          ctr.y -
+          (this.canvRadius - radiusOffset) * this.cosDeg(t) -
+          this.canvWidth / 2;
       const rect_r = new Rect(rect_x, rect_y, this.canvWidth, this.canvWidth);
       canvas.fillEllipse(rect_r);
     }
@@ -201,10 +192,10 @@ class Widget extends DmYY {
 
   drawText(txt, canvas, txtOffset, fontSize) {
     const txtRect = new Rect(
-      this.canvTextSize / 2 - 20,
-      txtOffset - this.canvTextSize / 2,
-      this.canvSize,
-      this.canvTextSize
+        this.canvTextSize / 2 - 20,
+        txtOffset - this.canvTextSize / 2,
+        this.canvSize,
+        this.canvTextSize,
     );
     canvas.setTextColor(this.percentColor);
     canvas.setFont(Font.boldSystemFont(fontSize));
@@ -231,10 +222,10 @@ class Widget extends DmYY {
     const canvas = this.makeCanvas();
     stackCircle.size = new Size(70, 70);
     this.makeCircle(
-      canvas,
-      this.dayRadiusOffset,
-      data.percent * 3.6,
-      data.circleColor
+        canvas,
+        this.dayRadiusOffset,
+        data.percent * 3.6,
+        data.circleColor,
     );
 
     this.drawText(data.percent, canvas, 75, 18);
@@ -244,8 +235,8 @@ class Widget extends DmYY {
     stackCircle.setPadding(20, 0, 0, 0);
     stackCircle.addSpacer();
     const icon = data.urlIcon
-      ? { image: data.icon }
-      : SFSymbol.named(data.icon);
+        ? {image: data.icon}
+        : SFSymbol.named(data.icon);
     const imageIcon = stackCircle.addImage(icon.image);
     imageIcon.tintColor = this.iconColor;
     imageIcon.imageSize = new Size(15, 15);
@@ -286,11 +277,11 @@ class Widget extends DmYY {
     const stackFooter = stackBody.addStack();
     stackFooter.addSpacer();
     const text = this.textFormat.defaultText;
-    text.color = new Color("#aaa");
+    text.color = new Color('#aaa');
     this.provideText(
-      `联通更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
-      stackFooter,
-      text
+        `联通更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+        stackFooter,
+        text,
     );
     stackFooter.addSpacer();
     return w;
@@ -305,8 +296,8 @@ class Widget extends DmYY {
     const stackBottom = stackBody.addStack();
     this.setCircleText(stackBottom, this.voice);
     this.updateTime.icon = await this.$request.get(
-      this.updateTime.urlIcon,
-      "IMG"
+        this.updateTime.urlIcon,
+        'IMG',
     );
     this.setCircleText(stackBottom, this.updateTime);
     return w;
@@ -318,41 +309,41 @@ class Widget extends DmYY {
 
   Run() {
     if (config.runsInApp) {
-      this.registerAction("费用进度", async () => {
-        await this.setAlertInput(`${this.name}`, "预计当月费用使用值", {
-          maxFee: "默认 100 元",
+      this.registerAction('费用进度', async () => {
+        await this.setAlertInput(`${this.name}`, '预计当月费用使用值', {
+          maxFee: '默认 100 元',
         });
       });
       const widgetInitConfig = {
-        loginheader: "chavy_tokenheader_10010",
+        loginheader: 'chavy_tokenheader_10010',
       };
-      this.registerAction("颜色配置", async () => {
+      this.registerAction('颜色配置', async () => {
         await this.setAlertInput(
-          `${this.name}颜色配置`,
-          "进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色",
-          {
-            step1: "进度颜色 1",
-            step2: "进度颜色 2",
-            step3: "进度颜色 3",
-            step4: "进度颜色 4",
-            inner: "底圈颜色",
-            icon: "图标颜色",
-            percent: "比值颜色",
-            value: "值颜色",
-          }
+            `${this.name}颜色配置`,
+            '进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色',
+            {
+              step1: '进度颜色 1',
+              step2: '进度颜色 2',
+              step3: '进度颜色 3',
+              step4: '进度颜色 4',
+              inner: '底圈颜色',
+              icon: '图标颜色',
+              percent: '比值颜色',
+              value: '值颜色',
+            },
         );
       });
-      this.registerAction("账号设置", async () => {
+      this.registerAction('账号设置', async () => {
         await this.setAlertInput(
-          `${this.name}账号`,
-          "读取 BoxJS 缓存信息",
-          widgetInitConfig
+            `${this.name}账号`,
+            '读取 BoxJS 缓存信息',
+            widgetInitConfig,
         );
       });
-      this.registerAction("代理缓存", async () => {
+      this.registerAction('代理缓存', async () => {
         await this.setCacheBoxJSData(widgetInitConfig);
       });
-      this.registerAction("基础设置", this.setWidgetConfig);
+      this.registerAction('基础设置', this.setWidgetConfig);
     }
 
     try {
@@ -370,11 +361,13 @@ class Widget extends DmYY {
       } = this.settings;
       this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
       this.textColor1 = value ? new Color(value) : this.textColor1;
-      
+
       this.phoneBill.circleColor = step1 ? new Color(step1) : this.circleColor1;
       this.flow.circleColor = step2 ? new Color(step2) : this.circleColor2;
       this.voice.circleColor = step3 ? new Color(step3) : this.circleColor3;
-      this.updateTime.circleColor = step4 ? new Color(step4) : this.circleColor4;
+      this.updateTime.circleColor = step4
+          ? new Color(step4)
+          : this.circleColor4;
 
       this.iconColor = icon ? new Color(icon) : this.iconColor;
       this.percentColor = percent ? new Color(percent) : this.percentColor;
@@ -394,9 +387,9 @@ class Widget extends DmYY {
     const widget = new ListWidget();
     widget.setPadding(0, 0, 0, 0);
     await this.getWidgetBackgroundImage(widget);
-    if (this.widgetFamily === "medium") {
+    if (this.widgetFamily === 'medium') {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === "large") {
+    } else if (this.widgetFamily === 'large') {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);

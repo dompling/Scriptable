@@ -172,7 +172,6 @@ class Widget extends DmYY {
     request.body = table.body;
     request.method = 'POST';
     const data = await request.loadString();
-    console.log(data);
     try {
       if (
           JSON.parse(data).msg.match(
