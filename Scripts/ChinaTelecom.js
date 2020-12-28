@@ -166,9 +166,8 @@ class Widget extends DmYY {
     }
     if (balance.result === 0) {
       // 余额
-      this.phoneBill.count = Math.floor(
-          (parseInt(balance.totalBalanceAvailable) / 100).toFixed(2) * 100,
-      );
+      this.phoneBill.count = parseFloat(
+          parseInt(balance.totalBalanceAvailable) / 100).toFixed(2)
     }
     this.phoneBill.percent = Math.floor((this.phoneBill.count / 100) * 100);
   };
