@@ -133,7 +133,7 @@ class Widget extends DmYY {
     if (!this.orderList.length) {
       if (this.widgetFamily !== "small") {
         const bg = await this.$request.get(
-          "https://raw.githubusercontent.com/dompling/Scriptable/master/JDWuLiu/cart.png",
+          "https://gitee.com/Ya_Ya_2/Scriptable/raw/master/JDWuLiu/cart.png",
           "IMG"
         );
         const cartView = container.addStack();
