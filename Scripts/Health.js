@@ -73,8 +73,8 @@ class Widget extends DmYY {
 			const year = dateToday.getFullYear();
 			let month = dateToday.getMonth() + 1;
 			let day = dateToday.getDate();
-			month = month > 10 ? month : `0${month}`;
-			day = day > 10 ? day : `0${day}`;
+			month = month >= 10 ? month : `0${month}`;
+			day = day >= 10 ? day : `0${day}`;
 			const today = `${year}-${month}-${day}`;
 
 			data.forEach((item) => {

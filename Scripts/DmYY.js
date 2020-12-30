@@ -22,6 +22,9 @@ class DmYY {
     );
   }
 
+  BACKGROUND_NIGHT_KEY;
+  widgetColor;
+  backGroundColor;
   useBoxJS = true;
   isNight = Device.isUsingDarkAppearance();
 
@@ -42,7 +45,7 @@ class DmYY {
         request.headers = {...this.defaultHeaders, ...options.headers};
       } else {
         request = this.getRequest(options.url);
-        return await request.loadImage();
+        return await request.loadImage() || SFSymbol.named('photo').image;
       }
       if (type === 'JSON') {
         return await request.loadJSON();
@@ -53,6 +56,7 @@ class DmYY {
       return await request.loadJSON();
     } catch (e) {
       console.log('error:' + e);
+      if (type === 'IMG') return SFSymbol.named('photo').image;
     }
   };
 
@@ -85,7 +89,7 @@ class DmYY {
   // 获取 boxJS 缓存
   getCache = async (key) => {
     try {
-      const url = `http://${this.prefix}/query/boxdata`;
+      const url = 'http://' + this.prefix + '/query/boxdata';
       const boxdata = await this.$request.get(url);
       console.log(boxdata.datas[key]);
       if (key) return boxdata.datas[key];
@@ -119,10 +123,13 @@ class DmYY {
     widget.backgroundColor = this.backGroundColor;
     if (backgroundImage) {
       const opacity = this.isNight
-          ? Number(this.settings.opacity[0])
-          : Number(this.settings.opacity[1]);
+          ? Number(this.settings.darkOpacity)
+          : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
-          backgroundImage, '#000', opacity);
+          backgroundImage,
+          '#000',
+          opacity,
+      );
       return true;
     } else {
       return false;
@@ -139,14 +146,20 @@ class DmYY {
       const direct = true;
       if (width > 1000) {
         const options = ['取消', '打开图像处理'];
-        const message = `
-				您的图片像素为${width} x ${height}\n
-				请将图片${direct ? '宽度' : '高度'}调整到 1000 以下\n
-				${!direct ? '宽度' : '高度'} 自动适应
-				`;
+        const message =
+            '您的图片像素为' +
+            width +
+            ' x ' +
+            height +
+            '\n' +
+            '请将图片' +
+            (direct ? '宽度' : '高度') +
+            '调整到 1000 以下\n' +
+            (!direct ? '宽度' : '高度') +
+            '自动适应';
         const index = await this.generateAlert(message, options);
-        if (index === 1) Safari.openInApp(
-            'https://www.sojson.com/image/change.html', false);
+        if (index === 1)
+          Safari.openInApp('https://www.sojson.com/image/change.html', false);
         return false;
       }
       return true;
@@ -165,7 +178,6 @@ class DmYY {
   async getWidgetScreenShot(title = null) {
     // Crop an image into the specified rect.
     function cropImage(img, rect) {
-
       let draw = new DrawContext();
       draw.size = new Size(rect.width, rect.height);
 
@@ -177,7 +189,7 @@ class DmYY {
     function phoneSizes() {
       return {
         // 12 and 12 Pro
-        '2532': {
+        2532: {
           small: 474,
           medium: 1014,
           large: 1062,
@@ -189,7 +201,7 @@ class DmYY {
         },
 
         // 11 Pro Max, XS Max
-        '2688': {
+        2688: {
           small: 507,
           medium: 1080,
           large: 1137,
@@ -201,7 +213,7 @@ class DmYY {
         },
 
         // 11, XR
-        '1792': {
+        1792: {
           small: 338,
           medium: 720,
           large: 758,
@@ -213,7 +225,7 @@ class DmYY {
         },
 
         // 11 Pro, XS, X
-        '2436': {
+        2436: {
           small: 465,
           medium: 987,
           large: 1035,
@@ -225,7 +237,7 @@ class DmYY {
         },
 
         // Plus phones
-        '2208': {
+        2208: {
           small: 471,
           medium: 1044,
           large: 1071,
@@ -237,7 +249,7 @@ class DmYY {
         },
 
         // SE2 and 6/6S/7/8
-        '1334': {
+        1334: {
           small: 296,
           medium: 642,
           large: 648,
@@ -249,7 +261,7 @@ class DmYY {
         },
 
         // SE1
-        '1136': {
+        1136: {
           small: 282,
           medium: 584,
           large: 622,
@@ -261,7 +273,7 @@ class DmYY {
         },
 
         // 11 and XR in Display Zoom mode
-        '1624': {
+        1624: {
           small: 310,
           medium: 658,
           large: 690,
@@ -273,7 +285,7 @@ class DmYY {
         },
 
         // Plus in Display Zoom mode
-        '2001': {
+        2001: {
           small: 444,
           medium: 963,
           large: 972,
@@ -286,7 +298,8 @@ class DmYY {
       };
     }
 
-    let message = title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
+    let message =
+        title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
     let exitOptions = ['我已截图', '前去截图 >'];
     let shouldExit = await this.generateAlert(message, exitOptions);
     if (shouldExit) return;
@@ -308,16 +321,24 @@ class DmYY {
     let widgetSize = sizes[size];
 
     message = '要设置透明背景的小组件在哪个位置？';
-    message += (height === 1136
-        ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
-        : '');
+    message +=
+        height === 1136
+            ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
+            : '';
 
     // Determine image crop based on phone size.
     let crop = {w: '', h: '', x: '', y: ''};
     if (widgetSize === '小尺寸') {
       crop.w = phone.small;
       crop.h = phone.small;
-      let positions = ['左上角', '右上角', '中间左', '中间右', '左下角', '右下角'];
+      let positions = [
+        '左上角',
+        '右上角',
+        '中间左',
+        '中间右',
+        '左下角',
+        '右下角',
+      ];
       let _posotions = [
         'Top left',
         'Top right',
@@ -332,7 +353,6 @@ class DmYY {
       let keys = _posotions[position].toLowerCase().split(' ');
       crop.y = phone[keys[0]];
       crop.x = phone[keys[1]];
-
     } else if (widgetSize === '中尺寸') {
       crop.w = phone.medium;
       crop.h = phone.small;
@@ -344,7 +364,6 @@ class DmYY {
       let position = await this.generateAlert(message, positions);
       let key = _positions[position].toLowerCase();
       crop.y = phone[key];
-
     } else if (widgetSize === '大尺寸') {
       crop.w = phone.medium;
       crop.h = phone.large;
@@ -361,19 +380,23 @@ class DmYY {
   }
 
   setLightAndDark = async (title, desc, light, dark) => {
-    const a = new Alert();
-    a.title = '白天和夜间' + title;
-    a.message = !desc ? '请自行去网站上搜寻颜色（Hex 颜色）' : desc;
-    a.addTextField('白天', this.settings[light]);
-    a.addTextField('夜间', this.settings[dark]);
-    a.addAction('确定');
-    a.addCancelAction('取消');
-    const id = await a.presentAlert();
-    if (id === -1) return;
-    this.settings[light] = a.textFieldValue(0);
-    this.settings[dark] = a.textFieldValue(1);
-    // 保存到本地
-    this.saveSettings();
+    try {
+      const a = new Alert();
+      a.title = '白天和夜间' + title;
+      a.message = !desc ? '请自行去网站上搜寻颜色（Hex 颜色）' : desc;
+      a.addTextField('白天', (this.settings[light] || '') + '');
+      a.addTextField('夜间', (this.settings[dark] || '') + '');
+      a.addAction('确定');
+      a.addCancelAction('取消');
+      const id = await a.presentAlert();
+      if (id === -1) return;
+      this.settings[light] = a.textFieldValue(0);
+      this.settings[dark] = a.textFieldValue(1);
+      // 保存到本地
+      this.saveSettings();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   /**
@@ -387,7 +410,7 @@ class DmYY {
     const a = new Alert();
     a.title = title;
     a.message = !desc ? '' : desc;
-    Object.keys(opt).forEach(key => {
+    Object.keys(opt).forEach((key) => {
       a.addTextField(opt[key], this.settings[key]);
     });
     a.addAction('确定');
@@ -418,7 +441,7 @@ class DmYY {
     if (index === 0) return;
     try {
       const boxJSData = await this.getCache();
-      Object.keys(opt).forEach(key => {
+      Object.keys(opt).forEach((key) => {
         this.settings[key] = boxJSData[opt[key]] || '';
       });
       // 保存到本地
@@ -426,7 +449,8 @@ class DmYY {
     } catch (e) {
       console.log(e);
       this.notify(
-          this.name, 'BoxJS 缓存读取失败！点击查看相关教程',
+          this.name,
+          'BoxJS 缓存读取失败！点击查看相关教程',
           'https://chavyleung.gitbook.io/boxjs/awesome/videos',
       );
     }
@@ -448,13 +472,15 @@ class DmYY {
     const actions = [
       async () => {
         await this.setAlertInput(
-            '刷新时间（分）', '默认刷新时间 30 分钟刷新一次，也可自行手动运行', {refreshAfterDate: '分钟'});
+            '刷新时间（分）',
+            '默认刷新时间 30 分钟刷新一次，也可自行手动运行',
+            {refreshAfterDate: '分钟'},
+        );
       },
       async () => {
         const a = new Alert();
         a.title = '主题设置';
-        a.message = '请自行搭配相应的字体颜色。\n 透明背景：白天蒙层透明设置为 0 \n 夜间请自行调整,参考值 0.35';
-        a.addAction('选择背景');
+        a.addAction('背景设置');
         a.addAction('背景颜色');
         a.addAction('字体颜色');
         a.addAction('透明背景');
@@ -465,40 +491,76 @@ class DmYY {
         if (i === -1) return;
         const _action = [
           async () => {
+            const message = '白天和夜间背景';
+            const options = ['白天', '夜间', '取消'];
+            const index = await this.generateAlert(message, options);
+            if (index === 2) return;
             const backImage = await this.chooseImg();
-            if (!await this.verifyImage(backImage)) return;
-            await this.setBackgroundImage(backImage, true);
+            if (!backImage || !(await this.verifyImage(backImage))) return;
+            if (index === 0) await this.setBackgroundImage(backImage, true);
+            if (index === 1)
+              await this.setBackgroundNightImage(backImage, true);
           },
-          async () => this.setLightAndDark(
-              '背景颜色', false, 'lightBgColor', 'darkBgColor'),
-          async () => this.setLightAndDark(
-              '字体颜色', false, 'lightColor', 'darkColor'),
+          async () =>
+              await this.setLightAndDark(
+                  '背景颜色',
+                  false,
+                  'lightBgColor',
+                  'darkBgColor',
+              ),
+          async () =>
+              await this.setLightAndDark(
+                  '字体颜色',
+                  false,
+                  'lightColor',
+                  'darkColor',
+              ),
           async () => {
+            const message =
+                '请自行搭配相应的字体颜色。\n' +
+                '白天蒙层透明设置为 0\n' +
+                '夜间请自行调整参考值 0.26\n' +
+                '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
+            const options = ['取消', '确定'];
+            const index = await this.generateAlert(message, options);
+            if (index === 0) return;
             const backImage = await this.getWidgetScreenShot();
-            if (backImage) await this.setBackgroundImage(backImage, true);
+            if (backImage) {
+              await this.setBackgroundImage(backImage, true);
+              await this.setBackgroundNightImage(backImage, true);
+            }
           },
-          async () => this.setLightAndDark(
-              '透明', '若是设置了透明背景，请自行调整', 'lightOpacity', 'darkOpacity'),
-          () => {
-            this.setBackgroundImage(false, true);
+          async () => {
+            await this.setLightAndDark(
+                '透明',
+                '若是设置了透明背景，请自行调整',
+                'lightOpacity',
+                'darkOpacity',
+            );
+          },
+          async () => {
+            await this.setBackgroundImage(false, false);
+            await this.setBackgroundNightImage(false, true);
           },
         ];
         _action[i] && _action[i].call(this);
       },
-      ...(this.useBoxJS ? [
-        async () => {
-          const a = new Alert();
-          a.title = 'BoxJS 域名';
-          a.addTextField('域名', this.settings.boxjsDomain);
-          a.addAction('确定');
-          a.addCancelAction('取消');
-          const id = await a.presentAlert();
-          if (id === -1) return;
-          this.settings.boxjsDomain = a.textFieldValue(0);
-          // 保存到本地
-          this.saveSettings();
-        },
-      ] : []),
+      ...(this.useBoxJS
+          ? [
+            async () => {
+              const a = new Alert();
+              a.title = 'BoxJS 域名';
+              a.addTextField('域名', this.settings.boxjsDomain);
+              a.addAction('确定');
+              a.addCancelAction('取消');
+              const id = await a.presentAlert();
+              if (id === -1) return;
+              this.settings.boxjsDomain = a.textFieldValue(0);
+              // 保存到本地
+              this.saveSettings();
+            },
+          ]
+          : []),
       async () => {
         const options = ['取消', '确定'];
         const message = '该操作不可逆，会清空所有组件配置！';
@@ -530,20 +592,21 @@ class DmYY {
     this.FILE_MGR_LOCAL = FileManager.local();
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
         this.FILE_MGR_LOCAL.documentsDirectory(),
-        `bg_${this.SETTING_KEY}.jpg`,
+        'bg_' + this.SETTING_KEY + '.jpg',
+    );
+
+    this.BACKGROUND_NIGHT_KEY = this.FILE_MGR_LOCAL.joinPath(
+        this.FILE_MGR_LOCAL.documentsDirectory(),
+        'bg_' + this.SETTING_KEY + 'night.jpg',
     );
 
     this.settings = this.getSettings();
-    if (this.settings.opacity) {
-      this.settings.opacity[0] = Number(this.settings.opacity[0]);
-      this.settings.opacity[1] = Number(this.settings.opacity[1]);
-    } else {
-      this.settings.opacity = [0.7, 0.4];
-    }
     this.settings.lightColor = this.settings.lightColor || '#000';
     this.settings.darkColor = this.settings.darkColor || '#fff';
     this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
     this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
+    this.settings.lightOpacity = this.settings.lightOpacity || '0.7';
+    this.settings.darkOpacity = this.settings.darkOpacity || '0.4';
     this.prefix = this.settings.boxjsDomain;
   }
 
@@ -834,6 +897,7 @@ class DmYY {
    * @param {float} opacity 透明度
    */
   async shadowImage(img, color = '#000000', opacity = 0.7) {
+    if (!img) return;
     if (opacity === 0) return img;
     let ctx = new DrawContext();
     // 获取图片的尺寸
@@ -861,8 +925,7 @@ class DmYY {
     if (json) {
       try {
         res = JSON.parse(cache);
-      } catch (e) {
-      }
+      } catch (e) {}
     } else {
       res = cache;
     }
@@ -892,12 +955,18 @@ class DmYY {
     if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
       result = Image.fromFile(this.BACKGROUND_KEY);
     }
+    if (
+        this.isNight &&
+        this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)
+    ) {
+      result = Image.fromFile(this.BACKGROUND_NIGHT_KEY);
+    }
     return result;
   }
 
   /**
    * 设置当前组件的背景图片
-   * @param {image} img
+   * @param {Image} img
    */
   setBackgroundImage(img, notify = true) {
     if (!img) {
@@ -905,28 +974,40 @@ class DmYY {
       if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
         this.FILE_MGR_LOCAL.remove(this.BACKGROUND_KEY);
       }
-      if (notify) this.notify('移除成功', '小组件背景图片已移除，稍后刷新生效');
+      if (notify)
+        this.notify('移除成功', '小组件白天背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
       // 全部设置一遍，
       this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_KEY, img);
-      if (notify) this.notify('设置成功', '小组件背景图片已设置！稍后刷新生效');
+      if (notify)
+        this.notify('设置成功', '小组件白天背景图片已设置！稍后刷新生效');
     }
   }
 
-  randomNum(minNum, maxNum) {
-    switch (arguments.length) {
-      case 1:
-        return parseInt(Math.random() * minNum + 1, 10);
-      case 2:
-        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-      default:
-        return 0;
+  setBackgroundNightImage(img, notify = true) {
+    if (!img) {
+      // 移除背景
+      if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)) {
+        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_NIGHT_KEY);
+      }
+      if (notify)
+        this.notify('移除成功', '小组件夜间背景图片已移除，稍后刷新生效');
+    } else {
+      // 设置背景
+      // 全部设置一遍，
+      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_NIGHT_KEY, img);
+      if (notify)
+        this.notify('设置成功', '小组件夜间背景图片已设置！稍后刷新生效');
     }
   }
 
   getRandomArrayElements(arr, count) {
-    let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+    let shuffled = arr.slice(0),
+        i = arr.length,
+        min = i - count,
+        temp,
+        index;
     min = min > 0 ? min : 0;
     while (i-- > min) {
       index = Math.floor((i + 1) * Math.random());
@@ -946,15 +1027,33 @@ class DmYY {
 
   provideFont = (fontName, fontSize) => {
     const fontGenerator = {
-      'ultralight': function() { return Font.ultraLightSystemFont(fontSize); },
-      'light': function() { return Font.lightSystemFont(fontSize); },
-      'regular': function() { return Font.regularSystemFont(fontSize); },
-      'medium': function() { return Font.mediumSystemFont(fontSize); },
-      'semibold': function() { return Font.semiboldSystemFont(fontSize); },
-      'bold': function() { return Font.boldSystemFont(fontSize); },
-      'heavy': function() { return Font.heavySystemFont(fontSize); },
-      'black': function() { return Font.blackSystemFont(fontSize); },
-      'italic': function() { return Font.italicSystemFont(fontSize); },
+      ultralight: function() {
+        return Font.ultraLightSystemFont(fontSize);
+      },
+      light: function() {
+        return Font.lightSystemFont(fontSize);
+      },
+      regular: function() {
+        return Font.regularSystemFont(fontSize);
+      },
+      medium: function() {
+        return Font.mediumSystemFont(fontSize);
+      },
+      semibold: function() {
+        return Font.semiboldSystemFont(fontSize);
+      },
+      bold: function() {
+        return Font.boldSystemFont(fontSize);
+      },
+      heavy: function() {
+        return Font.heavySystemFont(fontSize);
+      },
+      black: function() {
+        return Font.blackSystemFont(fontSize);
+      },
+      italic: function() {
+        return Font.italicSystemFont(fontSize);
+      },
     };
 
     const systemFont = fontGenerator[fontName];
@@ -974,7 +1073,6 @@ class DmYY {
     textItem.textColor = textColor;
     return textItem;
   };
-
 }
 
 // @base.end
@@ -993,7 +1091,8 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     try {
       if (M.settings.refreshAfterDate) {
         W.refreshAfterDate = new Date(
-            new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate));
+            new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate),
+        );
       }
     } catch (e) {
       console.log(e);
@@ -1015,122 +1114,6 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       // 弹出选择菜单
       const actions = M['_actions'];
       const _actions = [
-        ...(isDebug
-            ? [
-              // 远程开发
-              async () => {
-                // 1. 获取服务器ip
-                const a = new Alert();
-                a.title = '服务器 IP';
-                a.message = '请输入远程开发服务器（电脑）IP地址';
-                let xjj_debug_server = '192.168.1.3';
-                if (Keychain.contains('xjj_debug_server')) {
-                  xjj_debug_server = Keychain.get('xjj_debug_server');
-                }
-                a.addTextField('server-ip', xjj_debug_server);
-                a.addAction('连接');
-                a.addCancelAction('取消');
-                const id = await a.presentAlert();
-                if (id === -1) return;
-                const ip = a.textFieldValue(0);
-                // 保存到本地
-                Keychain.set('xjj_debug_server', ip);
-                const server_api = `http://${ip}:5566`;
-                // 2. 发送当前文件到远程服务器
-                const SELF_FILE = module.filename.replace(
-                    'DmYY',
-                    Script.name(),
-                );
-                const req = new Request(`${server_api}/sync`);
-                req.method = 'POST';
-                req.addFileToMultipart(SELF_FILE, 'Widget', Script.name());
-                try {
-                  const res = await req.loadString();
-                  if (res !== 'ok') {
-                    return M.notify('连接失败', res);
-                  }
-                } catch (e) {
-                  return M.notify('连接错误', e.message);
-                }
-                M.notify('连接成功', '编辑文件后保存即可进行下一步预览操作');
-                // 重写console.log方法，把数据传递到nodejs
-                const rconsole_log = async (data, t = 'log') => {
-                  const _req = new Request(`${server_api}/console`);
-                  _req.method = 'POST';
-                  _req.headers = {
-                    'Content-Type': 'application/json',
-                  };
-                  _req.body = JSON.stringify({
-                    t,
-                    data,
-                  });
-                  return await _req.loadString();
-                };
-                const lconsole_log = console.log.bind(console);
-                const lconsole_warn = console.warn.bind(console);
-                const lconsole_error = console.error.bind(console);
-                console.log = (d) => {
-                  lconsole_log(d);
-                  rconsole_log(d, 'log');
-                };
-                console.warn = (d) => {
-                  lconsole_warn(d);
-                  rconsole_log(d, 'warn');
-                };
-                console.error = (d) => {
-                  lconsole_error(d);
-                  rconsole_log(d, 'error');
-                };
-                // 3. 同步
-                while (1) {
-                  let _res = '';
-                  try {
-                    const _req = new Request(
-                        `${server_api}/sync?name=${encodeURIComponent(
-                            Script.name(),
-                        )}`,
-                    );
-                    _res = await _req.loadString();
-                  } catch (e) {
-                    M.notify('停止调试', '与开发服务器的连接已终止');
-                    break;
-                  }
-                  if (_res === 'stop') {
-                    console.log('[!] 停止同步');
-                    break;
-                  } else if (_res === 'no') {
-                    // console.log("[-] 没有更新内容")
-                  } else if (_res.length > 0) {
-                    M.notify('同步成功', '新文件已同步，大小：' + _res.length);
-                    // 重新加载组件
-                    // 1. 读取当前源码
-                    const _code = _res.split('// @组件代码开始')[1].split(
-                        '// @组件代码结束')[0];
-                    // 2. 解析 widget class
-                    let NewWidget = null;
-                    try {
-                      const _func = new Function(
-                          `const _Debugger = DmYY => {\n${_code}\nreturn Widget\n}\nreturn _Debugger`,
-                      );
-                      NewWidget = _func()(DmYY);
-                    } catch (e) {
-                      M.notify('解析失败', e.message);
-                    }
-                    if (!NewWidget) continue;
-                    // 3. 重新执行 widget class
-                    delete M;
-                    M = new NewWidget(__arg || default_args || '');
-                    if (__size) M.init(__size);
-                    // 写入文件
-                    FileManager.local().writeString(SELF_FILE, _res);
-                    // 执行预览
-                    let i = await _actions[1](true);
-                    if (i === 4 + Object.keys(actions).length) break;
-                  }
-                }
-              },
-            ]
-            : []),
         // 预览组件
         async (debug = false) => {
           let a = new Alert();
@@ -1191,9 +1174,6 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const alert = new Alert();
       alert.title = M.name;
       alert.message = M.desc;
-      if (isDebug) {
-        alert.addAction('远程开发');
-      }
       alert.addAction('预览组件');
       for (let _ in actions) {
         alert.addAction(_);
@@ -1209,7 +1189,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     }
     let _tmp = act.split('-').map((_) => _[0].toUpperCase() + _.substr(1)).join(
         '');
-    let _act = `action${_tmp}`;
+    let _act = 'action' + _tmp;
     if (M[_act] && typeof M[_act] === 'function') {
       const func = M[_act].bind(M);
       await func(data);

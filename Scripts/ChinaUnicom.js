@@ -29,7 +29,7 @@ class Widget extends DmYY {
   iconColor = new Color('#827af1');
 
   format = (str) => {
-    return parseInt(str) > 10 ? str : `0${str}`;
+    return parseInt(str) >= 10 ? str : `0${str}`;
   };
 
   date = new Date();
@@ -40,6 +40,7 @@ class Widget extends DmYY {
     this.format(this.date.getMinutes()),
   ];
 
+  maxFee = 100;
   // percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
   phoneBill = {
     percent: 0,
@@ -52,7 +53,7 @@ class Widget extends DmYY {
 
   flow = {
     percent: 0,
-    label: '流量剩余',
+    label: '已用流量',
     count: 0,
     unit: 'M',
     icon: 'waveform.path.badge.minus',
@@ -70,16 +71,16 @@ class Widget extends DmYY {
 
   updateTime = {
     percent: 0,
-    label: '更新时间',
+    label: '联通更新',
     count: `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
     unit: '',
-    icon: 'clock',
+    urlIcon: 'https://raw.githubusercontent.com/Orz-3/mini/master/10010.png',
     circleColor: this.circleColor4,
   };
 
-  canvSize = 282;
-  canvWidth = 20; // circle thickness
-  canvRadius = 160; // circle radius
+  canvSize = 100;
+  canvWidth = 5; // circle thickness
+  canvRadius = 100; // circle radius
   dayRadiusOffset = 60;
   canvTextSize = 40;
 
@@ -87,52 +88,61 @@ class Widget extends DmYY {
     try {
       const nowHours = this.date.getHours();
       const updateHours = nowHours > 12 ? 24 : 12;
-      this.updateTime.percent = Math.floor(nowHours / updateHours * 100);
+      this.updateTime.percent = Math.floor((nowHours / updateHours) * 100);
       await this.getinfo();
     } catch (e) {
       console.log(e);
     }
   };
 
-  // MB 和 GB 自动转换
-  formatFlow(number) {
-    const n = number / 1024;
-    if (n < 1024) {
-      return {count: n.toFixed(2), unit: 'M'};
-    }
-    return {count: (n / 1024).toFixed(2), unit: 'G'};
-  }
-
   async getinfo() {
-    const telNum = this.gettel();
-    const url = {
-      url: `https://m.client.10010.com/mobileService/home/queryUserInfoSeven.htm?version=iphone_c@7.0403&desmobiel=${telNum}&showType=3`,
-      headers: {
-        Cookie: this.loginheader.Cookie,
-      },
-    };
-    const signinfo = await this.$request.get(url);
-    if (signinfo.code === 'Y') {
-      signinfo.data.dataList.forEach(item => {
-        if (item.type === 'flow') {
-          this.flow.count = item.number;
-          this.flow.unit = item.unit;
-        }
-        if (item.type === 'fee') {
-          this.phoneBill.count = item.number;
-          this.phoneBill.unit = item.unit;
-        }
-        if (item.type === 'voice') {
-          this.voice.count = item.number;
-          this.voice.unit = item.unit;
-        }
-        if (item.type === 'voice') {
-          this.voice.count = item.number;
-          this.voice.unit = item.unit;
-        }
-      });
-    }
+    try {
+      const telNum = this.gettel();
+      const url = {
+        url: `https://m.client.10010.com/mobileService/home/queryUserInfoSeven.htm?version=iphone_c@7.0403&desmobiel=${telNum}&showType=3`,
+        headers: {
+          Cookie: this.loginheader.Cookie,
+        },
+      };
+      const signinfo = await this.$request.get(url);
+      if (signinfo.code === 'Y') {
+        console.log('✅获取信息成功');
+        console.log(signinfo.data);
+        signinfo.data.dataList.forEach((item) => {
+          let percent = 0;
+          if (item.usedTitle.includes('剩余'))
+            percent = item.usedTitle.replace('剩余', '').replace('%');
+          if (item.usedTitle.includes('已用'))
+            percent = (
+                100 - parseFloat(item.usedTitle.replace('已用', '').replace('%'))
+            ).toFixed(2);
 
+          if (item.type === 'flow') {
+            this.flow.count = item.number;
+            this.flow.unit = item.unit;
+            this.flow.percent = percent;
+            this.flow.label = item.remainTitle;
+          }
+          if (item.type === 'fee') {
+            this.phoneBill.count = item.number;
+            this.phoneBill.unit = item.unit;
+            this.phoneBill.percent =
+                Math.floor((item.number / this.maxFee).toFixed(2) * 100);
+            this.phoneBill.label = item.remainTitle;
+          }
+          if (item.type === 'voice') {
+            this.voice.count = item.number;
+            this.voice.unit = item.unit;
+            this.voice.percent = percent;
+            this.voice.label = item.remainTitle;
+          }
+        });
+      } else {
+        throw 'cookie错误';
+      }
+    } catch (e) {
+      console.log('❌获取信息失败：' + e);
+    }
   }
 
   gettel() {
@@ -160,28 +170,22 @@ class Widget extends DmYY {
     const bgx = ctr.x - (this.canvRadius - radiusOffset);
     const bgy = ctr.y - (this.canvRadius - radiusOffset);
     const bgd = 2 * (this.canvRadius - radiusOffset);
-    const bgr = new Rect(
-        bgx,
-        bgy,
-        bgd,
-        bgd,
-    );
+    const bgr = new Rect(bgx, bgy, bgd, bgd);
     canvas.setStrokeColor(this.fgCircleColor);
-    canvas.setLineWidth(this.canvWidth - 14);
+    canvas.setLineWidth(2);
     canvas.strokeEllipse(bgr);
     // Inner circle
     canvas.setFillColor(color);
     for (let t = 0; t < degree; t++) {
-      const rect_x = ctr.x + (this.canvRadius - radiusOffset) * this.sinDeg(t) -
+      const rect_x =
+          ctr.x +
+          (this.canvRadius - radiusOffset) * this.sinDeg(t) -
           this.canvWidth / 2;
-      const rect_y = ctr.y - (this.canvRadius - radiusOffset) * this.cosDeg(t) -
+      const rect_y =
+          ctr.y -
+          (this.canvRadius - radiusOffset) * this.cosDeg(t) -
           this.canvWidth / 2;
-      const rect_r = new Rect(
-          rect_x,
-          rect_y,
-          this.canvWidth - 4,
-          this.canvWidth - 4,
-      );
+      const rect_r = new Rect(rect_x, rect_y, this.canvWidth, this.canvWidth);
       canvas.fillEllipse(rect_r);
     }
   }
@@ -218,15 +222,21 @@ class Widget extends DmYY {
     const canvas = this.makeCanvas();
     stackCircle.size = new Size(70, 70);
     this.makeCircle(
-        canvas, this.dayRadiusOffset, data.percent * 3.6, data.circleColor);
+        canvas,
+        this.dayRadiusOffset,
+        data.percent * 3.6,
+        data.circleColor,
+    );
 
-    this.drawText(data.percent, canvas, 170, 42);
-    this.drawPointText(`%`, canvas, new Point(190, 150), 25);
+    this.drawText(data.percent, canvas, 75, 18);
+    this.drawPointText(`%`, canvas, new Point(65, 50), 14);
     stackCircle.backgroundImage = canvas.getImage();
 
     stackCircle.setPadding(20, 0, 0, 0);
     stackCircle.addSpacer();
-    const icon = SFSymbol.named(data.icon);
+    const icon = data.urlIcon
+        ? {image: data.icon}
+        : SFSymbol.named(data.icon);
     const imageIcon = stackCircle.addImage(icon.image);
     imageIcon.tintColor = this.iconColor;
     imageIcon.imageSize = new Size(15, 15);
@@ -269,7 +279,7 @@ class Widget extends DmYY {
     const text = this.textFormat.defaultText;
     text.color = new Color('#aaa');
     this.provideText(
-        `更新时间：${this.arrUpdateTime[0]}-${this.arrUpdateTime[1]} ${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+        `联通更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
         stackFooter,
         text,
     );
@@ -285,6 +295,10 @@ class Widget extends DmYY {
     this.setCircleText(stackTop, this.flow);
     const stackBottom = stackBody.addStack();
     this.setCircleText(stackBottom, this.voice);
+    this.updateTime.icon = await this.$request.get(
+        this.updateTime.urlIcon,
+        'IMG',
+    );
     this.setCircleText(stackBottom, this.updateTime);
     return w;
   };
@@ -295,12 +309,19 @@ class Widget extends DmYY {
 
   Run() {
     if (config.runsInApp) {
+      this.registerAction('费用进度', async () => {
+        await this.setAlertInput(`${this.name}`, '预计当月费用使用值', {
+          maxFee: '默认 100 元',
+        });
+      });
       const widgetInitConfig = {
         loginheader: 'chavy_tokenheader_10010',
       };
       this.registerAction('颜色配置', async () => {
         await this.setAlertInput(
-            `${this.name}颜色配置`, '进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色', {
+            `${this.name}颜色配置`,
+            '进度条颜色|底圈颜色\n图标颜色|比值颜色|值颜色',
+            {
               step1: '进度颜色 1',
               step2: '进度颜色 2',
               step3: '进度颜色 3',
@@ -309,28 +330,49 @@ class Widget extends DmYY {
               icon: '图标颜色',
               percent: '比值颜色',
               value: '值颜色',
-            });
+            },
+        );
       });
       this.registerAction('账号设置', async () => {
         await this.setAlertInput(
-            `${this.name}账号`, '读取 BoxJS 缓存信息', widgetInitConfig);
+            `${this.name}账号`,
+            '读取 BoxJS 缓存信息',
+            widgetInitConfig,
+        );
       });
       this.registerAction('代理缓存', async () => {
         await this.setCacheBoxJSData(widgetInitConfig);
       });
       this.registerAction('基础设置', this.setWidgetConfig);
     }
-    const {loginheader, step1, step2, step3, step4, inner, icon, percent, value} = this.settings;
-    this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
-    this.textColor1 = value ? new Color(value) : this.textColor1;
-    this.circleColor1 = step1 ? new Color(step1) : this.circleColor1;
-    this.circleColor2 = step2 ? new Color(step2) : this.circleColor2;
-    this.circleColor3 = step3 ? new Color(step3) : this.circleColor3;
-    this.circleColor4 = step4 ? new Color(step4) : this.circleColor4;
-    this.iconColor = icon ? new Color(icon) : this.iconColor;
-    this.percentColor = percent ? new Color(percent) : this.percentColor;
+
     try {
+      const {
+        loginheader,
+        step1,
+        step2,
+        step3,
+        step4,
+        inner,
+        icon,
+        percent,
+        value,
+        maxFee,
+      } = this.settings;
+      this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
+      this.textColor1 = value ? new Color(value) : this.textColor1;
+
+      this.phoneBill.circleColor = step1 ? new Color(step1) : this.circleColor1;
+      this.flow.circleColor = step2 ? new Color(step2) : this.circleColor2;
+      this.voice.circleColor = step3 ? new Color(step3) : this.circleColor3;
+      this.updateTime.circleColor = step4
+          ? new Color(step4)
+          : this.circleColor4;
+
+      this.iconColor = icon ? new Color(icon) : this.iconColor;
+      this.percentColor = percent ? new Color(percent) : this.percentColor;
       this.loginheader = loginheader ? JSON.parse(loginheader) : {};
+      this.maxFee = parseFloat(maxFee) || this.maxFee;
     } catch (e) {
       console.log(e);
     }

@@ -17,8 +17,6 @@ class Widget extends DmYY {
   }
 
   useBoxJS = false;
-  today = '';
-  loginok = false;
   dataSource = {
     restData: '0',
     usedData: '0',
@@ -26,32 +24,43 @@ class Widget extends DmYY {
     isCheckIn: false,
   };
 
-  chartConfig = (labels = [], datas = []) => {
+  chartConfig = (labels = [], datas = [], text = []) => {
     const color = `#${this.widgetColor.hex}`;
-    return `{
-    'type': 'bar', // line 类型为折现类型
-    'data': {
-      'labels': ${JSON.stringify(labels)},
-      'datasets': [
-        {
-          type: 'line',
-          backgroundColor: '#fff',
-          borderColor: getGradientFillHelper('vertical', ['#c8e3fa', '#e62490']),
-          'borderWidth': 2,
-          pointRadius: 5,
-          'fill': false,
-          'data': ${JSON.stringify(datas)},
-        },
-      ],
-    },
-    'options': {
+    let template;
+    let path = this.FILE_MGR.documentsDirectory();
+    path = path + '/VPNBoardTemplate.js';
+    if (this.FILE_MGR.fileExists(path)) {
+      template = require('./VPNBoardTemplate');
+    } else {
+      template = `
+{
+  'type': 'bar',
+  'data': {
+    'labels': __LABELS__,
+    'tips': __TEXT__,
+    'datasets': [
+      {
+        type: 'line',
+        backgroundColor: '#fff',
+        borderColor: getGradientFillHelper('vertical', ['#c8e3fa', '#e62490']),
+        'borderWidth': 2,
+        pointRadius: 5,
+        'fill': false,
+        'data': __DATAS__,
+      },
+    ],
+  },
+  'options': {
       plugins: {
         datalabels: {
           display: true,
           align: 'top',
-          color: '${color}',
+          color: __COLOR__,
           font: {
              size: '16'
+          },
+          formatter: function(value, context) {
+            return context.chart.data.tips[context.dataIndex];
           }
         },
       },
@@ -60,7 +69,7 @@ class Widget extends DmYY {
               left: 0,
               right: 0,
               top: 30,
-              bottom: 5
+              bottom: 10
           }
       },
       responsive: true,
@@ -76,11 +85,11 @@ class Widget extends DmYY {
           {
             gridLines: {
               display: false,
-              color: '${color}',
+              color: __COLOR__,
             },
             ticks: {
               display: true, 
-              fontColor: '${color}',
+              fontColor: __COLOR__,
               fontSize: '16',
             },
           },
@@ -90,18 +99,30 @@ class Widget extends DmYY {
             ticks: {
               display: false,
               beginAtZero: true,
-              fontColor: '${color}',
+              fontColor: __COLOR__,
             },
             gridLines: {
               borderDash: [7, 5],
               display: false,
-              color: '${color}',
+              color: __COLOR__,
             },
           },
         ],
       },
     },
-  }`;
+ }`;
+      const content = `// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: deep-gray; icon-glyph: ellipsis-v;
+const template = \`${template}\`;
+module.exports = template;`;
+      this.FILE_MGR.writeString(path, content);
+    }
+    template = template.replaceAll('__COLOR__', `'${color}'`);
+    template = template.replace('__LABELS__', `${JSON.stringify(labels)}`);
+    template = template.replace('__TEXT__', `${JSON.stringify(text)}`);
+    template = template.replace('__DATAS__', `${JSON.stringify(datas)}`);
+    return template;
   };
 
   account = {
@@ -111,57 +132,65 @@ class Widget extends DmYY {
     password: '',
   };
 
-  range = {};
+  range = {
+    '11.1': {todayUsed: '30M'},
+    '11.2': {todayUsed: '130M'},
+    '11.3': {todayUsed: '300M'},
+    '11.4': {todayUsed: '30M'},
+    '11.5': {todayUsed: '2g'},
+    '11.6': {todayUsed: '3G'},
+  };
   max = 6;
 
   init = async () => {
     try {
-      await this.login();
-      await this.checkin();
-      await this.dataResults();
-      if (Keychain.contains(this.CACHE_KEY)) {
-        this.range = JSON.parse(Keychain.get(this.CACHE_KEY));
-      }
-      const date = new Date();
-      const format = new DateFormatter();
-      format.dateFormat = 'MM.dd';
-      const dateDay = format.string(date);
-      this.range[dateDay] = this.dataSource;
-      const rangeKey = Object.keys(this.range);
-      if (rangeKey.length > this.max) {
-        for (let i = 0; i <= rangeKey.length - this.max; i++) {
-          delete this.range[rangeKey[i]];
+      if (this.account.url) {
+        await this.login();
+        await this.checkin();
+        await this.dataResults();
+        if (Keychain.contains(this.CACHE_KEY)) {
+          this.range = JSON.parse(Keychain.get(this.CACHE_KEY));
         }
+        const date = new Date();
+        const format = new DateFormatter();
+        format.dateFormat = 'MM.dd';
+        const dateDay = format.string(date);
+        this.range[dateDay] = this.dataSource;
+        const rangeKey = Object.keys(this.range);
+        if (rangeKey.length > this.max) {
+          for (let i = 0; i <= rangeKey.length - this.max; i++) {
+            delete this.range[rangeKey[i]];
+          }
+        }
+        Keychain.set(this.CACHE_KEY, JSON.stringify(this.range));
       }
-      Keychain.set(this.CACHE_KEY, JSON.stringify(this.range));
     } catch (e) {
       console.log(e);
     }
   };
 
   async login() {
-    const url = this.account.url;
-    const loginPath =
-        url.indexOf('auth/login') != -1 ? 'auth/login' : 'user/_login.php';
     const table = {
-      url:
-          url.replace(/(auth|user)\/login(.php)*/g, '') +
-          loginPath +
-          `?email=${this.account.email}&passwd=${this.account.password}&rumber-me=week`,
+      url: this.account.url,
+      body: `email=${encodeURIComponent(
+          this.account.email)}&passwd=${encodeURIComponent(
+          this.account.password)}&remember_me=on&rumber-me=week`,
     };
-
-    const data = await this.$request.post(table, 'STRING');
+    const request = new Request(table.url);
+    request.body = table.body;
+    request.method = 'POST';
+    const data = await request.loadString();
     try {
       if (
           JSON.parse(data).msg.match(
               /邮箱不存在|邮箱或者密码错误|Mail or password is incorrect/,
           )
       ) {
-        this.loginok = false;
         this.notify(this.name, '邮箱或者密码错误');
         console.log('登陆失败');
+        this.cookie = request.response.cookies(
+            item => `${item.name}=${item.value}`).join('; ');
       } else {
-        this.loginok = true;
         console.log('登陆成功');
       }
     } catch (e) {
@@ -172,9 +201,12 @@ class Widget extends DmYY {
   async checkin() {
     const url = this.account.url;
     let checkinPath =
-        url.indexOf('auth/login') != -1 ? 'user/checkin' : 'user/_checkin.php';
+        url.indexOf('auth/login') !== -1 ? 'user/checkin' : 'user/_checkin.php';
     const checkinreqest = {
       url: url.replace(/(auth|user)\/login(.php)*/g, '') + checkinPath,
+      headers: {
+        cookie: this.cookie,
+      },
     };
     const data = await this.$request.post(checkinreqest, 'STRING');
     if (data.match(/\"msg\"\:/)) {
@@ -186,102 +218,65 @@ class Widget extends DmYY {
   }
 
   async dataResults() {
-    const url = this.account.url;
-    const userPath = url.indexOf('auth/login') != -1
+    let url = this.account.url;
+    const userPath = url.indexOf('auth/login') !== -1
         ? 'user'
         : 'user/index.php';
-    const datarequest = {
-      url: url.replace(/(auth|user)\/login(.php)*/g, '') + userPath,
-    };
-    const data = await this.$request.get(datarequest, 'STRING');
-    if (data.match(/login|请填写邮箱|登陆/)) {
-      this.loginok = false;
-    } else {
-      let resultData = '';
-      let result = [];
-      if (data.match(/theme\/malio/)) {
-        let flowInfo = data.match(/trafficDountChat\s*\(([^\)]+)/);
-        if (flowInfo) {
-          let flowData = flowInfo[1].match(/\d[^\']+/g);
-          let usedData = flowData[0];
-          let todatUsed = flowData[1];
-          let restData = flowData[2];
-          this.dataSource.todayUsed = `${flowData[1]}`;
-          this.dataSource.usedData = `${flowData[0]}`;
-          this.dataSource.restData = `${flowData[2]}`;
-          result.push(
-              `今日：${todatUsed}\n已用：${usedData}\n剩余：${restData}`,
-          );
-        }
-        let userInfo = data.match(/ChatraIntegration\s*=\s*({[^}]+)/);
-        if (userInfo) {
-          let user_name = userInfo[1].match(/name.+'(.+)'/)[1];
-          let user_class = userInfo[1].match(/Class.+'(.+)'/)[1];
-          let class_expire = userInfo[1].match(/Class_Expire.+'(.+)'/)[1];
-          let money = userInfo[1].match(/Money.+'(.+)'/)[1];
-          result.push(
-              `用户名：${user_name}\n用户等级：lv${user_class}\n余额：${money}\n到期时间：${class_expire}`,
-          );
-        }
-        if (result.length != 0) {
-          resultData = result.join('\n\n');
-        }
-      } else {
-        let todayUsed = data.match(/>*\s*今日(已用|使用)*[^B]+/);
-        if (todayUsed) {
-          todayUsed = this.flowFormat(todayUsed[0]);
-          result.push(`今日：${todayUsed}`);
-          this.dataSource.todayUsed = `${todayUsed}`;
-        } else {
-          this.dataSource.todayUsed = `0`;
-          result.push(`今日已用获取失败`);
-        }
-        let usedData = data.match(
-            /(Used Transfer|>过去已用|>已用|>总已用|\"已用)[^B]+/,
-        );
-        if (usedData) {
-          usedData = this.flowFormat(usedData[0]);
-          result.push(`已用：${usedData}`);
-          this.dataSource.usedData = `${usedData}`;
-        } else {
-          this.dataSource.usedData = `0`;
-          result.push(`累计使用获取失败`);
-        }
-        let restData = data.match(
-            /(Remaining Transfer|>剩余流量|>流量剩余|>可用|\"剩余)[^B]+/,
-        );
-        if (restData) {
-          restData = this.flowFormat(restData[0]);
-          result.push(`剩余：${restData}`);
-          this.dataSource.restData = `${restData}`;
-        } else {
-          this.dataSource.restData = `0`;
-          result.push(`剩余流量获取失败`);
-        }
-        resultData = result.join('\n');
-      }
-      console.log(resultData);
-    }
+    url = url.replace(/(auth|user)\/login(.php)*/g, '') + userPath;
+    const webView = new WebView();
+    await webView.loadURL(url);
+    const js = `
+var response = {todayUsed: "0KB", usedData: "0KB", restData: "0KB"};
+if($('.progressbar').length){
+  response.todayUsed = $('.progressbar .label-flex:eq(0) .card-tag').text();
+  response.usedData =  $('.progressbar .label-flex:eq(1) .card-tag').text();
+  response.restData =  $('.progressbar .label-flex:eq(2) .card-tag').text();
+} else if(document.body.innerHTML.includes('trafficDountChat')){
+  response.todayUsed =  $('.card.card-statistic-2:eq(1) .breadcrumb-item').text().split(' ')[1];
+  response.restData =  $('.card.card-statistic-2:eq(1) .card-body').text().trim();
+  response.usedData = document.body.innerHTML.match(/trafficDountChat\\s*\\(([^\\)]+)/)[1].match(/\\d[^\\']+/g)[0];
+}
+completion(response);
+    `;
+    const response = await webView.evaluateJavaScript(js, true);
+    this.dataSource = {...this.dataSource, ...response};
   }
 
-  flowFormat(data) {
-    data = data.replace(/\d+(\.\d+)*%/, '');
-    let flow = data.match(/\d+(\.\d+)*\w*/);
-    return flow[0];
+  translateFlow(value) {
+    const unit = [
+      {unit: 'T', value: 1024 * 1024},
+      {unit: 'G', value: 1024},
+      {unit: 'M', value: 1},
+      {unit: 'K', value: 1 / 1024},
+    ];
+    const data = {unit: '', value: parseFloat(value)};
+    unit.forEach(item => {
+      if (value.indexOf(item.unit) > -1) {
+        data.unit = item.unit;
+        data.value = Math.floor((parseFloat(value) * item.value) * 100) / 100;
+      }
+    });
+
+    return data;
   }
 
   createChart = async (size) => {
-    let labels = [], data = [];
+    let labels = [], data = [], text = [];
     const rangeKey = Object.keys(this.range);
     rangeKey.forEach((key) => {
       labels.push(key);
-      data.push(parseInt(this.range[key].todayUsed));
+      const value = this.range[key].todayUsed.toLocaleUpperCase();
+      const valueUnit = this.translateFlow(value);
+      data.push(valueUnit.value);
+      text.push(value);
     });
     if (this.widgetSize === 'small') {
       labels = labels.slice(-3);
       data = data.slice(-3);
     }
-    const chart = this.chartConfig(labels, data);
+    console.log(data);
+    const chart = this.chartConfig(labels, data, text);
+    console.log(chart);
     const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
         chart)}`;
     return await this.$request.get(url, 'IMG');
@@ -306,6 +301,7 @@ class Widget extends DmYY {
 
   async setHeader(w, size) {
     const header = w.addStack();
+    header.centerAlignContent();
     const left = header.addStack();
     left.centerAlignContent();
     let icon = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
@@ -420,35 +416,42 @@ class Widget extends DmYY {
   }
 
   Run = () => {
-    if (config.runsInApp) {
-      this.registerAction('默认账号', this.actionSettings);
-      this.registerAction('清除账号', this.deletedVpn);
-      this.registerAction('新增账号', async () => {
-        const account = await this.setAlertInput(
-            '添加账号', '添加账号数据，添加完成之后请去设置默认账号', {
-              title: '机场名',
-              icon: '图标',
-              url: '登陆地址',
-              email: '邮箱账号',
-              password: '密码',
-            }, false);
-        if (!this.settings.dataSource) this.settings.dataSource = [];
-        if (!account) return;
-        if (account.title && account.url && account.email && account.password) {
-          this.settings.dataSource.push(account);
-        }
-        this.settings.dataSource = this.settings.dataSource.filter(
-            item => item);
-        this.saveSettings();
-      });
-      this.registerAction('基础设置', this.setWidgetConfig);
-    }
-    this.account = this.settings.account || this.account;
-    this.CACHE_KEY += '_' + this.account.title;
-    const index = typeof args.widgetParameter === 'string' ? parseInt(
-        args.widgetParameter) : false;
-    if (this.settings[index] && index !== false) {
-      this.account = this.settings[index];
+    try {
+      if (config.runsInApp) {
+        this.registerAction('默认账号', this.actionSettings);
+        this.registerAction('清除账号', this.deletedVpn);
+        this.registerAction('新增账号', async () => {
+          const account = await this.setAlertInput(
+              '添加账号', '添加账号数据，添加完成之后请去设置默认账号', {
+                title: '机场名',
+                icon: '图标',
+                url: '登陆地址',
+                email: '邮箱账号',
+                password: '密码',
+              }, false);
+          if (!this.settings.dataSource) this.settings.dataSource = [];
+          if (!account) return;
+          if (account.title && account.url && account.email &&
+              account.password) {
+            this.settings.dataSource.push(account);
+          }
+          this.settings.dataSource = this.settings.dataSource.filter(
+              item => item);
+          this.saveSettings();
+        });
+        this.registerAction('基础设置', this.setWidgetConfig);
+      }
+      this.account = this.settings.account || this.account;
+      this.CACHE_KEY += '_' + this.account.title;
+      const index = typeof args.widgetParameter === 'string' ? parseInt(
+          args.widgetParameter) : false;
+      if (this.settings.dataSource && this.settings.dataSource[index] &&
+          index !==
+          false) {
+        this.account = this.settings.dataSource[index];
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -456,9 +459,9 @@ class Widget extends DmYY {
     try {
       const table = new UITable();
       const dataSource = this.settings.dataSource || [];
-      dataSource.map((t) => {
+      dataSource.map((t, index) => {
         const r = new UITableRow();
-        r.addText(`机场名：${t.title}     账号：${t.email}`);
+        r.addText(`parameter：${index}  机场名：${t.title}     账号：${t.email}`);
         r.onSelect = (n) => {
           this.settings.account = t;
           this.notify(t.title, `默认账号设置成功\n账号：${t.email}`);

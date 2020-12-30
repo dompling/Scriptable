@@ -1,22 +1,25 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: pink; icon-glyph: paper-plane;
+// icon-color: pink; icon-glyph: mobile-alt;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
 const {DmYY, Runing} = require('./DmYY');
+const CryptoJS = require('./crypto-js');
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = '中国电信';
-    this.en = 'ChinaTelecom';
+    this.name = '中国移动';
+    this.en = 'ChinaMobile';
     this.Run();
   }
 
+  getfee = {};
+  autologin = {};
   cookie = '';
-  authToken = '';
+
   fgCircleColor = Color.dynamic(new Color('#dddef3'), new Color('#fff'));
   percentColor = this.widgetColor;
   textColor1 = Color.dynamic(new Color('#333'), new Color('#fff'));
@@ -39,8 +42,6 @@ class Widget extends DmYY {
     this.format(this.date.getHours()),
     this.format(this.date.getMinutes()),
   ];
-
-  monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   // percent 的计算方式，剩余/总量 * 100 = 百分比| 百分比 * 3.6 ，为显示进度。
   phoneBill = {
@@ -72,109 +73,194 @@ class Widget extends DmYY {
 
   updateTime = {
     percent: 0,
-    label: '电信更新',
+    label: '移动更新',
     count: `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
     unit: '',
-    urlIcon: 'https://raw.githubusercontent.com/Orz-3/mini/master/10000.png',
+    urlIcon: 'https://raw.githubusercontent.com/Orz-3/mini/master/10086.png',
     circleColor: this.circleColor4,
   };
-
+  maxFee = 100;
   canvSize = 100;
   canvWidth = 5; // circle thickness
   canvRadius = 100; // circle radius
   dayRadiusOffset = 60;
   canvTextSize = 40;
 
-  options = {
-    headers: {
-      // type: "alipayMiniApp",
-      // "User-Agent": "TYUserCenter/2.8 (iPhone; iOS 14.0; Scale/3.00)",
-    },
-    // body: "t=tysuit",
-    method: 'POST',
-  };
-
-  fetchUri = {
-    detail: 'https://e.189.cn/store/user/package_detail.do',
-    balance: 'https://e.189.cn/store/user/balance_new.do',
-  };
-
   init = async () => {
     try {
-      const nowHours = (this.date.getDate() - 1) * 24 + this.date.getHours();
-      //闰年简单判断，本世纪内直接用4取模没问题的
-      const totalHours = this.monthDays[this.date.getMonth()] * 24 
-                          + (this.date.getFullYear() % 4 == 0 && this.date.getMonth() == 1 ? 24 : 0);
-      this.updateTime.percent = Math.floor(nowHours / totalHours * 100);
-      await this.getData();
+      const nowHours = this.date.getHours();
+      const updateHours = nowHours > 12 ? 24 : 12;
+      this.updateTime.percent = Math.floor((nowHours / updateHours) * 100);
+      await this.login();
+      await this.queryFee();
+      await this.queryFlow();
     } catch (e) {
       console.log(e);
     }
   };
 
-  // MB 和 GB 自动转换
-  formatFlow(number) {
-    const n = number / 1024;
-    if (n < 1024) {
-      return {count: n.toFixed(2), unit: 'M'};
+  async login() {
+    try {
+      const options = this.autologin;
+      const request = new Request(options.url);
+      Object.keys(options).forEach((key) => {
+        request[key] = options[key];
+      });
+      request.method = 'POST';
+      await request.loadString();
+      this.cookie = request.response.headers['Set-Cookie'];
+      if (this.cookie) {
+        console.log('✅登陆成功');
+      } else {
+        console.log('❌登陆失败');
+      }
+    } catch (e) {
+      console.log('❌登陆失败，请检查 Ck：' + e);
     }
-    return {count: (n / 1024).toFixed(2), unit: 'G'};
   }
 
-  getData = async () => {
-    const detail = await this.http({
-      url: this.fetchUri.detail,
-      ...this.options,
-    });
-    console.log(detail);
-    const balance = await this.http({
-      url: this.fetchUri.balance,
-      ...this.options,
-    });
-
-    if (detail.result === 0) {
-      // 套餐分钟数
-      this.voice.percent = Math.floor(
-          (parseInt(detail.voiceBalance) / parseInt(detail.voiceAmount)) * 100,
+  async queryFee() {
+    try {
+      const options = this.getfee;
+      const body = JSON.parse(this.decrypt(options.body, 'bAIgvwAuA4tbDr9d'));
+      const cellNum = body.reqBody.cellNum;
+      const bodystr = `{"t":"${CryptoJS.MD5(
+          this.cookie,
+      ).toString()}","cv":"9.9.9","reqBody":{"cellNum":"${cellNum}"}}`;
+      options.body = this.encrypt(bodystr, 'bAIgvwAuA4tbDr9d');
+      options.headers['Cookie'] = this.cookie;
+      options.headers['xs'] = CryptoJS.MD5(
+          options.url + '_' + bodystr + '_Leadeon/SecurityOrganization',
+      ).toString();
+      const request = new Request(options.url);
+      request.method = 'POST';
+      request.headers = options.headers;
+      request.body = options.body;
+      const webView = new WebView();
+      await webView.loadRequest(request);
+      const response = await webView.evaluateJavaScript(
+          'completion(document.body.innerText);',
+          true,
       );
-      this.voice.count = detail.voiceBalance;
-      console.log(detail.items);
-      if (!detail.count && !detail.total) {
-        detail.items.forEach((data) => {
-          if (data.offerType !== 19) {
-            data.items.forEach((item) => {
-              if (item.unitTypeId === '3') {
-                if (item.usageAmount !== '0' && item.balanceAmount !== '0') {
-                  this.flow.percent = Math.floor(
-                      (item.balanceAmount / (item.ratableAmount || 1)) * 100,
-                  );
-                  const flow = this.formatFlow(item.balanceAmount);
-                  this.flow.count = flow.count;
-                  this.flow.unit = flow.unit;
-                  this.flow.max = item.ratableAmount;
-                }
-              }
-            });
-          }
-        });
+      const data = JSON.parse(this.decrypt(response, 'GS7VelkJl5IT1uwQ'));
+      if (data.retCode === '000000') {
+        console.log('✅费用信息获取成功');
+        const {rspBody} = data;
+        this.phoneBill.count = rspBody.curFee;
+        this.phoneBill.percent = Math.floor((this.phoneBill.count / this.maxFee).toFixed(2) * 100);
       } else {
-        this.flow.percent = Math.floor(
-            (detail.balance / (detail.total || 1)) * 100,
-        );
-        const flow = this.formatFlow(detail.balance);
-        this.flow.count = flow.count;
-        this.flow.unit = flow.unit;
-        this.flow.max = detail.total;
+        console.log('❌费用信息获取失败，请检查 Ck 配置' + data.retDesc);
       }
+    } catch (e) {
+      console.log('❌费用信息获取失败：' + e);
+    }
+  }
 
+  async queryFlow() {
+    try {
+      const options = this.getfee;
+      const body = JSON.parse(this.decrypt(options.body, 'bAIgvwAuA4tbDr9d'));
+      const cellNum = body.reqBody.cellNum;
+      options.url =
+          'https://clientaccess.10086.cn/biz-orange/BN/newComboMealResouceUnite/getNewComboMealResource';
+      const bodystr = `{"t":"${CryptoJS.MD5(
+          this.cookie,
+      ).
+          toString()}","cv":"9.9.9","reqBody":{"cellNum":"${cellNum}","tag":"3"}}`;
+      options.body = this.encrypt(bodystr, 'bAIgvwAuA4tbDr9d');
+      options.headers['Cookie'] = this.cookie;
+      options.headers['xs'] = CryptoJS.MD5(
+          options.url + '_' + bodystr + '_Leadeon/SecurityOrganization',
+      ).toString();
+
+      const request = new Request(options.url);
+      request.method = 'POST';
+      request.headers = options.headers;
+      request.body = options.body;
+      const webView = new WebView();
+      await webView.loadRequest(request);
+      const response = await webView.evaluateJavaScript(
+          'completion(document.body.innerText);',
+          true,
+      );
+
+      const data = JSON.parse(this.decrypt(response, 'GS7VelkJl5IT1uwQ'));
+      if (data.retCode === '000000') {
+        console.log('✅套餐信息获取成功');
+        const res = data.rspBody.qryInfoRsp[0].resourcesTotal;
+        const flowRes = res.find((r) => r.resourcesCode === '04');
+        const voiceRes = res.find((r) => r.resourcesCode === '01');
+        var flowResValue = '未开通',
+            voiceResValue = '';
+        if (flowRes) {
+          const total = this.translateFlow({
+            value: flowRes.allTotalRes,
+            code: flowRes.allUnit,
+          });
+          const remain = this.translateFlow({
+            value: flowRes.allRemainRes,
+            code: flowRes.remUnit,
+          });
+
+          this.flow.percent = Math.floor(
+              (remain.value / (total.value || 1)) * 100,
+          );
+          this.flow.count = flowRes.allRemainRes;
+          this.flow.unit = remain.unit;
+          flowResValue = `${flowRes.allRemainRes}${remain.unit}`;
+        }
+        if (voiceRes) {
+          this.voice.percent = Math.floor(
+              (voiceRes.allRemainRes / (voiceRes.allTotalRes || 1)) * 100,
+          );
+          this.voice.count = voiceRes.allRemainRes;
+          voiceResValue = voiceRes.allRemainRes;
+        }
+        console.log(`✅流量：` + flowResValue + '\n ✅语音：' + voiceResValue);
+      } else {
+        console.log('❌流量信息获取失败，请检查 Ck 配置' + data.retDesc);
+      }
+    } catch (e) {
+      console.log('❌流量信息获取失败：' + e);
     }
-    if (balance.result === 0) {
-      // 余额
-      this.phoneBill.count = parseFloat(
-          parseInt(balance.totalBalanceAvailable) / 100).toFixed(2)
-    }
-    this.phoneBill.percent = Math.floor((this.phoneBill.count / 100) * 100);
-  };
+  }
+
+  encrypt(str, key) {
+    return CryptoJS.AES.encrypt(
+        CryptoJS.enc.Utf8.parse(str),
+        CryptoJS.enc.Utf8.parse(key),
+        {
+          iv: CryptoJS.enc.Utf8.parse('9791027341711819'),
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+        },
+    ).toString();
+  }
+
+  decrypt(str, key) {
+    return CryptoJS.AES.decrypt(str, CryptoJS.enc.Utf8.parse(key), {
+      iv: CryptoJS.enc.Utf8.parse('9791027341711819'),
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }).toString(CryptoJS.enc.Utf8);
+  }
+
+  translateFlow(value) {
+    const unit = [
+      {unit: 'G', value: 1024, code: '05'},
+      {unit: 'M', value: 1, code: '04'},
+    ];
+    const data = {unit: '', ...value};
+    unit.forEach((item) => {
+      if (value.code === item.code) {
+        data.unit = item.unit;
+        data.value =
+            Math.floor(parseFloat(data.value) * item.value * 100) / 100;
+      }
+    });
+    data.value = parseInt(data.value);
+    return data;
+  }
 
   makeCanvas() {
     const canvas = new DrawContext();
@@ -254,10 +340,12 @@ class Widget extends DmYY {
 
     stackCircle.setPadding(20, 0, 0, 0);
     stackCircle.addSpacer();
+
     const icon = data.urlIcon
         ? {image: data.icon}
         : SFSymbol.named(data.icon);
     const imageIcon = stackCircle.addImage(icon.image);
+
     imageIcon.tintColor = this.iconColor;
     imageIcon.imageSize = new Size(15, 15);
     // canvas.drawImageInRect(icon.image, new Rect(110, 80, 60, 60));
@@ -299,7 +387,7 @@ class Widget extends DmYY {
     const text = this.textFormat.defaultText;
     text.color = new Color('#aaa');
     this.provideText(
-        `电信更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
+        `移动更新：${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`,
         stackFooter,
         text,
     );
@@ -327,36 +415,17 @@ class Widget extends DmYY {
     return await this.renderMedium(w);
   };
 
-  renderWebView = async () => {
-    const webView = new WebView();
-    const url = 'https://e.189.cn/index.do';
-    await webView.loadURL(url);
-    await webView.present(false);
-
-    const request = new Request(this.fetchUri.detail);
-    request.method = 'POST';
-    const response = await request.loadJSON();
-    console.log(response);
-    if (response.result === -10001) {
-      const index = await this.generateAlert('未获取到用户信息', [
-        '取消',
-        '重试',
-      ]);
-      if (index === 0) return;
-      await this.renderWebView();
-    } else {
-      const cookies = request.response.cookies;
-      let cookie = [];
-      cookie = cookies.map((item) => `${item.name}=${item.value}`);
-      cookie = cookie.join('; ');
-      this.settings.cookie = cookie;
-      this.saveSettings();
-    }
-  };
-
   Run() {
     if (config.runsInApp) {
-      const widgetInitConfig = {cookie: 'china_telecom_cookie'};
+      this.registerAction('费用进度', async () => {
+        await this.setAlertInput(`${this.name}`, '预计当月费用使用值', {
+          maxFee: '默认 100 元',
+        });
+      });
+      const widgetInitConfig = {
+        getfee: 'chavy_getfee_cmcc',
+        autologin: 'chavy_autologin_cmcc',
+      };
       this.registerAction('颜色配置', async () => {
         await this.setAlertInput(
             `${this.name}颜色配置`,
@@ -374,44 +443,50 @@ class Widget extends DmYY {
         );
       });
       this.registerAction('账号设置', async () => {
-        const index = await this.generateAlert('设置账号信息', [
-          '取消',
-          '网站登录',
-        ]);
-        if (index === 0) return;
-        await this.renderWebView();
+        await this.setAlertInput(
+            `${this.name}账号`,
+            '读取 BoxJS 缓存信息',
+            widgetInitConfig,
+        );
       });
       this.registerAction('代理缓存', async () => {
         await this.setCacheBoxJSData(widgetInitConfig);
       });
       this.registerAction('基础设置', this.setWidgetConfig);
     }
-    const {
-      step1,
-      step2,
-      step3,
-      step4,
-      inner,
-      icon,
-      percent,
-      value,
-      // authToken,
-      cookie,
-    } = this.settings;
-    this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
-    this.textColor1 = value ? new Color(value) : this.textColor1;
-    this.phoneBill.circleColor = step1 ? new Color(step1) : this.circleColor1;
-    this.flow.circleColor = step2 ? new Color(step2) : this.circleColor2;
-    this.voice.circleColor = step3 ? new Color(step3) : this.circleColor3;
-    this.updateTime.circleColor = step4 ? new Color(step4) : this.circleColor4;
+    try {
+      const {
+        getfee,
+        autologin,
+        step1,
+        step2,
+        step3,
+        step4,
+        inner,
+        icon,
+        percent,
+        value,
+        maxFee,
+      } = this.settings;
+      this.fgCircleColor = inner ? new Color(inner) : this.fgCircleColor;
+      this.textColor1 = value ? new Color(value) : this.textColor1;
 
-    this.iconColor = icon ? new Color(icon) : this.iconColor;
-    this.percentColor = percent ? new Color(percent) : this.percentColor;
+      this.phoneBill.circleColor = step1 ? new Color(step1) : this.circleColor1;
+      this.flow.circleColor = step2 ? new Color(step2) : this.circleColor2;
+      this.voice.circleColor = step3 ? new Color(step3) : this.circleColor3;
+      this.updateTime.circleColor = step4
+          ? new Color(step4)
+          : this.circleColor4;
 
-    this.cookie = cookie;
-    if (this.cookie) this.options.headers.cookie = this.cookie;
-    // this.authToken = authToken;
-    // if (this.authToken) this.options.headers.authToken = this.authToken;
+      this.iconColor = icon ? new Color(icon) : this.iconColor;
+      this.percentColor = percent ? new Color(percent) : this.percentColor;
+      this.maxFee = parseFloat(maxFee) || this.maxFee;
+
+      this.getfee = JSON.parse(getfee || '{}');
+      this.autologin = JSON.parse(autologin || '{}');
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**

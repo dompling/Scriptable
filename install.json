@@ -5,17 +5,25 @@
   "apps": [
     {
       "version": "1.0.0",
-      "description": "一键安装所有包",
+      "description": "单个安装",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "widget.Install",
+      "title": "单个安装"
+    },
+    {
+      "version": "1.0.0",
+      "description": "全量安装",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "2YaInstall",
-      "title": "一键安装所有包"
+      "title": "全量安装"
     },
     {
       "version": "1.0.0",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "DmYY",
       "title": "DmYY"
     },
@@ -23,115 +31,344 @@
       "version": "1.0.0",
       "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "JDWuLiu",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md",
-      "title": "京东物流"
+      "title": "京东物流",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "JDDou",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
-      "title": "京东豆"
+      "title": "京东豆",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
-      "name": "JDDou",
-      "title": "京东豆走势"
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "JDDouK",
+      "title": "京东豆走势",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "BiliBili",
-      "title": "哔哩哔哩今日番剧"
+      "title": "哔哩哔哩今日番剧",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "BiliBiliWatch",
-      "title": "哔哩哔哩关注中心"
-    },
-    {
-      "version": "1.0.0",
-      "description": "依赖DmYY，Canlendar",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Canlendar.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
-      "name": "Canlendar",
-      "title": "日历函数"
-    },
-    {
-      "version": "1.0.0",
-      "description": "依赖DmYY，Canlendar",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
-      "name": "Birthday",
-      "title": "破壳日"
+      "title": "哔哩哔哩关注中心",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryDay.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
-      "name": "HistoryDay",
-      "title": "历史上的今天"
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliUp.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "BiliBiliUp",
+      "title": "哔哩哔哩 Up 主",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY，Canlendar",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "Calendar",
+      "title": "日历函数"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY，Calendar",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "Birthday",
+      "title": "破壳日",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        },
+        {
+          "name": "Calendar",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "HistoryToday",
+      "title": "历史上的今天",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "ZXTrains",
-      "title": "智行火车票提醒"
+      "title": "智行火车票提醒",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Health.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "Health",
-      "title": "健康步数"
+      "title": "健康步数",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Contact.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "Contact",
-      "title": "桌面联系人"
+      "title": "桌面联系人",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "Telegram",
-      "title": "Telegram"
+      "title": "Telegram",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "YouTube",
+      "title": "YouTube",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "ChinaTelecom",
-      "title": "中国电信"
+      "title": "中国电信",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaMobile.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "ChinaMobile",
+      "title": "中国移动",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        },
+        {
+          "name": "crypto-js",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/crypto-js.min.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaUnicom.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "ChinaUnicom",
+      "title": "中国联通",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
       "description": "依赖DmYY",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js",
-      "thumb": "https://avatars0.githubusercontent.com/u/23498579?s=60&v=4",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
       "name": "VPNBoard",
-      "title": "VPN 面板+签到"
+      "title": "VPN 面板+签到",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoardPress.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "VPNBoardPress",
+      "title": "VPN 面板+签到 第二版",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNSubscription.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "VPNSubscription",
+      "title": "VPN 机场订阅流量",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/VPNV2Bord.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "VPNV2Board",
+      "title": "V2Board 机场模板"
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendar.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "PoisonCalendar",
+      "title": "📆毒汤日历",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "依赖DmYY",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendarText.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "PoisonCalendarText",
+      "title": "📆毒汤日历文字版",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/TodayOilPrice.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "TodayOilPrice",
+      "title": "今日油价"
+    },
+    {
+      "version": "1.0.0",
+      "description": "",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/COVID-19.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "COVID-19",
+      "title": "疫情日报"
+    },
+    {
+      "version": "1.0.0",
+      "description": "",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/CountDown.js",
+      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "name": "CountDownCalendar",
+      "title": "日历倒计时"
     }
   ]
 }
