@@ -123,7 +123,7 @@
     },
     {
       "version": "1.0.0",
-      "description": "，Calendar",
+      "description": "生日的信息和倒计时",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
       "name": "Birthday",
@@ -141,7 +141,7 @@
     },
     {
       "version": "1.0.0",
-      "description": "",
+      "description": "显示历史上的今日带图片情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
       "name": "HistoryToday",
@@ -199,7 +199,7 @@
       "version": "1.0.0",
       "description": "在文本框里面输入电报频道的信息，可以显示订阅的人数等信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/poicloud.png",
+      "thumb": "https://img.icons8.com/clouds/344/telegram-app.png",
       "name": "Telegram",
       "title": "Telegram",
       "depend": [
@@ -213,7 +213,7 @@
       "version": "1.0.0",
       "description": "在文本框里面输入YouTube 作者的信息，可以展示作者的粉丝数，视频信息等",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/YouTube.png",
+      "thumb": "https://img.icons8.com/clouds/2x/youtube.png",
       "name": "YouTube",
       "title": "YouTube",
       "depend": [
@@ -317,7 +317,7 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/VPNV2Bord.js",
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNV2Board",
-      "title": "V2Board 机场模板"
+      "title": "V2模板"
     },
     {
       "version": "1.0.0",
