@@ -1,7 +1,8 @@
 {
   "author": "DomplingYaYa",
+  "scriptable": true,
   "icon": "https://avatars3.githubusercontent.com/u/23498579?s=460&u=1e87605e4abc4e6ecf3edd8b1d730227f54db4d4&v=4",
-  "repo": "https://github.com/dompling/Script",
+  "repo": "https://github.com/dompling/Scriptable",
   "apps": [
     {
       "version": "1.0.0",
