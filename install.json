@@ -64,6 +64,9 @@
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDouK",
       "title": "京东豆走势",
+      "images": [
+        "https://raw.githubusercontent.com/dompling/Scriptable/master/images/jdk.jpg"
+      ],
       "depend": [
         {
           "name": "DmYY",
@@ -330,7 +333,8 @@
         {
           "name": "DmYY",
           "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
-        },{
+        },
+        {
           "name": "Calendar",
           "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js"
         }
