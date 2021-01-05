@@ -5,9 +5,9 @@
   "apps": [
     {
       "version": "1.0.0",
-      "description": "单个安装",
+      "description": "单个安装，添加作者订阅，在 app 中运行，单个安装文件",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/downloading-updates.png",
       "name": "widget.Install",
       "title": "单个安装"
     },
@@ -15,7 +15,7 @@
       "version": "1.0.0",
       "description": "全量安装",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/download-2.png",
       "name": "2YaInstall",
       "title": "全量安装"
     },
@@ -23,15 +23,15 @@
       "version": "1.0.0",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/settings.png",
       "name": "DmYY",
       "title": "DmYY"
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
+      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png",
       "name": "JDWuLiu",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md",
       "title": "京东物流",
@@ -44,9 +44,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
+      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京豆总量，和昨日收支情况。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDou",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
       "title": "京东豆",
@@ -59,9 +59,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY,根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
+      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDouK",
       "title": "京东豆走势",
       "depend": [
@@ -73,11 +73,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "哔哩哔哩今日的推送番剧情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
       "name": "BiliBili",
-      "title": "哔哩哔哩今日番剧",
+      "title": "今日番剧",
       "depend": [
         {
           "name": "DmYY",
@@ -87,11 +87,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "哔哩哔哩关注中心的最近更新",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
       "name": "BiliBiliWatch",
-      "title": "哔哩哔哩关注中心",
+      "title": "关注中心",
       "depend": [
         {
           "name": "DmYY",
@@ -101,11 +101,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "哔哩哔哩Up主订阅控件的视频信息等",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliUp.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
       "name": "BiliBiliUp",
-      "title": "哔哩哔哩 Up 主",
+      "title": "哔哩UP主",
       "depend": [
         {
           "name": "DmYY",
@@ -115,17 +115,17 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY，Canlendar",
+      "description": "日历函数插件，组件的依赖包",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/edit-calendar.png",
       "name": "Calendar",
       "title": "日历函数"
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY，Calendar",
+      "description": "，Calendar",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
       "name": "Birthday",
       "title": "破壳日",
       "depend": [
@@ -141,9 +141,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
       "name": "HistoryToday",
       "title": "历史上的今天",
       "depend": [
@@ -155,11 +155,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "智行火车票的出行提醒，需要手动的去智行火车的待出行列表使用重写获取待出行数据",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png",
       "name": "ZXTrains",
-      "title": "智行火车票提醒",
+      "title": "车票提醒",
       "depend": [
         {
           "name": "DmYY",
@@ -169,9 +169,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "根据快捷指令，可以获取到相关的健康数据，然后使用本组件可以查询最近的步行跑步的数据",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Health.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/apple-health.png",
       "name": "Health",
       "title": "健康步数",
       "depend": [
@@ -183,9 +183,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "在文本框里面输入电话簿中的联系人，可以在桌面显示联系人信息，可以进行电话拨号等",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Contact.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/apple-contacts.png",
       "name": "Contact",
       "title": "桌面联系人",
       "depend": [
@@ -197,9 +197,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "在文本框里面输入电报频道的信息，可以显示订阅的人数等信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Telegram.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/poicloud.png",
       "name": "Telegram",
       "title": "Telegram",
       "depend": [
@@ -211,9 +211,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "在文本框里面输入YouTube 作者的信息，可以展示作者的粉丝数，视频信息等",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/YouTube.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/YouTube.png",
       "name": "YouTube",
       "title": "YouTube",
       "depend": [
@@ -225,9 +225,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "显示中国电信的手机号的套餐信息，可以在 app 里面登录，登录成功之后可以展示信息，也可以使用代理缓存读取 boxjs 的账号信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10010.png",
       "name": "ChinaTelecom",
       "title": "中国电信",
       "depend": [
@@ -239,9 +239,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "显示移动的套餐信息，目前暂不支持登录，请自行使用代理软件抓取数据信息。推荐使用 boxjs 代理缓存",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaMobile.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10086.png",
       "name": "ChinaMobile",
       "title": "中国移动",
       "depend": [
@@ -257,9 +257,9 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "显示联通的套餐信息，目前暂不支持登录，请自行使用代理软件抓取数据信息。推荐使用 boxjs 代理缓存",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaUnicom.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10000.png",
       "name": "ChinaUnicom",
       "title": "中国联通",
       "depend": [
@@ -271,11 +271,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "Vpn 折线图面板，带签到功能。支持的机场 url 地址：https://**/user/login",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNBoard",
-      "title": "VPN 面板+签到",
+      "title": "VPN面板",
       "depend": [
         {
           "name": "DmYY",
@@ -285,11 +285,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "Vpn 圆形进度条，带签到功能。 url 地址：https://**/user/login",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoardPress.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNBoardPress",
-      "title": "VPN 面板+签到 第二版",
+      "title": "VPN圆形",
       "depend": [
         {
           "name": "DmYY",
@@ -299,11 +299,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "VPN 圆形进度条，vpn 的订阅地址返回的信息中需要有带各种流量的使用情况的订阅地址",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNSubscription.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNSubscription",
-      "title": "VPN 机场订阅流量",
+      "title": "VPN订阅",
       "depend": [
         {
           "name": "DmYY",
@@ -313,18 +313,19 @@
     },
     {
       "version": "1.0.0",
+      "description": "VPN 圆形进度条，vpn 登陆地址必须是 https://****/api/v1/passport/auth/login",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/VPNV2Bord.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNV2Board",
       "title": "V2Board 机场模板"
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "毒汤日历，每天一杯毒鸡汤，扎心不怕百年享。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendar.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/google-calendar.png",
       "name": "PoisonCalendar",
-      "title": "📆毒汤日历",
+      "title": "毒汤日历",
       "depend": [
         {
           "name": "DmYY",
@@ -334,11 +335,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "依赖DmYY",
+      "description": "毒汤日历纯文字版，无需抓包信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PoisonCalendarText.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/google-calendar.png",
       "name": "PoisonCalendarText",
-      "title": "📆毒汤日历文字版",
+      "title": "毒汤纯文字",
       "depend": [
         {
           "name": "DmYY",
@@ -348,25 +349,25 @@
     },
     {
       "version": "1.0.0",
-      "description": "",
+      "description": "显示定位信息的油价使用的情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/TodayOilPrice.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/engine-oil-level.png",
       "name": "TodayOilPrice",
       "title": "今日油价"
     },
     {
       "version": "1.0.0",
-      "description": "",
+      "description": "根据定位信息，显示本地区的新冠病毒的数据情况，可能有数据更新不及时的情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/COVID-19.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://img.icons8.com/clouds/344/coronavirus.png",
       "name": "COVID-19",
       "title": "疫情日报"
     },
     {
       "version": "1.0.0",
-      "description": "",
+      "description": "显示公历和农历，根据近期的信息会出现一个倒计时的提示信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/CountDown.js",
-      "thumb": "https://lh3.googleusercontent.com/-Gu4lX2Q_jsY/X8nbN8NZ8JI/AAAAAAAAAG4/Sbymgqcer60UsAjFEOGVNqXEVPyt3d9yQCEwYBhgLKtQDAL1OcqyRj9gmCz6pkTJIqqq-PtUPkPkcrjeL0BclZbYGgXuU1GxaYNOL55QQh9AmTIoMIxab-5kL3EQJlGTNiihiRFr7XjMj7a8EPU5xMIdqOD31xLXOi8Tg2aW7H4ieC0vG1rzndrkjcpCpOQXluU0Zbfx0AYUHcMcdee75jZ4sOoyLz3nfUUXkVJblLE0nQ7uoagXyyDd7pCpNTlDbSLhci9264_alEkHvwKdEU8MBQV0aijq-3Fu1mBQEnHsqOrJa1CMdX5u1Xry1jSgxxuWEzlv_mfljCuPZBhK214COeaRNsWnmQwxDRA_e91_EWU313pUDx6HUbitKb6tJFsdKHg4ACb5I_-0GwLKWX91xbS5OVE1Kye9spCFq_CMp4EEvywRvT6dcoLM5N7lPj8ZVnDATKKZVkTfU3QJNYMYERO_4hy1K5SSU1CqBQ8bfvJyif5Ac7RpVqY1O6jfSgDIkUw8TcKKzoQ7Y4mleW72gbiM-RcHvMYxOmUNP5ErDCorcfQ41kO82jkHi3oG4B29wYApqzFDanUShWgj2M11D41NS4ib8MfBe_ZfAuZ0nncLy_Wwc2er8IKI_sgNFQtlBZEiCObAWZKJYyTP4HrXWq_FPMMi7p_4F/w280-h280-p/unnamed.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/daysmatter.png",
       "name": "CountDownCalendar",
       "title": "日历倒计时"
     }
