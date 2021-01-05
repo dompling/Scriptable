@@ -31,7 +31,7 @@
       "version": "1.0.0",
       "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDWuLiu",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md",
       "title": "京东物流",
