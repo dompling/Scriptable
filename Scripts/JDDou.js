@@ -189,7 +189,7 @@ class Widget extends DmYY {
     const letfContainer = body.addStack();
     await this.setContainer(letfContainer, {
       icon:
-        "https://gitee.com/Ya_Ya_2/Scriptable/raw/master/JDDou/jdd.png",
+        "https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png",
       text: `${this.beanCount}`,
       desc: "当前京豆",
     });
@@ -197,7 +197,7 @@ class Widget extends DmYY {
     const centerContainer = body.addStack();
     await this.setContainer(centerContainer, {
       icon:
-        "https://gitee.com/Ya_Ya_2/Scriptable/raw/master/JDDou/jdd.png",
+        "https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png",
       text: `+${this.incomeBean}`,
       desc: "昨日收入",
     });
@@ -205,7 +205,7 @@ class Widget extends DmYY {
     const rightContainer = body.addStack();
     await this.setContainer(rightContainer, {
       icon:
-        "https://gitee.com/Ya_Ya_2/Scriptable/raw/master/JDDou/jdd.png",
+        "https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png",
       text: `${this.expenseBean}`,
       desc: "昨日支出",
     });
