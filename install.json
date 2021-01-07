@@ -30,12 +30,16 @@
     },
     {
       "version": "1.0.0",
-      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。",
+      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。组件使用，参考下方京东豆走势视频",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDWuLiu",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md",
       "title": "京东物流",
+      "html": [
+        "<h3 align=\"center\">签到相关教程</h3>",
+        "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
+      ],
       "depend": [
         {
           "name": "DmYY",
@@ -45,12 +49,16 @@
     },
     {
       "version": "1.0.0",
-      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京豆总量，和昨日收支情况。",
+      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京豆总量，和昨日收支情况。组件使用，参考下方京东豆走势视频",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDou",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
       "title": "京东豆",
+      "html": [
+        "<h3 align=\"center\">签到相关教程</h3>",
+        "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
+      ],
       "depend": [
         {
           "name": "DmYY",
@@ -60,11 +68,15 @@
     },
     {
       "version": "1.0.0",
-      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。",
+      "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。组件使用，参考下方视频",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDouK",
       "title": "京东豆走势",
+      "html": [
+        "<h3 align=\"center\">签到相关教程</h3>",
+        "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
+      ],
       "images": [
         "https://raw.githubusercontent.com/dompling/Scriptable/master/images/jdk.jpg"
       ],
