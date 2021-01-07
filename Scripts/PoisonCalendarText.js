@@ -3,27 +3,27 @@
 // icon-color: yellow; icon-glyph: calendar-alt;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === "undefined") require = importModule;
-const { DmYY, Runing } = require("./DmYY");
-const { Calendar } = require("./Calendar");
+if (typeof require === 'undefined') require = importModule;
+const { DmYY, Runing } = require('./DmYY');
+const { Calendar } = require('./Calendar');
 const $calendar = new Calendar();
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = "毒汤日历";
-    this.en = "PoisonCalendar";
+    this.name = '毒汤日历';
+    this.en = 'PoisonCalendar';
     this.Run();
   }
 
-  cookie = "";
+  cookie = '';
   date = new Date();
   format = new DateFormatter();
 
   userInfo = {};
   dataSource = [];
-  baseUrl = "http://www.dutangapp.cn";
+  baseUrl = 'http://www.dutangapp.cn';
 
   init = async () => {
     try {
@@ -39,14 +39,14 @@ class Widget extends DmYY {
       const url = `${this.baseUrl}/u/wx_login?code=&os=iOS&unid=${this.cookie}&version=3.5.2`;
       const response = await this.$request.get(url);
       if (response.code === 0) {
-        console.log("✅用户信息获取成功");
+        console.log('✅用户信息获取成功');
         const { data } = response;
         this.userInfo = data;
       } else {
-        console.log("❌用户信息获取失败");
+        console.log('❌用户信息获取失败');
       }
     } catch (e) {
-      console.log("❌用户信息获取失败" + e);
+      console.log('❌用户信息获取失败' + e);
     }
   };
 
@@ -62,7 +62,9 @@ class Widget extends DmYY {
       if (response.code === 0) {
         console.log(`✅今日${this.name}获取成功`);
         const { data } = response;
-        this.dataSource = data[today].toxicList;
+        this.format.dateFormat = 'YYYY-MM-dd';
+        const key = this.format.string(this.date);
+        this.dataSource = data[key].toxicList;
       } else {
         console.log(`❌今日${this.name}获取成功`);
       }
@@ -74,7 +76,7 @@ class Widget extends DmYY {
   setAvatar = async (stack) => {
     stack.size = new Size(50, 50);
     stack.cornerRadius = 5;
-    const imgLogo = await this.$request.get(this.userInfo.avatar, "IMG");
+    const imgLogo = await this.$request.get(this.userInfo.avatar, 'IMG');
     const imgLogoItem = stack.addImage(imgLogo);
     imgLogoItem.imageSize = new Size(50, 50);
     return stack;
@@ -85,18 +87,18 @@ class Widget extends DmYY {
     textFormatNumber.color = this.backGroundColor;
     const title = this.userInfo.nick;
     textFormatNumber.size =
-      title.length > 20 || this.widgetFamily === "small" ? 16 : 20;
+      title.length > 20 || this.widgetFamily === 'small' ? 16 : 20;
     const titleItem = this.provideText(title, stack, textFormatNumber);
     titleItem.lineLimit = 1;
   };
 
   setPathStack = (stack) => {
     const textFormatNumber = this.textFormat.defaultText;
-    textFormatNumber.color = new Color("#2481cc");
+    textFormatNumber.color = new Color('#2481cc');
     textFormatNumber.size = 12;
-    this.format.dateFormat = "HH:mm";
-    let simpleText = "更新：" + this.format.string(this.date);
-    this.format.dateFormat = "YYYY-MM-dd";
+    this.format.dateFormat = 'HH:mm';
+    let simpleText = '更新：' + this.format.string(this.date);
+    this.format.dateFormat = 'YYYY-MM-dd';
     const titleItem = this.provideText(simpleText, stack, textFormatNumber);
     titleItem.lineLimit = 1;
   };
@@ -117,7 +119,7 @@ class Widget extends DmYY {
 
   setCalendar(stack) {
     const today = this.format.string(this.date);
-    const todays = today.split("-");
+    const todays = today.split('-');
     const response = $calendar.solar2lunar(todays[0], todays[1], todays[2]);
     stack.layoutVertically();
     const stackCalendar = stack.addStack();
@@ -167,7 +169,7 @@ class Widget extends DmYY {
 
   Run() {
     if (config.runsInApp) {
-      this.registerAction("基础设置", this.setWidgetConfig);
+      this.registerAction('基础设置', this.setWidgetConfig);
     }
   }
 
@@ -179,9 +181,9 @@ class Widget extends DmYY {
     await this.init();
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
-    if (this.widgetFamily === "medium") {
+    if (this.widgetFamily === 'medium') {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === "large") {
+    } else if (this.widgetFamily === 'large') {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
