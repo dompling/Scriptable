@@ -37,7 +37,7 @@
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md",
       "title": "京东物流",
       "html": [
-        "<h3 align=\"center\">签到相关教程</h3>",
+        "<h3 align=\"center\">京东组件教程</h3>",
         "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
       ],
       "depend": [
@@ -56,7 +56,7 @@
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
       "title": "京东豆",
       "html": [
-        "<h3 align=\"center\">签到相关教程</h3>",
+        "<h3 align=\"center\">京东组件教程</h3>",
         "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
       ],
       "depend": [
@@ -74,7 +74,7 @@
       "name": "JDDouK",
       "title": "京东豆走势",
       "html": [
-        "<h3 align=\"center\">签到相关教程</h3>",
+        "<h3 align=\"center\">京东组件教程</h3>",
         "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
       ],
       "images": [
@@ -232,6 +232,10 @@
       "thumb": "https://img.icons8.com/clouds/2x/youtube.png",
       "name": "YouTube",
       "title": "YouTube",
+      "html": [
+        "<h3 align=\"center\">组件教程</h3>",
+        "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/M5XMCTRLZkI\" width=\"100%\" height=\"100%\"></iframe></p>"
+      ],
       "depend": [
         {
           "name": "DmYY",
@@ -246,6 +250,10 @@
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10000.png",
       "name": "ChinaTelecom",
       "title": "中国电信",
+      "html": [
+        "<h3 align=\"center\">组件教程</h3>",
+        "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/_xjLlpz0GbU\" width=\"100%\" height=\"100%\"></iframe></p>"
+      ],
       "depend": [
         {
           "name": "DmYY",
