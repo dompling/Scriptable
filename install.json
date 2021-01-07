@@ -231,7 +231,7 @@
       "version": "1.0.0",
       "description": "显示中国电信的手机号的套餐信息，可以在 app 里面登录，登录成功之后可以展示信息，也可以使用代理缓存读取 boxjs 的账号信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10010.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10000.png",
       "name": "ChinaTelecom",
       "title": "中国电信",
       "depend": [
@@ -263,7 +263,7 @@
       "version": "1.0.0",
       "description": "显示联通的套餐信息，目前暂不支持登录，请自行使用代理软件抓取数据信息。推荐使用 boxjs 代理缓存",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaUnicom.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10000.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10010.png",
       "name": "ChinaUnicom",
       "title": "中国联通",
       "depend": [
