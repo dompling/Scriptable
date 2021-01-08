@@ -1,0 +1,20 @@
+{
+  "author": "YaYa推荐",
+  "scriptable": true,
+  "icon": "https://avatars3.githubusercontent.com/u/23498579?s=460&u=1e87605e4abc4e6ecf3edd8b1d730227f54db4d4&v=4",
+  "repo": "https://github.com/dompling/Scriptable",
+  "apps": [
+    {
+      "version": "1.0.0",
+      "author": "KeiKinn",
+      "description": "透明贴纸，随机换磁贴图片",
+      "scriptURL": "https://raw.githubusercontent.com/KeiKinn/StickerOnScreen/main/src/StickerOnScreen.js",
+      "thumb": "https://img.icons8.com/clouds/344/apple-app-store.png",
+      "name": "StickerOnScreen",
+      "title": "透明贴纸",
+      "html": [
+        "作者：<a href=\"https://github.com/KeiKinn/StickerOnScreen\">@KeiKinn</>"
+      ]
+    }
+  ]
+}
