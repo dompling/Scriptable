@@ -3,23 +3,23 @@
 // icon-color: deep-gray; icon-glyph: tv;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === "undefined") require = importModule;
-const { DmYY, Runing } = require("./DmYY");
+if (typeof require === 'undefined') require = importModule;
+const { DmYY, Runing } = require('./DmYY');
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = "哔哩哔哩今日番剧";
-    this.en = "BiliBiliMonitor";
+    this.name = '哔哩哔哩今日番剧';
+    this.en = 'BiliBiliMonitor';
     this.logo =
-      "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
-    config.runsInApp && this.registerAction("基础设置", this.setWidgetConfig);
+      'https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png';
+    config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
     this.cacheName = this.md5(`dataSouce_${this.en}`);
   }
 
   useBoxJS = false;
-  today = "";
+  today = '';
   dataSource = [];
 
   init = async () => {
@@ -53,7 +53,7 @@ class Widget extends DmYY {
         if (result) {
           Keychain.set(
             this.cacheName,
-            JSON.stringify({ [this.today]: result })
+            JSON.stringify({ [this.today]: result }),
           );
           return result.seasons;
         }
@@ -64,7 +64,7 @@ class Widget extends DmYY {
     }
   };
 
-  setListCell = async (cell, data) => {
+  setListCell = async (body, data) => {
     let {
       cover,
       url,
@@ -75,63 +75,117 @@ class Widget extends DmYY {
       delay_reason,
       delay_index,
     } = data;
-    let body = cell.addStack();
     body.url = url;
-    if (this.widgetFamily !== "small") {
-      const imageView = body.addStack();
-      imageView.size = new Size(43, 43);
-      imageView.cornerRadius = 5;
-      const image = await this.$request.get(cover, "IMG");
-      imageView.backgroundImage = image;
-      body.addSpacer(10);
-    }
+    const imageView = body.addStack();
+    imageView.size = new Size(89, 105);
+    imageView.cornerRadius = 5;
+    const image = await this.$request.get(cover, 'IMG');
+    imageView.backgroundImage = image;
+    imageView.borderWidth = 1;
+    imageView.borderColor = new Color(this.widgetColor.hex, 0.7);
+    const stackDesc = imageView.addStack();
 
-    const textView = body.addStack();
+    stackDesc.layoutVertically();
+    const stackDescTop = stackDesc.addStack();
+    stackDescTop.setPadding(5, 0, 0, 0);
+    const textColor = new Color('#fff');
+    if (delay) pub_index = `${delay_index}「${delay_reason}」`;
+    stackDescTop.addSpacer();
+    const stackTopText = stackDescTop.addStack();
+    stackTopText.setPadding(0, 2, 0, 2);
+    stackTopText.backgroundColor = new Color('#000', 0.3);
+    stackTopText.cornerRadius = 4;
+    const subContent = stackTopText.addText(pub_index);
+    subContent.font = Font.boldSystemFont(10);
+    subContent.textColor = textColor;
+    subContent.lineLimit = 1;
+
+    stackDesc.addSpacer();
+    const stackDescBottom = stackDesc.addStack();
+    stackDescBottom.addSpacer();
+    stackDescBottom.backgroundColor = new Color('#000', 0.3);
+
+    const textView = stackDescBottom.addStack();
+    textView.setPadding(0, 10, 0, 10);
+    textView.size = new Size(89, 30);
     textView.layoutVertically();
-
     const descText = textView.addText(title);
-    descText.font = Font.boldSystemFont(14);
-    descText.textColor = this.widgetColor;
+    descText.font = Font.boldSystemFont(10);
+    descText.textColor = textColor;
     descText.lineLimit = 1;
 
-    textView.addSpacer(3);
-    if (delay) pub_index = `${delay_index}「${delay_reason}」`;
-    const subContent = textView.addText(pub_index);
-    subContent.font = Font.boldSystemFont(10);
-    subContent.textColor = this.widgetColor;
-    subContent.lineLimit = 1;
-    const timerText = textView.addText(`更新时间：${pub_time}`);
+    const timerText = textView.addText(`更新：${pub_time}`);
     timerText.font = Font.lightSystemFont(10);
-    timerText.textColor = this.widgetColor;
+    timerText.textColor = textColor;
     timerText.lineLimit = 1;
+    stackDescBottom.addSpacer();
 
-    return cell;
+    return body;
   };
 
-  setWidget = async (body, size) => {
+  setLine = (stack, color) => {
+    const stackLine = stack.addStack();
+    stackLine.backgroundColor = new Color(color);
+    stackLine.addSpacer();
+    const line = stackLine.addStack();
+    line.size = new Size(1, 1);
+    stackLine.addSpacer();
+  };
+
+  setWidget = async (body, data) => {
     const container = body.addStack();
     container.layoutVertically();
-    const dataSource = this.getRandomArrayElements(this.dataSource, size);
-    for (let index = 0; index < dataSource.length; index++) {
-      const data = dataSource[index];
+    const dataSource = data.length > 3 ? [data.splice(0, 3), data] : [data];
+    let itemIndex = 0;
+    for (const item of dataSource) {
       let listItem = container.addStack();
-      await this.setListCell(listItem, data);
-      container.addSpacer(10);
+      let index = 0;
+      for (const video of item) {
+        const stackItem = listItem.addStack();
+        await this.setListCell(stackItem, video);
+        index++;
+        if (item.length !== index) listItem.addSpacer(13);
+      }
+      itemIndex++;
+      if (dataSource.length !== itemIndex) container.addSpacer(13);
     }
-    body.addSpacer();
+    if (config.widgetFamily === 'large') {
+      container.addSpacer();
+      this.setLine(container, '#e8e8e8');
+      const timerColor = new Color(this.widgetColor.hex, 0.7);
+      const fontSize = 10;
+      container.addSpacer();
+      const stackFooter = container.addStack();
+      stackFooter.addSpacer();
+      const now = new Date();
+      const footerTextItem = stackFooter.addText('时间：');
+      footerTextItem.textColor = timerColor;
+      footerTextItem.fontSize = fontSize;
+      const stackDate = stackFooter.addDate(
+        new Date(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`),
+      );
+      stackDate.textColor = timerColor;
+      stackDate.fontSize = fontSize;
+      stackDate.rightAlignText();
+      stackDate.applyTimerStyle();
+    }
     return body;
   };
 
   renderSmall = async (w) => {
-    return await this.setWidget(w, 2);
+    const stack = w.addStack();
+    stack.addText('暂不支持');
+    return w;
   };
 
   renderLarge = async (w) => {
-    return await this.setWidget(w, 5);
+    const dataSource = this.getRandomArrayElements(this.dataSource, 6);
+    return await this.setWidget(w, dataSource);
   };
 
   renderMedium = async (w) => {
-    return await this.setWidget(w, 2);
+    const dataSource = this.getRandomArrayElements(this.dataSource, 3);
+    return await this.setWidget(w, dataSource);
   };
 
   /**
@@ -143,15 +197,15 @@ class Widget extends DmYY {
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
     const header = widget.addStack();
-    if (this.widgetFamily !== "small") {
+    if (this.widgetFamily !== 'small') {
       await this.renderJDHeader(header);
     } else {
       await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     }
     widget.addSpacer(10);
-    if (this.widgetFamily === "medium") {
+    if (this.widgetFamily === 'medium') {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === "large") {
+    } else if (this.widgetFamily === 'large') {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
@@ -163,10 +217,10 @@ class Widget extends DmYY {
     await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     header.addSpacer();
     const headerMore = header.addStack();
-    headerMore.url = "";
+    headerMore.url = '';
     headerMore.setPadding(1, 10, 1, 10);
     headerMore.cornerRadius = 10;
-    headerMore.backgroundColor = new Color("#fff", 0.5);
+    headerMore.backgroundColor = new Color('#fff', 0.5);
     const textItem = headerMore.addText(this.today);
     textItem.font = Font.boldSystemFont(12);
     textItem.textColor = this.widgetColor;
@@ -178,4 +232,4 @@ class Widget extends DmYY {
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, "", false); //远程开发环境
+await Runing(Widget, '', false); //远程开发环境
