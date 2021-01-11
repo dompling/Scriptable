@@ -295,14 +295,14 @@
     },
     {
       "version": "1.0.0",
-      "description": "Vpn 折线图面板，带签到功能。支持的机场 url 地址：https://**/user/login",
+      "description": "Vpn 折线图面板，带签到功能。支持的机场 url 地址：https://**/auth/login",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VpnBoard.js",
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNBoard",
       "title": "VPN面板",
       "html": [
         "<h3 align=\"center\">机场模板要求</h3>",
-        "<p>登陆地址如下：https://***/user/login , 以/user/login 结尾的地址则符合要求</p>"
+        "<p>登陆地址如下：https://***/auth/login , 以/auth/login 结尾的地址则符合要求</p>"
       ],
       "depend": [
         {
@@ -313,14 +313,14 @@
     },
     {
       "version": "1.0.0",
-      "description": "Vpn 圆形进度条，带签到功能。 url 地址：https://**/user/login",
+      "description": "Vpn 圆形进度条，带签到功能。 url 地址：https://**/auth/login",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNBoardPress.js",
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNBoardPress",
       "title": "VPN圆形",
       "html": [
         "<h3 align=\"center\">机场模板要求</h3>",
-        "<p>登陆地址如下：https://***/user/login , 以/user/login 结尾的地址则符合要求</p>"
+        "<p>登陆地址如下：https://***/auth/login , 以/auth/login 结尾的地址则符合要求</p>"
       ],
       "depend": [
         {
