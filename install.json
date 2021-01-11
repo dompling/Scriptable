@@ -300,6 +300,10 @@
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNBoard",
       "title": "VPN面板",
+      "html": [
+        "<h3 align=\"center\">机场模板要求</h3>",
+        "<p>登陆地址如下：https://***/user/login , 以/user/login 结尾的地址则符合要求</p>"
+      ],
       "depend": [
         {
           "name": "DmYY",
@@ -314,6 +318,10 @@
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNBoardPress",
       "title": "VPN圆形",
+      "html": [
+        "<h3 align=\"center\">机场模板要求</h3>",
+        "<p>登陆地址如下：https://***/user/login , 以/user/login 结尾的地址则符合要求</p>"
+      ],
       "depend": [
         {
           "name": "DmYY",
@@ -328,6 +336,17 @@
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNSubscription",
       "title": "VPN订阅",
+      "html": [
+        "<h3 align=\"center\">机场模板要求</h3>",
+        "<h4>PC：订阅链接</h4>",
+        "<li>打开订阅链接</li>",
+        "<li>电脑端使用 F12 打开调试控制台，找到NetWork</li>",
+        "<li>找到订阅地址的请求</li>",
+        "<li>如果 response里面含有subscription-userinfo的关键字则满足条件</li>",
+        "<br/>",
+        "<h4>Mobile：</h4>",
+        "<li>操作方式类似 PC 登陆地址的查看步骤</li>"
+      ],
       "depend": [
         {
           "name": "DmYY",
