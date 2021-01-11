@@ -350,7 +350,7 @@
         "<h4>PC登陆地址接口：</h4>",
         "<ul><li>输入账号密码（错误的账号密码即可）点击登陆</li><li>电脑端使用 F12 打开调试控制台，找到NetWork</li><li>找到 login 接口：https://*****/api/v1/passport/auth/login</li><li>在 scriptable中的登陆地址输入/api/v1/passport/auth/login前面的那段地址</li><ul>",
         "<h4>Mobile登陆地址接口：</h4>",
-        "<p>请自行使用代理软件查看搜索即可，操作方式类似 PC 登陆地址的查看步骤</p>"
+        "<ul><li>请自行使用代理软件查看搜索即可，操作方式类似 PC 登陆地址的查看步骤</li></ul>"
       ]
     },
     {
