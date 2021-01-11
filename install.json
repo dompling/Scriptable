@@ -341,7 +341,17 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/VPNV2Bord.js",
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
       "name": "VPNV2Board",
-      "title": "V2模板"
+      "title": "V2模板",
+      "html": [
+        "<h3 align=\"center\">VPN 小组件教学</h3>",
+        "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/GguczjLgfmM\" width=\"100%\" height=\"100%\"></iframe></p>",
+        "<h3 align=\"center\">机场模板要求</h3>",
+        "<p>登陆地址如下：https://xn--mesr8b36x.net/#/login , 以/#/login 结尾的地址则符合要求</p>",
+        "<h4>PC登陆地址接口：</h4>",
+        "<ul><li>输入账号密码（错误的账号密码即可）点击登陆</li><li>电脑端使用 F12 打开调试控制台，找到NetWork</li><li>找到 login 接口：https://*****/api/v1/passport/auth/login</li><li>在 scriptable中的登陆地址输入/api/v1/passport/auth/login前面的那段地址</li><ul>",
+        "<h4>Mobile登陆地址接口：</h4>",
+        "<p>请自行使用代理软件查看搜索即可，操作方式类似 PC 登陆地址的查看步骤</p>"
+      ]
     },
     {
       "version": "1.0.0",
