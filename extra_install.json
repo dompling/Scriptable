@@ -18,6 +18,21 @@
       "images": [
         "https://raw.githubusercontent.com/KeiKinn/StickerOnScreen/main/img/IMG_3804.JPEG"
       ]
+    },
+    {
+      "version": "1.0.0",
+      "author": "脑瓜",
+      "description": "中国联通小组件，两种模式",
+      "scriptURL": "https://raw.githubusercontent.com/anker1209/Scriptable/main/Chinaunicom.js",
+      "thumb": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-imgbed/34ebdddc-90a8-4eb7-828b-f934c7386e12.png",
+      "name": "Chinaunicom",
+      "title": "中国联通",
+      "html": [
+        "作者：<a href=\"https://github.com/anker1209/Scriptable\">@anker1209</>"
+      ],
+      "images": [
+        "https://raw.githubusercontent.com/anker1209/Scriptable/main/IMG_2686.jpg"
+      ]
     }
   ]
 }
