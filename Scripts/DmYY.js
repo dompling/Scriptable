@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: cogs;
 
 /*
  * Author: 2Ya
@@ -112,11 +109,7 @@ class DmYY {
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
     const backgroundImage = this.getBackgroundImage();
-    if (this.backGroundColor.colors) {
-      widget.backgroundGradient = this.backGroundColor;
-    } else {
-      widget.backgroundColor = this.backGroundColor;
-    }
+
     console.log(this.backGroundColor);
     if (backgroundImage) {
       const opacity = this.isNight
@@ -129,6 +122,12 @@ class DmYY {
       );
       return true;
     } else {
+        
+   if (this.backGroundColor.colors) {
+      widget.backgroundGradient = this.backGroundColor;
+    } else {
+      widget.backgroundColor = this.backGroundColor;
+    }
       return false;
     }
   };
