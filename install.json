@@ -50,7 +50,7 @@
     {
       "version": "1.0.0",
       "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京豆总量，和昨日收支情况。组件使用，参考下方京东豆走势视频",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDou.js",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/JDDou.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
       "name": "JDDou",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
@@ -58,12 +58,6 @@
       "html": [
         "<h3 align=\"center\">京东组件教程</h3>",
         "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
-      ],
-      "depend": [
-        {
-          "name": "DmYY",
-          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
-        }
       ]
     },
     {
