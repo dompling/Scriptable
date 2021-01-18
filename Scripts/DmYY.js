@@ -12,14 +12,6 @@ class DmYY {
     this.arg = arg;
     this._actions = {};
     this.init();
-    this.backGroundColor = Color.dynamic(
-        new Color(this.settings.lightBgColor || '#fff'),
-        new Color(this.settings.darkBgColor || '#000'),
-    );
-    this.widgetColor = Color.dynamic(
-        new Color(this.settings.lightColor),
-        new Color(this.settings.darkColor),
-    );
   }
 
   BACKGROUND_NIGHT_KEY;
@@ -120,15 +112,20 @@ class DmYY {
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
     const backgroundImage = this.getBackgroundImage();
-    widget.backgroundColor = this.backGroundColor;
+    if (this.backGroundColor.colors) {
+      widget.backgroundGradient = this.backGroundColor;
+    } else {
+      widget.backgroundColor = this.backGroundColor;
+    }
+    console.log(this.backGroundColor);
     if (backgroundImage) {
       const opacity = this.isNight
-          ? Number(this.settings.darkOpacity)
-          : Number(this.settings.lightOpacity);
+        ? Number(this.settings.darkOpacity)
+        : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
-          backgroundImage,
-          '#000',
-          opacity,
+        backgroundImage,
+        '#000',
+        opacity,
       );
       return true;
     } else {
@@ -147,16 +144,16 @@ class DmYY {
       if (width > 1000) {
         const options = ['取消', '打开图像处理'];
         const message =
-            '您的图片像素为' +
-            width +
-            ' x ' +
-            height +
-            '\n' +
-            '请将图片' +
-            (direct ? '宽度' : '高度') +
-            '调整到 1000 以下\n' +
-            (!direct ? '宽度' : '高度') +
-            '自动适应';
+          '您的图片像素为' +
+          width +
+          ' x ' +
+          height +
+          '\n' +
+          '请将图片' +
+          (direct ? '宽度' : '高度') +
+          '调整到 1000 以下\n' +
+          (!direct ? '宽度' : '高度') +
+          '自动适应';
         const index = await this.generateAlert(message, options);
         if (index === 1)
           Safari.openInApp('https://www.sojson.com/image/change.html', false);
@@ -299,7 +296,7 @@ class DmYY {
     }
 
     let message =
-        title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
+      title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
     let exitOptions = ['我已截图', '前去截图 >'];
     let shouldExit = await this.generateAlert(message, exitOptions);
     if (shouldExit) return;
@@ -322,9 +319,9 @@ class DmYY {
 
     message = '要设置透明背景的小组件在哪个位置？';
     message +=
-        height === 1136
-            ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
-            : '';
+      height === 1136
+        ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
+        : '';
 
     // Determine image crop based on phone size.
     let crop = {w: '', h: '', x: '', y: ''};
@@ -449,9 +446,9 @@ class DmYY {
     } catch (e) {
       console.log(e);
       this.notify(
-          this.name,
-          'BoxJS 缓存读取失败！点击查看相关教程',
-          'https://chavyleung.gitbook.io/boxjs/awesome/videos',
+        this.name,
+        'BoxJS 缓存读取失败！点击查看相关教程',
+        'https://chavyleung.gitbook.io/boxjs/awesome/videos',
       );
     }
   };
@@ -472,9 +469,9 @@ class DmYY {
     const actions = [
       async () => {
         await this.setAlertInput(
-            '刷新时间（分）',
-            '默认刷新时间 30 分钟刷新一次，也可自行手动运行',
-            {refreshAfterDate: '分钟'},
+          '刷新时间（分）',
+          '默认刷新时间 30 分钟刷新一次，也可自行手动运行',
+          {refreshAfterDate: '分钟'},
         );
       },
       async () => {
@@ -502,25 +499,25 @@ class DmYY {
               await this.setBackgroundNightImage(backImage, true);
           },
           async () =>
-              await this.setLightAndDark(
-                  '背景颜色',
-                  false,
-                  'lightBgColor',
-                  'darkBgColor',
-              ),
+            await this.setLightAndDark(
+              '背景颜色',
+              false,
+              'lightBgColor',
+              'darkBgColor',
+            ),
           async () =>
-              await this.setLightAndDark(
-                  '字体颜色',
-                  false,
-                  'lightColor',
-                  'darkColor',
-              ),
+            await this.setLightAndDark(
+              '字体颜色',
+              false,
+              'lightColor',
+              'darkColor',
+            ),
           async () => {
             const message =
-                '请自行搭配相应的字体颜色。\n' +
-                '白天蒙层透明设置为 0\n' +
-                '夜间请自行调整参考值 0.26\n' +
-                '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
+              '请自行搭配相应的字体颜色。\n' +
+              '白天蒙层透明设置为 0\n' +
+              '夜间请自行调整参考值 0.26\n' +
+              '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
             const options = ['取消', '确定'];
             const index = await this.generateAlert(message, options);
             if (index === 0) return;
@@ -532,10 +529,10 @@ class DmYY {
           },
           async () => {
             await this.setLightAndDark(
-                '透明',
-                '若是设置了透明背景，请自行调整',
-                'lightOpacity',
-                'darkOpacity',
+              '透明',
+              '若是设置了透明背景，请自行调整',
+              'lightOpacity',
+              'darkOpacity',
             );
           },
           async () => {
@@ -546,21 +543,21 @@ class DmYY {
         _action[i] && _action[i].call(this);
       },
       ...(this.useBoxJS
-          ? [
-            async () => {
-              const a = new Alert();
-              a.title = 'BoxJS 域名';
-              a.addTextField('域名', this.settings.boxjsDomain);
-              a.addAction('确定');
-              a.addCancelAction('取消');
-              const id = await a.presentAlert();
-              if (id === -1) return;
-              this.settings.boxjsDomain = a.textFieldValue(0);
-              // 保存到本地
-              this.saveSettings();
-            },
-          ]
-          : []),
+        ? [
+          async () => {
+            const a = new Alert();
+            a.title = 'BoxJS 域名';
+            a.addTextField('域名', this.settings.boxjsDomain);
+            a.addAction('确定');
+            a.addCancelAction('取消');
+            const id = await a.presentAlert();
+            if (id === -1) return;
+            this.settings.boxjsDomain = a.textFieldValue(0);
+            // 保存到本地
+            this.saveSettings();
+          },
+        ]
+        : []),
       async () => {
         const options = ['取消', '确定'];
         const message = '该操作不可逆，会清空所有组件配置！';
@@ -586,18 +583,18 @@ class DmYY {
     // 文件管理器
     // 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
     this.FILE_MGR = FileManager[
-        module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
-        ]();
+      module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
+      ]();
     // 本地，用于存储图片等
     this.FILE_MGR_LOCAL = FileManager.local();
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
-        this.FILE_MGR_LOCAL.documentsDirectory(),
-        'bg_' + this.SETTING_KEY + '.jpg',
+      this.FILE_MGR_LOCAL.documentsDirectory(),
+      'bg_' + this.SETTING_KEY + '.jpg',
     );
 
     this.BACKGROUND_NIGHT_KEY = this.FILE_MGR_LOCAL.joinPath(
-        this.FILE_MGR_LOCAL.documentsDirectory(),
-        'bg_' + this.SETTING_KEY + 'night.jpg',
+      this.FILE_MGR_LOCAL.documentsDirectory(),
+      'bg_' + this.SETTING_KEY + 'night.jpg',
     );
 
     this.settings = this.getSettings();
@@ -608,7 +605,31 @@ class DmYY {
     this.settings.lightOpacity = this.settings.lightOpacity || '0.7';
     this.settings.darkOpacity = this.settings.darkOpacity || '0.4';
     this.prefix = this.settings.boxjsDomain;
+
+    this.backGroundColor = !this.isNight ? this.getBackgroundColor(
+      this.settings.lightBgColor || '#fff') :
+      this.getBackgroundColor(this.settings.darkBgColor || '#000');
+    this.widgetColor = Color.dynamic(
+      new Color(this.settings.lightColor),
+      new Color(this.settings.darkColor),
+    );
   }
+
+  getBackgroundColor = (color = '') => {
+    const colors = color.split(',');
+    if (colors.length > 0) {
+      const locations = [];
+      const linearColor = new LinearGradient();
+      const cLen = colors.length;
+      linearColor.colors = colors.map((item, index) => {
+        locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
+        return new Color(item, 1);
+      });
+      linearColor.locations = locations;
+      return linearColor;
+    }
+    return new Color(color, 1);
+  };
 
   /**
    * 注册点击操作菜单
@@ -672,103 +693,103 @@ class DmYY {
       var r, e, o, u;
       (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
       for (
-          var c = 1732584193,
-              f = -271733879,
-              i = -1732584194,
-              a = 271733878,
-              h = 0;
-          h < n.length;
-          h += 16
+        var c = 1732584193,
+          f = -271733879,
+          i = -1732584194,
+          a = 271733878,
+          h = 0;
+        h < n.length;
+        h += 16
       )
         (c = l((r = c), (e = f), (o = i), (u = a), n[h], 7, -680876936)),
-            (a = l(a, c, f, i, n[h + 1], 12, -389564586)),
-            (i = l(i, a, c, f, n[h + 2], 17, 606105819)),
-            (f = l(f, i, a, c, n[h + 3], 22, -1044525330)),
-            (c = l(c, f, i, a, n[h + 4], 7, -176418897)),
-            (a = l(a, c, f, i, n[h + 5], 12, 1200080426)),
-            (i = l(i, a, c, f, n[h + 6], 17, -1473231341)),
-            (f = l(f, i, a, c, n[h + 7], 22, -45705983)),
-            (c = l(c, f, i, a, n[h + 8], 7, 1770035416)),
-            (a = l(a, c, f, i, n[h + 9], 12, -1958414417)),
-            (i = l(i, a, c, f, n[h + 10], 17, -42063)),
-            (f = l(f, i, a, c, n[h + 11], 22, -1990404162)),
-            (c = l(c, f, i, a, n[h + 12], 7, 1804603682)),
-            (a = l(a, c, f, i, n[h + 13], 12, -40341101)),
-            (i = l(i, a, c, f, n[h + 14], 17, -1502002290)),
-            (c = v(
-                c,
-                (f = l(f, i, a, c, n[h + 15], 22, 1236535329)),
-                i,
-                a,
-                n[h + 1],
-                5,
-                -165796510,
-            )),
-            (a = v(a, c, f, i, n[h + 6], 9, -1069501632)),
-            (i = v(i, a, c, f, n[h + 11], 14, 643717713)),
-            (f = v(f, i, a, c, n[h], 20, -373897302)),
-            (c = v(c, f, i, a, n[h + 5], 5, -701558691)),
-            (a = v(a, c, f, i, n[h + 10], 9, 38016083)),
-            (i = v(i, a, c, f, n[h + 15], 14, -660478335)),
-            (f = v(f, i, a, c, n[h + 4], 20, -405537848)),
-            (c = v(c, f, i, a, n[h + 9], 5, 568446438)),
-            (a = v(a, c, f, i, n[h + 14], 9, -1019803690)),
-            (i = v(i, a, c, f, n[h + 3], 14, -187363961)),
-            (f = v(f, i, a, c, n[h + 8], 20, 1163531501)),
-            (c = v(c, f, i, a, n[h + 13], 5, -1444681467)),
-            (a = v(a, c, f, i, n[h + 2], 9, -51403784)),
-            (i = v(i, a, c, f, n[h + 7], 14, 1735328473)),
-            (c = g(
-                c,
-                (f = v(f, i, a, c, n[h + 12], 20, -1926607734)),
-                i,
-                a,
-                n[h + 5],
-                4,
-                -378558,
-            )),
-            (a = g(a, c, f, i, n[h + 8], 11, -2022574463)),
-            (i = g(i, a, c, f, n[h + 11], 16, 1839030562)),
-            (f = g(f, i, a, c, n[h + 14], 23, -35309556)),
-            (c = g(c, f, i, a, n[h + 1], 4, -1530992060)),
-            (a = g(a, c, f, i, n[h + 4], 11, 1272893353)),
-            (i = g(i, a, c, f, n[h + 7], 16, -155497632)),
-            (f = g(f, i, a, c, n[h + 10], 23, -1094730640)),
-            (c = g(c, f, i, a, n[h + 13], 4, 681279174)),
-            (a = g(a, c, f, i, n[h], 11, -358537222)),
-            (i = g(i, a, c, f, n[h + 3], 16, -722521979)),
-            (f = g(f, i, a, c, n[h + 6], 23, 76029189)),
-            (c = g(c, f, i, a, n[h + 9], 4, -640364487)),
-            (a = g(a, c, f, i, n[h + 12], 11, -421815835)),
-            (i = g(i, a, c, f, n[h + 15], 16, 530742520)),
-            (c = m(
-                c,
-                (f = g(f, i, a, c, n[h + 2], 23, -995338651)),
-                i,
-                a,
-                n[h],
-                6,
-                -198630844,
-            )),
-            (a = m(a, c, f, i, n[h + 7], 10, 1126891415)),
-            (i = m(i, a, c, f, n[h + 14], 15, -1416354905)),
-            (f = m(f, i, a, c, n[h + 5], 21, -57434055)),
-            (c = m(c, f, i, a, n[h + 12], 6, 1700485571)),
-            (a = m(a, c, f, i, n[h + 3], 10, -1894986606)),
-            (i = m(i, a, c, f, n[h + 10], 15, -1051523)),
-            (f = m(f, i, a, c, n[h + 1], 21, -2054922799)),
-            (c = m(c, f, i, a, n[h + 8], 6, 1873313359)),
-            (a = m(a, c, f, i, n[h + 15], 10, -30611744)),
-            (i = m(i, a, c, f, n[h + 6], 15, -1560198380)),
-            (f = m(f, i, a, c, n[h + 13], 21, 1309151649)),
-            (c = m(c, f, i, a, n[h + 4], 6, -145523070)),
-            (a = m(a, c, f, i, n[h + 11], 10, -1120210379)),
-            (i = m(i, a, c, f, n[h + 2], 15, 718787259)),
-            (f = m(f, i, a, c, n[h + 9], 21, -343485551)),
-            (c = d(c, r)),
-            (f = d(f, e)),
-            (i = d(i, o)),
-            (a = d(a, u));
+          (a = l(a, c, f, i, n[h + 1], 12, -389564586)),
+          (i = l(i, a, c, f, n[h + 2], 17, 606105819)),
+          (f = l(f, i, a, c, n[h + 3], 22, -1044525330)),
+          (c = l(c, f, i, a, n[h + 4], 7, -176418897)),
+          (a = l(a, c, f, i, n[h + 5], 12, 1200080426)),
+          (i = l(i, a, c, f, n[h + 6], 17, -1473231341)),
+          (f = l(f, i, a, c, n[h + 7], 22, -45705983)),
+          (c = l(c, f, i, a, n[h + 8], 7, 1770035416)),
+          (a = l(a, c, f, i, n[h + 9], 12, -1958414417)),
+          (i = l(i, a, c, f, n[h + 10], 17, -42063)),
+          (f = l(f, i, a, c, n[h + 11], 22, -1990404162)),
+          (c = l(c, f, i, a, n[h + 12], 7, 1804603682)),
+          (a = l(a, c, f, i, n[h + 13], 12, -40341101)),
+          (i = l(i, a, c, f, n[h + 14], 17, -1502002290)),
+          (c = v(
+            c,
+            (f = l(f, i, a, c, n[h + 15], 22, 1236535329)),
+            i,
+            a,
+            n[h + 1],
+            5,
+            -165796510,
+          )),
+          (a = v(a, c, f, i, n[h + 6], 9, -1069501632)),
+          (i = v(i, a, c, f, n[h + 11], 14, 643717713)),
+          (f = v(f, i, a, c, n[h], 20, -373897302)),
+          (c = v(c, f, i, a, n[h + 5], 5, -701558691)),
+          (a = v(a, c, f, i, n[h + 10], 9, 38016083)),
+          (i = v(i, a, c, f, n[h + 15], 14, -660478335)),
+          (f = v(f, i, a, c, n[h + 4], 20, -405537848)),
+          (c = v(c, f, i, a, n[h + 9], 5, 568446438)),
+          (a = v(a, c, f, i, n[h + 14], 9, -1019803690)),
+          (i = v(i, a, c, f, n[h + 3], 14, -187363961)),
+          (f = v(f, i, a, c, n[h + 8], 20, 1163531501)),
+          (c = v(c, f, i, a, n[h + 13], 5, -1444681467)),
+          (a = v(a, c, f, i, n[h + 2], 9, -51403784)),
+          (i = v(i, a, c, f, n[h + 7], 14, 1735328473)),
+          (c = g(
+            c,
+            (f = v(f, i, a, c, n[h + 12], 20, -1926607734)),
+            i,
+            a,
+            n[h + 5],
+            4,
+            -378558,
+          )),
+          (a = g(a, c, f, i, n[h + 8], 11, -2022574463)),
+          (i = g(i, a, c, f, n[h + 11], 16, 1839030562)),
+          (f = g(f, i, a, c, n[h + 14], 23, -35309556)),
+          (c = g(c, f, i, a, n[h + 1], 4, -1530992060)),
+          (a = g(a, c, f, i, n[h + 4], 11, 1272893353)),
+          (i = g(i, a, c, f, n[h + 7], 16, -155497632)),
+          (f = g(f, i, a, c, n[h + 10], 23, -1094730640)),
+          (c = g(c, f, i, a, n[h + 13], 4, 681279174)),
+          (a = g(a, c, f, i, n[h], 11, -358537222)),
+          (i = g(i, a, c, f, n[h + 3], 16, -722521979)),
+          (f = g(f, i, a, c, n[h + 6], 23, 76029189)),
+          (c = g(c, f, i, a, n[h + 9], 4, -640364487)),
+          (a = g(a, c, f, i, n[h + 12], 11, -421815835)),
+          (i = g(i, a, c, f, n[h + 15], 16, 530742520)),
+          (c = m(
+            c,
+            (f = g(f, i, a, c, n[h + 2], 23, -995338651)),
+            i,
+            a,
+            n[h],
+            6,
+            -198630844,
+          )),
+          (a = m(a, c, f, i, n[h + 7], 10, 1126891415)),
+          (i = m(i, a, c, f, n[h + 14], 15, -1416354905)),
+          (f = m(f, i, a, c, n[h + 5], 21, -57434055)),
+          (c = m(c, f, i, a, n[h + 12], 6, 1700485571)),
+          (a = m(a, c, f, i, n[h + 3], 10, -1894986606)),
+          (i = m(i, a, c, f, n[h + 10], 15, -1051523)),
+          (f = m(f, i, a, c, n[h + 1], 21, -2054922799)),
+          (c = m(c, f, i, a, n[h + 8], 6, 1873313359)),
+          (a = m(a, c, f, i, n[h + 15], 10, -30611744)),
+          (i = m(i, a, c, f, n[h + 6], 15, -1560198380)),
+          (f = m(f, i, a, c, n[h + 13], 21, 1309151649)),
+          (c = m(c, f, i, a, n[h + 4], 6, -145523070)),
+          (a = m(a, c, f, i, n[h + 11], 10, -1120210379)),
+          (i = m(i, a, c, f, n[h + 2], 15, 718787259)),
+          (f = m(f, i, a, c, n[h + 9], 21, -343485551)),
+          (c = d(c, r)),
+          (f = d(f, e)),
+          (i = d(i, o)),
+          (a = d(a, u));
       return [c, f, i, a];
     }
 
@@ -790,7 +811,7 @@ class DmYY {
     function e(n) {
       for (var t, r = '0123456789abcdef', e = '', o = 0; o < n.length; o += 1)
         (t = n.charCodeAt(o)),
-            (e += r.charAt((t >>> 4) & 15) + r.charAt(15 & t));
+          (e += r.charAt((t >>> 4) & 15) + r.charAt(15 & t));
       return e;
     }
 
@@ -806,20 +827,20 @@ class DmYY {
     function u(n, t) {
       return (function(n, t) {
         var r,
-            e,
-            o = h(n),
-            u = [],
-            c = [];
+          e,
+          o = h(n),
+          u = [],
+          c = [];
         for (
-            u[15] = c[15] = void 0,
-            16 < o.length && (o = i(o, 8 * n.length)),
-                r = 0;
-            r < 16;
-            r += 1
+          u[15] = c[15] = void 0,
+          16 < o.length && (o = i(o, 8 * n.length)),
+            r = 0;
+          r < 16;
+          r += 1
         )
           (u[r] = 909522486 ^ o[r]), (c[r] = 1549556828 ^ o[r]);
         return (
-            (e = i(u.concat(h(t)), 512 + 8 * t.length)), a(i(c.concat(e), 640))
+          (e = i(u.concat(h(t)), 512 + 8 * t.length)), a(i(c.concat(e), 640))
         );
       })(r(n), r(t));
     }
@@ -904,8 +925,8 @@ class DmYY {
     ctx.size = img.size;
 
     ctx.drawImageInRect(
-        img,
-        new Rect(0, 0, img.size['width'], img.size['height']),
+      img,
+      new Rect(0, 0, img.size['width'], img.size['height']),
     );
     ctx.setFillColor(new Color(color, opacity));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
@@ -939,9 +960,9 @@ class DmYY {
    */
   saveSettings(notify = true) {
     let res =
-        typeof this.settings === 'object'
-            ? JSON.stringify(this.settings)
-            : String(this.settings);
+      typeof this.settings === 'object'
+        ? JSON.stringify(this.settings)
+        : String(this.settings);
     Keychain.set(this.SETTING_KEY, res);
     if (notify) this.notify('设置成功', '桌面组件稍后将自动刷新');
   }
@@ -956,8 +977,8 @@ class DmYY {
       result = Image.fromFile(this.BACKGROUND_KEY);
     }
     if (
-        this.isNight &&
-        this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)
+      this.isNight &&
+      this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)
     ) {
       result = Image.fromFile(this.BACKGROUND_NIGHT_KEY);
     }
@@ -1004,10 +1025,10 @@ class DmYY {
 
   getRandomArrayElements(arr, count) {
     let shuffled = arr.slice(0),
-        i = arr.length,
-        min = i - count,
-        temp,
-        index;
+      i = arr.length,
+      min = i - count,
+      temp,
+      index;
     min = min > 0 ? min : 0;
     while (i-- > min) {
       index = Math.floor((i + 1) * Math.random());
@@ -1091,7 +1112,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     try {
       if (M.settings.refreshAfterDate) {
         W.refreshAfterDate = new Date(
-            new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate),
+          new Date() + 1000 * 60 * parseInt(M.settings.refreshAfterDate),
         );
       }
     } catch (e) {
@@ -1188,7 +1209,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       return;
     }
     let _tmp = act.split('-').map((_) => _[0].toUpperCase() + _.substr(1)).join(
-        '');
+      '');
     let _act = 'action' + _tmp;
     if (M[_act] && typeof M[_act] === 'function') {
       const func = M[_act].bind(M);
