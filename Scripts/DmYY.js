@@ -1,4 +1,3 @@
-
 /*
  * Author: 2Ya
  * Github: https://github.com/dompling
@@ -23,7 +22,7 @@ class DmYY {
   };
 
   // 发起请求
-  http = async (options = {headers: {}, url: ''}, type = 'JSON') => {
+  http = async (options = { headers: {}, url: '' }, type = 'JSON') => {
     try {
       let request;
       if (type !== 'IMG') {
@@ -31,10 +30,10 @@ class DmYY {
         Object.keys(options).forEach((key) => {
           request[key] = options[key];
         });
-        request.headers = {...this.defaultHeaders, ...options.headers};
+        request.headers = { ...this.defaultHeaders, ...options.headers };
       } else {
         request = this.getRequest(options.url);
-        return await request.loadImage() || SFSymbol.named('photo').image;
+        return (await request.loadImage()) || SFSymbol.named('photo').image;
       }
       if (type === 'JSON') {
         return await request.loadJSON();
@@ -52,9 +51,9 @@ class DmYY {
   //request 接口请求
   $request = {
     get: async (url = '', options = {}, type = 'JSON') => {
-      let params = {...options, method: 'GET'};
+      let params = { ...options, method: 'GET' };
       if (typeof url === 'object') {
-        params = {...params, ...url};
+        params = { ...params, ...url };
       } else {
         params.url = url;
       }
@@ -63,9 +62,9 @@ class DmYY {
       return await this.http(params, _type);
     },
     post: async (url = '', options = {}, type = 'JSON') => {
-      let params = {...options, method: 'POST'};
+      let params = { ...options, method: 'POST' };
       if (typeof url === 'object') {
-        params = {...params, ...url};
+        params = { ...params, ...url };
       } else {
         params.url = url;
       }
@@ -122,12 +121,11 @@ class DmYY {
       );
       return true;
     } else {
-        
-   if (this.backGroundColor.colors) {
-      widget.backgroundGradient = this.backGroundColor;
-    } else {
-      widget.backgroundColor = this.backGroundColor;
-    }
+      if (this.backGroundColor.colors) {
+        widget.backgroundGradient = this.backGroundColor;
+      } else {
+        widget.backgroundColor = this.backGroundColor;
+      }
       return false;
     }
   };
@@ -138,7 +136,7 @@ class DmYY {
    */
   verifyImage = async (img) => {
     try {
-      const {width, height} = img.size;
+      const { width, height } = img.size;
       const direct = true;
       if (width > 1000) {
         const options = ['取消', '打开图像处理'];
@@ -323,7 +321,7 @@ class DmYY {
         : '';
 
     // Determine image crop based on phone size.
-    let crop = {w: '', h: '', x: '', y: ''};
+    let crop = { w: '', h: '', x: '', y: '' };
     if (widgetSize === '小尺寸') {
       crop.w = phone.small;
       crop.h = phone.small;
@@ -419,7 +417,7 @@ class DmYY {
     });
     // 保存到本地
     if (isSave) {
-      this.settings = {...this.settings, ...data};
+      this.settings = { ...this.settings, ...data };
       return this.saveSettings();
     }
     return data;
@@ -470,7 +468,7 @@ class DmYY {
         await this.setAlertInput(
           '刷新时间（分）',
           '默认刷新时间 30 分钟刷新一次，也可自行手动运行',
-          {refreshAfterDate: '分钟'},
+          { refreshAfterDate: '分钟' },
         );
       },
       async () => {
@@ -543,19 +541,19 @@ class DmYY {
       },
       ...(this.useBoxJS
         ? [
-          async () => {
-            const a = new Alert();
-            a.title = 'BoxJS 域名';
-            a.addTextField('域名', this.settings.boxjsDomain);
-            a.addAction('确定');
-            a.addCancelAction('取消');
-            const id = await a.presentAlert();
-            if (id === -1) return;
-            this.settings.boxjsDomain = a.textFieldValue(0);
-            // 保存到本地
-            this.saveSettings();
-          },
-        ]
+            async () => {
+              const a = new Alert();
+              a.title = 'BoxJS 域名';
+              a.addTextField('域名', this.settings.boxjsDomain);
+              a.addAction('确定');
+              a.addCancelAction('取消');
+              const id = await a.presentAlert();
+              if (id === -1) return;
+              this.settings.boxjsDomain = a.textFieldValue(0);
+              // 保存到本地
+              this.saveSettings();
+            },
+          ]
         : []),
       async () => {
         const options = ['取消', '确定'];
@@ -583,7 +581,7 @@ class DmYY {
     // 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
     this.FILE_MGR = FileManager[
       module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
-      ]();
+    ]();
     // 本地，用于存储图片等
     this.FILE_MGR_LOCAL = FileManager.local();
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
@@ -605,9 +603,9 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.4';
     this.prefix = this.settings.boxjsDomain;
 
-    this.backGroundColor = !this.isNight ? this.getBackgroundColor(
-      this.settings.lightBgColor || '#fff') :
-      this.getBackgroundColor(this.settings.darkBgColor || '#000');
+    this.backGroundColor = !this.isNight
+      ? this.getBackgroundColor(this.settings.lightBgColor || '#fff')
+      : this.getBackgroundColor(this.settings.darkBgColor || '#000');
     this.widgetColor = Color.dynamic(
       new Color(this.settings.lightColor),
       new Color(this.settings.darkColor),
@@ -616,7 +614,7 @@ class DmYY {
 
   getBackgroundColor = (color = '') => {
     const colors = color.split(',');
-    if (colors.length > 0) {
+    if (colors.length > 1) {
       const locations = [];
       const linearColor = new LinearGradient();
       const cLen = colors.length;
@@ -824,7 +822,7 @@ class DmYY {
     }
 
     function u(n, t) {
-      return (function(n, t) {
+      return (function (n, t) {
         var r,
           e,
           o = h(n),
@@ -832,7 +830,7 @@ class DmYY {
           c = [];
         for (
           u[15] = c[15] = void 0,
-          16 < o.length && (o = i(o, 8 * n.length)),
+            16 < o.length && (o = i(o, 8 * n.length)),
             r = 0;
           r < 16;
           r += 1
@@ -1039,39 +1037,39 @@ class DmYY {
   }
 
   textFormat = {
-    defaultText: {size: 14, font: 'regular', color: this.widgetColor},
-    battery: {size: 10, font: 'bold', color: this.widgetColor},
-    title: {size: 16, font: 'semibold', color: this.widgetColor},
-    SFMono: {size: 12, font: 'SF Mono', color: this.widgetColor},
+    defaultText: { size: 14, font: 'regular', color: this.widgetColor },
+    battery: { size: 10, font: 'bold', color: this.widgetColor },
+    title: { size: 16, font: 'semibold', color: this.widgetColor },
+    SFMono: { size: 12, font: 'SF Mono', color: this.widgetColor },
   };
 
   provideFont = (fontName, fontSize) => {
     const fontGenerator = {
-      ultralight: function() {
+      ultralight: function () {
         return Font.ultraLightSystemFont(fontSize);
       },
-      light: function() {
+      light: function () {
         return Font.lightSystemFont(fontSize);
       },
-      regular: function() {
+      regular: function () {
         return Font.regularSystemFont(fontSize);
       },
-      medium: function() {
+      medium: function () {
         return Font.mediumSystemFont(fontSize);
       },
-      semibold: function() {
+      semibold: function () {
         return Font.semiboldSystemFont(fontSize);
       },
-      bold: function() {
+      bold: function () {
         return Font.boldSystemFont(fontSize);
       },
-      heavy: function() {
+      heavy: function () {
         return Font.heavySystemFont(fontSize);
       },
-      black: function() {
+      black: function () {
         return Font.blackSystemFont(fontSize);
       },
-      italic: function() {
+      italic: function () {
         return Font.italicSystemFont(fontSize);
       },
     };
@@ -1122,7 +1120,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       Script.complete();
     }
   } else {
-    let {act, data, __arg, __size} = args.queryParameters;
+    let { act, data, __arg, __size } = args.queryParameters;
     M = new Widget(__arg || default_args || '');
     if (extra) {
       Object.keys(extra).forEach((key) => {
@@ -1207,8 +1205,10 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       }
       return;
     }
-    let _tmp = act.split('-').map((_) => _[0].toUpperCase() + _.substr(1)).join(
-      '');
+    let _tmp = act
+      .split('-')
+      .map((_) => _[0].toUpperCase() + _.substr(1))
+      .join('');
     let _act = 'action' + _tmp;
     if (M[_act] && typeof M[_act] === 'function') {
       const func = M[_act].bind(M);
@@ -1217,4 +1217,4 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
   }
 };
 
-module.exports = {DmYY, Runing};
+module.exports = { DmYY, Runing };
