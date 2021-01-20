@@ -133,7 +133,9 @@ class Widget extends DmYY {
   };
 
   setWidget = async (body, data) => {
-    const container = body.addStack();
+    const d = body.addStack();
+    d.addSpacer();
+    const container = d.addStack();
     container.layoutVertically();
     const dataSource = data.length > 3 ? [data.splice(0, 3), data] : [data];
     let itemIndex = 0;
@@ -169,6 +171,7 @@ class Widget extends DmYY {
       stackDate.rightAlignText();
       stackDate.applyTimerStyle();
     }
+    d.addSpacer();
     return body;
   };
 
