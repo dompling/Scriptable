@@ -123,13 +123,51 @@ class Widget extends DmYY {
     return body;
   };
 
+  fillRect(drawing, rect, color) {
+    const path = new Path();
+    path.addRoundedRect(rect, 0, 0);
+    drawing.addPath(path);
+    drawing.setFillColor(new Color(color, 1));
+    drawing.fillPath();
+  }
+
+  drawLine(drawing, rect, color, scale) {
+    const x1 = Math.round(rect.x + scale * 1.5);
+    const y1 = rect.y - scale;
+    const x2 = Math.round(rect.width + scale * 1.5);
+    const point1 = new Point(x1, y1);
+    const point2 = new Point(x2, y1);
+    const path = new Path();
+    path.move(point1);
+    path.addLine(point2);
+    drawing.addPath(path);
+    drawing.setStrokeColor(new Color(color, 1));
+    drawing.setLineWidth(60 / (40 + 15 * scale));
+    drawing.strokePath();
+  }
+
   setLine = (stack, color) => {
-    const stackLine = stack.addStack();
-    stackLine.backgroundColor = new Color(color);
-    stackLine.addSpacer();
-    const line = stackLine.addStack();
-    line.size = new Size(1, 1);
-    stackLine.addSpacer();
+    try {
+      const topDrawing = new DrawContext();
+      topDrawing.size = new Size(642, 100);
+      topDrawing.opaque = false;
+      topDrawing.respectScreenScale = true;
+
+      const rectLine = new Rect(0, 70, 610, 26);
+      this.fillRect(topDrawing, rectLine, color);
+      for (let i = 0; i < 40; i++) {
+        this.drawLine(topDrawing, rectLine, color, i);
+      }
+
+      const stackLine = stack.addStack();
+      stack.backgroundImage = topDrawing.getImage();
+      stackLine.addSpacer();
+      const line = stackLine.addStack();
+      line.size = new Size(1, 10);
+      stackLine.addSpacer();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   setWidget = async (body, data) => {
@@ -151,7 +189,7 @@ class Widget extends DmYY {
       itemIndex++;
       if (dataSource.length !== itemIndex) container.addSpacer(13);
     }
-    if (config.widgetFamily === 'large') {
+    if (this.widgetFamily === 'large') {
       container.addSpacer();
       this.setLine(container, '#e8e8e8');
       const timerColor = new Color(this.widgetColor.hex, 0.7);
