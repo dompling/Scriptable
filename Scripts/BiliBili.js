@@ -198,9 +198,6 @@ class Widget extends DmYY {
       const stackFooter = container.addStack();
       stackFooter.addSpacer();
       const now = new Date();
-      const footerTextItem = stackFooter.addText('时间：');
-      footerTextItem.textColor = timerColor;
-      footerTextItem.fontSize = fontSize;
       const stackDate = stackFooter.addDate(
         new Date(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`),
       );
