@@ -84,16 +84,10 @@
     {
       "version": "1.0.0",
       "description": "哔哩哔哩今日的推送番剧情况",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBili.js",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/BiliBili.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
       "name": "BiliBili",
-      "title": "今日番剧",
-      "depend": [
-        {
-          "name": "DmYY",
-          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
-        }
-      ]
+      "title": "今日番剧"
     },
     {
       "version": "1.0.0",
