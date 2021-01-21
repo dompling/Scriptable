@@ -82,7 +82,7 @@
       ]
     },
     {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "哔哩哔哩今日的推送番剧情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/BiliBili.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
