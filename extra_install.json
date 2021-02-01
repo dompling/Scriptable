@@ -30,8 +30,8 @@
       "html": [
         "<p>作者：<a href=\"https://github.com/michaellee\">@Michael Lee</a></p>",
         "<p>Michael Lee 大佬博客里一篇文章详细的描述了关于这个小组件开发和使用，有一定英语水平的大佬可以自行摸索，了解了解代码</p>",
-        "<p>博客：<a href=\"https://michaelsoolee.com/ios-scriptable-youtube-widget\">iOS Scriptable YouTube widget</p>",
-        "<p>谷歌的 API KEY 需要自行申请，地址：<a href=\"https://developers.google.com/youtube/v3/getting-started\">YouTube DataAPI</><p>"
+        "<p>博客：<a href=\"https://michaelsoolee.com/ios-scriptable-youtube-widget\">iOS Scriptable YouTube widget</a></p>",
+        "<p>谷歌的 API KEY 需要自行申请，地址：<a href=\"https://developers.google.com/youtube/v3/getting-started\">YouTube DataAPI</a><p>"
       ]
     },
     {
