@@ -21,13 +21,13 @@
     },
     {
       "version": "1.0.0",
-      "author": "国外大佬",
+      "author": "@Michael Lee",
       "description": "根据脚本注释，自行填写 API, 和频道ID",
       "scriptURL": "https://raw.githubusercontent.com/zc-nju-med/own_JS/master/YouTube%20Plus.js",
       "thumb": "https://www.gstatic.com/youtube/img/branding/favicon/favicon_144x144.png",
       "name": "YouTubePlus",
       "title": "油管订阅",
-      "html": ["作者：<a href=\"#\">@国外大佬</>"]
+      "html": ["作者：<a href=\"https://github.com/michaellee\">@Michael Lee</>"]
     }
   ]
 }
