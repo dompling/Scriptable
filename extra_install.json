@@ -27,7 +27,10 @@
       "thumb": "https://www.gstatic.com/youtube/img/branding/favicon/favicon_144x144.png",
       "name": "YouTubePlus",
       "title": "油管订阅",
-      "html": ["作者：<a href=\"https://github.com/michaellee\">@Michael Lee</>"]
+      "html": [
+        "作者：<a href=\"https://github.com/michaellee\">@Michael Lee</>",
+        "<p>谷歌的 API KEY 需要自行申请，地址：<a href=\"https://developers.google.com/youtube/v3/getting-started\">YouTube DataAPI</><p>"
+      ]
     }
   ]
 }
