@@ -33,6 +33,16 @@
         "<p>博客：<a href=\"https://michaelsoolee.com/ios-scriptable-youtube-widget\">iOS Scriptable YouTube widget</p>",
         "<p>谷歌的 API KEY 需要自行申请，地址：<a href=\"https://developers.google.com/youtube/v3/getting-started\">YouTube DataAPI</><p>"
       ]
+    },
+    {
+      "version": "1.0.0",
+      "author": "@Unknown",
+      "description": "根据脚本注释自行使用",
+      "scriptURL": "https://raw.githubusercontent.com/zc-nju-med/own_JS/master/NBA.js",
+      "thumb": "https://img.icons8.com/clouds/344/apple-app-store.png",
+      "name": "NBA",
+      "title": "NBA",
+      "html": ["<p>喜欢篮球的，可以看看</p>"]
     }
   ]
 }
