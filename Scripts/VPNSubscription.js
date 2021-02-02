@@ -386,7 +386,7 @@ class Widget extends DmYY {
         stackRight,
         {
           icon: this.gradient(this.color3),
-          title: '今日',
+          title: '上传',
           value: this.formatFileSize(this.dataSource.todayData),
         },
     );
