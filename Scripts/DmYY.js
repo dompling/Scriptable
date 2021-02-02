@@ -12,7 +12,7 @@ class DmYY {
     this.arg = arg;
     this._actions = {};
     this.init();
-    isNight = Device.isUsingDarkAppearance();
+    this.isNight = Device.isUsingDarkAppearance();
   }
 
   BACKGROUND_NIGHT_KEY;
