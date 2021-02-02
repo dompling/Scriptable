@@ -115,7 +115,7 @@ class DmYY {
 
     console.log(this.backGroundColor);
     if (backgroundImage) {
-      const opacity = this.isNight
+      const opacity = Device.isUsingDarkAppearance()
         ? Number(this.settings.darkOpacity)
         : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
@@ -603,11 +603,11 @@ class DmYY {
     this.settings.darkColor = this.settings.darkColor || '#fff';
     this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
     this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
-    this.settings.lightOpacity = this.settings.lightOpacity || '0.7';
-    this.settings.darkOpacity = this.settings.darkOpacity || '0.4';
+    this.settings.lightOpacity = this.settings.lightOpacity || '0.4';
+    this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
 
-    this.backGroundColor = !this.isNight
+    this.backGroundColor = !Device.isUsingDarkAppearance()
       ? this.getBackgroundColor(this.settings.lightBgColor || '#fff')
       : this.getBackgroundColor(this.settings.darkBgColor || '#000');
     this.widgetColor = Color.dynamic(
@@ -978,7 +978,7 @@ class DmYY {
       result = Image.fromFile(this.BACKGROUND_KEY);
     }
     if (
-      this.isNight &&
+      Device.isUsingDarkAppearance() &&
       this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)
     ) {
       result = Image.fromFile(this.BACKGROUND_NIGHT_KEY);
