@@ -12,13 +12,14 @@ class DmYY {
     this.arg = arg;
     this._actions = {};
     this.init();
+    isNight = Device.isUsingDarkAppearance();
   }
 
   BACKGROUND_NIGHT_KEY;
   widgetColor;
   backGroundColor;
   useBoxJS = true;
-  isNight = Device.isUsingDarkAppearance();
+  isNight;
 
   // 获取 Request 对象
   getRequest = (url = '') => {
@@ -112,8 +113,6 @@ class DmYY {
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
     const backgroundImage = this.getBackgroundImage();
-
-    console.log(this.backGroundColor);
     if (backgroundImage) {
       const opacity = Device.isUsingDarkAppearance()
         ? Number(this.settings.darkOpacity)
