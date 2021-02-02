@@ -318,7 +318,7 @@
       ]
     },
     {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "VPN 圆形进度条，vpn 的订阅地址返回的信息中需要有带各种流量的使用情况的订阅地址",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/VPNSubscription.js",
       "thumb": "https://img.icons8.com/clouds/344/paper-plane-message-1.png",
