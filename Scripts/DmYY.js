@@ -606,29 +606,39 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
 
-    this.backGroundColor = !Device.isUsingDarkAppearance()
-      ? this.getBackgroundColor(this.settings.lightBgColor || '#fff')
-      : this.getBackgroundColor(this.settings.darkBgColor || '#000');
+    const lightBgColor = this.getColors(this.settings.lightBgColor);
+    const darkBgColor = this.getColors(this.settings.darkBgColor);
+    if (lightBgColor.length > 1 || darkBgColor.length > 1) {
+      this.backGroundColor = !Device.isUsingDarkAppearance()
+        ? this.getBackgroundColor(lightBgColor || '#fff')
+        : this.getBackgroundColor(darkBgColor || '#000');
+    } else {
+      this.backGroundColor = Color.dynamic(
+        new Color(this.settings.lightBgColor || '#fff'),
+        new Color(this.settings.darkBgColor || '#000'),
+      );
+    }
     this.widgetColor = Color.dynamic(
       new Color(this.settings.lightColor),
       new Color(this.settings.darkColor),
     );
   }
 
-  getBackgroundColor = (color = '') => {
+  getColors = (color = '') => {
     const colors = color.split(',');
-    if (colors.length > 1) {
-      const locations = [];
-      const linearColor = new LinearGradient();
-      const cLen = colors.length;
-      linearColor.colors = colors.map((item, index) => {
-        locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
-        return new Color(item, 1);
-      });
-      linearColor.locations = locations;
-      return linearColor;
-    }
-    return new Color(color, 1);
+    return colors;
+  };
+
+  getBackgroundColor = (colors) => {
+    const locations = [];
+    const linearColor = new LinearGradient();
+    const cLen = colors.length;
+    linearColor.colors = colors.map((item, index) => {
+      locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
+      return new Color(item, 1);
+    });
+    linearColor.locations = locations;
+    return linearColor;
   };
 
   /**
