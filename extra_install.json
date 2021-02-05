@@ -43,6 +43,18 @@
       "name": "NBA",
       "title": "NBA",
       "html": ["<p>喜欢篮球的，可以看看</p>"]
+    },
+    {
+      "version": "1.0.0",
+      "author": "@三行",
+      "description": "根据脚本注释自行使用",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/webo.js",
+      "thumb": "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2225458401,2104443747&fm=26&gp=0.jpg",
+      "name": "Webo",
+      "title": "微博热搜",
+      "html": [
+        "<p>修改自三行大佬的脚本<a href=\"https://x.im3x.cn\">@三行</a></p>"
+      ]
     }
   ]
 }
