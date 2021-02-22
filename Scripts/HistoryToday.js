@@ -13,7 +13,7 @@ class Widget extends DmYY {
 		this.name = "历史上的今天";
 		this.en = "historyToday";
 		this.logo =
-		 "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png";
+		 "https://raw.githubusercontent.com/Orz-3/mini/master/Color/historyToday.png";
 		config.runsInApp &&
 		this.registerAction("基础设置", this.setWidgetConfig);
 		this.cacheName = this.md5(`dataSouce_${this.en}`);

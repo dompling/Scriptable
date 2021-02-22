@@ -13,7 +13,7 @@ class Widget extends DmYY {
     this.name = '哔哩哔哩今日番剧';
     this.en = 'BiliBiliMonitor';
     this.logo =
-      'https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png';
+      'https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png';
     config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
     this.cacheName = this.md5(`dataSouce_${this.en}`);
   }

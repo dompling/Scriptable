@@ -16,7 +16,7 @@ class Widget extends DmYY {
 		super(arg);
 		this.name = "智行火车票";
 		this.en = "ZXTrains";
-		this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png";
+		this.logo = "https://raw.githubusercontent.com/Orz-3/mini/master/Color/zxhc.png";
 		this.cacheName = this.md5(`dataSouce_${this.en}`);
 		if (config.runsInApp) {
 			this.registerAction("基础设置", this.setWidgetConfig);

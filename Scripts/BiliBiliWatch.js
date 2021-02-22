@@ -13,7 +13,7 @@ class Widget extends DmYY {
     this.name = "哔哩哔哩关注";
     this.en = "BiliBiliWatch";
     this.logo =
-      "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png";
+      "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png";
     this.Run(module.filename);
   }
 

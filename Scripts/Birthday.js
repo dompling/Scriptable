@@ -14,7 +14,7 @@ class Widget extends DmYY {
 		this.name = "破壳日";
 		this.en = "birthday";
 		this.logo =
-		 "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png";
+		 "https://raw.githubusercontent.com/Orz-3/mini/master/Color/birthday.png";
 		this.LEFT_IMG_KEY = this.FILE_MGR_LOCAL.joinPath(
 		 this.FILE_MGR_LOCAL.documentsDirectory(),
 		 `left_image_${this.SETTING_KEY}.jpg`,

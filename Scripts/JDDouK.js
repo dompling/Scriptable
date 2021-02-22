@@ -91,7 +91,7 @@ class Widget extends DmYY {
               color: __COLOR__,
             },
             ticks: {
-              display: true, 
+              display: true,
               fontColor: __COLOR__,
               fontSize: '16',
             },
@@ -368,7 +368,7 @@ module.exports = template;`;
     }
     let _md5 = this.md5(filename + this.en);
 
-    this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
+    this.logo = "https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png";
     this.JDindex =
       typeof args.widgetParameter === "string"
         ? parseInt(args.widgetParameter)

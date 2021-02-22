@@ -331,7 +331,7 @@ class Widget extends DmYY {
       typeof args.widgetParameter === "string"
         ? parseInt(args.widgetParameter)
         : false;
-    this.logo = "https://raw.githubusercontent.com/Orz-3/task/master/jd.png";
+    this.logo = "https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png";
     try {
       const cookieData = this.settings.cookieData;
       if (this.JDindex !== false && cookieData[this.JDindex]) {

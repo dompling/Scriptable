@@ -32,7 +32,7 @@
       "version": "1.0.0",
       "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的未确认收货的订单和信息。组件使用，参考下方京东豆走势视频",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDWuLiu.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png",
       "name": "JDWuLiu",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDWuLiu/README.md",
       "title": "京东物流",
@@ -51,7 +51,7 @@
       "version": "1.0.0",
       "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京豆总量，和昨日收支情况。组件使用，参考下方京东豆走势视频",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/JDDou.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png",
       "name": "JDDou",
       "homepage": "https://github.com/dompling/Scriptable/blob/master/JDDou/README.md",
       "title": "京东豆",
@@ -64,7 +64,7 @@
       "version": "1.0.0",
       "description": "根据代理软件获取到京东 CK ,或者自行输入。显示京东最近的京豆收支。组件使用，参考下方视频",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/JDDouK.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/jd.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png",
       "name": "JDDouK",
       "title": "京东豆走势",
       "html": [
@@ -85,7 +85,7 @@
       "version": "1.0.1",
       "description": "哔哩哔哩今日的推送番剧情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/BiliBili.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png",
       "name": "BiliBili",
       "title": "今日番剧"
     },
@@ -93,7 +93,7 @@
       "version": "1.0.0",
       "description": "哔哩哔哩关注中心的最近更新",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliWatch.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png",
       "name": "BiliBiliWatch",
       "title": "关注中心",
       "depend": [
@@ -107,7 +107,7 @@
       "version": "1.0.0",
       "description": "哔哩哔哩Up主订阅控件的视频信息等",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BiliBiliUp.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png",
       "name": "BiliBiliUp",
       "title": "哔哩UP主",
       "depend": [
@@ -129,7 +129,7 @@
       "version": "1.0.0",
       "description": "生日的信息和倒计时",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Birthday.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/birthday.png",
       "name": "Birthday",
       "title": "破壳日",
       "depend": [
@@ -147,7 +147,7 @@
       "version": "1.0.0",
       "description": "显示历史上的今日带图片情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/historyToday.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/historyToday.png",
       "name": "HistoryToday",
       "title": "历史上的今天",
       "depend": [
@@ -161,7 +161,7 @@
       "version": "1.0.0",
       "description": "智行火车票的出行提醒，需要手动的去智行火车的待出行列表使用重写获取待出行数据",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ZXTrains.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/zxhc.png",
       "name": "ZXTrains",
       "title": "车票提醒",
       "depend": [
@@ -235,7 +235,7 @@
       "version": "1.0.0",
       "description": "显示中国电信的手机号的套餐信息，可以在 app 里面登录，登录成功之后可以展示信息，也可以使用代理缓存读取 boxjs 的账号信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaTelecom.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10000.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/10000.png",
       "name": "ChinaTelecom",
       "title": "中国电信",
       "html": [
@@ -253,7 +253,7 @@
       "version": "1.0.0",
       "description": "显示移动的套餐信息，目前暂不支持登录，请自行使用代理软件抓取数据信息。推荐使用 boxjs 代理缓存",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaMobile.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10086.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/10086.png",
       "name": "ChinaMobile",
       "title": "中国移动",
       "depend": [
@@ -271,7 +271,7 @@
       "version": "1.0.0",
       "description": "显示联通的套餐信息，目前暂不支持登录，请自行使用代理软件抓取数据信息。推荐使用 boxjs 代理缓存",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/ChinaUnicom.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/10010.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/10010.png",
       "name": "ChinaUnicom",
       "title": "中国联通",
       "depend": [
@@ -416,7 +416,7 @@
       "version": "1.0.0",
       "description": "显示公历和农历，根据近期的信息会出现一个倒计时的提示信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/CountDown.js",
-      "thumb": "https://raw.githubusercontent.com/Orz-3/task/master/daysmatter.png",
+      "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/daysmatter.png",
       "name": "CountDownCalendar",
       "title": "日历倒计时"
     }

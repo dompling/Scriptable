@@ -344,7 +344,7 @@ class YaYaBirthday extends Calendar {
     widget.setPadding(0, 10, 0, 10);
     await this.setHeader(
       widget,
-      "https://raw.githubusercontent.com/Orz-3/task/master/birthday.png",
+      "https://raw.githubusercontent.com/Orz-3/mini/master/Color/birthday.png",
       "破壳日🎂"
     );
     let body = await this.getEnableLeft(widget);
