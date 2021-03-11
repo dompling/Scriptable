@@ -625,7 +625,7 @@ class DmYY {
   }
 
   getColors = (color = '') => {
-    if (!color) return;
+    if (!color) return [];
     const colors = color.split(',');
     return colors;
   };
