@@ -652,6 +652,7 @@ class DmYY {
   }
 
   getColors = (color = '') => {
+    if (!color) return '';
     if (typeof color === 'string') return color.split(',');
     if (typeof color === 'object' && !color.length) return [];
     return color;
