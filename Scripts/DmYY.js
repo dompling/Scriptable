@@ -512,13 +512,13 @@ class DmYY {
           },
           {
             id: 'lightColor',
-            name: '亮色字体',
+            name: '亮色文字',
             val: this.settings.lightColor,
             type: 'colorPicker',
           },
           {
             id: 'darkColor',
-            name: '暗色字体',
+            name: '暗色文字',
             val: this.settings.darkColor,
             type: 'colorPicker',
           },
