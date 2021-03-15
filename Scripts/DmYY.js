@@ -453,150 +453,125 @@ class DmYY {
     }
   };
 
-  injectEventhandler = async (webView) => {
-    const js = `window.addEventListener('catalog-event', (event) => completion(event.detail), false);`;
-    return webView.evaluateJavaScript(js, true).then((response) => {
-      if (response.key === 'setting') {
-        const settings = { ...response };
-        delete settings.key;
-        Object.keys(settings).forEach((key) => {
-          this.settings[key] = settings[key];
-        });
-        this.saveSettings();
-      }
-      if (response.key === 'rest') {
-        this.settings = {};
-        this.saveSettings();
-      }
-      return this.injectEventhandler(webView);
-    });
-  };
-
-  getBaseConfig = () => {
-    let lightBgColor = this.getColors(this.settings.lightBgColor);
-    let darkBgColor = this.getColors(this.settings.darkBgColor);
-    return [
-      {
-        title: '组件设置',
-        settings: [
-          {
-            id: 'refreshAfterDate',
-            name: '刷新时间',
-            val: this.settings.refreshAfterDate,
-            type: 'input',
-          },
-          {
-            id: 'boxjsDomain',
-            name: '域名',
-            val: this.settings.boxjsDomain,
-            type: 'input',
-          },
-        ],
-      },
-      {
-        title: '颜色设置',
-        settings: [
-          {
-            id: 'lightOpacity',
-            name: '亮色透明',
-            val: this.settings.lightOpacity,
-            type: 'slider',
-            desc: '当设置了背景图片时，会给图片添加一层蒙版',
-          },
-          {
-            id: 'darkOpacity',
-            name: '暗色透明',
-            val: this.settings.darkOpacity,
-            type: 'slider',
-            desc: '当设置了背景图片时，会给图片添加一层蒙版',
-          },
-          {
-            id: 'lightColor',
-            name: '亮色文字',
-            val: this.settings.lightColor,
-            type: 'colorPicker',
-          },
-          {
-            id: 'darkColor',
-            name: '暗色文字',
-            val: this.settings.darkColor,
-            type: 'colorPicker',
-          },
-          {
-            id: 'lightBgColor',
-            name: '亮色背景',
-            val: lightBgColor,
-            step: 2,
-            type: 'colorPickers',
-          },
-          {
-            id: 'darkBgColor',
-            name: '暗色背景',
-            val: darkBgColor,
-            step: 2,
-            type: 'colorPickers',
-          },
-        ],
-      },
-    ];
-  };
-
-  baseWebView = async () => {
-    const web = new WebView();
-    const baseConfig = encodeURIComponent(JSON.stringify(this.getBaseConfig()));
-    const url = `https://scriptablejs.gitee.io/config/#/config?config=${baseConfig}`;
-    console.log(url);
-    await web.loadURL(url);
-    this.injectEventhandler(web);
-    return web.present(true);
-  };
-
   /**
    * 设置组件内容
    * @returns {Promise<void>}
    */
   setWidgetConfig = async () => {
-    const a = new Alert();
-    a.addAction('参数设置');
-    a.addAction('背景图片');
-    a.addAction('透明背景');
-    a.addAction('清空背景');
-    a.addCancelAction('取消');
-    let i = await a.presentSheet();
-    if (i === -1) return;
-    const _action = [
-      this.baseWebView,
+    const alert = new Alert();
+    alert.title = '内容配置';
+    alert.message = '主题设置、刷新时间等';
+    alert.addAction('刷新时间');
+    alert.addAction('主题设置');
+    if (this.useBoxJS) alert.addAction('BoxJS域名');
+    alert.addAction('重置所有');
+    alert.addCancelAction('取消');
+    const actions = [
       async () => {
-        const message = '白天和夜间背景';
-        const options = ['白天', '夜间', '取消'];
-        const index = await this.generateAlert(message, options);
-        if (index === 2) return;
-        const backImage = await this.chooseImg();
-        if (!backImage || !(await this.verifyImage(backImage))) return;
-        if (index === 0) await this.setBackgroundImage(backImage, true);
-        if (index === 1) await this.setBackgroundNightImage(backImage, true);
+        await this.setAlertInput(
+          '刷新时间（分）',
+          '默认刷新时间 30 分钟刷新一次，也可自行手动运行',
+          { refreshAfterDate: '分钟' },
+        );
       },
       async () => {
-        const message =
-          '请自行搭配相应的字体颜色。\n' +
-          '白天蒙层透明设置为 0\n' +
-          '夜间请自行调整参考值 0.26\n' +
-          '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
+        const a = new Alert();
+        a.title = '主题设置';
+        a.addAction('背景设置');
+        a.addAction('背景颜色');
+        a.addAction('字体颜色');
+        a.addAction('透明背景');
+        a.addAction('蒙层透明');
+        a.addAction('清空背景');
+        a.addCancelAction('取消');
+        let i = await a.presentSheet();
+        if (i === -1) return;
+        const _action = [
+          async () => {
+            const message = '白天和夜间背景';
+            const options = ['白天', '夜间', '取消'];
+            const index = await this.generateAlert(message, options);
+            if (index === 2) return;
+            const backImage = await this.chooseImg();
+            if (!backImage || !(await this.verifyImage(backImage))) return;
+            if (index === 0) await this.setBackgroundImage(backImage, true);
+            if (index === 1)
+              await this.setBackgroundNightImage(backImage, true);
+          },
+          async () =>
+            await this.setLightAndDark(
+              '背景颜色',
+              false,
+              'lightBgColor',
+              'darkBgColor',
+            ),
+          async () =>
+            await this.setLightAndDark(
+              '字体颜色',
+              false,
+              'lightColor',
+              'darkColor',
+            ),
+          async () => {
+            const message =
+              '请自行搭配相应的字体颜色。\n' +
+              '白天蒙层透明设置为 0\n' +
+              '夜间请自行调整参考值 0.26\n' +
+              '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
+            const options = ['取消', '确定'];
+            const index = await this.generateAlert(message, options);
+            if (index === 0) return;
+            const backImage = await this.getWidgetScreenShot();
+            if (backImage) {
+              await this.setBackgroundImage(backImage, true);
+              await this.setBackgroundNightImage(backImage, true);
+            }
+          },
+          async () => {
+            await this.setLightAndDark(
+              '透明',
+              '若是设置了透明背景，请自行调整',
+              'lightOpacity',
+              'darkOpacity',
+            );
+          },
+          async () => {
+            await this.setBackgroundImage(false, false);
+            await this.setBackgroundNightImage(false, true);
+          },
+        ];
+        _action[i] && _action[i].call(this);
+      },
+      ...(this.useBoxJS
+        ? [
+            async () => {
+              const a = new Alert();
+              a.title = 'BoxJS 域名';
+              a.addTextField('域名', this.settings.boxjsDomain);
+              a.addAction('确定');
+              a.addCancelAction('取消');
+              const id = await a.presentAlert();
+              if (id === -1) return;
+              this.settings.boxjsDomain = a.textFieldValue(0);
+              // 保存到本地
+              this.saveSettings();
+            },
+          ]
+        : []),
+      async () => {
         const options = ['取消', '确定'];
+        const message = '该操作不可逆，会清空所有组件配置！';
         const index = await this.generateAlert(message, options);
         if (index === 0) return;
-        const backImage = await this.getWidgetScreenShot();
-        if (backImage) {
-          await this.setBackgroundImage(backImage, true);
-          await this.setBackgroundNightImage(backImage, true);
-        }
-      },
-      async () => {
+        this.settings = {};
+        // 保存到本地
         await this.setBackgroundImage(false, false);
-        await this.setBackgroundNightImage(false, true);
+        this.saveSettings();
       },
     ];
-    return _action[i].call(this);
+    const id = await alert.presentAlert();
+    if (id === -1) return;
+    actions[id] && actions[id].call(this);
   };
 
   init(widgetFamily = config.widgetFamily) {
@@ -631,43 +606,29 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
 
-    let lightBgColor = this.getColors(this.settings.lightBgColor);
-    let darkBgColor = this.getColors(this.settings.darkBgColor);
-    if (lightBgColor.length > 1 || darkBgColor.length > 1) {
-      this.backGroundColor = !Device.isUsingDarkAppearance()
-        ? this.getBackgroundColor(lightBgColor || '#fff')
-        : this.getBackgroundColor(darkBgColor || '#000');
-    } else {
-      lightBgColor = lightBgColor.length ? lightBgColor[0] : lightBgColor;
-      darkBgColor = darkBgColor.length ? darkBgColor[0] : darkBgColor;
-      this.backGroundColor = Color.dynamic(
-        new Color(lightBgColor || '#fff'),
-        new Color(darkBgColor || '#000'),
-      );
-    }
+    this.backGroundColor = !Device.isUsingDarkAppearance()
+      ? this.getBackgroundColor(this.settings.lightBgColor || '#fff')
+      : this.getBackgroundColor(this.settings.darkBgColor || '#000');
     this.widgetColor = Color.dynamic(
       new Color(this.settings.lightColor),
       new Color(this.settings.darkColor),
     );
   }
 
-  getColors = (color = '') => {
-    if (!color) return '';
-    if (typeof color === 'string') return color.split(',');
-    if (typeof color === 'object' && !color.length) return [];
-    return color;
-  };
-
-  getBackgroundColor = (colors) => {
-    const locations = [];
-    const linearColor = new LinearGradient();
-    const cLen = colors.length;
-    linearColor.colors = colors.map((item, index) => {
-      locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
-      return new Color(item, 1);
-    });
-    linearColor.locations = locations;
-    return linearColor;
+  getBackgroundColor = (color = '') => {
+    const colors = color.split(',');
+    if (colors.length > 1) {
+      const locations = [];
+      const linearColor = new LinearGradient();
+      const cLen = colors.length;
+      linearColor.colors = colors.map((item, index) => {
+        locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
+        return new Color(item, 1);
+      });
+      linearColor.locations = locations;
+      return linearColor;
+    }
+    return new Color(color, 1);
   };
 
   /**
@@ -1259,5 +1220,4 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
   }
 };
 
-// new DmYY().setWidgetConfig();
 module.exports = { DmYY, Runing };
