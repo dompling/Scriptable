@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: cogs;
 
 /*
  * Author: 2Ya
@@ -606,13 +603,25 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
 
-    this.backGroundColor = !Device.isUsingDarkAppearance()
+    if(this.getColors(this.settings.lightBgColor).length > 1 || this.getColors(this.settings.darkBgColor).length > 1) {
+      this.backGroundColor = !Device.isUsingDarkAppearance()
       ? this.getBackgroundColor(this.settings.lightBgColor || '#fff')
       : this.getBackgroundColor(this.settings.darkBgColor || '#000');
+    } else {
+      this.backGroundColor = Color.dynamic(
+        new Color(this.settings.lightBgColor || '#fff'),
+        new Color(this.settings.darkBgColor || '#000')
+      );
+    }
     this.widgetColor = Color.dynamic(
       new Color(this.settings.lightColor),
       new Color(this.settings.darkColor),
     );
+  }
+
+  getColors =  (color = '') => {
+    const colors = color.split(',');
+    return colors;
   }
 
   getBackgroundColor = (color = '') => {
@@ -1221,3 +1230,5 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
 };
 
 module.exports = { DmYY, Runing };
+
+//version:1.0.4
