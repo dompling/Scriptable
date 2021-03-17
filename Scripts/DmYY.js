@@ -1,4 +1,3 @@
-
 /*
  * Author: 2Ya
  * Github: https://github.com/dompling
@@ -182,6 +181,18 @@ class DmYY {
     // Pixel sizes and positions for widgets on all supported phones.
     function phoneSizes() {
       return {
+        // 12 Pro Max
+        2778: {
+          small: 510,
+          medium: 1092,
+          large: 1146,
+          left: 96,
+          right: 678,
+          top: 246,
+          middle: 882,
+          bottom: 1518,
+        },
+
         // 12 and 12 Pro
         2532: {
           small: 474,
@@ -373,20 +384,17 @@ class DmYY {
     return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h));
   }
 
-  setLightAndDark = async (title, desc, light, dark) => {
+  setLightAndDark = async (title, desc, val) => {
     try {
       const a = new Alert();
-      a.title = '白天和夜间' + title;
-      a.message = !desc ? '请自行去网站上搜寻颜色（Hex 颜色）' : desc;
-      a.addTextField('白天', (this.settings[light] || '') + '');
-      a.addTextField('夜间', (this.settings[dark] || '') + '');
+      a.title = title;
+      a.message = desc;
+      a.addTextField('', `${this.settings[val]}`);
       a.addAction('确定');
       a.addCancelAction('取消');
       const id = await a.presentAlert();
       if (id === -1) return;
-      this.settings[light] = a.textFieldValue(0);
-      this.settings[dark] = a.textFieldValue(1);
-      // 保存到本地
+      this.settings[val] = a.textFieldValue(0);
       this.saveSettings();
     } catch (e) {
       console.log(e);
@@ -455,121 +463,155 @@ class DmYY {
    * @returns {Promise<void>}
    */
   setWidgetConfig = async () => {
-    const alert = new Alert();
-    alert.title = '内容配置';
-    alert.message = '主题设置、刷新时间等';
-    alert.addAction('刷新时间');
-    alert.addAction('主题设置');
-    if (this.useBoxJS) alert.addAction('BoxJS域名');
-    alert.addAction('重置所有');
-    alert.addCancelAction('取消');
-    const actions = [
-      async () => {
-        await this.setAlertInput(
-          '刷新时间（分）',
-          '默认刷新时间 30 分钟刷新一次，也可自行手动运行',
-          { refreshAfterDate: '分钟' },
-        );
+    const table = new UITable();
+    table.showSeparators = true;
+    await this.setContent(table);
+    await table.present();
+  };
+
+  async preferences(table, arr, outfit) {
+    let header = new UITableRow();
+    let heading = header.addText(outfit);
+    heading.titleFont = Font.mediumSystemFont(17);
+    heading.centerAligned();
+    table.addRow(header);
+    arr.forEach((item) => {
+      let row = new UITableRow();
+      let rowTitle = row.addText(item['title']);
+      rowTitle.widthWeight = 0.5;
+      rowTitle.titleFont = Font.systemFont(16);
+      if (item.val) {
+        let valText = row.addText(`${this.settings[item.val]}`.toUpperCase());
+        valText.widthWeight = 0.5;
+        valText.rightAligned();
+        valText.titleColor = Color.blue();
+        valText.titleFont = Font.mediumSystemFont(16);
+      }
+      row.dismissOnSelect = false;
+      row.onSelect = async () => {
+        if (item.type == 'input') {
+          await this.setLightAndDark(item['title'], item['desc'], item['val']);
+        } else if (item.type == 'setBackground') {
+          const backImage = await this.getWidgetScreenShot();
+          if (backImage) {
+            await this.setBackgroundImage(backImage, true);
+            await this.setBackgroundNightImage(backImage, true);
+          }
+        } else if (item.type == 'removeBackground') {
+          const options = ['取消', '清空'];
+          const message = '该操作不可逆，会清空所有背景图片！';
+          const index = await this.generateAlert(message, options);
+          if (index === 0) return;
+          await this.setBackgroundImage(false, true);
+          await this.setBackgroundNightImage(false, true);
+        } else {
+          const backImage = await this.chooseImg();
+          if (!backImage || !(await this.verifyImage(backImage))) return;
+          if (item.type == 'setDayBackground')
+            await this.setBackgroundImage(backImage, true);
+          if (item.type == 'setNightBackground')
+            await this.setBackgroundNightImage(backImage, true);
+        }
+        await this.setContent(table);
+      };
+      table.addRow(row);
+    });
+    table.reload();
+  }
+
+  async setContent(table) {
+    const basic = [
+      {
+        type: 'input',
+        title: '刷新时间',
+        desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
+        val: 'refreshAfterDate',
       },
-      async () => {
-        const a = new Alert();
-        a.title = '主题设置';
-        a.addAction('背景设置');
-        a.addAction('背景颜色');
-        a.addAction('字体颜色');
-        a.addAction('透明背景');
-        a.addAction('蒙层透明');
-        a.addAction('清空背景');
-        a.addCancelAction('取消');
-        let i = await a.presentSheet();
-        if (i === -1) return;
-        const _action = [
-          async () => {
-            const message = '白天和夜间背景';
-            const options = ['白天', '夜间', '取消'];
-            const index = await this.generateAlert(message, options);
-            if (index === 2) return;
-            const backImage = await this.chooseImg();
-            if (!backImage || !(await this.verifyImage(backImage))) return;
-            if (index === 0) await this.setBackgroundImage(backImage, true);
-            if (index === 1)
-              await this.setBackgroundNightImage(backImage, true);
-          },
-          async () =>
-            await this.setLightAndDark(
-              '背景颜色',
-              false,
-              'lightBgColor',
-              'darkBgColor',
-            ),
-          async () =>
-            await this.setLightAndDark(
-              '字体颜色',
-              false,
-              'lightColor',
-              'darkColor',
-            ),
-          async () => {
-            const message =
-              '请自行搭配相应的字体颜色。\n' +
-              '白天蒙层透明设置为 0\n' +
-              '夜间请自行调整参考值 0.26\n' +
-              '夜间开启了（深色外观下调暗壁纸）参考值 0.35';
-            const options = ['取消', '确定'];
-            const index = await this.generateAlert(message, options);
-            if (index === 0) return;
-            const backImage = await this.getWidgetScreenShot();
-            if (backImage) {
-              await this.setBackgroundImage(backImage, true);
-              await this.setBackgroundNightImage(backImage, true);
-            }
-          },
-          async () => {
-            await this.setLightAndDark(
-              '透明',
-              '若是设置了透明背景，请自行调整',
-              'lightOpacity',
-              'darkOpacity',
-            );
-          },
-          async () => {
-            await this.setBackgroundImage(false, false);
-            await this.setBackgroundNightImage(false, true);
-          },
-        ];
-        _action[i] && _action[i].call(this);
+      {
+        type: 'input',
+        title: '白天背景颜色',
+        desc:
+          '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
+        val: 'lightBgColor',
       },
-      ...(this.useBoxJS
-        ? [
-            async () => {
-              const a = new Alert();
-              a.title = 'BoxJS 域名';
-              a.addTextField('域名', this.settings.boxjsDomain);
-              a.addAction('确定');
-              a.addCancelAction('取消');
-              const id = await a.presentAlert();
-              if (id === -1) return;
-              this.settings.boxjsDomain = a.textFieldValue(0);
-              // 保存到本地
-              this.saveSettings();
-            },
-          ]
-        : []),
-      async () => {
-        const options = ['取消', '确定'];
-        const message = '该操作不可逆，会清空所有组件配置！';
-        const index = await this.generateAlert(message, options);
-        if (index === 0) return;
-        this.settings = {};
-        // 保存到本地
-        await this.setBackgroundImage(false, false);
-        this.saveSettings();
+      {
+        type: 'input',
+        title: '晚上背景颜色',
+        desc:
+          '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
+        val: 'darkBgColor',
+      },
+      {
+        type: 'input',
+        title: '白天字体颜色',
+        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
+        val: 'lightColor',
+      },
+      {
+        type: 'input',
+        title: '晚上字体颜色',
+        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
+        val: 'darkColor',
       },
     ];
-    const id = await alert.presentAlert();
-    if (id === -1) return;
-    actions[id] && actions[id].call(this);
-  };
+    const background = [
+      { type: 'setBackground', title: '透明背景设置' },
+      { type: 'setDayBackground', title: '白天背景图片' },
+      { type: 'setNightBackground', title: '晚上背景图片' },
+      {
+        type: 'input',
+        title: '白天蒙层透明',
+        desc: '完全透明请设置为0',
+        val: 'lightOpacity',
+      },
+      {
+        type: 'input',
+        title: '晚上蒙层透明',
+        desc: '完全透明请设置为0',
+        val: 'darkOpacity',
+      },
+      { type: 'removeBackground', title: '清空背景图片' },
+    ];
+    const boxjs = {
+      type: 'input',
+      title: 'BoxJS 域名',
+      desc: '',
+      val: 'boxjsDomain',
+    };
+    if (this.useBoxJS) basic.push(boxjs);
+    table.removeAllRows();
+    let topRow = new UITableRow();
+    topRow.height = 60;
+    let leftText = topRow.addButton('Github');
+    leftText.widthWeight = 0.3;
+    leftText.onTap = async () => {
+      await Safari.openInApp('https://github.com/dompling/Scriptable');
+    };
+    let centerRow = topRow.addImageAtURL(
+      'https://s3.ax1x.com/2021/03/16/6y4oJ1.png',
+    );
+    centerRow.widthWeight = 0.4;
+    centerRow.centerAligned();
+    centerRow.onTap = async () => {
+      await Safari.open('https://t.me/Scriptable_JS');
+    };
+    let rightText = topRow.addButton('重置所有');
+    rightText.widthWeight = 0.3;
+    rightText.rightAligned();
+    rightText.onTap = async () => {
+      const options = ['取消', '重置'];
+      const message =
+        '该操作不可逆，会清空所有组件配置！重置后请重新打开设置菜单。';
+      const index = await this.generateAlert(message, options);
+      if (index === 0) return;
+      this.settings = {};
+      await this.setBackgroundImage(false, false);
+      this.saveSettings();
+    };
+    table.addRow(topRow);
+    await this.preferences(table, basic, '基础设置');
+    await this.preferences(table, background, '背景图片');
+  }
 
   init(widgetFamily = config.widgetFamily) {
     // 组件大小：small,medium,large
@@ -595,22 +637,27 @@ class DmYY {
     );
 
     this.settings = this.getSettings();
-    this.settings.lightColor = this.settings.lightColor || '#000';
-    this.settings.darkColor = this.settings.darkColor || '#fff';
+    this.settings.lightColor = this.settings.lightColor || '#000000';
+    this.settings.darkColor = this.settings.darkColor || '#ffffff';
+    this.settings.lightBgColor = this.settings.lightBgColor || '#ffffff';
+    this.settings.darkBgColor = this.settings.darkBgColor || '#000000';
     this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
     this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
     this.settings.lightOpacity = this.settings.lightOpacity || '0.4';
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
 
-    if(this.getColors(this.settings.lightBgColor).length > 1 || this.getColors(this.settings.darkBgColor).length > 1) {
+    if (
+      this.getColors(this.settings.lightBgColor).length > 1 ||
+      this.getColors(this.settings.darkBgColor).length > 1
+    ) {
       this.backGroundColor = !Device.isUsingDarkAppearance()
-      ? this.getBackgroundColor(this.settings.lightBgColor || '#fff')
-      : this.getBackgroundColor(this.settings.darkBgColor || '#000');
+        ? this.getBackgroundColor(this.settings.lightBgColor)
+        : this.getBackgroundColor(this.settings.darkBgColor);
     } else {
       this.backGroundColor = Color.dynamic(
-        new Color(this.settings.lightBgColor || '#fff'),
-        new Color(this.settings.darkBgColor || '#000')
+        new Color(this.settings.lightBgColor),
+        new Color(this.settings.darkBgColor),
       );
     }
     this.widgetColor = Color.dynamic(
@@ -619,10 +666,10 @@ class DmYY {
     );
   }
 
-  getColors =  (color = '') => {
+  getColors = (color = '') => {
     const colors = color.split(',');
     return colors;
-  }
+  };
 
   getBackgroundColor = (color = '') => {
     const colors = color.split(',');
