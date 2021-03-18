@@ -481,39 +481,47 @@ class DmYY {
       rowTitle.widthWeight = 0.5;
       rowTitle.titleFont = Font.systemFont(16);
       if (item.val) {
-        let valText = row.addText(`${this.settings[item.val]}`.toUpperCase());
+        let valText = row.addText(
+          `${this.settings[item.val] || item.val}`.toUpperCase(),
+        );
         valText.widthWeight = 0.5;
         valText.rightAligned();
         valText.titleColor = Color.blue();
         valText.titleFont = Font.mediumSystemFont(16);
       }
       row.dismissOnSelect = false;
-      row.onSelect = async () => {
-        if (item.type == 'input') {
-          await this.setLightAndDark(item['title'], item['desc'], item['val']);
-        } else if (item.type == 'setBackground') {
-          const backImage = await this.getWidgetScreenShot();
-          if (backImage) {
-            await this.setBackgroundImage(backImage, true);
-            await this.setBackgroundNightImage(backImage, true);
-          }
-        } else if (item.type == 'removeBackground') {
-          const options = ['取消', '清空'];
-          const message = '该操作不可逆，会清空所有背景图片！';
-          const index = await this.generateAlert(message, options);
-          if (index === 0) return;
-          await this.setBackgroundImage(false, true);
-          await this.setBackgroundNightImage(false, true);
-        } else {
-          const backImage = await this.chooseImg();
-          if (!backImage || !(await this.verifyImage(backImage))) return;
-          if (item.type == 'setDayBackground')
-            await this.setBackgroundImage(backImage, true);
-          if (item.type == 'setNightBackground')
-            await this.setBackgroundNightImage(backImage, true);
-        }
-        await this.setContent(table);
-      };
+      row.onSelect = item.onClick
+        ? () => item.onClick(item)
+        : async () => {
+            if (item.type == 'input') {
+              await this.setLightAndDark(
+                item['title'],
+                item['desc'],
+                item['val'],
+              );
+            } else if (item.type == 'setBackground') {
+              const backImage = await this.getWidgetScreenShot();
+              if (backImage) {
+                await this.setBackgroundImage(backImage, true);
+                await this.setBackgroundNightImage(backImage, true);
+              }
+            } else if (item.type == 'removeBackground') {
+              const options = ['取消', '清空'];
+              const message = '该操作不可逆，会清空所有背景图片！';
+              const index = await this.generateAlert(message, options);
+              if (index === 0) return;
+              await this.setBackgroundImage(false, true);
+              await this.setBackgroundNightImage(false, true);
+            } else {
+              const backImage = await this.chooseImg();
+              if (!backImage || !(await this.verifyImage(backImage))) return;
+              if (item.type == 'setDayBackground')
+                await this.setBackgroundImage(backImage, true);
+              if (item.type == 'setNightBackground')
+                await this.setBackgroundNightImage(backImage, true);
+            }
+            await this.setContent(table);
+          };
       table.addRow(row);
     });
     table.reload();
@@ -1192,86 +1200,48 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const actions = M['_actions'];
       const _actions = [
         // 预览组件
-        async (debug = false) => {
-          let a = new Alert();
-          a.title = '预览组件';
-          a.message = '测试桌面组件在各种尺寸下的显示效果';
-          a.addAction('小尺寸 Small');
-          a.addAction('中尺寸 Medium');
-          a.addAction('大尺寸 Large');
-          a.addAction('全部 All');
-          a.addCancelAction('取消操作');
-          const funcs = [];
-          if (debug) {
-            for (let _ in actions) {
-              a.addAction(_);
-              funcs.push(actions[_].bind(M));
-            }
-            a.addDestructiveAction('停止调试');
-          }
-          let i = await a.presentSheet();
-          if (i === -1) return;
-          let w;
-          switch (i) {
-            case 0:
-              M.widgetFamily = 'small';
-              w = await M.render();
-              w && (await w.presentSmall());
-              break;
-            case 1:
-              M.widgetFamily = 'medium';
-              w = await M.render();
-              w && (await w.presentMedium());
-              break;
-            case 2:
-              M.widgetFamily = 'large';
-              w = await M.render();
-              w && (await w.presentLarge());
-              break;
-            case 3:
-              M.widgetFamily = 'small';
-              w = await M.render();
-              w && (await w.presentSmall());
-              M.widgetFamily = 'medium';
-              w = await M.render();
-              w && (await w.presentMedium());
-              M.widgetFamily = 'large';
-              w = await M.render();
-              w && (await w.presentLarge());
-              break;
-            default:
-              const func = funcs[i - 4];
-              if (func) await func();
-              break;
-          }
+        async () => {
+          const table = new UITable();
 
-          return i;
+          await table.present();
         },
       ];
-      const alert = new Alert();
-      alert.title = M.name;
-      alert.message = M.desc;
-      alert.addAction('预览组件');
+      const table = new UITable();
+      const onClick = async (item) => {
+        M.widgetFamily = item.val;
+        w = await M.render();
+        const fnc = item.val
+          .toLowerCase()
+          .replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+        w && (await w[`present${fnc}`]());
+      };
+      const preview = [
+        {
+          title: '小尺寸',
+          val: 'small',
+          onClick,
+        },
+        {
+          title: '中尺寸',
+          val: 'medium',
+          onClick,
+        },
+        {
+          title: '大尺寸',
+          val: 'large',
+          onClick,
+        },
+      ];
+      await M.preferences(table, preview, '预览组件');
+      const extra = [];
       for (let _ in actions) {
-        alert.addAction(_);
-        _actions.push(actions[_]);
+        extra.push({
+          title: _,
+          onClick: actions[_],
+        });
       }
-      alert.addCancelAction('取消操作');
-      const idx = await alert.presentSheet();
-      if (_actions[idx]) {
-        const func = _actions[idx];
-        await func();
-      }
-      return;
-    }
-    let _tmp = act
-      .split('-')
-      .map((_) => _[0].toUpperCase() + _.substr(1))
-      .join('');
-    let _act = 'action' + _tmp;
-    if (M[_act] && typeof M[_act] === 'function') {
-      const func = M[_act].bind(M);
-      await func(data);
+      await M.preferences(table, extra, '配置组件');
+      await table.present();
     }
   }
 };
