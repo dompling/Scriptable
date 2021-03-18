@@ -655,13 +655,15 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
 
+    const lightBgColor = this.getColors(this.settings.lightBgColor);
+    const darkBgColor = this.getColors(this.settings.darkBgColor);
     if (
       this.getColors(this.settings.lightBgColor).length > 1 ||
       this.getColors(this.settings.darkBgColor).length > 1
     ) {
       this.backGroundColor = !Device.isUsingDarkAppearance()
-        ? this.getBackgroundColor(this.settings.lightBgColor)
-        : this.getBackgroundColor(this.settings.darkBgColor);
+        ? this.getBackgroundColor(lightBgColor)
+        : this.getBackgroundColor(darkBgColor);
     } else {
       this.backGroundColor = Color.dynamic(
         new Color(this.settings.lightBgColor),
@@ -675,24 +677,20 @@ class DmYY {
   }
 
   getColors = (color = '') => {
-    const colors = color.split(',');
+    const colors = typeof color === 'string' ? color.split(',') : color;
     return colors;
   };
 
-  getBackgroundColor = (color = '') => {
-    const colors = color.split(',');
-    if (colors.length > 1) {
-      const locations = [];
-      const linearColor = new LinearGradient();
-      const cLen = colors.length;
-      linearColor.colors = colors.map((item, index) => {
-        locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
-        return new Color(item, 1);
-      });
-      linearColor.locations = locations;
-      return linearColor;
-    }
-    return new Color(color, 1);
+  getBackgroundColor = (colors) => {
+    const locations = [];
+    const linearColor = new LinearGradient();
+    const cLen = colors.length;
+    linearColor.colors = colors.map((item, index) => {
+      locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
+      return new Color(item, 1);
+    });
+    linearColor.locations = locations;
+    return linearColor;
   };
 
   /**
