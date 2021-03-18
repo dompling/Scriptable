@@ -1187,7 +1187,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       Script.complete();
     }
   } else {
-    let { act, data, __arg, __size } = args.queryParameters;
+    let { act, __arg, __size } = args.queryParameters;
     M = new Widget(__arg || default_args || '');
     if (extra) {
       Object.keys(extra).forEach((key) => {
@@ -1198,14 +1198,6 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     if (!act || !M['_actions']) {
       // 弹出选择菜单
       const actions = M['_actions'];
-      const _actions = [
-        // 预览组件
-        async () => {
-          const table = new UITable();
-
-          await table.present();
-        },
-      ];
       const table = new UITable();
       const onClick = async (item) => {
         M.widgetFamily = item.val;
