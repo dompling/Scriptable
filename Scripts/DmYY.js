@@ -486,7 +486,7 @@ class DmYY {
       rowTitle.titleFont = Font.systemFont(16);
       if (item.val) {
         let valText = row.addText(
-          `${this.settings[item.val] || item.val}`.toUpperCase(),
+          `${this.settings[item.val] || item.val || item.title}`.toUpperCase(),
         );
         valText.widthWeight = 0.5;
         valText.rightAligned();
