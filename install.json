@@ -21,13 +21,18 @@
       "title": "全量安装"
     },
     {
-      "version": "1.0.4",
+      "version": "1.0.5",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
       "thumb": "https://img.icons8.com/clouds/344/settings.png",
       "name": "DmYY",
       "title": "DmYY",
-      "html":[
+      "html": [
+        "<h4 align=\"center\">更新说明</h4>",
+        "v1.0.5",
+        "<li>修改调整菜单更多图标</li>",
+        "<li>预览关闭菜单功能</li>",
+        "<br/>",
         "<h3 align=\"center\">历史版本</h3>",
         "<li><a href=\"https://gist.githubusercontent.com/dompling/ca238c3102a1ed88746d617d0d0cbe2f/raw/04ccdfd75fcd6674df09c6fe627a3aabc701a25a/DmYY\">可视化界面版本</a></li>"
       ]
