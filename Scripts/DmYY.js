@@ -505,7 +505,7 @@ class DmYY {
       }
 
       row.onSelect = item.onClick
-        ? () => item.onClick(item, table)
+        ? async () => item.onClick(item, table)
         : async () => {
             if (item.type == 'input') {
               await this.setLightAndDark(
