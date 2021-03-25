@@ -481,7 +481,7 @@ class DmYY {
     table.addRow(header);
     arr.forEach((item) => {
       let row = new UITableRow();
-      if (item.dismissOnSelect) row.dismissOnSelect = true;
+      row.dismissOnSelect = !!item.dismissOnSelect;
       let rowTitle = row.addText(item['title']);
       rowTitle.widthWeight = 0.5;
       rowTitle.titleFont = Font.systemFont(16);
@@ -494,7 +494,6 @@ class DmYY {
         valText.rightAligned();
         valText.titleColor = Color.blue();
         valText.titleFont = Font.mediumSystemFont(fontSize);
-        row.dismissOnSelect = !!item.dismissOnSelect;
       } else {
         const imgCell = UITableCell.imageAtURL(
           'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png',
