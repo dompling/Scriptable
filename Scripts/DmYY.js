@@ -481,6 +481,7 @@ class DmYY {
     table.addRow(header);
     arr.forEach((item) => {
       let row = new UITableRow();
+      if (item.dismissOnSelect) row.dismissOnSelect = true;
       let rowTitle = row.addText(item['title']);
       rowTitle.widthWeight = 0.5;
       rowTitle.titleFont = Font.systemFont(16);
@@ -493,14 +494,13 @@ class DmYY {
         valText.rightAligned();
         valText.titleColor = Color.blue();
         valText.titleFont = Font.mediumSystemFont(fontSize);
-        row.dismissOnSelect = false;
+        row.dismissOnSelect = !!item.dismissOnSelect;
       } else {
         const imgCell = UITableCell.imageAtURL(
           'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png',
         );
         imgCell.rightAligned();
         imgCell.widthWeight = 0.5;
-        console.log(imgCell);
         row.addCell(imgCell);
       }
 
@@ -1223,16 +1223,19 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         {
           title: '小尺寸',
           val: 'small',
+          dismissOnSelect: true,
           onClick,
         },
         {
           title: '中尺寸',
           val: 'medium',
+          dismissOnSelect: true,
           onClick,
         },
         {
           title: '大尺寸',
           val: 'large',
+          dismissOnSelect: true,
           onClick,
         },
       ];
