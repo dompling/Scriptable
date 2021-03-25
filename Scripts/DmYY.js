@@ -484,16 +484,25 @@ class DmYY {
       let rowTitle = row.addText(item['title']);
       rowTitle.widthWeight = 0.5;
       rowTitle.titleFont = Font.systemFont(16);
-
-      let valText = row.addText(
-        `${this.settings[item.val] || item.val || '💬'}`.toUpperCase(),
-      );
-      const fontSize = !item.val ? 26 : 16;
-      valText.widthWeight = 0.5;
-      valText.rightAligned();
-      valText.titleColor = Color.blue();
-      valText.titleFont = Font.mediumSystemFont(fontSize);
-      row.dismissOnSelect = false;
+      if (this.settings[item.val] || item.val) {
+        let valText = row.addText(
+          `${this.settings[item.val] || item.val}`.toUpperCase(),
+        );
+        const fontSize = !item.val ? 26 : 16;
+        valText.widthWeight = 0.5;
+        valText.rightAligned();
+        valText.titleColor = Color.blue();
+        valText.titleFont = Font.mediumSystemFont(fontSize);
+        row.dismissOnSelect = false;
+      } else {
+        const imgCell = UITableCell.imageAtURL(
+          'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png',
+        );
+        imgCell.rightAligned();
+        imgCell.widthWeight = 0.5;
+        console.log(imgCell);
+        row.addCell(imgCell);
+      }
 
       row.onSelect = item.onClick
         ? () => item.onClick(item, table)
