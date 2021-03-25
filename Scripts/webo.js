@@ -77,8 +77,7 @@ class Widget extends DmYY {
     num.font = Font.lightSystemFont(10);
     num.textOpacity = 0.5;
     num.textColor = this.widgetColor;
-
-    w.url = this.actionUrl('open-url', topic['scheme']);
+    body.url = topic['scheme'];
     return w;
   }
   /**
@@ -128,7 +127,7 @@ class Widget extends DmYY {
       extr.font = Font.lightSystemFont(12);
       extr.textColor = this.widgetColor;
       extr.textOpacity = 0.6;
-      dom.url = this.actionUrl('open-url', topic['scheme']);
+      dom.url = topic['scheme'];
       bodyLeft.addSpacer(5);
     }
     body.addSpacer();
