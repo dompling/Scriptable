@@ -469,8 +469,10 @@ class DmYY {
   setWidgetConfig = async () => {
     const table = new UITable();
     table.showSeparators = true;
-    await this.setContent(table);
+    await this.renderDmYYTables(table);
     await table.present();
+    console.log('基础设置');
+    return;
   };
 
   async preferences(table, arr, outfit) {
@@ -533,14 +535,14 @@ class DmYY {
               if (item.type == 'setNightBackground')
                 await this.setBackgroundNightImage(backImage, true);
             }
-            await this.setContent(table);
+            await this.renderDmYYTables(table);
           };
       table.addRow(row);
     });
     table.reload();
   }
 
-  async setContent(table) {
+  async renderDmYYTables(table) {
     const basic = [
       {
         type: 'input',

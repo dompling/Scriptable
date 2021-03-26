@@ -257,7 +257,7 @@ completion(response);
     return await this.$request.get(url, 'IMG');
   };
 
-  setContent = async (w, size, viewSize) => {
+  renderContent = async (w, size, viewSize) => {
     const rest = this.translateFlow(this.dataSource.restData);
     const use = this.translateFlow(this.dataSource.usedData);
     const today = this.translateFlow(this.dataSource.todayUsed);
@@ -389,7 +389,7 @@ completion(response);
 
     const stackContent = w.addStack();
     stackContent.addSpacer();
-    await this.setContent(stackContent, {w: 360, h: 360}, new Size(80, 80));
+    await this.renderContent(stackContent, {w: 360, h: 360}, new Size(80, 80));
     stackContent.addSpacer();
 
     w.addSpacer();
@@ -418,7 +418,7 @@ completion(response);
   renderMedium = async (w) => {
     const stackBody = w.addStack();
     const stackLeft = stackBody.addStack();
-    await this.setContent(stackLeft, {w: 360, h: 360}, new Size(140, 140));
+    await this.renderContent(stackLeft, {w: 360, h: 360}, new Size(140, 140));
     stackBody.addSpacer(10);
     const stackRight = stackBody.addStack();
     stackRight.layoutVertically();
