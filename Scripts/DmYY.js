@@ -560,7 +560,7 @@ class DmYY {
     cornerWidth = 10,
   ) => {
     const sfi = SFSymbol.named(icon);
-    sfi.applyFont(Font.mediumSystemFont(25));
+    sfi.applyFont(Font.mediumSystemFont(22));
     const imgData = Data.fromPNG(sfi.image).toBase64String();
     const html = `
 <img id="sourceImg" src="data:image/png;base64,${imgData}" />
@@ -609,10 +609,8 @@ output=canvas.toDataURL()
     ctx.addPath(path);
     ctx.fillPath();
     const imageSize = iconImage.size;
-    console.log(imageSize);
     const x = (size.width - imageSize.width) / 2;
     const y = (size.height - imageSize.height) / 2;
-    console.log(x, y);
     ctx.drawImageAtPoint(iconImage, new Point(x, y));
     return ctx.getImage();
   };
