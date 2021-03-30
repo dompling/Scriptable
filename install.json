@@ -21,7 +21,7 @@
       "title": "全量安装"
     },
     {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
       "thumb": "https://img.icons8.com/clouds/344/settings.png",
@@ -29,6 +29,8 @@
       "title": "DmYY",
       "html": [
         "<h4 align=\"center\">更新说明</h4>",
+        "v1.0.6",
+        "<li>优化菜单，增加菜单图标</li>",
         "v1.0.5",
         "<li>修改调整菜单更多图标</li>",
         "<li>预览关闭菜单功能</li>",
