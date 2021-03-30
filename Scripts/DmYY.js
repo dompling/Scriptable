@@ -1341,11 +1341,18 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       await M.preferences(table, preview, '预览组件');
       const extra = [];
       for (let _ in actions) {
-        extra.push({
+        const iconItem = M._actionsIcon[_];
+        const isUrl = typeoficonItem === 'string';
+        const actionItem = {
           title: _,
-          icon: M._actionsIcon[_],
           onClick: actions[_],
-        });
+        };
+        if (isUrl) {
+          actionItem.url = iconItem;
+        } else {
+          actionItem.icon = iconItem;
+        }
+        extra.push(actionItem);
       }
       await M.preferences(table, extra, '配置组件');
       await table.present();
