@@ -608,11 +608,12 @@ output=canvas.toDataURL()
     ctx.setFillColor(new Color(color));
     ctx.addPath(path);
     ctx.fillPath();
-
-    const rate = 16;
-    const iw = size.width - rate;
-    const x = (size.width - iw) / 2;
-    ctx.drawImageInRect(iconImage, new Rect(x, x, iw, iw));
+    const imageSize = iconImage.size;
+    console.log(imageSize);
+    const x = (size.width - imageSize.width) / 2;
+    const y = (size.height - imageSize.height) / 2;
+    console.log(x, y);
+    ctx.drawImageAtPoint(iconImage, new Point(x, y));
     return ctx.getImage();
   };
 
