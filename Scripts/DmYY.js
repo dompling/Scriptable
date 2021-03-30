@@ -10,16 +10,17 @@
 class DmYY {
   constructor(arg) {
     this.arg = arg;
-    this._actions = {};
     this.init();
     this.isNight = Device.isUsingDarkAppearance();
   }
 
+  _actions = {};
   BACKGROUND_NIGHT_KEY;
   widgetColor;
   backGroundColor;
   useBoxJS = true;
   isNight;
+  _actionsIcon = {};
 
   // 获取 Request 对象
   getRequest = (url = '') => {
@@ -471,8 +472,6 @@ class DmYY {
     table.showSeparators = true;
     await this.renderDmYYTables(table);
     await table.present();
-    console.log('基础设置');
-    return;
   };
 
   async preferences(table, arr, outfit) {
@@ -481,18 +480,32 @@ class DmYY {
     heading.titleFont = Font.mediumSystemFont(17);
     heading.centerAligned();
     table.addRow(header);
-    arr.forEach((item) => {
-      let row = new UITableRow();
+    for (const item of arr) {
+      const row = new UITableRow();
       row.dismissOnSelect = !!item.dismissOnSelect;
+      row.cellSpacing = 10;
+      if (item.url) {
+        const rowIcon = row.addImageAtURL(item.url);
+        rowIcon.widthWeight = 10;
+      } else {
+        const icon = item.icon || {};
+        const image = await this.drawTableIcon(
+          icon.name,
+          icon.color,
+          item.cornerWidth,
+        );
+        const imageCell = row.addImage(image);
+        imageCell.widthWeight = 10;
+      }
       let rowTitle = row.addText(item['title']);
-      rowTitle.widthWeight = 0.5;
+      rowTitle.widthWeight = 100;
       rowTitle.titleFont = Font.systemFont(16);
       if (this.settings[item.val] || item.val) {
         let valText = row.addText(
           `${this.settings[item.val] || item.val}`.toUpperCase(),
         );
         const fontSize = !item.val ? 26 : 16;
-        valText.widthWeight = 0.5;
+        valText.widthWeight = 100;
         valText.rightAligned();
         valText.titleColor = Color.blue();
         valText.titleFont = Font.mediumSystemFont(fontSize);
@@ -501,7 +514,7 @@ class DmYY {
           'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png',
         );
         imgCell.rightAligned();
-        imgCell.widthWeight = 0.5;
+        imgCell.widthWeight = 100;
         row.addCell(imgCell);
       }
 
@@ -538,19 +551,82 @@ class DmYY {
             await this.renderDmYYTables(table);
           };
       table.addRow(row);
-    });
+    }
     table.reload();
   }
+
+  drawTableIcon = async (
+    icon = 'square.grid.2x2',
+    color = '#e8e8e8',
+    cornerWidth = 10,
+  ) => {
+    const sfi = SFSymbol.named(icon);
+    const imgData = Data.fromPNG(sfi.image).toBase64String();
+    const html = `
+<img id="sourceImg" src="data:image/png;base64,${imgData}" />
+<img id="silhouetteImg" src="" />
+<canvas id="mainCanvas" />
+  `;
+    const js = `
+var canvas = document.createElement("canvas");
+var sourceImg = document.getElementById("sourceImg");
+var silhouetteImg = document.getElementById("silhouetteImg");
+var ctx = canvas.getContext('2d');
+canvas.width = sourceImg.width;
+canvas.height = sourceImg.height;
+ctx.drawImage(sourceImg,0,0);
+var imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+var pix = imgData.data;
+//convert the image into a silhouette
+for (var i=0, n = pix.length; i < n; i+= 4){
+  //set red to 0
+    pix[i] = 255;
+  //set green to 0
+    pix[i+1] = 255;
+  //set blue to 0
+    pix[i+2] = 255;
+  //retain the alpha value
+    pix[i+3] = pix[i+3];
+}
+ctx.putImageData(imgData,0,0);
+silhouetteImg.src = canvas.toDataURL();
+output=canvas.toDataURL()
+`;
+    let wv = new WebView();
+    await wv.loadHTML(html);
+    const base64Image = await wv.evaluateJavaScript(js);
+    const iconImage = await new Request(base64Image).loadImage();
+    const size = new Size(60, 60);
+    const ctx = new DrawContext();
+    ctx.size = size;
+    const path = new Path();
+    const rect = new Rect(0, 0, size.width, size.width);
+
+    path.addRoundedRect(rect, cornerWidth, cornerWidth);
+    path.closeSubpath();
+    ctx.setFillColor(new Color(color));
+    ctx.addPath(path);
+    ctx.fillPath();
+
+    const rate = 16;
+    const iw = size.width - rate;
+    const x = (size.width - iw) / 2;
+    const iconRect = new Rect(x, x, iw, iw);
+    ctx.drawImageInRect(iconImage, iconRect);
+    return ctx.getImage();
+  };
 
   async renderDmYYTables(table) {
     const basic = [
       {
+        icon: { name: 'arrow.clockwise', color: '#1890ff' },
         type: 'input',
         title: '刷新时间',
         desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
         val: 'refreshAfterDate',
       },
       {
+        icon: { name: 'photo', color: '#13c2c2' },
         type: 'input',
         title: '白天背景颜色',
         desc:
@@ -558,6 +634,7 @@ class DmYY {
         val: 'lightBgColor',
       },
       {
+        icon: { name: 'photo.fill', color: '#52c41a' },
         type: 'input',
         title: '晚上背景颜色',
         desc:
@@ -565,12 +642,14 @@ class DmYY {
         val: 'darkBgColor',
       },
       {
+        icon: { name: 'sun.max', color: '#d48806' },
         type: 'input',
         title: '白天字体颜色',
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
         val: 'lightColor',
       },
       {
+        icon: { name: 'moon.stars', color: '#d4b106' },
         type: 'input',
         title: '晚上字体颜色',
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
@@ -578,24 +657,43 @@ class DmYY {
       },
     ];
     const background = [
-      { type: 'setBackground', title: '透明背景设置' },
-      { type: 'setDayBackground', title: '白天背景图片' },
-      { type: 'setNightBackground', title: '晚上背景图片' },
       {
+        icon: { name: 'text.below.photo', color: '#faad14' },
+        type: 'setBackground',
+        title: '透明背景设置',
+      },
+      {
+        icon: { name: 'photo.on.rectangle', color: '#fa8c16' },
+        type: 'setDayBackground',
+        title: '白天背景图片',
+      },
+      {
+        icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
+        type: 'setNightBackground',
+        title: '晚上背景图片',
+      },
+      {
+        icon: { name: 'record.circle', color: '#722ed1' },
         type: 'input',
         title: '白天蒙层透明',
         desc: '完全透明请设置为0',
         val: 'lightOpacity',
       },
       {
+        icon: { name: 'record.circle.fill', color: '#eb2f96' },
         type: 'input',
         title: '晚上蒙层透明',
         desc: '完全透明请设置为0',
         val: 'darkOpacity',
       },
-      { type: 'removeBackground', title: '清空背景图片' },
+      {
+        icon: { name: 'clear', color: '#f5222d' },
+        type: 'removeBackground',
+        title: '清空背景图片',
+      },
     ];
     const boxjs = {
+      icon: { name: 'shippingbox', color: '#fff566' },
       type: 'input',
       title: 'BoxJS 域名',
       desc: '',
@@ -669,17 +767,13 @@ class DmYY {
     this.settings.lightOpacity = this.settings.lightOpacity || '0.4';
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
     this.prefix = this.settings.boxjsDomain;
-
     const lightBgColor = this.getColors(this.settings.lightBgColor);
     const darkBgColor = this.getColors(this.settings.darkBgColor);
-    if (
-      this.getColors(this.settings.lightBgColor).length > 1 ||
-      this.getColors(this.settings.darkBgColor).length > 1
-    ) {
+    if (lightBgColor.length > 1 || darkBgColor.length > 1) {
       this.backGroundColor = !Device.isUsingDarkAppearance()
         ? this.getBackgroundColor(lightBgColor)
         : this.getBackgroundColor(darkBgColor);
-    } else {
+    } else if (lightBgColor.length > 0 && darkBgColor.length > 0) {
       this.backGroundColor = Color.dynamic(
         new Color(this.settings.lightBgColor),
         new Color(this.settings.darkBgColor),
@@ -713,8 +807,9 @@ class DmYY {
    * @param {string} name 操作函数名
    * @param {func} func 点击后执行的函数
    */
-  registerAction(name, func) {
+  registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }) {
     this._actions[name] = func.bind(this);
+    this._actionsIcon[name] = icon;
   }
 
   /**
@@ -1222,18 +1317,21 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       };
       const preview = [
         {
+          url: 'https://z3.ax1x.com/2021/03/26/6v5wIP.png',
           title: '小尺寸',
           val: 'small',
           dismissOnSelect: true,
           onClick,
         },
         {
+          url: 'https://z3.ax1x.com/2021/03/26/6v5dat.png',
           title: '中尺寸',
           val: 'medium',
           dismissOnSelect: true,
           onClick,
         },
         {
+          url: 'https://z3.ax1x.com/2021/03/26/6v5BPf.png',
           title: '大尺寸',
           val: 'large',
           dismissOnSelect: true,
@@ -1245,6 +1343,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       for (let _ in actions) {
         extra.push({
           title: _,
+          icon: M._actionsIcon[_],
           onClick: actions[_],
         });
       }
@@ -1254,6 +1353,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
   }
 };
 
+// await new DmYY().setWidgetConfig();
 module.exports = { DmYY, Runing };
 
 //version:1.0.4
