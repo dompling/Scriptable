@@ -572,10 +572,11 @@ class DmYY {
     var sourceImg = document.getElementById("sourceImg");
     var silhouetteImg = document.getElementById("silhouetteImg");
     var ctx = canvas.getContext('2d');
-    canvas.width = sourceImg.width;
-    canvas.height = sourceImg.height;
-    ctx.drawImage(sourceImg,0,0);
-    var imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+    var size = sourceImg.width > sourceImg.height ? sourceImg.width : sourceImg.height;
+    canvas.width = size;
+    canvas.height = size;
+    ctx.drawImage(sourceImg, (canvas.width - sourceImg.width) / 2, (canvas.height - sourceImg.height) / 2);
+    var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     var pix = imgData.data;
     //convert the image into a silhouette
     for (var i=0, n = pix.length; i < n; i+= 4){
@@ -592,6 +593,7 @@ class DmYY {
     silhouetteImg.src = canvas.toDataURL();
     output=canvas.toDataURL()
     `;
+
     let wv = new WebView();
     await wv.loadHTML(html);
     const base64Image = await wv.evaluateJavaScript(js);
@@ -609,10 +611,10 @@ class DmYY {
     ctx.setFillColor(new Color(color));
     ctx.addPath(path);
     ctx.fillPath();
-    const imageSize = iconImage.size;
-    const x = (size.width - imageSize.width) / 2;
-    const y = (size.height - imageSize.height) / 2;
-    ctx.drawImageAtPoint(iconImage, new Point(x, y));
+    const rate = 36;
+    const iw = size.width - rate;
+    const x = (size.width - iw) / 2;
+    ctx.drawImageInRect(iconImage, new Rect(x, x, iw, iw));
     return ctx.getImage();
   };
 
