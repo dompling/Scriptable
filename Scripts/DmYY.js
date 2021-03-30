@@ -1342,7 +1342,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const extra = [];
       for (let _ in actions) {
         const iconItem = M._actionsIcon[_];
-        const isUrl = typeoficonItem === 'string';
+        const isUrl = typeof iconItem === 'string';
         const actionItem = {
           title: _,
           onClick: actions[_],
