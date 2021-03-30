@@ -483,10 +483,9 @@ class DmYY {
     for (const item of arr) {
       const row = new UITableRow();
       row.dismissOnSelect = !!item.dismissOnSelect;
-      row.cellSpacing = 10;
       if (item.url) {
         const rowIcon = row.addImageAtURL(item.url);
-        rowIcon.widthWeight = 10;
+        rowIcon.widthWeight = 100;
       } else {
         const icon = item.icon || {};
         const image = await this.drawTableIcon(
@@ -495,17 +494,17 @@ class DmYY {
           item.cornerWidth,
         );
         const imageCell = row.addImage(image);
-        imageCell.widthWeight = 10;
+        imageCell.widthWeight = 100;
       }
       let rowTitle = row.addText(item['title']);
-      rowTitle.widthWeight = 100;
+      rowTitle.widthWeight = 400;
       rowTitle.titleFont = Font.systemFont(16);
       if (this.settings[item.val] || item.val) {
         let valText = row.addText(
           `${this.settings[item.val] || item.val}`.toUpperCase(),
         );
         const fontSize = !item.val ? 26 : 16;
-        valText.widthWeight = 100;
+        valText.widthWeight = 500;
         valText.rightAligned();
         valText.titleColor = Color.blue();
         valText.titleFont = Font.mediumSystemFont(fontSize);
@@ -514,7 +513,7 @@ class DmYY {
           'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png',
         );
         imgCell.rightAligned();
-        imgCell.widthWeight = 100;
+        imgCell.widthWeight = 500;
         row.addCell(imgCell);
       }
 
@@ -596,7 +595,7 @@ output=canvas.toDataURL()
     await wv.loadHTML(html);
     const base64Image = await wv.evaluateJavaScript(js);
     const iconImage = await new Request(base64Image).loadImage();
-    const size = new Size(60, 60);
+    const size = new Size(80, 80);
     const ctx = new DrawContext();
     ctx.size = size;
     const path = new Path();
