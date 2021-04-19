@@ -155,7 +155,7 @@
       ]
     },
     {
-      "version": "1.0.0",
+      "version": "1.0.2",
       "description": "显示历史上的今日带图片情况",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/HistoryToday.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/historyToday.png",
