@@ -37,6 +37,8 @@ class Widget extends DmYY {
   getHistoryList = async () => {
     const url = `http://api.sodion.net/api_v1/grap/todayinhistory`;
     const response = await this.$request.get(url);
+    if (!response || !response.length)
+      console.log('接口数据异常，请稍后再试！');
     this.dataSource = response;
   };
 
@@ -45,60 +47,90 @@ class Widget extends DmYY {
     let body = cell.addStack();
     body.url = href;
 
-    const textView = body.addStack();
-    textView.layoutVertically();
+    const box = body.addStack();
+    box.addSpacer();
+    box.setPadding(10, 10, 10, 10);
+    box.backgroundColor = new Color('#000', 0.1);
+    box.cornerRadius = 20;
+    box.layoutVertically();
 
-    const descText = textView.addText(title);
-    descText.font = Font.boldSystemFont(14);
+    const boxTopStack = box.addStack();
+    boxTopStack.addSpacer();
+    const avatarStack = boxTopStack.addStack();
+    avatarStack.size = new Size(50, 50);
+    avatarStack.cornerRadius = 25;
+    const image = await this.$request.get(img, 'IMG');
+    const imageItem = avatarStack.addImage(image);
+    imageItem.centerAlignImage();
+    boxTopStack.addSpacer();
+
+    box.addSpacer();
+    const titleStack = box.addStack();
+    titleStack.size = new Size(0, 30);
+    const descText = titleStack.addText(title);
+    descText.font = Font.boldSystemFont(8);
     descText.textColor = this.widgetColor;
-    descText.lineLimit = 1;
+    descText.lineLimit = 3;
 
-    textView.addSpacer();
-    const subContent = textView.addText(year);
-    subContent.font = Font.lightSystemFont(10);
-    subContent.textColor = this.widgetColor;
-    subContent.lineLimit = 1;
+    box.addSpacer(5);
+    const yearStack = box.addStack();
+    yearStack.addSpacer();
+    const yearText = yearStack.addText(year);
+    yearText.font = Font.boldSystemFont(10);
+    yearText.textColor = this.widgetColor;
+    yearStack.addSpacer();
 
-    if (this.widgetFamily !== 'small') {
-      body.addSpacer();
-      const imageView = body.addStack();
-      imageView.centerAlignContent();
-      imageView.size = new Size(43, 43);
-      imageView.cornerRadius = 5;
-      imageView.borderWidth = 1;
-      imageView.borderColor = this.widgetColor;
-      const image = await this.$request.get(img, 'IMG');
-      const imageItem = imageView.addImage(image);
-      imageItem.centerAlignImage();
-      body.addSpacer(10);
-    }
     return cell;
   };
 
+  group(array, subNum) {
+    let index = 0;
+    let newArray = [];
+    while (index < array.length) {
+      newArray.push(array.slice(index, (index += subNum)));
+    }
+    return newArray;
+  }
+
   setWidget = async (body, size) => {
     const container = body.addStack();
-    container.layoutVertically();
-    const dataSource = this.getRandomArrayElements(this.dataSource, size);
-    for (let index = 0; index < dataSource.length; index++) {
-      const data = dataSource[index];
-      let listItem = container.addStack();
-      await this.setListCell(listItem, data);
-      container.addSpacer(10);
+    container.setPadding(10, 10, 10, 10);
+    const data = this.getRandomArrayElements(this.dataSource, size);
+    if (size === 6) {
+      const source = this.group(data, 3);
+      container.layoutVertically();
+      for (const item of source) {
+        const boxStack = container.addStack();
+        container.addSpacer();
+        for (let index = 0; index < item.length; index++) {
+          const data = item[index];
+          let listItem = boxStack.addStack();
+          await this.setListCell(listItem, data);
+          if (index !== item.length - 1) boxStack.addSpacer();
+        }
+      }
+    } else {
+      const dataSource = data;
+      for (let index = 0; index < dataSource.length; index++) {
+        const data = dataSource[index];
+        let listItem = container.addStack();
+        await this.setListCell(listItem, data);
+        if (index !== dataSource.length - 1) container.addSpacer();
+      }
     }
-    body.addSpacer();
     return body;
   };
 
   renderSmall = async (w) => {
-    return await this.setWidget(w, 2);
+    return await this.setWidget(w, 1);
   };
 
   renderLarge = async (w) => {
-    return await this.setWidget(w, 5);
+    return await this.setWidget(w, 6);
   };
 
   renderMedium = async (w) => {
-    return await this.setWidget(w, 2);
+    return await this.setWidget(w, 3);
   };
 
   /**
@@ -108,14 +140,8 @@ class Widget extends DmYY {
   async render() {
     await this.init();
     const widget = new ListWidget();
+    widget.setPadding(0, 0, 0, 0);
     await this.getWidgetBackgroundImage(widget);
-    const header = widget.addStack();
-    if (this.widgetFamily !== 'small') {
-      await this.renderNotSmallHeader(header);
-    } else {
-      await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-    }
-    widget.addSpacer(10);
     if (this.widgetFamily === 'medium') {
       return await this.renderMedium(widget);
     } else if (this.widgetFamily === 'large') {
@@ -124,26 +150,6 @@ class Widget extends DmYY {
       return await this.renderSmall(widget);
     }
   }
-
-  renderNotSmallHeader = async (header) => {
-    header.centerAlignContent();
-    await this.renderHeader(header, this.logo, this.name, this.widgetColor);
-    header.addSpacer();
-    const headerMore = header.addStack();
-    let [month, day] = this.today.split('.');
-    month = month >= 10 ? month : `0${month}`;
-    day = day >= 10 ? day : `0${day}`;
-    headerMore.url = `https://m.8684.cn/today_d${month}${day}`;
-    headerMore.setPadding(1, 10, 1, 10);
-    headerMore.cornerRadius = 10;
-    headerMore.backgroundColor = new Color('#fff', 0.5);
-    const textItem = headerMore.addText(`更多`);
-    textItem.font = Font.boldSystemFont(12);
-    textItem.textColor = this.widgetColor;
-    textItem.lineLimit = 1;
-    textItem.rightAlignText();
-    return header;
-  };
 }
 
 // @组件代码结束

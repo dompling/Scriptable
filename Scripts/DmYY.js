@@ -518,7 +518,13 @@ class DmYY {
       }
 
       row.onSelect = item.onClick
-        ? async () => item.onClick(item, table)
+        ? async () => {
+            try {
+              await item.onClick(item, table);
+            } catch (e) {
+              console.log(e);
+            }
+          }
         : async () => {
             if (item.type == 'input') {
               await this.setLightAndDark(
@@ -1315,7 +1321,9 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         const fnc = item.val
           .toLowerCase()
           .replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
-        w && (await w[`present${fnc}`]());
+        if (w) {
+          return w[`present${fnc}`]();
+        }
       };
       const preview = [
         {
@@ -1357,7 +1365,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         extra.push(actionItem);
       }
       await M.preferences(table, extra, '配置组件');
-      await table.present();
+      return table.present();
     }
   }
 };
