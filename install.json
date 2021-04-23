@@ -430,6 +430,15 @@
       "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/daysmatter.png",
       "name": "CountDownCalendar",
       "title": "日历倒计时"
+    },
+    {
+      "version": "1.0.0",
+      "description": "低端影视的桌面小组件",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/DdVideo.js",
+      "thumb": "https://ddrk.me/favicon-32x32.png",
+      "name": "DdVideo",
+      "title": "低端影视组件",
+      "html": ["<li>感谢 @Gideon_Senku 提供接口帮助</li>"]
     }
   ]
 }
