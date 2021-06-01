@@ -5,23 +5,7 @@
   "repo": "https://github.com/dompling/Scriptable",
   "apps": [
     {
-      "version": "1.0.0",
-      "description": "单个安装，添加作者订阅，在 app 中运行，单个安装文件",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js",
-      "thumb": "https://img.icons8.com/clouds/344/downloading-updates.png",
-      "name": "widget.Install",
-      "title": "单个安装"
-    },
-    {
-      "version": "1.0.0",
-      "description": "全量安装",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js",
-      "thumb": "https://img.icons8.com/clouds/344/download-2.png",
-      "name": "2YaInstall",
-      "title": "全量安装"
-    },
-    {
-      "version": "1.0.6",
+      "version": "1.0.7",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
       "thumb": "https://img.icons8.com/clouds/344/settings.png",
@@ -29,6 +13,8 @@
       "title": "DmYY",
       "html": [
         "<h4 align=\"center\">更新说明</h4>",
+        "v1.0.7",
+        "<li>处理背景图在 12mini 下错位的情况</li>",
         "v1.0.6",
         "<li>优化菜单，增加菜单图标</li>",
         "v1.0.5",
