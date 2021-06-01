@@ -28,7 +28,7 @@ class DmYY {
   };
 
   // 发起请求
-  http = async (options = { headers: {}, url: '' }, type = 'JSON') => {
+  http = async (options = {headers: {}, url: ''}, type = 'JSON') => {
     try {
       let request;
       if (type !== 'IMG') {
@@ -36,7 +36,7 @@ class DmYY {
         Object.keys(options).forEach((key) => {
           request[key] = options[key];
         });
-        request.headers = { ...this.defaultHeaders, ...options.headers };
+        request.headers = {...this.defaultHeaders, ...options.headers};
       } else {
         request = this.getRequest(options.url);
         return (await request.loadImage()) || SFSymbol.named('photo').image;
@@ -57,9 +57,9 @@ class DmYY {
   //request 接口请求
   $request = {
     get: async (url = '', options = {}, type = 'JSON') => {
-      let params = { ...options, method: 'GET' };
+      let params = {...options, method: 'GET'};
       if (typeof url === 'object') {
-        params = { ...params, ...url };
+        params = {...params, ...url};
       } else {
         params.url = url;
       }
@@ -68,9 +68,9 @@ class DmYY {
       return await this.http(params, _type);
     },
     post: async (url = '', options = {}, type = 'JSON') => {
-      let params = { ...options, method: 'POST' };
+      let params = {...options, method: 'POST'};
       if (typeof url === 'object') {
-        params = { ...params, ...url };
+        params = {...params, ...url};
       } else {
         params.url = url;
       }
@@ -140,7 +140,7 @@ class DmYY {
    */
   verifyImage = async (img) => {
     try {
-      const { width, height } = img.size;
+      const {width, height} = img.size;
       const direct = true;
       if (width > 1000) {
         const options = ['取消', '打开图像处理'];
@@ -187,7 +187,7 @@ class DmYY {
     function phoneSizes() {
       return {
         // 12 Pro Max
-        2778: {
+        '2778': {
           small: 510,
           medium: 1092,
           large: 1146,
@@ -199,7 +199,7 @@ class DmYY {
         },
 
         // 12 and 12 Pro
-        2532: {
+        '2532': {
           small: 474,
           medium: 1014,
           large: 1062,
@@ -211,7 +211,7 @@ class DmYY {
         },
 
         // 11 Pro Max, XS Max
-        2688: {
+        '2688': {
           small: 507,
           medium: 1080,
           large: 1137,
@@ -223,7 +223,7 @@ class DmYY {
         },
 
         // 11, XR
-        1792: {
+        '1792': {
           small: 338,
           medium: 720,
           large: 758,
@@ -234,20 +234,35 @@ class DmYY {
           bottom: 1000,
         },
 
-        // 11 Pro, XS, X
-        2436: {
-          small: 465,
-          medium: 987,
-          large: 1035,
-          left: 69,
-          right: 591,
-          top: 213,
-          middle: 783,
-          bottom: 1353,
+        // 11 Pro, XS, X, 12 mini
+        '2436': {
+
+          x: {
+            small: 465,
+            medium: 987,
+            large: 1035,
+            left: 69,
+            right: 591,
+            top: 213,
+            middle: 783,
+            bottom: 1353,
+          },
+
+          mini: {
+            small: 465,
+            medium: 987,
+            large: 1035,
+            left: 69,
+            right: 591,
+            top: 231,
+            middle: 801,
+            bottom: 1371,
+          },
+
         },
 
         // Plus phones
-        2208: {
+        '2208': {
           small: 471,
           medium: 1044,
           large: 1071,
@@ -259,7 +274,7 @@ class DmYY {
         },
 
         // SE2 and 6/6S/7/8
-        1334: {
+        '1334': {
           small: 296,
           medium: 642,
           large: 648,
@@ -271,7 +286,7 @@ class DmYY {
         },
 
         // SE1
-        1136: {
+        '1136': {
           small: 282,
           medium: 584,
           large: 622,
@@ -283,7 +298,7 @@ class DmYY {
         },
 
         // 11 and XR in Display Zoom mode
-        1624: {
+        '1624': {
           small: 310,
           medium: 658,
           large: 690,
@@ -295,7 +310,7 @@ class DmYY {
         },
 
         // Plus in Display Zoom mode
-        2001: {
+        '2001': {
           small: 444,
           medium: 963,
           large: 972,
@@ -337,7 +352,7 @@ class DmYY {
         : '';
 
     // Determine image crop based on phone size.
-    let crop = { w: '', h: '', x: '', y: '' };
+    let crop = {w: '', h: '', x: '', y: ''};
     if (widgetSize === '小尺寸') {
       crop.w = phone.small;
       crop.h = phone.small;
@@ -430,7 +445,7 @@ class DmYY {
     });
     // 保存到本地
     if (isSave) {
-      this.settings = { ...this.settings, ...data };
+      this.settings = {...this.settings, ...data};
       return this.saveSettings();
     }
     return data;
@@ -519,42 +534,42 @@ class DmYY {
 
       row.onSelect = item.onClick
         ? async () => {
-            try {
-              await item.onClick(item, table);
-            } catch (e) {
-              console.log(e);
-            }
+          try {
+            await item.onClick(item, table);
+          } catch (e) {
+            console.log(e);
           }
+        }
         : async () => {
-            if (item.type == 'input') {
-              await this.setLightAndDark(
-                item['title'],
-                item['desc'],
-                item['val'],
-              );
-            } else if (item.type == 'setBackground') {
-              const backImage = await this.getWidgetScreenShot();
-              if (backImage) {
-                await this.setBackgroundImage(backImage, true);
-                await this.setBackgroundNightImage(backImage, true);
-              }
-            } else if (item.type == 'removeBackground') {
-              const options = ['取消', '清空'];
-              const message = '该操作不可逆，会清空所有背景图片！';
-              const index = await this.generateAlert(message, options);
-              if (index === 0) return;
-              await this.setBackgroundImage(false, true);
-              await this.setBackgroundNightImage(false, true);
-            } else {
-              const backImage = await this.chooseImg();
-              if (!backImage || !(await this.verifyImage(backImage))) return;
-              if (item.type == 'setDayBackground')
-                await this.setBackgroundImage(backImage, true);
-              if (item.type == 'setNightBackground')
-                await this.setBackgroundNightImage(backImage, true);
+          if (item.type == 'input') {
+            await this.setLightAndDark(
+              item['title'],
+              item['desc'],
+              item['val'],
+            );
+          } else if (item.type == 'setBackground') {
+            const backImage = await this.getWidgetScreenShot();
+            if (backImage) {
+              await this.setBackgroundImage(backImage, true);
+              await this.setBackgroundNightImage(backImage, true);
             }
-            await this.renderDmYYTables(table);
-          };
+          } else if (item.type == 'removeBackground') {
+            const options = ['取消', '清空'];
+            const message = '该操作不可逆，会清空所有背景图片！';
+            const index = await this.generateAlert(message, options);
+            if (index === 0) return;
+            await this.setBackgroundImage(false, true);
+            await this.setBackgroundNightImage(false, true);
+          } else {
+            const backImage = await this.chooseImg();
+            if (!backImage || !(await this.verifyImage(backImage))) return;
+            if (item.type == 'setDayBackground')
+              await this.setBackgroundImage(backImage, true);
+            if (item.type == 'setNightBackground')
+              await this.setBackgroundNightImage(backImage, true);
+          }
+          await this.renderDmYYTables(table);
+        };
       table.addRow(row);
     }
     table.reload();
@@ -627,14 +642,14 @@ class DmYY {
   async renderDmYYTables(table) {
     const basic = [
       {
-        icon: { name: 'arrow.clockwise', color: '#1890ff' },
+        icon: {name: 'arrow.clockwise', color: '#1890ff'},
         type: 'input',
         title: '刷新时间',
         desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
         val: 'refreshAfterDate',
       },
       {
-        icon: { name: 'photo', color: '#13c2c2' },
+        icon: {name: 'photo', color: '#13c2c2'},
         type: 'input',
         title: '白天背景颜色',
         desc:
@@ -642,7 +657,7 @@ class DmYY {
         val: 'lightBgColor',
       },
       {
-        icon: { name: 'photo.fill', color: '#52c41a' },
+        icon: {name: 'photo.fill', color: '#52c41a'},
         type: 'input',
         title: '晚上背景颜色',
         desc:
@@ -650,14 +665,14 @@ class DmYY {
         val: 'darkBgColor',
       },
       {
-        icon: { name: 'sun.max.fill', color: '#d48806' },
+        icon: {name: 'sun.max.fill', color: '#d48806'},
         type: 'input',
         title: '白天字体颜色',
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
         val: 'lightColor',
       },
       {
-        icon: { name: 'moon.stars.fill', color: '#d4b106' },
+        icon: {name: 'moon.stars.fill', color: '#d4b106'},
         type: 'input',
         title: '晚上字体颜色',
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
@@ -666,42 +681,42 @@ class DmYY {
     ];
     const background = [
       {
-        icon: { name: 'text.below.photo', color: '#faad14' },
+        icon: {name: 'text.below.photo', color: '#faad14'},
         type: 'setBackground',
         title: '透明背景设置',
       },
       {
-        icon: { name: 'photo.on.rectangle', color: '#fa8c16' },
+        icon: {name: 'photo.on.rectangle', color: '#fa8c16'},
         type: 'setDayBackground',
         title: '白天背景图片',
       },
       {
-        icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
+        icon: {name: 'photo.fill.on.rectangle.fill', color: '#fa541c'},
         type: 'setNightBackground',
         title: '晚上背景图片',
       },
       {
-        icon: { name: 'record.circle', color: '#722ed1' },
+        icon: {name: 'record.circle', color: '#722ed1'},
         type: 'input',
         title: '白天蒙层透明',
         desc: '完全透明请设置为0',
         val: 'lightOpacity',
       },
       {
-        icon: { name: 'record.circle.fill', color: '#eb2f96' },
+        icon: {name: 'record.circle.fill', color: '#eb2f96'},
         type: 'input',
         title: '晚上蒙层透明',
         desc: '完全透明请设置为0',
         val: 'darkOpacity',
       },
       {
-        icon: { name: 'clear', color: '#f5222d' },
+        icon: {name: 'clear', color: '#f5222d'},
         type: 'removeBackground',
         title: '清空背景图片',
       },
     ];
     const boxjs = {
-      icon: { name: 'shippingbox', color: '#f7bb10' },
+      icon: {name: 'shippingbox', color: '#f7bb10'},
       type: 'input',
       title: 'BoxJS 域名',
       desc: '',
@@ -752,7 +767,7 @@ class DmYY {
     // 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
     this.FILE_MGR = FileManager[
       module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
-    ]();
+      ]();
     // 本地，用于存储图片等
     this.FILE_MGR_LOCAL = FileManager.local();
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
@@ -815,7 +830,7 @@ class DmYY {
    * @param {string} name 操作函数名
    * @param {func} func 点击后执行的函数
    */
-  registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }) {
+  registerAction(name, func, icon = {name: 'gear', color: '#096dd9'}) {
     this._actions[name] = func.bind(this);
     this._actionsIcon[name] = icon;
   }
@@ -1005,7 +1020,7 @@ class DmYY {
     }
 
     function u(n, t) {
-      return (function (n, t) {
+      return (function(n, t) {
         var r,
           e,
           o = h(n),
@@ -1013,7 +1028,7 @@ class DmYY {
           c = [];
         for (
           u[15] = c[15] = void 0,
-            16 < o.length && (o = i(o, 8 * n.length)),
+          16 < o.length && (o = i(o, 8 * n.length)),
             r = 0;
           r < 16;
           r += 1
@@ -1220,39 +1235,39 @@ class DmYY {
   }
 
   textFormat = {
-    defaultText: { size: 14, font: 'regular', color: this.widgetColor },
-    battery: { size: 10, font: 'bold', color: this.widgetColor },
-    title: { size: 16, font: 'semibold', color: this.widgetColor },
-    SFMono: { size: 12, font: 'SF Mono', color: this.widgetColor },
+    defaultText: {size: 14, font: 'regular', color: this.widgetColor},
+    battery: {size: 10, font: 'bold', color: this.widgetColor},
+    title: {size: 16, font: 'semibold', color: this.widgetColor},
+    SFMono: {size: 12, font: 'SF Mono', color: this.widgetColor},
   };
 
   provideFont = (fontName, fontSize) => {
     const fontGenerator = {
-      ultralight: function () {
+      ultralight: function() {
         return Font.ultraLightSystemFont(fontSize);
       },
-      light: function () {
+      light: function() {
         return Font.lightSystemFont(fontSize);
       },
-      regular: function () {
+      regular: function() {
         return Font.regularSystemFont(fontSize);
       },
-      medium: function () {
+      medium: function() {
         return Font.mediumSystemFont(fontSize);
       },
-      semibold: function () {
+      semibold: function() {
         return Font.semiboldSystemFont(fontSize);
       },
-      bold: function () {
+      bold: function() {
         return Font.boldSystemFont(fontSize);
       },
-      heavy: function () {
+      heavy: function() {
         return Font.heavySystemFont(fontSize);
       },
-      black: function () {
+      black: function() {
         return Font.blackSystemFont(fontSize);
       },
-      italic: function () {
+      italic: function() {
         return Font.italicSystemFont(fontSize);
       },
     };
@@ -1303,7 +1318,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       Script.complete();
     }
   } else {
-    let { act, __arg, __size } = args.queryParameters;
+    let {act, __arg, __size} = args.queryParameters;
     M = new Widget(__arg || default_args || '');
     if (extra) {
       Object.keys(extra).forEach((key) => {
@@ -1318,9 +1333,8 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const onClick = async (item) => {
         M.widgetFamily = item.val;
         w = await M.render();
-        const fnc = item.val
-          .toLowerCase()
-          .replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+        const fnc = item.val.toLowerCase().replace(
+          /( |^)[a-z]/g, (L) => L.toUpperCase());
         if (w) {
           return w[`present${fnc}`]();
         }
@@ -1371,4 +1385,4 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
 };
 
 // await new DmYY().setWidgetConfig();
-module.exports = { DmYY, Runing };
+module.exports = {DmYY, Runing};
