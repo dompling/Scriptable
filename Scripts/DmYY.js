@@ -339,6 +339,27 @@ class DmYY {
       return;
     }
 
+    // Extra setup needed for 2436-sized phones.
+    if (height === 2436) {
+      const files = this.FILE_MGR_LOCAL;
+      let cacheName = 'mz-phone-type';
+      let cachePath = files.joinPath(files.libraryDirectory(), cacheName);
+
+      // If we already cached the phone size, load it.
+      if (files.fileExists(cachePath)) {
+        let typeString = files.readString(cachePath);
+        phone = phone[typeString];
+        // Otherwise, prompt the user.
+      } else {
+        message = '您的📱型号是?';
+        let types = ['iPhone 12 mini', 'iPhone 11 Pro, XS, or X'];
+        let typeIndex = await this.generateAlert(message, types);
+        let type = (typeIndex === 0) ? 'mini' : 'x';
+        phone = phone[type];
+        files.writeString(cachePath, type);
+      }
+    }
+
     // Prompt for widget size and position.
     message = '截图中要设置透明背景组件的尺寸类型是？';
     let sizes = ['小尺寸', '中尺寸', '大尺寸'];
