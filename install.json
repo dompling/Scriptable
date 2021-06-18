@@ -410,12 +410,18 @@
       "title": "疫情日报"
     },
     {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "显示公历和农历，根据近期的信息会出现一个倒计时的提示信息",
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/CountDown.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/daysmatter.png",
       "name": "CountDownCalendar",
-      "title": "日历倒计时"
+      "title": "日历倒计时",
+      "html": [
+        "<h4 align=\"center\">更新说明</h4>",
+        "v1.0.1",
+        "<li>调整大尺寸排列效果</li>",
+        "<li>调整下班倒计时默认不开启</li>"
+      ]
     },
     {
       "version": "1.0.0",
@@ -424,7 +430,9 @@
       "thumb": "https://ddrk.me/favicon-32x32.png",
       "name": "DdVideo",
       "title": "低端影视组件",
-      "html": ["<li>感谢 @Gideon_Senku 提供接口帮助</li>"]
+      "html": [
+        "<li>感谢 @Gideon_Senku 提供接口帮助</li>"
+      ]
     }
   ]
 }
