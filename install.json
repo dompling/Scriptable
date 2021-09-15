@@ -424,17 +424,6 @@
         "<li>调整大尺寸排列效果</li>",
         "<li>调整下班倒计时默认不开启</li>"
       ]
-    },
-    {
-      "version": "1.0.0",
-      "description": "低端影视的桌面小组件",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/DdVideo.js",
-      "thumb": "https://ddrk.me/favicon-32x32.png",
-      "name": "DdVideo",
-      "title": "低端影视组件",
-      "html": [
-        "<li>感谢 @Gideon_Senku 提供接口帮助</li>"
-      ]
     }
   ]
 }
