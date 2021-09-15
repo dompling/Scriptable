@@ -10,7 +10,11 @@
 class DmYY {
   constructor(arg) {
     this.arg = arg;
-    this.init();
+    try {
+      this.init();
+    } catch (error) {
+      console.log(error);
+    }
     this.isNight = Device.isUsingDarkAppearance();
   }
 
