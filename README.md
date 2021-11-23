@@ -3,12 +3,7 @@
 >首先安装 TF版的 [scriptable](https://testflight.apple.com/join/uN1vTqxk)
 
 > 网页安装：（推荐：⭐️⭐️⭐️⭐️⭐️）[WebStore](https://scriptablejs.gitee.io/store/#/)
-
-> 单个安装：（推荐：⭐️⭐️⭐️⭐️⭐️）[widget.Install](https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js) 安装导入到 scriptable，添加订阅，然后选择即可获取安装列表（覆盖当前下载文件）
-
-> 全量安装：（推荐：⭐️⭐️⭐️️）[2YaInstall](https://raw.githubusercontent.com/dompling/Scriptable/master/2YaInstall.js) 导入到 scriptable 软件中，点击运行即可(覆盖被修改的同名文件)
-
-> 收集订阅：（使用 [widget.Install](https://raw.githubusercontent.com/dompling/Scriptable/master/widget.Install.js)添加下方链接即可获取作者小组件）
+> 安装教程：[网页安装步骤](https://t.me/Scriptable_JS/101536)
 
 - 作者：<a href="https://raw.githubusercontent.com/dompling/Scriptable/master/install.json" download="2214962083.js">@2Ya - 订阅安装包</a>
 
