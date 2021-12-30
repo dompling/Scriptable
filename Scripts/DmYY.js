@@ -89,7 +89,6 @@ class DmYY {
     try {
       const url = 'http://' + this.prefix + '/query/boxdata';
       const boxdata = await this.$request.get(url);
-      console.log(boxdata.datas[key]);
       if (key) return boxdata.datas[key];
       return boxdata.datas;
     } catch (e) {
