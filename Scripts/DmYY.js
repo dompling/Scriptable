@@ -87,10 +87,10 @@ class DmYY {
   // 获取 boxJS 缓存
   getCache = async (key) => {
     try {
-      const url = 'http://' + this.prefix + '/query/boxdata';
+      const url = 'http://' + this.prefix + '/query/data/' + key;
       const boxdata = await this.$request.get(url);
-      if (key) return boxdata.datas[key];
-      return boxdata.datas;
+      if (boxdata.val) return boxdata.val;
+      return null;
     } catch (e) {
       console.log(e);
       return false;
