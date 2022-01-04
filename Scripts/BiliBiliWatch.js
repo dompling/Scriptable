@@ -3,21 +3,21 @@
 // icon-color: gray; icon-glyph: chalkboard;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === "undefined") require = importModule;
-const { DmYY, Runing } = require("./DmYY");
+if (typeof require === 'undefined') require = importModule;
+const { DmYY, Runing } = require('./DmYY');
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = "哔哩哔哩关注";
-    this.en = "BiliBiliWatch";
+    this.name = '哔哩哔哩关注';
+    this.en = 'BiliBiliWatch';
     this.logo =
-      "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png";
+      'https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png';
     this.Run(module.filename);
   }
 
-  cookie = "";
+  cookie = '';
   dataSource = [];
 
   init = async () => {
@@ -33,7 +33,7 @@ class Widget extends DmYY {
     const method = `GET`;
     const headers = {
       Cookie: this.cookie,
-      "User-Agent": `bili-universal/10320 CFNetwork/1206 Darwin/20.1.0 os/ios model/iPhone XR mobi_app/iphone build/10320 osVer/14.2 network/2 channel/AppStore`,
+      'User-Agent': `bili-universal/10320 CFNetwork/1206 Darwin/20.1.0 os/ios model/iPhone XR mobi_app/iphone build/10320 osVer/14.2 network/2 channel/AppStore`,
     };
     const response = await this.$request.get(url, {
       method,
@@ -69,10 +69,10 @@ class Widget extends DmYY {
         });
         return this.dataSource;
       } else {
-        throw "cookie 失效，请重新获取";
+        throw 'cookie 失效，请重新获取';
       }
     } catch (e) {
-      console.log("❌错误信息：" + e);
+      console.log('❌错误信息：' + e);
       return false;
     }
   };
@@ -81,11 +81,11 @@ class Widget extends DmYY {
     const { title, url, reply, play, desc, img, timestamp } = data;
     let body = cell.addStack();
     body.url = url;
-    if (this.widgetFamily !== "small") {
+    if (this.widgetFamily !== 'small') {
       const imageView = body.addStack();
       imageView.size = new Size(43, 43);
       imageView.cornerRadius = 5;
-      const image = await this.$request.get(img, "IMG");
+      const image = await this.$request.get(img, 'IMG');
       imageView.backgroundImage = image;
       body.addSpacer(10);
     }
@@ -112,7 +112,7 @@ class Widget extends DmYY {
 
     const descView = textView.addStack();
 
-    const icon1 = descView.addText("浏览：");
+    const icon1 = descView.addText('浏览：');
     icon1.font = Font.lightSystemFont(10);
     icon1.textColor = this.widgetColor;
     descView.addSpacer(3);
@@ -121,7 +121,7 @@ class Widget extends DmYY {
     timerText.textColor = this.widgetColor;
     descView.addSpacer(5);
 
-    const icon2 = descView.addText("评论：");
+    const icon2 = descView.addText('评论：');
     icon2.font = Font.lightSystemFont(10);
     icon2.textColor = this.widgetColor;
 
@@ -167,15 +167,15 @@ class Widget extends DmYY {
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
     const header = widget.addStack();
-    if (this.widgetFamily !== "small") {
+    if (this.widgetFamily !== 'small') {
       await this.renderJDHeader(header);
     } else {
       await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     }
     widget.addSpacer(10);
-    if (this.widgetFamily === "medium") {
+    if (this.widgetFamily === 'medium') {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === "large") {
+    } else if (this.widgetFamily === 'large') {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
@@ -187,11 +187,11 @@ class Widget extends DmYY {
     await this.renderHeader(header, this.logo, this.name, this.widgetColor);
     header.addSpacer();
     const headerMore = header.addStack();
-    headerMore.url = "";
+    headerMore.url = '';
     headerMore.setPadding(1, 10, 1, 10);
     headerMore.cornerRadius = 10;
-    headerMore.backgroundColor = new Color("#fff", 0.5);
-    const textItem = headerMore.addText("个人中心");
+    headerMore.backgroundColor = new Color('#fff', 0.5);
+    const textItem = headerMore.addText('个人中心');
     textItem.font = Font.boldSystemFont(12);
     textItem.textColor = this.widgetColor;
     textItem.lineLimit = 1;
@@ -201,55 +201,49 @@ class Widget extends DmYY {
 
   Run = (filename) => {
     if (config.runsInApp) {
-      this.registerAction("基础设置", this.setWidgetConfig);
-      this.registerAction("账号设置", this.inputCk);
-      this.registerAction("代理缓存", this._loadCk);
+      this.registerAction('基础设置', this.setWidgetConfig);
+      this.registerAction('账号设置', this.inputCk);
+      this.registerAction('代理缓存', this._loadCk);
     }
     let _md5 = this.md5(filename + this.en);
     this.CACHE_KEY = `cache_${_md5}`;
     try {
       this.cookie = this.settings[this.en];
       if (!this.cookie) {
-        throw "CK 获取失败";
+        throw 'CK 获取失败';
       }
       return true;
     } catch (e) {
-      this.notify("错误提示", e);
+      this.notify('错误提示', e);
       return false;
     }
   };
 
   _loadCk = async () => {
     try {
-      const cookie = await this.getCache("@bilibili.cookie");
+      const cookie = await this.getCache('@bilibili.cookie');
       if (cookie) {
         this.cookie = cookie;
         this.settings[this.en] = this.cookie;
         this.saveSettings();
       } else {
-        throw "ck 获取失败";
+        throw 'ck 获取失败';
       }
       return true;
     } catch (e) {
       console.log(e);
-      this.cookie = "";
-      this.notify(
-        this.name,
-        "",
-        "BoxJS 数据读取失败，请点击通知查看教程",
-        "https://chavyleung.gitbook.io/boxjs/awesome/videos"
-      );
+      this.cookie = '';
       return false;
     }
   };
 
   async inputCk() {
     const a = new Alert();
-    a.title = "账号设置";
-    a.message = "手动输入 Ck";
-    a.addTextField("Cookie", this.cookie);
-    a.addAction("确定");
-    a.addCancelAction("取消");
+    a.title = '账号设置';
+    a.message = '手动输入 Ck';
+    a.addTextField('Cookie', this.cookie);
+    a.addAction('确定');
+    a.addCancelAction('取消');
     const id = await a.presentAlert();
     if (id === -1) return;
     this.cookie = a.textFieldValue(0);
@@ -261,4 +255,4 @@ class Widget extends DmYY {
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, "", false); //远程开发环境
+await Runing(Widget, '', false); //远程开发环境

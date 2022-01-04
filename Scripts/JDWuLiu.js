@@ -360,12 +360,7 @@ class Widget extends DmYY {
       this.notify(this.name, body);
       table.present(false);
     } catch (e) {
-      this.notify(
-        this.name,
-        '',
-        'BoxJS 数据读取失败，请点击通知查看教程',
-        'https://chavyleung.gitbook.io/boxjs/awesome/videos',
-      );
+      console.log(e);
     }
   }
 }

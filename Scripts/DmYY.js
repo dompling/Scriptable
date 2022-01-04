@@ -92,7 +92,12 @@ class DmYY {
       if (boxdata.val) return boxdata.val;
       return null;
     } catch (e) {
-      console.log(e);
+      console.log('boxjs 数据读取失败');
+      await this.notify(
+        this.name,
+        'BoxJS 数据读取失败，请点击通知查看教程',
+        'https://chavyleung.gitbook.io/boxjs/awesome/videos',
+      );
       return false;
     }
   };

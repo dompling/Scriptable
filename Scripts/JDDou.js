@@ -188,24 +188,21 @@ class Widget extends DmYY {
     body.url = 'https://bean.m.jd.com/';
     const letfContainer = body.addStack();
     await this.setContainer(letfContainer, {
-      icon:
-        'https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png',
+      icon: 'https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png',
       text: `${this.beanCount}`,
       desc: '当前京豆',
     });
     body.addSpacer();
     const centerContainer = body.addStack();
     await this.setContainer(centerContainer, {
-      icon:
-        'https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png',
+      icon: 'https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png',
       text: `+${this.incomeBean}`,
       desc: '昨日收入',
     });
     body.addSpacer();
     const rightContainer = body.addStack();
     await this.setContainer(rightContainer, {
-      icon:
-        'https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png',
+      icon: 'https://gitee.com/scriptableJS/Scriptable/raw/master/JDDou/jdd.png',
       text: `${this.expenseBean}`,
       desc: '昨日支出',
     });
@@ -408,12 +405,7 @@ class Widget extends DmYY {
       this.notify(this.name, body);
       table.present(false);
     } catch (e) {
-      this.notify(
-        this.name,
-        '',
-        'BoxJS 数据读取失败，请点击通知查看教程',
-        'https://chavyleung.gitbook.io/boxjs/awesome/videos',
-      );
+      console.log(e);
     }
   }
 }
