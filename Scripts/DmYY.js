@@ -95,7 +95,7 @@ class DmYY {
       console.log('boxjs 数据读取失败');
       await this.notify(
         this.name,
-        'BoxJS 数据读取失败，请点击通知查看教程',
+        '数据读取失败请检查 BoxJS 域名是否为代理复写的域名，不加 http://。\n若没有 BoxJS ，请点击通知查看教程',
         'https://chavyleung.gitbook.io/boxjs/awesome/videos',
       );
       return false;
