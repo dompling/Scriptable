@@ -5,7 +5,7 @@
   "repo": "https://github.com/dompling/Scriptable",
   "apps": [
     {
-      "version": "1.0.9",
+      "version": "1.1.0",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
       "thumb": "https://img.icons8.com/clouds/344/settings.png",
@@ -13,6 +13,8 @@
       "title": "DmYY",
       "html": [
         "<h4 align=\"center\">更新说明</h4>",
+        "v1.1.0",
+        "<li>修复 boxjs 读取问题</li>",
         "v1.0.8",
         "<li>兼容 ios15 系统，图标引起脚本一直转圈问题</li>",
         "v1.0.7",
