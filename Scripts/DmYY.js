@@ -85,20 +85,23 @@ class DmYY {
   }
 
   // 获取 boxJS 缓存
-  getCache = async (key = '') => {
+  getCache = async (key = '', notify = true) => {
     try {
       let url = 'http://' + this.prefix + '/query/boxdata'
       if (key) url = 'http://' + this.prefix + '/query/data/' + key
-      const boxdata = await this.$request.get(url)
+      const boxdata = await this.$request.get(
+        url,
+        key ? { timeoutInterval: 1 } : {}
+      )
       if (boxdata.val) return boxdata.val
       return boxdata.datas
     } catch (e) {
-      console.log('boxjs 数据读取失败')
-      await this.notify(
-        `${this.name} - BoxJS 数据读取失败`,
-        '请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程',
-        'https://chavyleung.gitbook.io/boxjs/awesome/videos'
-      )
+      if (notify)
+        await this.notify(
+          `${this.name} - BoxJS 数据读取失败`,
+          '请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程',
+          'https://chavyleung.gitbook.io/boxjs/awesome/videos'
+        )
       return false
     }
   }
