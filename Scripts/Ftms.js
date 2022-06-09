@@ -248,7 +248,7 @@ class Widget extends DmYY {
     bottomStack.setPadding(10, 0, 10, 0);
     bottomStack.centerAlignContent();
     bottomStack.addSpacer();
-    bottomStack.cornerRadius = 20;
+    bottomStack.cornerRadius = 10;
     bottomStack.backgroundColor = new Color('#e8e8e8');
     const dataTime = this.dataSource.remoteInfo.datatime.split(`-`);
     const countKmText = bottomStack.addText(
