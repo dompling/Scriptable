@@ -1,7 +1,6 @@
 class Ftms {
   constructor(carWidget) {
     this.$ = carWidget;
-
   }
 
   name = '一汽丰田';
