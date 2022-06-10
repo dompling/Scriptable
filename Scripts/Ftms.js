@@ -48,6 +48,20 @@ class Ftms {
     console.log(response);
     if (response.msg === 'success') {
       this.$.dataSource.remoteInfo = response.result;
+      const safeData =
+        this.$.dataSource.remoteInfo.list.filter(
+          (item) => item.security !== 'safe',
+        ) || [];
+      if (safeData.length > 0) {
+        if (safeData.length === 1) {
+          this.$.dataSource.safeText = `${safeData[0].typeName}：${safeData[0].dataName}`;
+        } else {
+          this.$.dataSource.safeText = `隐患：${safeData.length}`;
+        }
+      }
+      const dataTime = this.$.dataSource.remoteInfo.datatime.split('-');
+      this.$.dataSource.remoteInfo.datatime = `${dataTime[1] ||
+      ''}-${dataTime[2] || ''}`;
     }
     await this.getDrivingMonitorInfo();
   };
@@ -62,6 +76,7 @@ class Ftms {
       this.$.dataSource.monitorInfo = response.result;
     }
     this.$.settings.dataSource = this.$.dataSource;
+
     this.$.saveSettings(false);
   };
 

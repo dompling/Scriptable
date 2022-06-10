@@ -39,6 +39,7 @@ class Widget extends DmYY {
   serveInfo = {
     carNumber: '',
   };
+
   dataSource = {
     remoteInfo: {
       datatime: '',
@@ -51,6 +52,7 @@ class Widget extends DmYY {
       oilRate: '0',
       oilWaste: '0',
     },
+    safeText: '',
   };
 
   createProgressBar(
@@ -202,9 +204,9 @@ class Widget extends DmYY {
     bottomStack.addSpacer();
     bottomStack.cornerRadius = 15;
     bottomStack.backgroundColor = new Color('#e8e8e8');
-    const dataTime = this.dataSource.remoteInfo.datatime.split(`-`);
+    const dataTime = this.dataSource.remoteInfo.datatime;
     const countKmText = bottomStack.addText(
-      `上传：${dataTime[1] || ''}-${dataTime[2] || ''}`,
+      `上传：${dataTime || '-'}`,
     );
     countKmText.textColor = this.widgetColor;
     countKmText.font = Font.boldSystemFont(12);
@@ -252,28 +254,21 @@ class Widget extends DmYY {
     const carSafeStack = carStack.addStack();
     carSafeStack.addSpacer();
     carSafeStack.centerAlignContent();
-    const safeData =
-      this.dataSource.remoteInfo.list.filter(
-        (item) => item.security !== 'safe',
-      ) || [];
-    let safeText = ``;
+
     let safeIconImg;
-    if (safeData.length > 0) {
-      if (safeData.length === 1) {
-        safeText = `${safeData[0].typeName}：${safeData[0].dataName}`;
-      } else {
-        safeText = `隐患：${safeData.length}`;
-      }
+    if (this.dataSource.safeText) {
       safeIconImg = carSafeStack.addImage(SFSymbol.named('lock.open').image);
     } else {
       safeIconImg = carSafeStack.addImage(SFSymbol.named('lock').image);
     }
 
     carSafeStack.addSpacer(5);
-    const statusText = carSafeStack.addText(!safeText ? '已上锁' : safeText);
+    const statusText = carSafeStack.addText(this.dataSource.safeText || '已上锁');
     statusText.centerAlignText();
     statusText.font = Font.systemFont(12);
-    statusText.textColor = safeText ? new Color('#f5222d') : this.widgetColor;
+    statusText.textColor = this.dataSource.safeText
+      ? new Color('#f5222d')
+      : this.widgetColor;
 
     safeIconImg.tintColor = statusText.textColor;
     safeIconImg.imageSize = new Size(10, 14);
