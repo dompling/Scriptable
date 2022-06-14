@@ -12,6 +12,17 @@ class Widget extends DmYY {
     super(arg)
     config.runsInApp &&
       this.registerAction(
+        '油价设置',
+        () => {
+          return this.setAlertInput('油价设置', '设置油价的价格和类型', {
+            oilNumber: '92|95|98',
+            oilType: '汽油|柴油',
+          })
+        },
+        { name: 'paperplane', color: '#722ed1' }
+      )
+    config.runsInApp &&
+      this.registerAction(
         '依赖插件',
         () => {
           return this.setAlertInput('设置依赖插件', '汽车的依赖插件地址', {
