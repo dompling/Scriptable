@@ -51,6 +51,7 @@ class Widget extends DmYY {
     this.init = carService.init
     this.name = carService.name
     this.logo = carService.logo
+    this.viewColor = Color.dynamic(new Color('#d9d9d9'), new Color('#8c8c8c'))
   }
 
   widgetHeight = 145
@@ -205,6 +206,7 @@ class Widget extends DmYY {
     const panoImg = await this.renderImage(
       `https://img.icons8.com/ios-glyphs/344/bar-chart.png`
     )
+
     const panoImgStack = kilometerStack.addStack()
     panoImgStack.setPadding(5, 0, 0, 0)
     const panoStack = panoImgStack.addImage(panoImg)
@@ -231,7 +233,7 @@ class Widget extends DmYY {
     bottomStack.centerAlignContent()
     bottomStack.addSpacer()
     bottomStack.cornerRadius = 15
-    bottomStack.backgroundColor = new Color('#d9d9d9')
+    bottomStack.backgroundColor = this.viewColor
     const dataTime = this.dataSource.remoteInfo.datatime
     const countKmText = bottomStack.addText(`上传：${dataTime || '-'}`)
     countKmText.textColor = this.widgetColor
@@ -251,7 +253,7 @@ class Widget extends DmYY {
     containerStack.centerAlignContent()
     const carStack = containerStack.addStack()
     carStack.addSpacer()
-    carStack.backgroundColor = new Color('#d9d9d9')
+    carStack.backgroundColor = this.viewColor
 
     carStack.layoutVertically()
 
