@@ -152,7 +152,7 @@ class Widget extends DmYY {
     headerStack.addSpacer(10)
     const gasImg = await this.renderImage(
       this.isNight
-        ? 'https://raw.githubusercontent.com/dompling/Scriptable/master/images/gas-night.svg'
+        ? 'https://raw.githubusercontent.com/dompling/Scriptable/master/images/gas-night.png'
         : `https://img.icons8.com/ios-glyphs/344/gas-station.png`
     )
 
@@ -207,7 +207,7 @@ class Widget extends DmYY {
     kilometerStack.addSpacer()
     const panoImg = await this.renderImage(
       this.isNight
-        ? `https://raw.githubusercontent.com/dompling/Scriptable/master/images/count.svg`
+        ? `https://raw.githubusercontent.com/dompling/Scriptable/master/images/count.png`
         : `https://img.icons8.com/ios-glyphs/344/bar-chart.png`
     )
 
