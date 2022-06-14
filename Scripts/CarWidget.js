@@ -59,8 +59,10 @@ class Widget extends DmYY {
       km: '0',
       oilRate: '0',
       oilWaste: '0',
+      oilWasteText: '',
     },
     safeText: '',
+    oilPriceText: '',
   }
 
   createProgressBar(
@@ -172,10 +174,17 @@ class Widget extends DmYY {
     oilWasteStack.centerAlignContent()
     oilWasteStack.addSpacer()
     const oilWasteStackText = oilWasteStack.addText(
-      `油耗：${this.dataSource.monitorInfo.oilWaste}L/100km`
+      this.dataSource.monitorInfo.oilWasteText
     )
     oilWasteStackText.textColor = this.widgetColor
     oilWasteStackText.font = Font.boldSystemFont(10)
+    oilWasteStack.addSpacer(5)
+    const oilPriceStackText = oilWasteStack.addText(
+      this.dataSource.oilPriceText
+    )
+    oilPriceStackText.textColor = this.widgetColor
+    oilPriceStackText.font = Font.boldSystemFont(10)
+
     oilWasteStack.addSpacer()
 
     const kilometerStack = stack.addStack()
@@ -211,7 +220,7 @@ class Widget extends DmYY {
     bottomStack.centerAlignContent()
     bottomStack.addSpacer()
     bottomStack.cornerRadius = 15
-    bottomStack.backgroundColor = new Color('#e8e8e8')
+    bottomStack.backgroundColor = new Color('#d9d9d9')
     const dataTime = this.dataSource.remoteInfo.datatime
     const countKmText = bottomStack.addText(`上传：${dataTime || '-'}`)
     countKmText.textColor = this.widgetColor
@@ -231,7 +240,7 @@ class Widget extends DmYY {
     containerStack.centerAlignContent()
     const carStack = containerStack.addStack()
     carStack.addSpacer()
-    carStack.backgroundColor = new Color('#e8e8e8')
+    carStack.backgroundColor = new Color('#d9d9d9')
 
     carStack.layoutVertically()
 
