@@ -14,9 +14,8 @@ class Widget extends DmYY {
       this.registerAction(
         '油价设置',
         () => {
-          return this.setAlertInput('油价设置', '设置油价的价格和类型', {
+          return this.setAlertInput('油价设置', '设置油价的价格', {
             oilNumber: '92|95|98',
-            oilType: '汽油|柴油',
           })
         },
         { name: 'paperplane', color: '#722ed1' }
@@ -75,6 +74,7 @@ class Widget extends DmYY {
     },
     safeText: '',
     oilPriceText: '',
+    oilZDE: 0,
   }
 
   createProgressBar(
@@ -198,6 +198,15 @@ class Widget extends DmYY {
     )
     oilPriceStackText.textColor = this.widgetColor
     oilPriceStackText.font = Font.boldSystemFont(10)
+    oilWasteStack.addSpacer(2)
+    const oildStatus = this.dataSource.oilZDE > 0
+    const oilZdeImage = SFSymbol.named(
+      oildStatus ? 'arrow.up' : 'arrow.up'
+    ).image
+
+    const oilZdeWidgetImg = oilWasteStack.addImage(oilZdeImage)
+    oilZdeWidgetImg.tintColor = new Color(oildStatus ? '#f5222d' : '#a0d911')
+    oilZdeWidgetImg.imageSize = new Size(10, 10)
 
     oilWasteStack.addSpacer()
 

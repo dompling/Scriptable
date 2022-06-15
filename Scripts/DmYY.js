@@ -43,7 +43,18 @@ class DmYY {
         request.headers = { ...this.defaultHeaders, ...options.headers }
       } else {
         request = this.getRequest(options.url)
-        return (await request.loadImage()) || SFSymbol.named('photo').image
+        const fileName = this.md5(options.url)
+        const imagePath = this.FILE_MGR_LOCAL.joinPath(
+          this.FILE_MGR_LOCAL.documentsDirectory(),
+          fileName
+        )
+        console.log(imagePath)
+        if (this.FILE_MGR_LOCAL.fileExists(fileName)) {
+          return Image.fromFile(imagePath)
+        }
+        const response = await request.loadImage()
+        this.FILE_MGR_LOCAL.writeImage(imagePath, response)
+        return response
       }
       if (type === 'JSON') {
         return await request.loadJSON()

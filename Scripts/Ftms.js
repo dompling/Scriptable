@@ -114,23 +114,23 @@ class Ftms {
     )
     const { administrativeArea = '' } = locationText[0] || {}
 
-    const oilNumber = this.$.settings.oilNumber || '92'
-    const oilType = this.$.settings.oilType || '汽油'
+    const oilNumber = `${this.$.settings.oilNumber || '92'}`
 
-    const filter = `(BHNAME="${oilNumber}#${oilType}")(CITYNAME="${administrativeArea.replace(
-      '省',
-      ''
-    )}")`
+    const filter = `(CITYNAME="${administrativeArea.replace('省', '')}")`
     const time = Date.now()
-    const url = `https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_WEB_YJ_DQBD&columns=ALL&filter=${encodeURIComponent(
+    const url = `https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_WEB_YJ_JH&columns=ALL&filter=${encodeURIComponent(
       filter
     )}&sortColumns=DIM_DATE&sortTypes=-1&pageNumber=1&pageSize=1&source=WEB&_=${time}`
 
     const options = { url }
     const response = await this.$.$request.post(options)
+    console.log(response)
     if (response.result) {
       this.$.dataSource.oilPrice = response.result.data[0]
-      this.$.dataSource.oilPriceText = `油价：${response.result.data[0].VALUE}`
+      this.$.dataSource.oilZDE = response.result.data[0][`ZDE${oilNumber}`]
+      this.$.dataSource.oilPriceText = `油价：${
+        response.result.data[0][`V${oilNumber}`]
+      }`
     }
   }
 }
