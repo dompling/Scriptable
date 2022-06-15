@@ -181,7 +181,7 @@ class Widget extends DmYY {
     const zdeValue = this.dataSource[`ZDE${oilNumber}`];
     const oilStatus = zdeValue > 0;
     const zdeColor = new Color(oilStatus ? '#f5222d' : '#a0d911');
-    const zdeValueText = colStack.addText(`${zdeValue}`);
+    const zdeValueText = colStack.addText(`${zdeValue.toFixed(2)}`);
     zdeValueText.textColor = zdeColor;
     zdeValueText.font = Font.boldSystemFont(12);
 
@@ -204,7 +204,7 @@ class Widget extends DmYY {
     colStack.addSpacer(5);
 
     const oilPrice = this.dataSource[`V${oilNumber}`];
-    const priceText = colStack.addText(`${oilPrice}`);
+    const priceText = colStack.addText(`${oilPrice.toFixed(2)}`);
     priceText.textColor = this.widgetColor;
     priceText.font = Font.boldSystemFont(20);
   };
