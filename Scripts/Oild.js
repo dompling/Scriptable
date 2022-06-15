@@ -196,7 +196,7 @@ class Widget extends DmYY {
 
     colStack.addSpacer();
 
-    const dollarImage = SFSymbol.named(`dollarsign.circle.fill`).image;
+    const dollarImage = SFSymbol.named(`dollarsign.circle`).image;
     const dollarWidgetImage = colStack.addImage(dollarImage);
     dollarWidgetImage.tintColor = this.widgetColor;
     dollarWidgetImage.imageSize = new Size(18, 18);
