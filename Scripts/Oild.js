@@ -104,26 +104,38 @@ class Widget extends DmYY {
   }
 
   renderSmall = async (w) => {
+    const headerStack = w.addStack();
+    const dollarImage = SFSymbol.named(`yensign.circle`).image;
+    headerStack.centerAlignContent();
+    const dollarWidgetImg = headerStack.addImage(dollarImage);
+    dollarWidgetImg.tintColor = new Color('#f5222d');
+    dollarWidgetImg.imageSize = new Size(24, 24);
+
+    headerStack.addSpacer();
+
     w.addSpacer();
     const topStack = w.addStack();
-    topStack.centerAlignContent();
-
+    const topLStack = topStack.addStack();
+    topLStack.layoutVertically();
+    topLStack.addSpacer();
+    topLStack.bottomAlignContent();
     const oilPrice = this.dataSource[`V${this.oilNumber[0]}`].toFixed(2);
     const timer = (this.dataSource.DIM_DATE.split(' ')[0] || '').split('-');
-    const oilNumText = topStack.addText(`${oilPrice}`);
+    const oilNumText = topLStack.addText(`${oilPrice}`);
     oilNumText.textColor = this.widgetColor;
-    oilNumText.font = Font.boldSystemFont(42);
+    oilNumText.minimumScaleFactor = 0.6;
+    oilNumText.font = Font.boldSystemFont(38);
+    topLStack.addSpacer();
 
     const oilStatus = this.dataSource[`ZDE${this.oilNumber[0]}`] > 0;
     const oilZdeImage = SFSymbol.named(
       oilStatus ? 'arrow.up' : 'arrow.up',
     ).image;
-    topStack.addSpacer(5);
+    topStack.addSpacer();
     const topRStack = topStack.addStack();
-    topRStack.setPadding(4, 0, 0, 0);
-
+    topRStack.addSpacer();
     topRStack.layoutVertically();
-    topRStack.centerAlignContent();
+    topRStack.bottomAlignContent();
     const zdeStack = topRStack.addStack();
     zdeStack.setPadding(2, 6, 0, 0);
     const oilZdeWidgetImg = zdeStack.addImage(oilZdeImage);
@@ -133,6 +145,7 @@ class Widget extends DmYY {
     const timerText = topRStack.addText(`${timer[2]}/${timer[1]}`);
     timerText.textColor = this.widgetColor;
     timerText.font = Font.systemFont(12);
+    topRStack.addSpacer();
 
     w.addSpacer();
 
