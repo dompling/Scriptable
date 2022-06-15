@@ -199,13 +199,13 @@ class Widget extends DmYY {
     oilPriceStackText.textColor = this.widgetColor
     oilPriceStackText.font = Font.boldSystemFont(10)
     oilWasteStack.addSpacer(2)
-    const oildStatus = this.dataSource.oilZDE > 0
+    const oilStatus = this.dataSource.oilZDE > 0
     const oilZdeImage = SFSymbol.named(
-      oildStatus ? 'arrow.up' : 'arrow.up'
+      oilStatus ? 'arrow.up' : 'arrow.up'
     ).image
 
     const oilZdeWidgetImg = oilWasteStack.addImage(oilZdeImage)
-    oilZdeWidgetImg.tintColor = new Color(oildStatus ? '#f5222d' : '#a0d911')
+    oilZdeWidgetImg.tintColor = new Color(oilStatus ? '#f5222d' : '#a0d911')
     oilZdeWidgetImg.imageSize = new Size(10, 10)
 
     oilWasteStack.addSpacer()
