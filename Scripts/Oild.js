@@ -108,7 +108,7 @@ class Widget extends DmYY {
     const topStack = w.addStack();
     topStack.centerAlignContent();
 
-    const oilPrice = this.dataSource[`V${this.oilNumber[0]}`];
+    const oilPrice = this.dataSource[`V${this.oilNumber[0]}`].toFixed(2);
     const timer = (this.dataSource.DIM_DATE.split(' ')[0] || '').split('-');
     const oilNumText = topStack.addText(`${oilPrice}`);
     oilNumText.textColor = this.widgetColor;
