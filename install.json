@@ -399,8 +399,8 @@
     },
     {
       "version": "1.0.0",
-      "description": "显示定位信息的油价使用的情况",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/TodayOilPrice.js",
+      "description": "获取当前省份油价",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Oild.js",
       "thumb": "https://img.icons8.com/clouds/344/engine-oil-level.png",
       "name": "TodayOilPrice",
       "title": "今日油价"
