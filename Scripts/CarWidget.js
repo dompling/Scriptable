@@ -201,7 +201,7 @@ class Widget extends DmYY {
     oilWasteStack.addSpacer(2)
     const oilStatus = this.dataSource.oilZDE > 0
     const oilZdeImage = SFSymbol.named(
-      oilStatus ? 'arrow.up' : 'arrow.up'
+      oilStatus ? 'arrow.up' : 'arrow.down'
     ).image
 
     const oilZdeWidgetImg = oilWasteStack.addImage(oilZdeImage)

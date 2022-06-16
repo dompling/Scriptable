@@ -14,6 +14,12 @@ const enumConfig = {
   0: '柴油',
 };
 
+const barHeight = [36, 30, 25, 32, 15, 20];
+const squareColor = '#8165AC';
+const processColor = [`#7517F8`, `#E323FF`];
+const processBarColor = [`#4da1ff`, `#4dffdf`];
+const processBarBgColor = '#5A5A89';
+
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
@@ -119,7 +125,8 @@ class Widget extends DmYY {
     topLStack.layoutVertically();
     topLStack.addSpacer();
     topLStack.bottomAlignContent();
-    const oilPrice = this.dataSource[`V${this.oilNumber[0]}`].toFixed(2);
+    const oilPrice = (this.dataSource[`V${this.oilNumber[0]}`] || '').toFixed(
+      2);
     const timer = (this.dataSource.DIM_DATE.split(' ')[0] || '').split('-');
     const oilNumText = topLStack.addText(`${oilPrice}`);
     oilNumText.textColor = this.widgetColor;
@@ -162,77 +169,144 @@ class Widget extends DmYY {
   };
 
   rowData = (w, oilNumber) => {
+
+    const oilPrice = (this.dataSource[`V${oilNumber}`] || '').toFixed(2);
+    const oilZde = (this.dataSource[`ZDE${oilNumber}`] || '').toFixed(2);
+    const oilType = enumConfig[oilNumber] || '';
+
     const colStack = w.addStack();
 
-    colStack.backgroundColor = Color.dynamic(
-      new Color('#d9d9d9'),
-      new Color('#434343'),
+    const oilNumberStack = colStack.addStack();
+    const colSize = new Size(40, 40);
+    oilNumberStack.size = colSize;
+    oilNumberStack.cornerRadius = 8;
+    oilNumberStack.borderWidth = 4;
+    oilNumberStack.borderColor = new Color(squareColor);
+    oilNumberStack.centerAlignContent();
+    this.provideText(
+      `${oilNumber}`, oilNumberStack,
+      {font: 'bold', size: 26, color: new Color(squareColor)},
     );
 
-    colStack.cornerRadius = 10;
-    colStack.setPadding(10, 10, 10, 10);
-    colStack.centerAlignContent();
+    colStack.addSpacer(7);
 
-    const oilNumText = colStack.addText(`${oilNumber}`);
-    oilNumText.textColor = this.widgetColor;
-    oilNumText.font = Font.boldSystemFont(20);
+    const oilInfoStack = colStack.addStack();
+    oilInfoStack.size = new Size(65, colSize.height);
+    oilInfoStack.layoutVertically();
+    oilInfoStack.addSpacer();
+    this.provideText(
+      `#${oilType}`, oilInfoStack,
+      {font: 'light', size: 12, color: this.widgetColor, opacity: 0.5},
+    );
 
-    colStack.addSpacer(5);
+    oilInfoStack.addSpacer(2);
 
-    const oilTypeText = colStack.addText(`#${enumConfig[oilNumber]}`);
-    oilTypeText.textColor = this.widgetColor;
-    oilTypeText.font = Font.boldSystemFont(12);
+    this.provideText(
+      `${oilPrice}`, oilInfoStack,
+      {font: 'medium', size: 18, color: this.widgetColor},
+    );
+    oilInfoStack.addSpacer();
+
+    const processStack = colStack.addStack();
+    processStack.centerAlignContent();
+    const processVerWidth = 10;
+
+    for (let i = 0; i < 6; i++) {
+      const processItemStack = processStack.addStack();
+      processItemStack.size = new Size(processVerWidth, colSize.height);
+      processItemStack.cornerRadius = processVerWidth / 2;
+      processItemStack.backgroundColor = new Color(processBarBgColor);
+      processItemStack.addSpacer();
+      processItemStack.layoutVertically();
+
+      const itemBarStack = processItemStack.addStack();
+      itemBarStack.cornerRadius = 7.5;
+      itemBarStack.size = new Size(processVerWidth, barHeight[i]);
+      itemBarStack.backgroundGradient = this.gradient(processColor);
+
+      processStack.addSpacer();
+    }
 
     colStack.addSpacer();
 
-    const zdeText = colStack.addText('涨跌');
-    zdeText.textColor = this.widgetColor;
-    zdeText.font = Font.boldSystemFont(12);
+    const oilZdeStack = colStack.addStack();
 
-    colStack.addSpacer(5);
+    const oilZdeSize = new Size(80, 10);
 
-    const zdeValue = this.dataSource[`ZDE${oilNumber}`];
-    const oilStatus = zdeValue > 0;
-    const zdeColor = new Color(oilStatus ? '#f5222d' : '#a0d911');
-    const zdeValueText = colStack.addText(`${zdeValue.toFixed(2)}`);
-    zdeValueText.textColor = zdeColor;
-    zdeValueText.font = Font.boldSystemFont(12);
+    oilZdeStack.layoutVertically();
+    oilZdeStack.size = new Size(oilZdeSize.width, colSize.height);
+    oilZdeStack.centerAlignContent();
 
-    colStack.addSpacer(5);
+    const oilZdeValueStack = oilZdeStack.addStack();
+    oilZdeValueStack.centerAlignContent();
+    oilZdeValueStack.addSpacer();
+    this.provideText(
+      `${oilZde > 0 ? '+' : '-'} ${oilZde}`, oilZdeValueStack,
+      {font: 'light', size: 14, color: this.widgetColor},
+    );
 
     const oilZdeImage = SFSymbol.named(
-      oilStatus ? 'arrow.up' : 'arrow.up',
+      oilZde > 0 ? 'arrow.up' : 'arrow.down',
     ).image;
-    const oilZdeWidgetImg = colStack.addImage(oilZdeImage);
-    oilZdeWidgetImg.tintColor = zdeColor;
-    oilZdeWidgetImg.imageSize = new Size(12, 12);
 
-    colStack.addSpacer();
+    oilZdeValueStack.addSpacer(10);
 
-    const dollarImage = SFSymbol.named(`yensign.circle`).image;
-    const dollarWidgetImage = colStack.addImage(dollarImage);
-    dollarWidgetImage.tintColor = this.widgetColor;
-    dollarWidgetImage.imageSize = new Size(18, 18);
+    const oilZdeWidgetImg = oilZdeValueStack.addImage(oilZdeImage);
+    oilZdeWidgetImg.tintColor = new Color(oilZde > 0 ? '#f5222d' : '#a0d911');
+    oilZdeWidgetImg.imageSize = new Size(10, 10);
 
-    colStack.addSpacer(5);
+    oilZdeValueStack.addSpacer();
 
-    const oilPrice = this.dataSource[`V${oilNumber}`];
-    const priceText = colStack.addText(`${oilPrice.toFixed(2)}`);
-    priceText.textColor = this.widgetColor;
-    priceText.font = Font.boldSystemFont(20);
+    oilZdeStack.addSpacer(5);
+
+    const oilZdeValue = Math.abs(parseFloat(oilZde));
+    const processBarBgStack = oilZdeStack.addStack();
+
+    processBarBgStack.cornerRadius = 5;
+    processBarBgStack.size = oilZdeSize;
+    processBarBgStack.backgroundColor = new Color(processBarBgColor);
+
+    if (oilZde < 0) processBarBgStack.addSpacer();
+
+    const processBarStack = processBarBgStack.addStack();
+
+    const linear = new LinearGradient();
+    linear.colors = processBarColor.map(item => new Color(item));
+    linear.locations = [0, 0.5];
+    linear.startPoint = new Point(0, 0);
+    linear.endPoint = new Point(1, 1);
+
+    processBarStack.backgroundGradient = linear;
+    processBarStack.cornerRadius = oilZdeSize.height / 2;
+    processBarStack.size = new Size(
+      parseInt(oilZdeSize.width * oilZdeValue), oilZdeSize.height);
+
+    if (oilZde > 0) processBarBgStack.addSpacer();
   };
 
   renderLarge = async (w) => {
     return this.notSupport(w);
   };
 
+  renderBorder = (stack) => {
+    stack.borderWidth = 1;
+  };
+
+  gradient = (color, config = {locations: [0, 0.5]}) => {
+    const linear = new LinearGradient();
+    linear.colors = color.map(item => new Color(item));
+    linear.locations = config.locations;
+    return linear;
+  };
+
   renderMedium = async (w) => {
-    const oilNumbers = this.getRandomArrayElements(this.oilNumber, 3);
     w.addSpacer();
-    oilNumbers.map((oilNumber) => {
+    this.oilNumber.forEach((oilNumber, index) => {
+      if (index > 2) return;
       this.rowData(w, oilNumber);
       w.addSpacer();
     });
+
     return w;
   };
 
