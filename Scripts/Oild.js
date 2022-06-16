@@ -230,7 +230,7 @@ class Widget extends DmYY {
       processItemStack.layoutVertically();
 
       const itemBarStack = processItemStack.addStack();
-      itemBarStack.cornerRadius = 7.5;
+      itemBarStack.cornerRadius = processVerWidth / 2;
       itemBarStack.size = new Size(
         processVerWidth, colSize.height * (Math.abs(item) / maxCount));
       itemBarStack.backgroundGradient = this.gradient(processColor);
