@@ -14,7 +14,6 @@ const enumConfig = {
   0: '柴油',
 };
 
-const barHeight = [36, 30, 25, 32, 15, 20];
 const squareColor = '#8165AC';
 const processColor = [`#7517F8`, `#E323FF`];
 const processBarColor = [`#4da1ff`, `#4dffdf`];
@@ -61,7 +60,7 @@ class Widget extends DmYY {
 
   init = async () => {
     if (this.settings.dataSource) {
-      this.dataSource = this.settings.dataSource;
+      this.dataSource = this.settings.dataSource[0];
     } else {
       await this.cacheData();
     }
@@ -87,14 +86,14 @@ class Widget extends DmYY {
     const time = Date.now();
     const url = `https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_WEB_YJ_JH&columns=ALL&filter=${encodeURIComponent(
       filter,
-    )}&sortColumns=DIM_DATE&sortTypes=-1&pageNumber=1&pageSize=1&source=WEB&_=${time}`;
+    )}&sortColumns=DIM_DATE&sortTypes=-1&pageNumber=1&pageSize=6&source=WEB&_=${time}`;
 
     const options = {url};
     const response = await this.$request.post(options);
     console.log(response);
     if (response.result) {
       this.dataSource = response.result.data[0];
-      this.settings.dataSource = this.dataSource;
+      this.settings.dataSource = response.result.data;
       this.saveSettings(false);
     }
   };
@@ -211,21 +210,33 @@ class Widget extends DmYY {
     processStack.centerAlignContent();
     const processVerWidth = 10;
 
-    for (let i = 0; i < 6; i++) {
+    let maxCount = 0;
+    const oilHistory = this.settings.dataSource.map(
+      item => {
+        const value = (item[`ZDE${oilNumber}`] /
+          item[`QE${oilNumber}`]).toFixed(2) * 100;
+        if (maxCount < value) maxCount = value;
+        return value;
+      });
+
+    maxCount = maxCount * 1.5;
+
+    oilHistory.forEach(item => {
       const processItemStack = processStack.addStack();
       processItemStack.size = new Size(processVerWidth, colSize.height);
       processItemStack.cornerRadius = processVerWidth / 2;
       processItemStack.backgroundColor = new Color(processBarBgColor);
-      processItemStack.addSpacer();
+      if (item > 0) processItemStack.addSpacer();
       processItemStack.layoutVertically();
 
       const itemBarStack = processItemStack.addStack();
       itemBarStack.cornerRadius = 7.5;
-      itemBarStack.size = new Size(processVerWidth, barHeight[i]);
+      itemBarStack.size = new Size(
+        processVerWidth, colSize.height * (Math.abs(item) / maxCount));
       itemBarStack.backgroundGradient = this.gradient(processColor);
-
+      if (item < 0) processItemStack.addSpacer();
       processStack.addSpacer();
-    }
+    });
 
     colStack.addSpacer();
 
