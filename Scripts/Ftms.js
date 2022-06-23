@@ -23,6 +23,7 @@ class Ftms {
     } else {
       await this.cacheData()
     }
+//     console.log(this.$.dataSource)
     this.cacheData()
   }
 
@@ -46,19 +47,17 @@ class Ftms {
       'ftms-iov-app-gbook/api/gbook/getRemoteInfoDetail'
     )
     const response = await this.$.$request.post(options)
-    console.log(response)
+//     console.log(response)
     if (response.msg === 'success') {
       this.$.dataSource.remoteInfo = response.result
       const safeData =
-        this.$.dataSource.remoteInfo.list.filter(
+        response.result.list.filter(
           (item) => item.security !== 'safe'
         ) || []
       if (safeData.length > 0) {
-        if (safeData.length === 1) {
           this.$.dataSource.safeText = `${safeData[0].typeName}：${safeData[0].dataName}`
-        } else {
-          this.$.dataSource.safeText = `隐患：${safeData.length}`
-        }
+      }else{
+	     this.$.dataSource.safeText = ``
       }
       const dataTime = this.$.dataSource.remoteInfo.datatime.split('-')
       this.$.dataSource.remoteInfo.datatime = `${dataTime[1] || ''}-${
@@ -79,6 +78,7 @@ class Ftms {
     }
     this.$.dataSource.monitorInfo.oilWasteText = `油耗：${this.$.dataSource.monitorInfo.oilWaste}L/100km`
     this.$.settings.dataSource = this.$.dataSource
+//     console.log(this.$.dataSource)
     this.$.saveSettings(false)
   }
 
