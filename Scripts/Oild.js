@@ -252,7 +252,7 @@ class Widget extends DmYY {
     oilZdeValueStack.centerAlignContent();
     oilZdeValueStack.addSpacer();
     this.provideText(
-      `${oilZde > 0 ? '+' : '-'} ${oilZde}`, oilZdeValueStack,
+      `${oilZde > 0 ? '+' : ''} ${oilZde}`, oilZdeValueStack,
       {font: 'light', size: 14, color: this.widgetColor},
     );
 
