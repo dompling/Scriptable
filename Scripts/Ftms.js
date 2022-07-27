@@ -23,7 +23,6 @@ class Ftms {
     } else {
       await this.cacheData()
     }
-//     console.log(this.$.dataSource)
     this.cacheData()
   }
 
@@ -47,22 +46,21 @@ class Ftms {
       'ftms-iov-app-gbook/api/gbook/getRemoteInfoDetail'
     )
     const response = await this.$.$request.post(options)
-//     console.log(response)
     if (response.msg === 'success') {
       this.$.dataSource.remoteInfo = response.result
       const safeData =
-        response.result.list.filter(
-          (item) => item.security !== 'safe'
-        ) || []
+        response.result.list.filter((item) => item.security !== 'safe') || []
       if (safeData.length > 0) {
-          this.$.dataSource.safeText = `${safeData[0].typeName}：${safeData[0].dataName}`
-      }else{
-	     this.$.dataSource.safeText = ``
+        this.$.dataSource.safeText = `${safeData[0].typeName}：${safeData[0].dataName}`
+      } else {
+        this.$.dataSource.safeText = ``
       }
       const dataTime = this.$.dataSource.remoteInfo.datatime.split('-')
       this.$.dataSource.remoteInfo.datatime = `${dataTime[1] || ''}-${
         dataTime[2] || ''
       }`
+    } else {
+      this.$.notify(this.name, response.msg)
     }
     await this.getDrivingMonitorInfo()
   }
@@ -78,7 +76,6 @@ class Ftms {
     }
     this.$.dataSource.monitorInfo.oilWasteText = `油耗：${this.$.dataSource.monitorInfo.oilWaste}L/100km`
     this.$.settings.dataSource = this.$.dataSource
-//     console.log(this.$.dataSource)
     this.$.saveSettings(false)
   }
 
@@ -97,6 +94,8 @@ class Ftms {
         this.$.settings.serveInfo = response.data
         this.$.serveInfo = response.data
         this.$.saveSettings(false)
+      } else {
+        this.$.notify(this.name, response.msg)
       }
     } else {
       this.$.serveInfo = this.$.settings.serveInfo || {}
