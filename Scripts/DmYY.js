@@ -104,9 +104,20 @@ class DmYY {
         url,
         key ? { timeoutInterval: 1 } : {}
       )
+      if (key) {
+        this.settings.BoxJSData = {
+          ...this.settings.BoxJSData,
+          [key]: boxdata.val,
+        }
+        this.saveSettings()
+      }
       if (boxdata.val) return boxdata.val
+
       return boxdata.datas
     } catch (e) {
+      if (key && this.settings.BoxJSData[key]) {
+        return this.settings.BoxJSData[key]
+      }
       if (notify)
         await this.notify(
           `${this.name} - BoxJS 数据读取失败`,
