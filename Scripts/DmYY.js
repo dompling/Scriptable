@@ -109,7 +109,7 @@ class DmYY {
           ...this.settings.BoxJSData,
           [key]: boxdata.val,
         }
-        this.saveSettings()
+        this.saveSettings(false)
       }
       if (boxdata.val) return boxdata.val
 
