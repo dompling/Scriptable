@@ -33,29 +33,31 @@ class DmYY {
 
   // 发起请求
   http = async (options = { headers: {}, url: '' }, type = 'JSON') => {
+    let request, fileName, imagePath
+    if (type === 'IMG') {
+      fileName = this.md5(options.url)
+      imagePath = this.FILE_MGR_LOCAL.joinPath(
+        this.FILE_MGR_LOCAL.documentsDirectory(),
+        fileName
+      )
+      if (this.FILE_MGR_LOCAL.fileExists(fileName)) {
+        return Image.fromFile(imagePath)
+      }
+    }
     try {
-      let request
-      if (type !== 'IMG') {
-        request = this.getRequest()
-        Object.keys(options).forEach((key) => {
-          request[key] = options[key]
-        })
-        request.headers = { ...this.defaultHeaders, ...options.headers }
-      } else {
+      if (type === 'IMG') {
         request = this.getRequest(options.url)
-        const fileName = this.md5(options.url)
-        const imagePath = this.FILE_MGR_LOCAL.joinPath(
-          this.FILE_MGR_LOCAL.documentsDirectory(),
-          fileName
-        )
         console.log(imagePath)
-        if (this.FILE_MGR_LOCAL.fileExists(fileName)) {
-          return Image.fromFile(imagePath)
-        }
         const response = await request.loadImage()
         this.FILE_MGR_LOCAL.writeImage(imagePath, response)
         return response
       }
+      request = this.getRequest()
+      Object.keys(options).forEach((key) => {
+        request[key] = options[key]
+      })
+      request.headers = { ...this.defaultHeaders, ...options.headers }
+
       if (type === 'JSON') {
         return await request.loadJSON()
       }
