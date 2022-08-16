@@ -33,23 +33,15 @@ class DmYY {
 
   // 发起请求
   http = async (options = { headers: {}, url: '' }, type = 'JSON') => {
-    let request, fileName, imagePath
-    if (type === 'IMG') {
-      fileName = this.md5(options.url)
-      imagePath = this.FILE_MGR_LOCAL.joinPath(
-        this.FILE_MGR_LOCAL.documentsDirectory(),
-        fileName
-      )
-      if (this.FILE_MGR_LOCAL.fileExists(fileName)) {
-        return Image.fromFile(imagePath)
-      }
-    }
+    let request
     try {
       if (type === 'IMG') {
+        const fileName = `${this.cacheImage}/${this.md5(options.url)}`
+        console.log(fileName)
+        if (this.FILE_MGR.fileExists(fileName)) return Image.fromFile(fileName)
         request = this.getRequest(options.url)
-        console.log(imagePath)
         const response = await request.loadImage()
-        this.FILE_MGR_LOCAL.writeImage(imagePath, response)
+        this.FILE_MGR.writeImage(fileName, response)
         return response
       }
       request = this.getRequest()
@@ -822,6 +814,16 @@ class DmYY {
       FileManager[
         module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
       ]()
+
+    this.cacheImage = this.FILE_MGR.joinPath(
+      this.FILE_MGR.libraryDirectory(),
+      `${Script.name()}/images`
+    )
+
+    if (!this.FILE_MGR.fileExists(this.cacheImage)) {
+      this.FILE_MGR.createDirectory(this.cacheImage, true)
+    }
+
     // 本地，用于存储图片等
     this.FILE_MGR_LOCAL = FileManager.local()
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
