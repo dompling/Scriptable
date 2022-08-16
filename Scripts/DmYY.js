@@ -38,10 +38,18 @@ class DmYY {
       if (type === 'IMG') {
         const fileName = `${this.cacheImage}/${this.md5(options.url)}`
         console.log(fileName)
-        if (this.FILE_MGR.fileExists(fileName)) return Image.fromFile(fileName)
         request = this.getRequest(options.url)
-        const response = await request.loadImage()
-        this.FILE_MGR.writeImage(fileName, response)
+        let response
+        if (this.FILE_MGR.fileExists(fileName)) {
+          request.loadImage().then((res) => {
+            console.log(res)
+            this.FILE_MGR.writeImage(fileName, res)
+          })
+          return Image.fromFile(fileName)
+        } else {
+          response = await request.loadImage()
+          this.FILE_MGR.writeImage(fileName, response)
+        }
         return response
       }
       request = this.getRequest()
@@ -795,6 +803,7 @@ class DmYY {
       if (index === 0) return
       this.settings = {}
       await this.setBackgroundImage(false, false)
+      this.FILE_MGR.remove(this.cacheImage)
       this.saveSettings()
     }
     table.addRow(topRow)
