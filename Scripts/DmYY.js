@@ -846,6 +846,7 @@ class DmYY {
     )
 
     this.settings = this.getSettings()
+    console.log(this.settings)
     this.settings.lightColor = this.settings.lightColor || '#000000'
     this.settings.darkColor = this.settings.darkColor || '#ffffff'
     this.settings.lightBgColor = this.settings.lightBgColor || '#ffffff'

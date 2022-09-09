@@ -3,61 +3,61 @@
 // icon-color: deep-gray; icon-glyph: car;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === 'undefined') require = importModule
-const { DmYY, Runing } = require('./DmYY')
+if (typeof require === 'undefined') require = importModule;
+const { DmYY, Runing } = require('./DmYY');
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
-    super(arg)
+    super(arg);
     config.runsInApp &&
       this.registerAction(
         '油价设置',
         () => {
           return this.setAlertInput('油价设置', '设置类型', {
             oilNumber: '89|92|95|98|0',
-          })
+          });
         },
         { name: 'paperplane', color: '#722ed1' }
-      )
+      );
     config.runsInApp &&
       this.registerAction(
         '依赖插件',
         () => {
           return this.setAlertInput('设置依赖插件', '汽车的依赖插件例如 Ftms', {
             filePath: '',
-          })
+          });
         },
         { name: 'car', color: '#f5222d' }
-      )
+      );
     config.runsInApp &&
       this.registerAction(
         '缩放比例',
         () => {
           return this.setAlertInput('设置缩放比例', '比例越大进度条越长', {
             scale: '比例默认值1',
-          })
+          });
         },
         { name: 'plus.viewfinder', color: '#fa8c16' }
-      )
+      );
 
-    config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig)
-    this.cacheName = this.md5(`dataSouce_${this.en}`)
-    const filePath = this.settings.filePath || 'Ftms'
-    const carModule = require(`./${filePath}`)
-    const carService = new carModule(this)
-    this.scale = parseFloat(this.settings.scale) || 1 // 柱状图比例高度，值越大，柱状范围越广
-    this.init = carService.init
-    this.name = carService.name
-    this.logo = carService.logo
-    this.viewColor = Color.dynamic(new Color('#d9d9d9'), new Color('#8c8c8c'))
+    config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
+    this.cacheName = this.md5(`dataSouce_${this.en}`);
+    const filePath = this.settings.filePath || 'Ftms';
+    const carModule = require(`./${filePath}`);
+    const carService = new carModule(this);
+    this.scale = parseFloat(this.settings.scale) || 1; // 柱状图比例高度，值越大，柱状范围越广
+    this.init = carService.init;
+    this.name = carService.name;
+    this.logo = carService.logo;
+    this.viewColor = Color.dynamic(new Color('#d9d9d9'), new Color('#8c8c8c'));
   }
 
-  widgetHeight = 145
+  widgetHeight = 145;
 
   serveInfo = {
     carNumber: '',
-  }
+  };
 
   dataSource = {
     remoteInfo: {
@@ -75,7 +75,7 @@ class Widget extends DmYY {
     safeText: '',
     oilPriceText: '',
     oilZDE: 0,
-  }
+  };
 
   createProgressBar(
     soFar,
@@ -84,266 +84,260 @@ class Widget extends DmYY {
     height = 40,
     showPercentage = false
   ) {
-    const context = new DrawContext()
-    context.size = new Size(width, height)
-    context.opaque = false
-    context.respectScreenScale = true
+    const context = new DrawContext();
+    context.size = new Size(width, height);
+    context.opaque = false;
+    context.respectScreenScale = true;
 
     // bar background
-    context.setFillColor(new Color('#48484b'))
-    const bgPath = new Path()
+    context.setFillColor(new Color('#48484b'));
+    const bgPath = new Path();
     bgPath.addRoundedRect(
       new Rect(0, 0, width, height),
       height / 2,
       height / 2 - 1
-    )
-    context.addPath(bgPath)
-    context.fillPath()
+    );
+    context.addPath(bgPath);
+    context.fillPath();
 
     // bar foreground
-    context.setFillColor(new Color('#e8e8e8'))
-    const fgPath = new Path()
+    context.setFillColor(new Color('#e8e8e8'));
+    const fgPath = new Path();
     fgPath.addRoundedRect(
       new Rect(0, 0, (width * soFar) / total, height),
       height / 2,
       height / 2 - 1
-    )
-    context.addPath(fgPath)
-    context.fillPath()
+    );
+    context.addPath(fgPath);
+    context.fillPath();
 
     if (showPercentage) {
-      const percentage = ((soFar / total) * 100).toFixed(2)
-      let xPos = (width * soFar) / total + 5
+      const percentage = ((soFar / total) * 100).toFixed(2);
+      let xPos = (width * soFar) / total + 5;
       // if over 70%, show in foreground area
       // to ensure that it doesn't overflow the display
       if (percentage > 70) {
-        xPos = (width * soFar) / total - 55
+        xPos = (width * soFar) / total - 55;
       }
 
-      context.setFont(Font.semiboldRoundedSystemFont(14))
-      context.setTextColor(primaryTextColor)
-      context.drawText(`${percentage}%`, new Point(xPos, height / 14))
+      context.setFont(Font.semiboldRoundedSystemFont(14));
+      context.setTextColor(primaryTextColor);
+      context.drawText(`${percentage}%`, new Point(xPos, height / 14));
     }
 
-    return context.getImage()
+    return context.getImage();
   }
 
   renderBorder = (stack) => {
-    stack.borderWidth = 1
-  }
+    stack.borderWidth = 1;
+  };
 
   renderImage = async (uri) => {
-    return this.$request.get(uri, 'IMG')
-  }
+    return this.$request.get(uri, 'IMG');
+  };
 
   notSupport(w) {
-    const stack = w.addStack()
-    stack.addText('暂不支持')
-    return w
+    const stack = w.addStack();
+    stack.addText('暂不支持');
+    return w;
   }
 
   renderSmall = async (w) => {
-    w.addSpacer()
+    w.addSpacer();
 
-    const stack = w.addStack()
-    stack.layoutVertically()
-    const headerStack = stack.addStack()
-    headerStack.centerAlignContent()
-    headerStack.addSpacer(10)
-    const gasImg = await this.renderImage(
-      this.isNight
-        ? 'https://raw.githubusercontent.com/dompling/Scriptable/master/images/gas-night.png'
-        : `https://img.icons8.com/ios-glyphs/344/gas-station.png`
-    )
+    const stack = w.addStack();
+    stack.layoutVertically();
+    const headerStack = stack.addStack();
+    headerStack.centerAlignContent();
+    headerStack.addSpacer(10);
+    const gasImg = SFSymbol.named('fuelpump').image;
 
-    const gasIcon = headerStack.addImage(gasImg)
-    gasIcon.imageSize = new Size(16, 16)
-    headerStack.addSpacer(5)
+    const gasIcon = headerStack.addImage(gasImg);
+    gasIcon.imageSize = new Size(16, 16);
+    gasIcon.tintColor = this.widgetColor;
+    headerStack.addSpacer(5);
 
     const oilRateStackText = headerStack.addText(
       `${this.dataSource.monitorInfo.oilRate}%`
-    )
-    oilRateStackText.textColor = this.widgetColor
-    oilRateStackText.font = Font.boldSystemFont(14)
+    );
+    oilRateStackText.textColor = this.widgetColor;
+    oilRateStackText.font = Font.boldSystemFont(14);
 
-    headerStack.addSpacer()
-    const logImg = await this.renderImage(this.logo)
-    const logImgStack = headerStack.addImage(logImg)
-    logImgStack.imageSize = new Size(20, 20)
-    headerStack.addSpacer(10)
+    headerStack.addSpacer();
+    const logImg = await this.renderImage(this.logo);
+    const logImgStack = headerStack.addImage(logImg);
+    logImgStack.imageSize = new Size(20, 20);
+    headerStack.addSpacer(10);
 
-    const bodyStack = stack.addStack()
-    bodyStack.centerAlignContent()
-    bodyStack.addSpacer()
+    const bodyStack = stack.addStack();
+    bodyStack.centerAlignContent();
+    bodyStack.addSpacer();
     const progressImg = this.createProgressBar(
       this.dataSource.monitorInfo.oilRate
-    )
-    const progressBar = bodyStack.addImage(progressImg)
-    progressBar.imageSize = new Size(this.widgetHeight * this.scale, 28)
-    bodyStack.addSpacer()
+    );
+    const progressBar = bodyStack.addImage(progressImg);
+    progressBar.imageSize = new Size(this.widgetHeight * this.scale, 28);
+    bodyStack.addSpacer();
 
-    stack.addSpacer()
+    stack.addSpacer();
 
-    const oilWasteStack = stack.addStack()
-    oilWasteStack.centerAlignContent()
-    oilWasteStack.addSpacer()
+    const oilWasteStack = stack.addStack();
+    oilWasteStack.centerAlignContent();
+    oilWasteStack.addSpacer();
     const oilWasteStackText = oilWasteStack.addText(
       this.dataSource.monitorInfo.oilWasteText
-    )
-    oilWasteStackText.textColor = this.widgetColor
-    oilWasteStackText.font = Font.boldSystemFont(10)
-    oilWasteStack.addSpacer(5)
+    );
+    oilWasteStackText.textColor = this.widgetColor;
+    oilWasteStackText.font = Font.boldSystemFont(10);
+    oilWasteStack.addSpacer(5);
     const oilPriceStackText = oilWasteStack.addText(
       this.dataSource.oilPriceText
-    )
-    oilPriceStackText.textColor = this.widgetColor
-    oilPriceStackText.font = Font.boldSystemFont(10)
-    oilWasteStack.addSpacer(2)
-    const oilStatus = this.dataSource.oilZDE > 0
+    );
+    oilPriceStackText.textColor = this.widgetColor;
+    oilPriceStackText.font = Font.boldSystemFont(10);
+    oilWasteStack.addSpacer(2);
+    const oilStatus = this.dataSource.oilZDE > 0;
     const oilZdeImage = SFSymbol.named(
       oilStatus ? 'arrow.up' : 'arrow.down'
-    ).image
+    ).image;
 
-    const oilZdeWidgetImg = oilWasteStack.addImage(oilZdeImage)
-    oilZdeWidgetImg.tintColor = new Color(oilStatus ? '#f5222d' : '#a0d911')
-    oilZdeWidgetImg.imageSize = new Size(10, 10)
+    const oilZdeWidgetImg = oilWasteStack.addImage(oilZdeImage);
+    oilZdeWidgetImg.tintColor = new Color(oilStatus ? '#f5222d' : '#a0d911');
+    oilZdeWidgetImg.imageSize = new Size(10, 10);
 
-    oilWasteStack.addSpacer()
+    oilWasteStack.addSpacer();
 
-    const kilometerStack = stack.addStack()
+    const kilometerStack = stack.addStack();
 
-    kilometerStack.centerAlignContent()
-    kilometerStack.addSpacer()
-    const panoImg = await this.renderImage(
-      this.isNight
-        ? `https://raw.githubusercontent.com/dompling/Scriptable/master/images/count.png`
-        : `https://img.icons8.com/ios-glyphs/344/bar-chart.png`
-    )
+    kilometerStack.centerAlignContent();
+    kilometerStack.addSpacer();
+    const panoImg = SFSymbol.named('speedometer').image;
 
-    const panoImgStack = kilometerStack.addStack()
-    panoImgStack.setPadding(5, 0, 0, 0)
-    const panoStack = panoImgStack.addImage(panoImg)
-    panoStack.imageSize = new Size(20, 20)
-    kilometerStack.addSpacer(5)
+    const panoImgStack = kilometerStack.addStack();
+    panoImgStack.setPadding(5, 0, 0, 0);
+    const panoStack = panoImgStack.addImage(panoImg);
+    panoStack.tintColor = this.widgetColor;
+    panoStack.imageSize = new Size(20, 20);
+    kilometerStack.addSpacer(5);
 
-    const oilWasteText = kilometerStack.addText(this.dataSource.monitorInfo.km)
-    oilWasteText.font = Font.boldSystemFont(28)
-    oilWasteText.textColor = this.widgetColor
-    kilometerStack.addSpacer(5)
-    const unitStack = kilometerStack.addStack()
-    unitStack.setPadding(5, 0, 0, 0)
-    const oilWasteUnit = unitStack.addText('km')
-    oilWasteUnit.font = Font.boldSystemFont(14)
-    oilWasteUnit.textColor = this.widgetColor
-    kilometerStack.addSpacer()
+    const oilWasteText = kilometerStack.addText(this.dataSource.monitorInfo.km);
+    oilWasteText.font = Font.boldSystemFont(28);
+    oilWasteText.textColor = this.widgetColor;
+    kilometerStack.addSpacer(5);
+    const unitStack = kilometerStack.addStack();
+    unitStack.setPadding(5, 0, 0, 0);
+    const oilWasteUnit = unitStack.addText('km');
+    oilWasteUnit.font = Font.boldSystemFont(14);
+    oilWasteUnit.textColor = this.widgetColor;
+    kilometerStack.addSpacer();
 
-    stack.addSpacer()
+    stack.addSpacer();
 
-    const btBodyStack = stack.addStack()
-    btBodyStack.addSpacer()
-    const bottomStack = btBodyStack.addStack()
-    bottomStack.setPadding(10, 0, 10, 0)
-    bottomStack.centerAlignContent()
-    bottomStack.addSpacer()
-    bottomStack.cornerRadius = 15
-    bottomStack.backgroundColor = this.viewColor
-    const dataTime = this.dataSource.remoteInfo.datatime
-    const countKmText = bottomStack.addText(`上传：${dataTime || '-'}`)
-    countKmText.textColor = this.widgetColor
-    countKmText.font = Font.boldSystemFont(12)
-    countKmText.centerAlignText()
-    bottomStack.addSpacer()
-    w.addSpacer()
-    return w
-  }
+    const btBodyStack = stack.addStack();
+    btBodyStack.addSpacer();
+    const bottomStack = btBodyStack.addStack();
+    bottomStack.setPadding(10, 0, 10, 0);
+    bottomStack.centerAlignContent();
+    bottomStack.addSpacer();
+    bottomStack.cornerRadius = 15;
+    bottomStack.backgroundColor = this.viewColor;
+    const dataTime = this.dataSource.remoteInfo.datatime;
+    const countKmText = bottomStack.addText(`上传：${dataTime || '-'}`);
+    countKmText.textColor = this.widgetColor;
+    countKmText.font = Font.boldSystemFont(12);
+    countKmText.centerAlignText();
+    bottomStack.addSpacer();
+    w.addSpacer();
+    return w;
+  };
 
   renderLarge = async (w) => {
-    return this.renderSmall(w)
-  }
+    return this.renderSmall(w);
+  };
 
   renderMedium = async (w) => {
-    const containerStack = w.addStack()
-    containerStack.centerAlignContent()
-    const carStack = containerStack.addStack()
-    carStack.addSpacer()
-    carStack.backgroundColor = this.viewColor
+    const containerStack = w.addStack();
+    containerStack.centerAlignContent();
+    const carStack = containerStack.addStack();
+    carStack.addSpacer();
+    carStack.backgroundColor = this.viewColor;
 
-    carStack.layoutVertically()
+    carStack.layoutVertically();
 
-    carStack.centerAlignContent()
-    carStack.size = new Size(this.widgetHeight, this.widgetHeight)
-    carStack.cornerRadius = 20
-    const carImg = await this.renderImage(this.serveInfo.picUrl)
+    carStack.centerAlignContent();
+    carStack.size = new Size(this.widgetHeight, this.widgetHeight);
+    carStack.cornerRadius = 20;
+    const carImg = await this.renderImage(this.serveInfo.picUrl);
 
-    const carImgStack = carStack.addStack()
-    const carResStack = carImgStack.addImage(carImg)
-    carResStack.imageSize = new Size(137.5, 70)
+    const carImgStack = carStack.addStack();
+    const carResStack = carImgStack.addImage(carImg);
+    carResStack.imageSize = new Size(137.5, 70);
 
-    carStack.addSpacer()
+    carStack.addSpacer();
 
-    const carNumberStack = carStack.addStack()
-    carNumberStack.addSpacer()
-    carNumberStack.centerAlignContent()
-    const carNumberText = carNumberStack.addText(this.serveInfo.carNumber)
-    carNumberText.font = Font.boldSystemFont(24)
-    carNumberText.textColor = this.widgetColor
-    carNumberText.centerAlignText()
-    carNumberStack.addSpacer()
+    const carNumberStack = carStack.addStack();
+    carNumberStack.addSpacer();
+    carNumberStack.centerAlignContent();
+    const carNumberText = carNumberStack.addText(this.serveInfo.carNumber);
+    carNumberText.font = Font.boldSystemFont(24);
+    carNumberText.textColor = this.widgetColor;
+    carNumberText.centerAlignText();
+    carNumberStack.addSpacer();
 
-    carStack.addSpacer()
+    carStack.addSpacer();
 
-    const carSafeStack = carStack.addStack()
-    carSafeStack.addSpacer()
-    carSafeStack.centerAlignContent()
+    const carSafeStack = carStack.addStack();
+    carSafeStack.addSpacer();
+    carSafeStack.centerAlignContent();
 
-    let safeIconImg
+    let safeIconImg;
     if (this.dataSource.safeText) {
-      safeIconImg = carSafeStack.addImage(SFSymbol.named('lock.open').image)
+      safeIconImg = carSafeStack.addImage(SFSymbol.named('lock.open').image);
     } else {
-      safeIconImg = carSafeStack.addImage(SFSymbol.named('lock').image)
+      safeIconImg = carSafeStack.addImage(SFSymbol.named('lock').image);
     }
 
-    carSafeStack.addSpacer(5)
+    carSafeStack.addSpacer(5);
     const statusText = carSafeStack.addText(
       this.dataSource.safeText || '已上锁'
-    )
-    statusText.centerAlignText()
-    statusText.font = Font.systemFont(12)
+    );
+    statusText.centerAlignText();
+    statusText.font = Font.systemFont(12);
     statusText.textColor = this.dataSource.safeText
       ? new Color('#f5222d')
-      : this.widgetColor
+      : this.widgetColor;
 
-    safeIconImg.tintColor = statusText.textColor
-    safeIconImg.imageSize = new Size(10, 14)
+    safeIconImg.tintColor = statusText.textColor;
+    safeIconImg.imageSize = new Size(10, 14);
 
-    carSafeStack.addSpacer()
+    carSafeStack.addSpacer();
 
-    carStack.addSpacer()
+    carStack.addSpacer();
 
-    containerStack.addSpacer()
-    const rightStack = containerStack.addStack()
-    rightStack.layoutVertically()
-    await this.renderSmall(rightStack)
+    containerStack.addSpacer();
+    const rightStack = containerStack.addStack();
+    rightStack.layoutVertically();
+    await this.renderSmall(rightStack);
 
-    return w
-  }
+    return w;
+  };
 
   /**
    * 渲染函数，函数名固定
    * 可以根据 this.widgetFamily 来判断小组件尺寸，以返回不同大小的内容
    */
   async render() {
-    await this.init()
-    const widget = new ListWidget()
-    widget.setPadding(10, 10, 10, 10)
-    await this.getWidgetBackgroundImage(widget)
+    await this.init();
+    const widget = new ListWidget();
+    widget.setPadding(10, 10, 10, 10);
+    await this.getWidgetBackgroundImage(widget);
     if (this.widgetFamily === 'medium') {
-      return await this.renderMedium(widget)
+      return await this.renderMedium(widget);
     } else {
-      return await this.notSupport(widget)
+      return await this.notSupport(widget);
     }
   }
 }
 
 // @组件代码结束
-await Runing(Widget, '', false) //远程开发环境
+await Runing(Widget, '', false); //远程开发环境
