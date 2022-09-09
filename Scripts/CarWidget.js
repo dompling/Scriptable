@@ -50,7 +50,10 @@ class Widget extends DmYY {
     this.init = carService.init;
     this.name = carService.name;
     this.logo = carService.logo;
-    this.viewColor = Color.dynamic(new Color('#d9d9d9'), new Color('#8c8c8c'));
+    this.viewColor = Color.dynamic(
+      new Color('#d9d9d9', parseFloat(this.settings.lightOpacity || 1)),
+      new Color('#8c8c8c', parseFloat(this.settings.darkOpacity || 1))
+    );
   }
 
   widgetHeight = 145;
