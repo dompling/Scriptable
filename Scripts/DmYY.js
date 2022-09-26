@@ -1420,21 +1420,21 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       }
       const preview = [
         {
-          url: 'https://z3.ax1x.com/2021/03/26/6v5wIP.png',
+          url: 'https://pic1.imgdb.cn/item/63315c3616f2c2beb1a2931a.png',
           title: '小尺寸',
           val: 'small',
           dismissOnSelect: true,
           onClick,
         },
         {
-          url: 'https://z3.ax1x.com/2021/03/26/6v5dat.png',
+          url: 'https://pic1.imgdb.cn/item/63315c2c16f2c2beb1a28706.png',
           title: '中尺寸',
           val: 'medium',
           dismissOnSelect: true,
           onClick,
         },
         {
-          url: 'https://z3.ax1x.com/2021/03/26/6v5BPf.png',
+          url: 'https://pic1.imgdb.cn/item/63315c2716f2c2beb1a27f24.png',
           title: '大尺寸',
           val: 'large',
           dismissOnSelect: true,
