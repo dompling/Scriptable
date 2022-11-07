@@ -4,7 +4,21 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
-const {DmYY, Runing} = require('./DmYY');
+const { DmYY, Runing } = require('./DmYY');
+
+const API_PARAMS = {
+  api4: 'biz.vio.detail.query',
+  infoURL: 'https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz',
+  api1: 'biz.vio.unhandledVioCount.query',
+  productId: 'p10000000000000000001',
+  alipay: 'alipays://platformapi/startapp?appId=2019050964403523',
+  api2: 'biz.vio.peccancyChannelList.query',
+  status:
+    'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Flicense%2Flicense',
+  update: 'https://gitcode.net/4qiao/scriptable/raw/master/api/violation.js',
+  api3: 'biz.vio.peccancyUnhandleInfoList.query',
+  Ver: 'Version 1.2\n\nverifyToken过期需打开Quantumult-X',
+};
 
 // @组件代码开始
 class Widget extends DmYY {
@@ -12,28 +26,60 @@ class Widget extends DmYY {
     super(arg);
     this.en = '12123';
     this.name = '交管 12123';
-    config.runsInApp && this.registerAction('Token', async () => {
-      const token = this.settings.token;
-      this.settings.token = await this.getCache('token_12123') || token;
-      if (this.settings.token) this.saveSettings(false);
-      return this.setAlertInput('Token', '设置 token', {
-        token: '获取Token作者: @FoKit',
-      });
-    }, {name: 'paperplane', color: '#722ed1'});
+    config.runsInApp &&
+      this.registerAction(
+        '车牌号',
+        async () => {
+          return this.setAlertInput('车牌号设置', '设置车牌', {
+            carNumber: '川 G88888',
+          });
+        },
+        { name: 'car', color: '#2d84ef' }
+      );
+    config.runsInApp &&
+      this.registerAction(
+        'Token',
+        async () => {
+          const token = this.settings.token;
+          this.settings.token = (await this.getCache('token_12123')) || token;
+          if (this.settings.token) this.saveSettings(false);
+          return this.setAlertInput('Token', '设置 token', {
+            token: '获取Token作者: @FoKit',
+          });
+        },
+        { name: 'paperplane', color: '#722ed1' }
+      );
     config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
   }
 
+  format = (str) => {
+    return parseInt(str) >= 10 ? str : `0${str}`;
+  };
+
+  date = new Date();
+  arrUpdateTime = [
+    this.format(this.date.getMonth() + 1),
+    this.format(this.date.getDate()),
+    this.format(this.date.getHours()),
+    this.format(this.date.getMinutes()),
+  ];
+
   dataSource = {
     left: {
-      title: '川 G88888', icon: 'car.fill', listItem: [
-        {label: '未处违法', value: `0`, unit: '条'},
-        {label: '车辆状态', value: '正常'},
-        {label: '上次更新', value: '10:40'},
+      title: '川 G88888',
+      icon: 'car.fill',
+      listItem: [
+        { label: '未处违法', value: `0`, unit: '条' },
+        { label: '车辆状态', value: '正常' },
+        { label: '上次更新', value: '00:00' },
       ],
-    }, right: {
-      title: '驾驶证', icon: 'creditcard.fill', listItem: [
-        {label: '累计积分', value: `0`, unit: '分'},
-        {label: '证件状态', value: '正常'},
+    },
+    right: {
+      title: '驾驶证',
+      icon: 'creditcard.fill',
+      listItem: [
+        { label: '累计积分', value: `0`, unit: '分' },
+        { label: '证件状态', value: '正常' },
       ],
     },
   };
@@ -49,15 +95,27 @@ class Widget extends DmYY {
 
   cacheData = async () => {
     try {
-      const response = await this.$request.post(
-        `https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz`, {
-          body: `params=${JSON.stringify({
-            productId: 'p10000000000000000001',
-            api: 'biz.vio.unhandledVioCount.query"',
-            verifyToken: this.settings.token,
-          })}`,
-        });
-      console.log(response);
+      const response = await this.$request.post(API_PARAMS.infoURL, {
+        body: `params=${encodeURIComponent(
+          `{"productId": "${API_PARAMS.productId}","api": "${API_PARAMS.api1}","verifyToken": "${this.settings.token}"}`
+        )}`,
+      });
+
+      if (response.success) {
+        const illegal = response.data.list[0] || {};
+        this.dataSource.left.listItem[0].value = illegal.count || 0;
+        const integral = response.data.list[1] || {};
+        this.dataSource.right.listItem[0].value = integral.count || 0;
+        this.dataSource.left.listItem[2].value = `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`;
+        this.settings.dataSource = this.dataSource;
+        this.saveSettings(false);
+      } else {
+        this.notify(
+          `verifyToken已过期 ⚠️`,
+          '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )',
+          'alipays://platformapi/startapp?appId=2019050964403523'
+        );
+      }
     } catch (e) {
       console.log(e);
     }
@@ -114,7 +172,7 @@ class Widget extends DmYY {
       listItemStack.addSpacer();
       if (index !== data.listItem.length - 1) w.addSpacer();
 
-      const valueText = listItemStack.addText(item.value);
+      const valueText = listItemStack.addText(`${item.value}`);
       valueText.textColor = this.widgetColor;
       valueText.font = this.provideFont('medium', 14);
 
@@ -123,7 +181,6 @@ class Widget extends DmYY {
         unitText.textColor = this.widgetColor;
         unitText.font = this.provideFont('medium', 14);
       }
-
     });
   };
 
@@ -148,6 +205,7 @@ class Widget extends DmYY {
    */
   async render() {
     await this.init();
+    this.dataSource.left.title = this.settings.carNumber;
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
     if (this.widgetFamily === 'medium') {
