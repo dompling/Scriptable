@@ -436,9 +436,9 @@
       "title": "交管 12123",
       "html": [
         "<h4 align=\"center\">Token获取说明</h4>",
-        "<li>获取Token重写：https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule</li>",
+        "<li>获取Token重写：<a href='https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule'>Surge 12123重写模块 </a></li>",
         "<li>使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。</li>",
-        "<li>使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/</li>"
+        "<li>使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：<a href='https://chavyleung.gitbook.io/boxjs/'>BoxJS教程</a></li>"
       ]
     }
   ]
