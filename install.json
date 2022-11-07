@@ -430,7 +430,7 @@
     {
       "version": "1.0.0",
       "description": "交管 12123 违章和扣分查询",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/scripts/12123.js",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/12123.js",
       "thumb": "https://is5-ssl.mzstatic.com/image/thumb/Purple112/v4/a7/a1/61/a7a16170-e644-079e-a362-9eb273becf9d/AppIcon-1x_U007emarketing-0-4-0-0-85-220.png/492x0w.webp",
       "name": "12123",
       "title": "交管 12123",
