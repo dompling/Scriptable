@@ -426,6 +426,20 @@
         "<li>调整大尺寸排列效果</li>",
         "<li>调整下班倒计时默认不开启</li>"
       ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "交管 12123 违章和扣分查询",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/12123.js",
+      "thumb": "https://is5-ssl.mzstatic.com/image/thumb/Purple112/v4/a7/a1/61/a7a16170-e644-079e-a362-9eb273becf9d/AppIcon-1x_U007emarketing-0-4-0-0-85-220.png/492x0w.webp",
+      "name": "12123",
+      "title": "交管 12123",
+      "html": [
+        "<h4 align=\"center\">Token获取说明</h4>",
+        "<li>获取Token重写：https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule</li>",
+        "<li>使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。</li>",
+        "<li>使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：https://chavyleung.gitbook.io/boxjs/</li>"
+      ]
     }
   ]
 }
