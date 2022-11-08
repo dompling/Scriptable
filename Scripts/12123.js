@@ -11,8 +11,13 @@ const API_PARAMS = {
   infoURL: 'https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz',
   api1: 'biz.vio.unhandledVioCount.query',
   productId: 'p10000000000000000001',
+  alipay: 'alipays://platformapi/startapp?appId=2019050964403523',
   api2: 'biz.vio.peccancyChannelList.query',
+  status:
+    'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Flicense%2Flicense',
+  update: 'https://gitcode.net/4qiao/scriptable/raw/master/api/violation.js',
   api3: 'biz.vio.peccancyUnhandleInfoList.query',
+  Ver: 'Version 1.2\n\nverifyToken过期需打开Quantumult-X',
 };
 
 // @组件代码开始
@@ -26,16 +31,6 @@ class Widget extends DmYY {
     });
     this.en = '12123';
     this.name = '交管 12123';
-    config.runsInApp &&
-      this.registerAction(
-        '微信小程序 ID',
-        async () => {
-          return this.setAlertInput('小程序 ID', '设置小程序跳转 ID', {
-            wxmini: '微信小程序交管12123跳转 ID',
-          });
-        },
-        { name: 'message', color: '#722ed1' }
-      );
     config.runsInApp &&
       this.registerAction(
         'Token',
@@ -129,7 +124,7 @@ class Widget extends DmYY {
           )}`,
         });
 
-        console.log(details)
+        console.log(details);
 
         if (details.success) {
           const { drivingLicense, vehicles } = details.data;
@@ -145,16 +140,14 @@ class Widget extends DmYY {
         }
 
         this.dataSource.left.listItem[2].value = `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`;
-        
+
         this.settings.dataSource = this.dataSource;
         this.saveSettings(false);
       } else {
         this.notify(
           `verifyToken已过期 ⚠️`,
-          '点击通知框自动跳转到微信小程序交管12123页面获取最新的Token ( 请确保已打开辅助工具 )',
-          this.settings.wxmini
-            ? `weixin://dl/business/?t=${this.settings.wxmini}`
-            : ''
+          '点击通知框自动跳转到支付宝小程序交管12123页面获取最新的Token ( 请确保已打开辅助工具 )',
+          API_PARAMS.alipay
         );
       }
     } catch (e) {
