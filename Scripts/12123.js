@@ -74,7 +74,7 @@ class Widget extends DmYY {
       icon: 'creditcard.fill',
       listItem: [
         { label: '证件状态', value: '正常' },
-        { label: '累计积分', value: `0`, unit: '分' },
+        { label: '累计扣分', value: `0`, unit: '分' },
         { label: '重置日期', value: '—' },
       ],
     },
