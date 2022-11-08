@@ -34,7 +34,7 @@ class Widget extends DmYY {
             wxmini: '微信小程序交管12123跳转 ID',
           });
         },
-        { name: 'chat', color: '#722ed1' }
+        { name: 'message', color: '#722ed1' }
       );
     config.runsInApp &&
       this.registerAction(
@@ -86,6 +86,8 @@ class Widget extends DmYY {
   };
 
   init = async () => {
+    this.settings.token =
+      (await this.getCache('wx_12123')) || this.settings.token;
     if (this.settings.dataSource) {
       this.dataSource = this.settings.dataSource;
     } else {
@@ -112,7 +114,7 @@ class Widget extends DmYY {
           ...params,
         })}`,
       });
-
+      console.log(response);
       if (response.success) {
         const illegal = response.data.list[0] || {};
         this.dataSource.left.listItem[0].value = illegal.count || 0;
