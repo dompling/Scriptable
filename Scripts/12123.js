@@ -8,43 +8,43 @@ const { DmYY, Runing } = require('./DmYY');
 
 const API_PARAMS = {
   api4: 'biz.vio.detail.query',
-  infoURL: 'https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz',
+  infoURL: 'https://miniappwx.122.gov.cn:8553/openapi/invokeApi/business/biz',
   api1: 'biz.vio.unhandledVioCount.query',
   productId: 'p10000000000000000001',
-  alipay: 'alipays://platformapi/startapp?appId=2019050964403523',
   api2: 'biz.vio.peccancyChannelList.query',
-  status:
-    'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Flicense%2Flicense',
-  update: 'https://gitcode.net/4qiao/scriptable/raw/master/api/violation.js',
   api3: 'biz.vio.peccancyUnhandleInfoList.query',
-  Ver: 'Version 1.2\n\nverifyToken过期需打开Quantumult-X',
 };
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
-    super(arg);
+    super(arg, {
+      lightBgColor: '#2581f2',
+      darkBgColor: '#2581f2',
+      darkColor: '#fff',
+      lightColor: '#fff',
+    });
     this.en = '12123';
     this.name = '交管 12123';
     config.runsInApp &&
       this.registerAction(
-        '车牌号',
+        '微信小程序 ID',
         async () => {
-          return this.setAlertInput('车牌号设置', '设置车牌', {
-            carNumber: '川 G88888',
+          return this.setAlertInput('小程序 ID', '设置小程序跳转 ID', {
+            wxmini: '微信小程序交管12123跳转 ID',
           });
         },
-        { name: 'car', color: '#2d84ef' }
+        { name: 'chat', color: '#722ed1' }
       );
     config.runsInApp &&
       this.registerAction(
         'Token',
         async () => {
           const token = this.settings.token;
-          this.settings.token = (await this.getCache('token_12123')) || token;
+          this.settings.token = (await this.getCache('wx_12123')) || token;
           if (this.settings.token) this.saveSettings(false);
           return this.setAlertInput('Token', '设置 token', {
-            token: '获取Token作者: @FoKit',
+            token: '微信小程序交管12123获取',
           });
         },
         { name: 'paperplane', color: '#722ed1' }
@@ -78,8 +78,9 @@ class Widget extends DmYY {
       title: '驾驶证',
       icon: 'creditcard.fill',
       listItem: [
-        { label: '累计积分', value: `0`, unit: '分' },
         { label: '证件状态', value: '正常' },
+        { label: '累计积分', value: `0`, unit: '分' },
+        { label: '重置日期', value: '—' },
       ],
     },
   };
@@ -95,25 +96,61 @@ class Widget extends DmYY {
 
   cacheData = async () => {
     try {
+      const token = this.settings.token.replace('params=', '');
+      const body = JSON.parse(decodeURIComponent(token));
+      const params = {
+        sign: body.sign,
+        businessId: body.businessId,
+        verifyToken: body.verifyToken,
+        businessPrincipalId: body.businessPrincipalId,
+      };
+
       const response = await this.$request.post(API_PARAMS.infoURL, {
-        body: `params=${encodeURIComponent(
-          `{"productId": "${API_PARAMS.productId}","api": "${API_PARAMS.api1}","verifyToken": "${this.settings.token}"}`
-        )}`,
+        body: `params=${JSON.stringify({
+          api: API_PARAMS.api1,
+          productId: API_PARAMS.productId,
+          ...params,
+        })}`,
       });
 
       if (response.success) {
         const illegal = response.data.list[0] || {};
         this.dataSource.left.listItem[0].value = illegal.count || 0;
-        const integral = response.data.list[1] || {};
-        this.dataSource.right.listItem[0].value = integral.count || 0;
+
+        const details = await this.$request.post(API_PARAMS.infoURL, {
+          body: `params=${encodeURIComponent(
+            JSON.stringify({
+              api: 'biz.user.integration.query',
+              productId: API_PARAMS.productId,
+              ...params,
+            })
+          )}`,
+        });
+
+        if (details.success) {
+          const { drivingLicense, vehicles } = details.data;
+          const reaccDate = drivingLicense.reaccDate.split('-');
+          this.dataSource.right.title = `驾驶证 ${drivingLicense.allowToDrive}`;
+          this.dataSource.right.listItem[1].value =
+            drivingLicense.cumulativePoint;
+          this.dataSource.right.listItem[2].value = `${reaccDate[1]}-${reaccDate[2]}`;
+
+          if (vehicles.length) {
+            this.dataSource.left.title = vehicles[0].plateNumber;
+          }
+        }
+
         this.dataSource.left.listItem[2].value = `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`;
+        console.log(this.dataSource);
         this.settings.dataSource = this.dataSource;
         this.saveSettings(false);
       } else {
         this.notify(
           `verifyToken已过期 ⚠️`,
-          '点击通知框自动跳转到支付宝12123小程序页面获取最新的Token ( 请确保已打开辅助工具 )',
-          'alipays://platformapi/startapp?appId=2019050964403523'
+          '点击通知框自动跳转到微信小程序交管12123页面获取最新的Token ( 请确保已打开辅助工具 )',
+          this.settings.wxmini
+            ? `weixin://dl/business/?t=${this.settings.wxmini}`
+            : ''
         );
       }
     } catch (e) {
@@ -162,6 +199,7 @@ class Widget extends DmYY {
     licensePlateText.font = this.provideFont('bold', 14);
 
     w.addSpacer();
+
     data.listItem.forEach((item, index) => {
       const listItemStack = w.addStack();
       listItemStack.centerAlignContent();
@@ -205,7 +243,6 @@ class Widget extends DmYY {
    */
   async render() {
     await this.init();
-    this.dataSource.left.title = this.settings.carNumber;
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
     if (this.widgetFamily === 'medium') {

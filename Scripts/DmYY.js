@@ -8,167 +8,168 @@
  */
 
 class DmYY {
-  constructor(arg) {
-    this.arg = arg
+  constructor(arg, defaultSettings) {
+    this.arg = arg;
+    this.defaultSettings = defaultSettings || {};
     try {
-      this.init()
+      this.init();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    this.isNight = Device.isUsingDarkAppearance()
+    this.isNight = Device.isUsingDarkAppearance();
   }
 
-  _actions = {}
-  BACKGROUND_NIGHT_KEY
-  widgetColor
-  backGroundColor
-  useBoxJS = true
-  isNight
-  _actionsIcon = {}
+  _actions = {};
+  BACKGROUND_NIGHT_KEY;
+  widgetColor;
+  backGroundColor;
+  useBoxJS = true;
+  isNight;
+  _actionsIcon = {};
 
   // 获取 Request 对象
   getRequest = (url = '') => {
-    return new Request(url)
-  }
+    return new Request(url);
+  };
 
   // 发起请求
   http = async (options = { headers: {}, url: '' }, type = 'JSON') => {
-    let request
+    let request;
     try {
       if (type === 'IMG') {
-        const fileName = `${this.cacheImage}/${this.md5(options.url)}`
-        console.log(fileName)
-        request = this.getRequest(options.url)
-        let response
+        const fileName = `${this.cacheImage}/${this.md5(options.url)}`;
+        console.log(fileName);
+        request = this.getRequest(options.url);
+        let response;
         if (this.FILE_MGR.fileExists(fileName)) {
           request.loadImage().then((res) => {
-            console.log(res)
-            this.FILE_MGR.writeImage(fileName, res)
-          })
-          return Image.fromFile(fileName)
+            console.log(res);
+            this.FILE_MGR.writeImage(fileName, res);
+          });
+          return Image.fromFile(fileName);
         } else {
-          response = await request.loadImage()
-          this.FILE_MGR.writeImage(fileName, response)
+          response = await request.loadImage();
+          this.FILE_MGR.writeImage(fileName, response);
         }
-        return response
+        return response;
       }
-      request = this.getRequest()
+      request = this.getRequest();
       Object.keys(options).forEach((key) => {
-        request[key] = options[key]
-      })
-      request.headers = { ...this.defaultHeaders, ...options.headers }
+        request[key] = options[key];
+      });
+      request.headers = { ...this.defaultHeaders, ...options.headers };
 
       if (type === 'JSON') {
-        return await request.loadJSON()
+        return await request.loadJSON();
       }
       if (type === 'STRING') {
-        return await request.loadString()
+        return await request.loadString();
       }
-      return await request.loadJSON()
+      return await request.loadJSON();
     } catch (e) {
-      console.log('error:' + e)
-      if (type === 'IMG') return SFSymbol.named('photo').image
+      console.log('error:' + e);
+      if (type === 'IMG') return SFSymbol.named('photo').image;
     }
-  }
+  };
 
   //request 接口请求
   $request = {
     get: async (url = '', options = {}, type = 'JSON') => {
-      let params = { ...options, method: 'GET' }
+      let params = { ...options, method: 'GET' };
       if (typeof url === 'object') {
-        params = { ...params, ...url }
+        params = { ...params, ...url };
       } else {
-        params.url = url
+        params.url = url;
       }
-      let _type = type
-      if (typeof options === 'string') _type = options
-      return await this.http(params, _type)
+      let _type = type;
+      if (typeof options === 'string') _type = options;
+      return await this.http(params, _type);
     },
     post: async (url = '', options = {}, type = 'JSON') => {
-      let params = { ...options, method: 'POST' }
+      let params = { ...options, method: 'POST' };
       if (typeof url === 'object') {
-        params = { ...params, ...url }
+        params = { ...params, ...url };
       } else {
-        params.url = url
+        params.url = url;
       }
-      let _type = type
-      if (typeof options === 'string') _type = options
-      return await this.http(params, _type)
+      let _type = type;
+      if (typeof options === 'string') _type = options;
+      return await this.http(params, _type);
     },
-  }
+  };
 
   // 获取 boxJS 缓存
   getCache = async (key = '', notify = true) => {
     try {
-      let url = 'http://' + this.prefix + '/query/boxdata'
-      if (key) url = 'http://' + this.prefix + '/query/data/' + key
+      let url = 'http://' + this.prefix + '/query/boxdata';
+      if (key) url = 'http://' + this.prefix + '/query/data/' + key;
       const boxdata = await this.$request.get(
         url,
         key ? { timeoutInterval: 1 } : {}
-      )
+      );
       if (key) {
         this.settings.BoxJSData = {
           ...this.settings.BoxJSData,
           [key]: boxdata.val,
-        }
-        this.saveSettings(false)
+        };
+        this.saveSettings(false);
       }
-      if (boxdata.val) return boxdata.val
+      if (boxdata.val) return boxdata.val;
 
-      return boxdata.datas
+      return boxdata.datas;
     } catch (e) {
       if (key && this.settings.BoxJSData[key]) {
-        return this.settings.BoxJSData[key]
+        return this.settings.BoxJSData[key];
       }
       if (notify)
         await this.notify(
           `${this.name} - BoxJS 数据读取失败`,
           '请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程',
           'https://chavyleung.gitbook.io/boxjs/awesome/videos'
-        )
-      return false
+        );
+      return false;
     }
-  }
+  };
 
   transforJSON = (str) => {
     if (typeof str == 'string') {
       try {
-        return JSON.parse(str)
+        return JSON.parse(str);
       } catch (e) {
-        console.log(e)
-        return str
+        console.log(e);
+        return str;
       }
     }
-    console.log('It is not a string!')
-  }
+    console.log('It is not a string!');
+  };
 
   // 选择图片并缓存
   chooseImg = async () => {
-    return await Photos.fromLibrary()
-  }
+    return await Photos.fromLibrary();
+  };
 
   // 设置 widget 背景图片
   getWidgetBackgroundImage = async (widget) => {
-    const backgroundImage = this.getBackgroundImage()
+    const backgroundImage = this.getBackgroundImage();
     if (backgroundImage) {
       const opacity = Device.isUsingDarkAppearance()
         ? Number(this.settings.darkOpacity)
-        : Number(this.settings.lightOpacity)
+        : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
         backgroundImage,
         '#000',
         opacity
-      )
-      return true
+      );
+      return true;
     } else {
       if (this.backGroundColor.colors) {
-        widget.backgroundGradient = this.backGroundColor
+        widget.backgroundGradient = this.backGroundColor;
       } else {
-        widget.backgroundColor = this.backGroundColor
+        widget.backgroundColor = this.backGroundColor;
       }
-      return false
+      return false;
     }
-  }
+  };
 
   /**
    * 验证图片尺寸： 图片像素超过 1000 左右的时候会导致背景无法加载
@@ -176,10 +177,10 @@ class DmYY {
    */
   verifyImage = async (img) => {
     try {
-      const { width, height } = img.size
-      const direct = true
+      const { width, height } = img.size;
+      const direct = true;
       if (width > 1000) {
-        const options = ['取消', '打开图像处理']
+        const options = ['取消', '打开图像处理'];
         const message =
           '您的图片像素为' +
           width +
@@ -190,17 +191,17 @@ class DmYY {
           (direct ? '宽度' : '高度') +
           '调整到 1000 以下\n' +
           (!direct ? '宽度' : '高度') +
-          '自动适应'
-        const index = await this.generateAlert(message, options)
+          '自动适应';
+        const index = await this.generateAlert(message, options);
         if (index === 1)
-          Safari.openInApp('https://www.sojson.com/image/change.html', false)
-        return false
+          Safari.openInApp('https://www.sojson.com/image/change.html', false);
+        return false;
       }
-      return true
+      return true;
     } catch (e) {
-      return false
+      return false;
     }
-  }
+  };
 
   /**
    * 获取截图中的组件剪裁图
@@ -212,11 +213,11 @@ class DmYY {
   async getWidgetScreenShot(title = null) {
     // Crop an image into the specified rect.
     function cropImage(img, rect) {
-      let draw = new DrawContext()
-      draw.size = new Size(rect.width, rect.height)
+      let draw = new DrawContext();
+      draw.size = new Size(rect.width, rect.height);
 
-      draw.drawImageAtPoint(img, new Point(-rect.x, -rect.y))
-      return draw.getImage()
+      draw.drawImageAtPoint(img, new Point(-rect.x, -rect.y));
+      return draw.getImage();
     }
 
     // Pixel sizes and positions for widgets on all supported phones.
@@ -354,63 +355,63 @@ class DmYY {
           middle: 618,
           bottom: 1146,
         },
-      }
+      };
     }
 
     let message =
-      title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续'
-    let exitOptions = ['我已截图', '前去截图 >']
-    let shouldExit = await this.generateAlert(message, exitOptions)
-    if (shouldExit) return
+      title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
+    let exitOptions = ['我已截图', '前去截图 >'];
+    let shouldExit = await this.generateAlert(message, exitOptions);
+    if (shouldExit) return;
 
     // Get screenshot and determine phone size.
-    let img = await Photos.fromLibrary()
-    let height = img.size.height
-    let phone = phoneSizes()[height]
+    let img = await Photos.fromLibrary();
+    let height = img.size.height;
+    let phone = phoneSizes()[height];
     if (!phone) {
-      message = '好像您选择的照片不是正确的截图，请先前往桌面'
-      await this.generateAlert(message, ['我已知晓'])
-      return
+      message = '好像您选择的照片不是正确的截图，请先前往桌面';
+      await this.generateAlert(message, ['我已知晓']);
+      return;
     }
 
     // Extra setup needed for 2436-sized phones.
     if (height === 2436) {
-      const files = this.FILE_MGR_LOCAL
-      let cacheName = 'mz-phone-type'
-      let cachePath = files.joinPath(files.libraryDirectory(), cacheName)
+      const files = this.FILE_MGR_LOCAL;
+      let cacheName = 'mz-phone-type';
+      let cachePath = files.joinPath(files.libraryDirectory(), cacheName);
 
       // If we already cached the phone size, load it.
       if (files.fileExists(cachePath)) {
-        let typeString = files.readString(cachePath)
-        phone = phone[typeString]
+        let typeString = files.readString(cachePath);
+        phone = phone[typeString];
         // Otherwise, prompt the user.
       } else {
-        message = '您的📱型号是?'
-        let types = ['iPhone 12 mini', 'iPhone 11 Pro, XS, or X']
-        let typeIndex = await this.generateAlert(message, types)
-        let type = typeIndex === 0 ? 'mini' : 'x'
-        phone = phone[type]
-        files.writeString(cachePath, type)
+        message = '您的📱型号是?';
+        let types = ['iPhone 12 mini', 'iPhone 11 Pro, XS, or X'];
+        let typeIndex = await this.generateAlert(message, types);
+        let type = typeIndex === 0 ? 'mini' : 'x';
+        phone = phone[type];
+        files.writeString(cachePath, type);
       }
     }
 
     // Prompt for widget size and position.
-    message = '截图中要设置透明背景组件的尺寸类型是？'
-    let sizes = ['小尺寸', '中尺寸', '大尺寸']
-    let size = await this.generateAlert(message, sizes)
-    let widgetSize = sizes[size]
+    message = '截图中要设置透明背景组件的尺寸类型是？';
+    let sizes = ['小尺寸', '中尺寸', '大尺寸'];
+    let size = await this.generateAlert(message, sizes);
+    let widgetSize = sizes[size];
 
-    message = '要设置透明背景的小组件在哪个位置？'
+    message = '要设置透明背景的小组件在哪个位置？';
     message +=
       height === 1136
         ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
-        : ''
+        : '';
 
     // Determine image crop based on phone size.
-    let crop = { w: '', h: '', x: '', y: '' }
+    let crop = { w: '', h: '', x: '', y: '' };
     if (widgetSize === '小尺寸') {
-      crop.w = phone.small
-      crop.h = phone.small
+      crop.w = phone.small;
+      crop.h = phone.small;
       let positions = [
         '左上角',
         '右上角',
@@ -418,7 +419,7 @@ class DmYY {
         '中间右',
         '左下角',
         '右下角',
-      ]
+      ];
       let _posotions = [
         'Top left',
         'Top right',
@@ -426,55 +427,55 @@ class DmYY {
         'Middle right',
         'Bottom left',
         'Bottom right',
-      ]
-      let position = await this.generateAlert(message, positions)
+      ];
+      let position = await this.generateAlert(message, positions);
 
       // Convert the two words into two keys for the phone size dictionary.
-      let keys = _posotions[position].toLowerCase().split(' ')
-      crop.y = phone[keys[0]]
-      crop.x = phone[keys[1]]
+      let keys = _posotions[position].toLowerCase().split(' ');
+      crop.y = phone[keys[0]];
+      crop.x = phone[keys[1]];
     } else if (widgetSize === '中尺寸') {
-      crop.w = phone.medium
-      crop.h = phone.small
+      crop.w = phone.medium;
+      crop.h = phone.small;
 
       // Medium and large widgets have a fixed x-value.
-      crop.x = phone.left
-      let positions = ['顶部', '中间', '底部']
-      let _positions = ['Top', 'Middle', 'Bottom']
-      let position = await this.generateAlert(message, positions)
-      let key = _positions[position].toLowerCase()
-      crop.y = phone[key]
+      crop.x = phone.left;
+      let positions = ['顶部', '中间', '底部'];
+      let _positions = ['Top', 'Middle', 'Bottom'];
+      let position = await this.generateAlert(message, positions);
+      let key = _positions[position].toLowerCase();
+      crop.y = phone[key];
     } else if (widgetSize === '大尺寸') {
-      crop.w = phone.medium
-      crop.h = phone.large
-      crop.x = phone.left
-      let positions = ['顶部', '底部']
-      let position = await this.generateAlert(message, positions)
+      crop.w = phone.medium;
+      crop.h = phone.large;
+      crop.x = phone.left;
+      let positions = ['顶部', '底部'];
+      let position = await this.generateAlert(message, positions);
 
       // Large widgets at the bottom have the "middle" y-value.
-      crop.y = position ? phone.middle : phone.top
+      crop.y = position ? phone.middle : phone.top;
     }
 
     // Crop image and finalize the widget.
-    return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h))
+    return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h));
   }
 
   setLightAndDark = async (title, desc, val) => {
     try {
-      const a = new Alert()
-      a.title = title
-      a.message = desc
-      a.addTextField('', `${this.settings[val]}`)
-      a.addAction('确定')
-      a.addCancelAction('取消')
-      const id = await a.presentAlert()
-      if (id === -1) return
-      this.settings[val] = a.textFieldValue(0)
-      this.saveSettings()
+      const a = new Alert();
+      a.title = title;
+      a.message = desc;
+      a.addTextField('', `${this.settings[val]}`);
+      a.addAction('确定');
+      a.addCancelAction('取消');
+      const id = await a.presentAlert();
+      if (id === -1) return;
+      this.settings[val] = a.textFieldValue(0);
+      this.saveSettings();
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
   /**
    * 弹出输入框
@@ -484,27 +485,27 @@ class DmYY {
    * @returns {Promise<void>}
    */
   setAlertInput = async (title, desc, opt = {}, isSave = true) => {
-    const a = new Alert()
-    a.title = title
-    a.message = !desc ? '' : desc
+    const a = new Alert();
+    a.title = title;
+    a.message = !desc ? '' : desc;
     Object.keys(opt).forEach((key) => {
-      a.addTextField(opt[key], this.settings[key])
-    })
-    a.addAction('确定')
-    a.addCancelAction('取消')
-    const id = await a.presentAlert()
-    if (id === -1) return
-    const data = {}
+      a.addTextField(opt[key], this.settings[key]);
+    });
+    a.addAction('确定');
+    a.addCancelAction('取消');
+    const id = await a.presentAlert();
+    if (id === -1) return;
+    const data = {};
     Object.keys(opt).forEach((key, index) => {
-      data[key] = a.textFieldValue(index)
-    })
+      data[key] = a.textFieldValue(index);
+    });
     // 保存到本地
     if (isSave) {
-      this.settings = { ...this.settings, ...data }
-      return this.saveSettings()
+      this.settings = { ...this.settings, ...data };
+      return this.saveSettings();
     }
-    return data
-  }
+    return data;
+  };
 
   /**
    * 设置当前项目的 boxJS 缓存
@@ -512,87 +513,87 @@ class DmYY {
    * @returns {Promise<void>}
    */
   setCacheBoxJSData = async (opt = {}) => {
-    const options = ['取消', '确定']
-    const message = '代理缓存仅支持 BoxJS 相关的代理！'
-    const index = await this.generateAlert(message, options)
-    if (index === 0) return
+    const options = ['取消', '确定'];
+    const message = '代理缓存仅支持 BoxJS 相关的代理！';
+    const index = await this.generateAlert(message, options);
+    if (index === 0) return;
     try {
-      const boxJSData = await this.getCache()
+      const boxJSData = await this.getCache();
       Object.keys(opt).forEach((key) => {
-        this.settings[key] = boxJSData[opt[key]] || ''
-      })
+        this.settings[key] = boxJSData[opt[key]] || '';
+      });
       // 保存到本地
-      this.saveSettings()
+      this.saveSettings();
     } catch (e) {
-      console.log(e)
+      console.log(e);
       this.notify(
         this.name,
         'BoxJS 缓存读取失败！点击查看相关教程',
         'https://chavyleung.gitbook.io/boxjs/awesome/videos'
-      )
+      );
     }
-  }
+  };
 
   /**
    * 设置组件内容
    * @returns {Promise<void>}
    */
   setWidgetConfig = async () => {
-    const table = new UITable()
-    table.showSeparators = true
-    await this.renderDmYYTables(table)
-    await table.present()
-  }
+    const table = new UITable();
+    table.showSeparators = true;
+    await this.renderDmYYTables(table);
+    await table.present();
+  };
 
   async preferences(table, arr, outfit) {
-    let header = new UITableRow()
-    let heading = header.addText(outfit)
-    heading.titleFont = Font.mediumSystemFont(17)
-    heading.centerAligned()
-    table.addRow(header)
+    let header = new UITableRow();
+    let heading = header.addText(outfit);
+    heading.titleFont = Font.mediumSystemFont(17);
+    heading.centerAligned();
+    table.addRow(header);
     for (const item of arr) {
-      const row = new UITableRow()
-      row.dismissOnSelect = !!item.dismissOnSelect
+      const row = new UITableRow();
+      row.dismissOnSelect = !!item.dismissOnSelect;
       if (item.url) {
-        const rowIcon = row.addImageAtURL(item.url)
-        rowIcon.widthWeight = 100
+        const rowIcon = row.addImageAtURL(item.url);
+        rowIcon.widthWeight = 100;
       } else {
-        const icon = item.icon || {}
+        const icon = item.icon || {};
         const image = await this.drawTableIcon(
           icon.name,
           icon.color,
           item.cornerWidth
-        )
-        const imageCell = row.addImage(image)
-        imageCell.widthWeight = 100
+        );
+        const imageCell = row.addImage(image);
+        imageCell.widthWeight = 100;
       }
-      let rowTitle = row.addText(item['title'])
-      rowTitle.widthWeight = 400
-      rowTitle.titleFont = Font.systemFont(16)
+      let rowTitle = row.addText(item['title']);
+      rowTitle.widthWeight = 400;
+      rowTitle.titleFont = Font.systemFont(16);
       if (this.settings[item.val] || item.val) {
         let valText = row.addText(
           `${this.settings[item.val] || item.val}`.toUpperCase()
-        )
-        const fontSize = !item.val ? 26 : 16
-        valText.widthWeight = 500
-        valText.rightAligned()
-        valText.titleColor = Color.blue()
-        valText.titleFont = Font.mediumSystemFont(fontSize)
+        );
+        const fontSize = !item.val ? 26 : 16;
+        valText.widthWeight = 500;
+        valText.rightAligned();
+        valText.titleColor = Color.blue();
+        valText.titleFont = Font.mediumSystemFont(fontSize);
       } else {
         const imgCell = UITableCell.imageAtURL(
           'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png'
-        )
-        imgCell.rightAligned()
-        imgCell.widthWeight = 500
-        row.addCell(imgCell)
+        );
+        imgCell.rightAligned();
+        imgCell.widthWeight = 500;
+        row.addCell(imgCell);
       }
 
       row.onSelect = item.onClick
         ? async () => {
             try {
-              await item.onClick(item, table)
+              await item.onClick(item, table);
             } catch (e) {
-              console.log(e)
+              console.log(e);
             }
           }
         : async () => {
@@ -601,33 +602,33 @@ class DmYY {
                 item['title'],
                 item['desc'],
                 item['val']
-              )
+              );
             } else if (item.type == 'setBackground') {
-              const backImage = await this.getWidgetScreenShot()
+              const backImage = await this.getWidgetScreenShot();
               if (backImage) {
-                await this.setBackgroundImage(backImage, true)
-                await this.setBackgroundNightImage(backImage, true)
+                await this.setBackgroundImage(backImage, true);
+                await this.setBackgroundNightImage(backImage, true);
               }
             } else if (item.type == 'removeBackground') {
-              const options = ['取消', '清空']
-              const message = '该操作不可逆，会清空所有背景图片！'
-              const index = await this.generateAlert(message, options)
-              if (index === 0) return
-              await this.setBackgroundImage(false, true)
-              await this.setBackgroundNightImage(false, true)
+              const options = ['取消', '清空'];
+              const message = '该操作不可逆，会清空所有背景图片！';
+              const index = await this.generateAlert(message, options);
+              if (index === 0) return;
+              await this.setBackgroundImage(false, true);
+              await this.setBackgroundNightImage(false, true);
             } else {
-              const backImage = await this.chooseImg()
-              if (!backImage || !(await this.verifyImage(backImage))) return
+              const backImage = await this.chooseImg();
+              if (!backImage || !(await this.verifyImage(backImage))) return;
               if (item.type == 'setDayBackground')
-                await this.setBackgroundImage(backImage, true)
+                await this.setBackgroundImage(backImage, true);
               if (item.type == 'setNightBackground')
-                await this.setBackgroundNightImage(backImage, true)
+                await this.setBackgroundNightImage(backImage, true);
             }
-            await this.renderDmYYTables(table)
-          }
-      table.addRow(row)
+            await this.renderDmYYTables(table);
+          };
+      table.addRow(row);
     }
-    table.reload()
+    table.reload();
   }
 
   drawTableIcon = async (
@@ -635,14 +636,14 @@ class DmYY {
     color = '#e8e8e8',
     cornerWidth = 42
   ) => {
-    const sfi = SFSymbol.named(icon)
-    sfi.applyFont(Font.mediumSystemFont(30))
-    const imgData = Data.fromPNG(sfi.image).toBase64String()
+    const sfi = SFSymbol.named(icon);
+    sfi.applyFont(Font.mediumSystemFont(30));
+    const imgData = Data.fromPNG(sfi.image).toBase64String();
     const html = `
     <img id="sourceImg" src="data:image/png;base64,${imgData}" />
     <img id="silhouetteImg" src="" />
     <canvas id="mainCanvas" />
-    `
+    `;
     const js = `
     var canvas = document.createElement("canvas");
     var sourceImg = document.getElementById("sourceImg");
@@ -668,31 +669,31 @@ class DmYY {
     ctx.putImageData(imgData,0,0);
     silhouetteImg.src = canvas.toDataURL();
     output=canvas.toDataURL()
-    `
+    `;
 
-    let wv = new WebView()
-    await wv.loadHTML(html)
-    const base64Image = await wv.evaluateJavaScript(js)
-    const iconImage = await new Request(base64Image).loadImage()
-    const size = new Size(160, 160)
-    const ctx = new DrawContext()
-    ctx.opaque = false
-    ctx.respectScreenScale = true
-    ctx.size = size
-    const path = new Path()
-    const rect = new Rect(0, 0, size.width, size.width)
+    let wv = new WebView();
+    await wv.loadHTML(html);
+    const base64Image = await wv.evaluateJavaScript(js);
+    const iconImage = await new Request(base64Image).loadImage();
+    const size = new Size(160, 160);
+    const ctx = new DrawContext();
+    ctx.opaque = false;
+    ctx.respectScreenScale = true;
+    ctx.size = size;
+    const path = new Path();
+    const rect = new Rect(0, 0, size.width, size.width);
 
-    path.addRoundedRect(rect, cornerWidth, cornerWidth)
-    path.closeSubpath()
-    ctx.setFillColor(new Color(color))
-    ctx.addPath(path)
-    ctx.fillPath()
-    const rate = 36
-    const iw = size.width - rate
-    const x = (size.width - iw) / 2
-    ctx.drawImageInRect(iconImage, new Rect(x, x, iw, iw))
-    return ctx.getImage()
-  }
+    path.addRoundedRect(rect, cornerWidth, cornerWidth);
+    path.closeSubpath();
+    ctx.setFillColor(new Color(color));
+    ctx.addPath(path);
+    ctx.fillPath();
+    const rate = 36;
+    const iw = size.width - rate;
+    const x = (size.width - iw) / 2;
+    ctx.drawImageInRect(iconImage, new Rect(x, x, iw, iw));
+    return ctx.getImage();
+  };
 
   async renderDmYYTables(table) {
     const basic = [
@@ -731,7 +732,7 @@ class DmYY {
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
         val: 'darkColor',
       },
-    ]
+    ];
     const background = [
       {
         icon: { name: 'text.below.photo', color: '#faad14' },
@@ -767,54 +768,54 @@ class DmYY {
         type: 'removeBackground',
         title: '清空背景图片',
       },
-    ]
+    ];
     const boxjs = {
       icon: { name: 'shippingbox', color: '#f7bb10' },
       type: 'input',
       title: 'BoxJS 域名',
       desc: '',
       val: 'boxjsDomain',
-    }
-    if (this.useBoxJS) basic.push(boxjs)
-    table.removeAllRows()
-    let topRow = new UITableRow()
-    topRow.height = 60
-    let leftText = topRow.addButton('Github')
-    leftText.widthWeight = 0.3
+    };
+    if (this.useBoxJS) basic.push(boxjs);
+    table.removeAllRows();
+    let topRow = new UITableRow();
+    topRow.height = 60;
+    let leftText = topRow.addButton('Github');
+    leftText.widthWeight = 0.3;
     leftText.onTap = async () => {
-      await Safari.openInApp('https://github.com/dompling/Scriptable')
-    }
+      await Safari.openInApp('https://github.com/dompling/Scriptable');
+    };
     let centerRow = topRow.addImageAtURL(
       'https://s3.ax1x.com/2021/03/16/6y4oJ1.png'
-    )
-    centerRow.widthWeight = 0.4
-    centerRow.centerAligned()
+    );
+    centerRow.widthWeight = 0.4;
+    centerRow.centerAligned();
     centerRow.onTap = async () => {
-      await Safari.open('https://t.me/Scriptable_JS')
-    }
-    let rightText = topRow.addButton('重置所有')
-    rightText.widthWeight = 0.3
-    rightText.rightAligned()
+      await Safari.open('https://t.me/Scriptable_JS');
+    };
+    let rightText = topRow.addButton('重置所有');
+    rightText.widthWeight = 0.3;
+    rightText.rightAligned();
     rightText.onTap = async () => {
-      const options = ['取消', '重置']
+      const options = ['取消', '重置'];
       const message =
-        '该操作不可逆，会清空所有组件配置！重置后请重新打开设置菜单。'
-      const index = await this.generateAlert(message, options)
-      if (index === 0) return
-      this.settings = {}
-      await this.setBackgroundImage(false, false)
-      this.FILE_MGR.remove(this.cacheImage)
-      this.saveSettings()
-    }
-    table.addRow(topRow)
-    await this.preferences(table, basic, '基础设置')
-    await this.preferences(table, background, '背景图片')
+        '该操作不可逆，会清空所有组件配置！重置后请重新打开设置菜单。';
+      const index = await this.generateAlert(message, options);
+      if (index === 0) return;
+      this.settings = {};
+      await this.setBackgroundImage(false, false);
+      this.FILE_MGR.remove(this.cacheImage);
+      this.saveSettings();
+    };
+    table.addRow(topRow);
+    await this.preferences(table, basic, '基础设置');
+    await this.preferences(table, background, '背景图片');
   }
 
   init(widgetFamily = config.widgetFamily) {
     // 组件大小：small,medium,large
-    this.widgetFamily = widgetFamily
-    this.SETTING_KEY = this.md5(Script.name())
+    this.widgetFamily = widgetFamily;
+    this.SETTING_KEY = this.md5(Script.name());
     //用于配置所有的组件相关设置
 
     // 文件管理器
@@ -822,74 +823,80 @@ class DmYY {
     this.FILE_MGR =
       FileManager[
         module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
-      ]()
+      ]();
 
     this.cacheImage = this.FILE_MGR.joinPath(
       this.FILE_MGR.libraryDirectory(),
       `${Script.name()}/images`
-    )
+    );
 
     if (!this.FILE_MGR.fileExists(this.cacheImage)) {
-      this.FILE_MGR.createDirectory(this.cacheImage, true)
+      this.FILE_MGR.createDirectory(this.cacheImage, true);
     }
 
     // 本地，用于存储图片等
-    this.FILE_MGR_LOCAL = FileManager.local()
+    this.FILE_MGR_LOCAL = FileManager.local();
     this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
       this.FILE_MGR_LOCAL.documentsDirectory(),
       'bg_' + this.SETTING_KEY + '.jpg'
-    )
+    );
 
     this.BACKGROUND_NIGHT_KEY = this.FILE_MGR_LOCAL.joinPath(
       this.FILE_MGR_LOCAL.documentsDirectory(),
       'bg_' + this.SETTING_KEY + 'night.jpg'
-    )
+    );
 
-    this.settings = this.getSettings()
-    console.log(this.settings)
-    this.settings.lightColor = this.settings.lightColor || '#000000'
-    this.settings.darkColor = this.settings.darkColor || '#ffffff'
-    this.settings.lightBgColor = this.settings.lightBgColor || '#ffffff'
-    this.settings.darkBgColor = this.settings.darkBgColor || '#000000'
-    this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net'
-    this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30'
-    this.settings.lightOpacity = this.settings.lightOpacity || '0.4'
-    this.settings.darkOpacity = this.settings.darkOpacity || '0.7'
-    this.prefix = this.settings.boxjsDomain
-    const lightBgColor = this.getColors(this.settings.lightBgColor)
-    const darkBgColor = this.getColors(this.settings.darkBgColor)
+    this.settings = this.getSettings();
+
+    this.settings = { ...this.defaultSettings, ...this.settings };
+    
+    console.log(this.settings);
+
+    this.settings.lightColor = this.settings.lightColor || '#000000';
+    this.settings.darkColor = this.settings.darkColor || '#ffffff';
+    this.settings.lightBgColor = this.settings.lightBgColor || '#ffffff';
+    this.settings.darkBgColor = this.settings.darkBgColor || '#000000';
+    this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
+    this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
+    this.settings.lightOpacity = this.settings.lightOpacity || '0.4';
+    this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
+
+    this.prefix = this.settings.boxjsDomain;
+    const lightBgColor = this.getColors(this.settings.lightBgColor);
+    const darkBgColor = this.getColors(this.settings.darkBgColor);
     if (lightBgColor.length > 1 || darkBgColor.length > 1) {
       this.backGroundColor = !Device.isUsingDarkAppearance()
         ? this.getBackgroundColor(lightBgColor)
-        : this.getBackgroundColor(darkBgColor)
+        : this.getBackgroundColor(darkBgColor);
     } else if (lightBgColor.length > 0 && darkBgColor.length > 0) {
       this.backGroundColor = Color.dynamic(
         new Color(this.settings.lightBgColor),
         new Color(this.settings.darkBgColor)
-      )
+      );
     }
+
     this.widgetColor = Color.dynamic(
       new Color(this.settings.lightColor),
       new Color(this.settings.darkColor)
-    )
+    );
   }
 
   getColors = (color = '') => {
-    const colors = typeof color === 'string' ? color.split(',') : color
-    return colors
-  }
+    const colors = typeof color === 'string' ? color.split(',') : color;
+    return colors;
+  };
 
   getBackgroundColor = (colors) => {
-    const locations = []
-    const linearColor = new LinearGradient()
-    const cLen = colors.length
+    const locations = [];
+    const linearColor = new LinearGradient();
+    const cLen = colors.length;
     linearColor.colors = colors.map((item, index) => {
-      locations.push(Math.floor(((index + 1) / cLen) * 100) / 100)
-      return new Color(item, 1)
-    })
-    linearColor.locations = locations
-    return linearColor
-  }
+      locations.push(Math.floor(((index + 1) / cLen) * 100) / 100);
+      return new Color(item, 1);
+    });
+    linearColor.locations = locations;
+    return linearColor;
+  };
 
   /**
    * 注册点击操作菜单
@@ -897,8 +904,8 @@ class DmYY {
    * @param {func} func 点击后执行的函数
    */
   registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }) {
-    this._actions[name] = func.bind(this)
-    this._actionsIcon[name] = icon
+    this._actions[name] = func.bind(this);
+    this._actionsIcon[name] = icon;
   }
 
   /**
@@ -906,8 +913,8 @@ class DmYY {
    * @param {string} str 要编码的字符串
    */
   base64Encode(str) {
-    const data = Data.fromString(str)
-    return data.toBase64String()
+    const data = Data.fromString(str);
+    return data.toBase64String();
   }
 
   /**
@@ -915,8 +922,8 @@ class DmYY {
    * @param {string} b64 base64编码的数据
    */
   base64Decode(b64) {
-    const data = Data.fromBase64String(b64)
-    return data.toRawString()
+    const data = Data.fromBase64String(b64);
+    return data.toRawString();
   }
 
   /**
@@ -925,34 +932,34 @@ class DmYY {
    */
   md5(str) {
     function d(n, t) {
-      var r = (65535 & n) + (65535 & t)
-      return (((n >> 16) + (t >> 16) + (r >> 16)) << 16) | (65535 & r)
+      var r = (65535 & n) + (65535 & t);
+      return (((n >> 16) + (t >> 16) + (r >> 16)) << 16) | (65535 & r);
     }
 
     function f(n, t, r, e, o, u) {
-      return d(((c = d(d(t, n), d(e, u))) << (f = o)) | (c >>> (32 - f)), r)
-      var c, f
+      return d(((c = d(d(t, n), d(e, u))) << (f = o)) | (c >>> (32 - f)), r);
+      var c, f;
     }
 
     function l(n, t, r, e, o, u, c) {
-      return f((t & r) | (~t & e), n, t, o, u, c)
+      return f((t & r) | (~t & e), n, t, o, u, c);
     }
 
     function v(n, t, r, e, o, u, c) {
-      return f((t & e) | (r & ~e), n, t, o, u, c)
+      return f((t & e) | (r & ~e), n, t, o, u, c);
     }
 
     function g(n, t, r, e, o, u, c) {
-      return f(t ^ r ^ e, n, t, o, u, c)
+      return f(t ^ r ^ e, n, t, o, u, c);
     }
 
     function m(n, t, r, e, o, u, c) {
-      return f(r ^ (t | ~e), n, t, o, u, c)
+      return f(r ^ (t | ~e), n, t, o, u, c);
     }
 
     function i(n, t) {
-      var r, e, o, u
-      ;(n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t)
+      var r, e, o, u;
+      (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
       for (
         var c = 1732584193,
           f = -271733879,
@@ -1050,39 +1057,39 @@ class DmYY {
           (c = d(c, r)),
           (f = d(f, e)),
           (i = d(i, o)),
-          (a = d(a, u))
-      return [c, f, i, a]
+          (a = d(a, u));
+      return [c, f, i, a];
     }
 
     function a(n) {
       for (var t = '', r = 32 * n.length, e = 0; e < r; e += 8)
-        t += String.fromCharCode((n[e >> 5] >>> e % 32) & 255)
-      return t
+        t += String.fromCharCode((n[e >> 5] >>> e % 32) & 255);
+      return t;
     }
 
     function h(n) {
-      var t = []
+      var t = [];
       for (t[(n.length >> 2) - 1] = void 0, e = 0; e < t.length; e += 1)
-        t[e] = 0
+        t[e] = 0;
       for (var r = 8 * n.length, e = 0; e < r; e += 8)
-        t[e >> 5] |= (255 & n.charCodeAt(e / 8)) << e % 32
-      return t
+        t[e >> 5] |= (255 & n.charCodeAt(e / 8)) << e % 32;
+      return t;
     }
 
     function e(n) {
       for (var t, r = '0123456789abcdef', e = '', o = 0; o < n.length; o += 1)
         (t = n.charCodeAt(o)),
-          (e += r.charAt((t >>> 4) & 15) + r.charAt(15 & t))
-      return e
+          (e += r.charAt((t >>> 4) & 15) + r.charAt(15 & t));
+      return e;
     }
 
     function r(n) {
-      return unescape(encodeURIComponent(n))
+      return unescape(encodeURIComponent(n));
     }
 
     function o(n) {
-      return a(i(h((t = r(n))), 8 * t.length))
-      var t
+      return a(i(h((t = r(n))), 8 * t.length));
+      var t;
     }
 
     function u(n, t) {
@@ -1091,7 +1098,7 @@ class DmYY {
           e,
           o = h(n),
           u = [],
-          c = []
+          c = [];
         for (
           u[15] = c[15] = void 0,
             16 < o.length && (o = i(o, 8 * n.length)),
@@ -1099,18 +1106,18 @@ class DmYY {
           r < 16;
           r += 1
         )
-          (u[r] = 909522486 ^ o[r]), (c[r] = 1549556828 ^ o[r])
+          (u[r] = 909522486 ^ o[r]), (c[r] = 1549556828 ^ o[r]);
         return (
           (e = i(u.concat(h(t)), 512 + 8 * t.length)), a(i(c.concat(e), 640))
-        )
-      })(r(n), r(t))
+        );
+      })(r(n), r(t));
     }
 
     function t(n, t, r) {
-      return t ? (r ? u(t, n) : e(u(t, n))) : r ? o(n) : e(o(n))
+      return t ? (r ? u(t, n) : e(u(t, n))) : r ? o(n) : e(o(n));
     }
 
-    return t(str)
+    return t(str);
   }
 
   /**
@@ -1121,24 +1128,24 @@ class DmYY {
    * @param {bool|color} color 字体的颜色（自定义背景时使用，默认系统）
    */
   async renderHeader(widget, icon, title, color = false) {
-    let header = widget.addStack()
-    header.centerAlignContent()
+    let header = widget.addStack();
+    header.centerAlignContent();
     try {
-      const image = await this.$request.get(icon, 'IMG')
-      let _icon = header.addImage(image)
-      _icon.imageSize = new Size(14, 14)
-      _icon.cornerRadius = 4
+      const image = await this.$request.get(icon, 'IMG');
+      let _icon = header.addImage(image);
+      _icon.imageSize = new Size(14, 14);
+      _icon.cornerRadius = 4;
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    header.addSpacer(10)
-    let _title = header.addText(title)
-    if (color) _title.textColor = color
-    _title.textOpacity = 0.7
-    _title.font = Font.boldSystemFont(12)
-    _title.lineLimit = 1
-    widget.addSpacer(15)
-    return widget
+    header.addSpacer(10);
+    let _title = header.addText(title);
+    if (color) _title.textColor = color;
+    _title.textOpacity = 0.7;
+    _title.font = Font.boldSystemFont(12);
+    _title.lineLimit = 1;
+    widget.addSpacer(15);
+    return widget;
   }
 
   /**
@@ -1148,13 +1155,13 @@ class DmYY {
    */
 
   async generateAlert(message, options) {
-    let alert = new Alert()
-    alert.message = message
+    let alert = new Alert();
+    alert.message = message;
 
     for (const option of options) {
-      alert.addAction(option)
+      alert.addAction(option);
     }
-    return await alert.presentAlert()
+    return await alert.presentAlert();
   }
 
   /**
@@ -1164,12 +1171,12 @@ class DmYY {
    * @param {string} url 点击后打开的URL
    */
   async notify(title, body, url, opts = {}) {
-    let n = new Notification()
-    n = Object.assign(n, opts)
-    n.title = title
-    n.body = body
-    if (url) n.openURL = url
-    return await n.schedule()
+    let n = new Notification();
+    n = Object.assign(n, opts);
+    n.title = title;
+    n.body = body;
+    if (url) n.openURL = url;
+    return await n.schedule();
   }
 
   /**
@@ -1179,19 +1186,19 @@ class DmYY {
    * @param {float} opacity 透明度
    */
   async shadowImage(img, color = '#000000', opacity = 0.7) {
-    if (!img) return
-    if (opacity === 0) return img
-    let ctx = new DrawContext()
+    if (!img) return;
+    if (opacity === 0) return img;
+    let ctx = new DrawContext();
     // 获取图片的尺寸
-    ctx.size = img.size
+    ctx.size = img.size;
 
     ctx.drawImageInRect(
       img,
       new Rect(0, 0, img.size['width'], img.size['height'])
-    )
-    ctx.setFillColor(new Color(color, opacity))
-    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']))
-    return await ctx.getImage()
+    );
+    ctx.setFillColor(new Color(color, opacity));
+    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
+    return await ctx.getImage();
   }
 
   /**
@@ -1199,20 +1206,20 @@ class DmYY {
    * @param {boolean} json 是否为json格式
    */
   getSettings(json = true) {
-    let res = json ? {} : ''
-    let cache = ''
+    let res = json ? {} : '';
+    let cache = '';
     if (Keychain.contains(this.SETTING_KEY)) {
-      cache = Keychain.get(this.SETTING_KEY)
+      cache = Keychain.get(this.SETTING_KEY);
     }
     if (json) {
       try {
-        res = JSON.parse(cache)
+        res = JSON.parse(cache);
       } catch (e) {}
     } else {
-      res = cache
+      res = cache;
     }
 
-    return res
+    return res;
   }
 
   /**
@@ -1223,9 +1230,9 @@ class DmYY {
     let res =
       typeof this.settings === 'object'
         ? JSON.stringify(this.settings)
-        : String(this.settings)
-    Keychain.set(this.SETTING_KEY, res)
-    if (notify) this.notify('设置成功', '桌面组件稍后将自动刷新')
+        : String(this.settings);
+    Keychain.set(this.SETTING_KEY, res);
+    if (notify) this.notify('设置成功', '桌面组件稍后将自动刷新');
   }
 
   /**
@@ -1233,17 +1240,17 @@ class DmYY {
    * @reutrn img | false
    */
   getBackgroundImage() {
-    let result = null
+    let result = null;
     if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
-      result = Image.fromFile(this.BACKGROUND_KEY)
+      result = Image.fromFile(this.BACKGROUND_KEY);
     }
     if (
       Device.isUsingDarkAppearance() &&
       this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)
     ) {
-      result = Image.fromFile(this.BACKGROUND_NIGHT_KEY)
+      result = Image.fromFile(this.BACKGROUND_NIGHT_KEY);
     }
-    return result
+    return result;
   }
 
   /**
@@ -1254,16 +1261,16 @@ class DmYY {
     if (!img) {
       // 移除背景
       if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
-        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_KEY)
+        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_KEY);
       }
       if (notify)
-        this.notify('移除成功', '小组件白天背景图片已移除，稍后刷新生效')
+        this.notify('移除成功', '小组件白天背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
       // 全部设置一遍，
-      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_KEY, img)
+      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_KEY, img);
       if (notify)
-        this.notify('设置成功', '小组件白天背景图片已设置！稍后刷新生效')
+        this.notify('设置成功', '小组件白天背景图片已设置！稍后刷新生效');
     }
   }
 
@@ -1271,16 +1278,16 @@ class DmYY {
     if (!img) {
       // 移除背景
       if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)) {
-        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_NIGHT_KEY)
+        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_NIGHT_KEY);
       }
       if (notify)
-        this.notify('移除成功', '小组件夜间背景图片已移除，稍后刷新生效')
+        this.notify('移除成功', '小组件夜间背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
       // 全部设置一遍，
-      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_NIGHT_KEY, img)
+      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_NIGHT_KEY, img);
       if (notify)
-        this.notify('设置成功', '小组件夜间背景图片已设置！稍后刷新生效')
+        this.notify('设置成功', '小组件夜间背景图片已设置！稍后刷新生效');
     }
   }
 
@@ -1289,15 +1296,15 @@ class DmYY {
       i = arr.length,
       min = i - count,
       temp,
-      index
-    min = min > 0 ? min : 0
+      index;
+    min = min > 0 ? min : 0;
     while (i-- > min) {
-      index = Math.floor((i + 1) * Math.random())
-      temp = shuffled[index]
-      shuffled[index] = shuffled[i]
-      shuffled[i] = temp
+      index = Math.floor((i + 1) * Math.random());
+      temp = shuffled[index];
+      shuffled[index] = shuffled[i];
+      shuffled[i] = temp;
     }
-    return shuffled.slice(min)
+    return shuffled.slice(min);
   }
 
   textFormat = {
@@ -1305,45 +1312,45 @@ class DmYY {
     battery: { size: 10, font: 'bold', color: this.widgetColor },
     title: { size: 16, font: 'semibold', color: this.widgetColor },
     SFMono: { size: 12, font: 'SF Mono', color: this.widgetColor },
-  }
+  };
 
   provideFont = (fontName, fontSize) => {
     const fontGenerator = {
       ultralight: function () {
-        return Font.ultraLightSystemFont(fontSize)
+        return Font.ultraLightSystemFont(fontSize);
       },
       light: function () {
-        return Font.lightSystemFont(fontSize)
+        return Font.lightSystemFont(fontSize);
       },
       regular: function () {
-        return Font.regularSystemFont(fontSize)
+        return Font.regularSystemFont(fontSize);
       },
       medium: function () {
-        return Font.mediumSystemFont(fontSize)
+        return Font.mediumSystemFont(fontSize);
       },
       semibold: function () {
-        return Font.semiboldSystemFont(fontSize)
+        return Font.semiboldSystemFont(fontSize);
       },
       bold: function () {
-        return Font.boldSystemFont(fontSize)
+        return Font.boldSystemFont(fontSize);
       },
       heavy: function () {
-        return Font.heavySystemFont(fontSize)
+        return Font.heavySystemFont(fontSize);
       },
       black: function () {
-        return Font.blackSystemFont(fontSize)
+        return Font.blackSystemFont(fontSize);
       },
       italic: function () {
-        return Font.italicSystemFont(fontSize)
+        return Font.italicSystemFont(fontSize);
       },
-    }
+    };
 
-    const systemFont = fontGenerator[fontName]
+    const systemFont = fontGenerator[fontName];
     if (systemFont) {
-      return systemFont()
+      return systemFont();
     }
-    return new Font(fontName, fontSize)
-  }
+    return new Font(fontName, fontSize);
+  };
 
   provideText = (
     string,
@@ -1356,68 +1363,68 @@ class DmYY {
       minimumScaleFactor: 1,
     }
   ) => {
-    const textItem = container.addText(string)
-    const textFont = format.font
-    const textSize = format.size
-    const textColor = format.color
+    const textItem = container.addText(string);
+    const textFont = format.font;
+    const textSize = format.size;
+    const textColor = format.color;
 
-    textItem.font = this.provideFont(textFont, textSize)
-    textItem.textColor = textColor
-    textItem.textOpacity = format.opacity || 1
-    textItem.minimumScaleFactor = format.minimumScaleFactor || 1
-    return textItem
-  }
+    textItem.font = this.provideFont(textFont, textSize);
+    textItem.textColor = textColor;
+    textItem.textOpacity = format.opacity || 1;
+    textItem.minimumScaleFactor = format.minimumScaleFactor || 1;
+    return textItem;
+  };
 }
 
 // @base.end
 const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
-  let M = null
+  let M = null;
   // 判断hash是否和当前设备匹配
   if (config.runsInWidget) {
-    M = new Widget(args.widgetParameter || '')
+    M = new Widget(args.widgetParameter || '');
 
     if (extra) {
       Object.keys(extra).forEach((key) => {
-        M[key] = extra[key]
-      })
+        M[key] = extra[key];
+      });
     }
-    const W = await M.render()
+    const W = await M.render();
     try {
       if (M.settings.refreshAfterDate) {
-        const refreshTime = parseInt(M.settings.refreshAfterDate) * 1000 * 60
-        const timeStr = new Date().getTime() + refreshTime
-        W.refreshAfterDate = new Date(timeStr)
+        const refreshTime = parseInt(M.settings.refreshAfterDate) * 1000 * 60;
+        const timeStr = new Date().getTime() + refreshTime;
+        W.refreshAfterDate = new Date(timeStr);
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
     if (W) {
-      Script.setWidget(W)
-      Script.complete()
+      Script.setWidget(W);
+      Script.complete();
     }
   } else {
-    let { act, __arg, __size } = args.queryParameters
-    M = new Widget(__arg || default_args || '')
+    let { act, __arg, __size } = args.queryParameters;
+    M = new Widget(__arg || default_args || '');
     if (extra) {
       Object.keys(extra).forEach((key) => {
-        M[key] = extra[key]
-      })
+        M[key] = extra[key];
+      });
     }
-    if (__size) M.init(__size)
+    if (__size) M.init(__size);
     if (!act || !M['_actions']) {
       // 弹出选择菜单
-      const actions = M['_actions']
-      const table = new UITable()
+      const actions = M['_actions'];
+      const table = new UITable();
       const onClick = async (item) => {
-        M.widgetFamily = item.val
-        w = await M.render()
+        M.widgetFamily = item.val;
+        w = await M.render();
         const fnc = item.val
           .toLowerCase()
-          .replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
+          .replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
         if (w) {
-          return w[`present${fnc}`]()
+          return w[`present${fnc}`]();
         }
-      }
+      };
       const preview = [
         {
           url: 'https://pic1.imgdb.cn/item/63315c3616f2c2beb1a2931a.png',
@@ -1440,28 +1447,28 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
           dismissOnSelect: true,
           onClick,
         },
-      ]
-      await M.preferences(table, preview, '预览组件')
-      const extra = []
+      ];
+      await M.preferences(table, preview, '预览组件');
+      const extra = [];
       for (let _ in actions) {
-        const iconItem = M._actionsIcon[_]
-        const isUrl = typeof iconItem === 'string'
+        const iconItem = M._actionsIcon[_];
+        const isUrl = typeof iconItem === 'string';
         const actionItem = {
           title: _,
           onClick: actions[_],
-        }
+        };
         if (isUrl) {
-          actionItem.url = iconItem
+          actionItem.url = iconItem;
         } else {
-          actionItem.icon = iconItem
+          actionItem.icon = iconItem;
         }
-        extra.push(actionItem)
+        extra.push(actionItem);
       }
-      await M.preferences(table, extra, '配置组件')
-      return table.present()
+      await M.preferences(table, extra, '配置组件');
+      return table.present();
     }
   }
-}
+};
 
 // await new DmYY().setWidgetConfig();
-module.exports = { DmYY, Runing }
+module.exports = { DmYY, Runing };
