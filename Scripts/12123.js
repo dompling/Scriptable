@@ -8,7 +8,7 @@ const { DmYY, Runing } = require('./DmYY');
 
 const API_PARAMS = {
   api4: 'biz.vio.detail.query',
-  infoURL: 'https://miniappwx.122.gov.cn:8553/openapi/invokeApi/business/biz',
+  infoURL: 'https://miniappcsfw.122.gov.cn:8443/openapi/invokeApi/business/biz',
   api1: 'biz.vio.unhandledVioCount.query',
   productId: 'p10000000000000000001',
   api2: 'biz.vio.peccancyChannelList.query',
@@ -102,9 +102,9 @@ class Widget extends DmYY {
       const body = JSON.parse(decodeURIComponent(token));
       const params = {
         sign: body.sign,
-        businessId: body.businessId,
+        // businessId: body.businessId,
         verifyToken: body.verifyToken,
-        businessPrincipalId: body.businessPrincipalId,
+        // businessPrincipalId: body.businessPrincipalId,
       };
 
       const response = await this.$request.post(API_PARAMS.infoURL, {
@@ -129,6 +129,8 @@ class Widget extends DmYY {
           )}`,
         });
 
+        console.log(details)
+
         if (details.success) {
           const { drivingLicense, vehicles } = details.data;
           const reaccDate = drivingLicense.reaccDate.split('-');
@@ -143,7 +145,7 @@ class Widget extends DmYY {
         }
 
         this.dataSource.left.listItem[2].value = `${this.arrUpdateTime[2]}:${this.arrUpdateTime[3]}`;
-        console.log(this.dataSource);
+        
         this.settings.dataSource = this.dataSource;
         this.saveSettings(false);
       } else {
