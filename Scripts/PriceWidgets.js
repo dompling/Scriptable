@@ -147,6 +147,9 @@ class Widget extends DmYY {
 
   renderSmall = async (widget) => {
     const market = this.dataSource[0] || {};
+
+    widget.url = `https://www.coingecko.com/en/coins/${market.id}`;
+
     const image = await this.renderImage(market.image);
     const backgroundImg = await this.getSmallBg(image);
     widget.backgroundColor = this.backGroundColor;
@@ -188,6 +191,7 @@ class Widget extends DmYY {
   };
 
   rowCell = async (rowStack, market) => {
+    rowStack.url = `https://www.coingecko.com/en/coins/${market.id}`;
     rowStack.layoutHorizontally();
     const image = await this.renderImage(market.image);
     const iconImage = rowStack.addImage(image);
