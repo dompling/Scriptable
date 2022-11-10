@@ -59,6 +59,12 @@
       "html": [
         "<h3 align=\"center\">京东组件教程</h3>",
         "<p align=\"center\"><iframe src=\"https://www.youtube.com/embed/7_RkDdn3J1A\" width=\"100%\" height=\"100%\"></iframe></p>"
+      ],
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
       ]
     },
     {
@@ -88,7 +94,13 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/BiliBili.js",
       "thumb": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bilibili.png",
       "name": "BiliBili",
-      "title": "今日番剧"
+      "title": "今日番剧",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
@@ -124,7 +136,13 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Calendar.js",
       "thumb": "https://img.icons8.com/clouds/344/edit-calendar.png",
       "name": "Calendar",
-      "title": "日历函数"
+      "title": "日历函数",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
@@ -363,6 +381,12 @@
         "<br/>",
         "<h4>Mobile登陆地址接口：</h4>",
         "<li>请自行使用代理软件查看搜索即可，操作方式类似 PC 登陆地址的查看步骤</li>"
+      ],
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
       ]
     },
     {
@@ -403,7 +427,13 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Oild.js",
       "thumb": "https://img.icons8.com/clouds/344/engine-oil-level.png",
       "name": "TodayOilPrice",
-      "title": "今日油价"
+      "title": "今日油价",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.0",
@@ -411,7 +441,13 @@
       "scriptURL": "https://raw.githubusercontent.com/dompling/scriptableTsx/master/scripts/COVID-19.js",
       "thumb": "https://img.icons8.com/clouds/344/coronavirus.png",
       "name": "COVID-19",
-      "title": "疫情日报"
+      "title": "疫情日报",
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     },
     {
       "version": "1.0.1",
@@ -425,6 +461,12 @@
         "v1.0.1",
         "<li>调整大尺寸排列效果</li>",
         "<li>调整下班倒计时默认不开启</li>"
+      ],
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
       ]
     },
     {
@@ -439,6 +481,31 @@
         "<li>获取Token重写：<a href='https://raw.githubusercontent.com/FoKit/Scripts/main/rewrite/get_12123_token.sgmodule'>Surge 12123重写模块 </a></li>",
         "<li>使用方法：配置重写规则，手动运行小组件，按提示跳转到 支付宝12123小程序 登录即可自动抓取/更新Token。</li>",
         "<li>使用前，请确保您的代理APP已配置好BoxJs重写，BoxJs配置方法：<a href='https://chavyleung.gitbook.io/boxjs/'>BoxJS教程</a></li>"
+      ],
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "比特币币种",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BTC.js",
+      "thumb": "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+      "name": "BTC",
+      "title": "比特币",
+      "html": [
+        "<h4 align=\"center\">迁移自JSBox脚本</h4>",
+        "<li>原项目：<a href='https://github.com/wuzeyou/PriceWidgets'>wuzeyou/PriceWidgets</a></li>",
+        "<li>特别感谢大佬：<a>@Jackie Xiang</a></li>"
+      ],
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
       ]
     }
   ]

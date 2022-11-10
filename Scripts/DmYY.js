@@ -38,12 +38,10 @@ class DmYY {
     try {
       if (type === 'IMG') {
         const fileName = `${this.cacheImage}/${this.md5(options.url)}`;
-        console.log(fileName);
         request = this.getRequest(options.url);
         let response;
         if (this.FILE_MGR.fileExists(fileName)) {
           request.loadImage().then((res) => {
-            console.log(res);
             this.FILE_MGR.writeImage(fileName, res);
           });
           return Image.fromFile(fileName);
