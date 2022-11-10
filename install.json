@@ -491,11 +491,11 @@
     },
     {
       "version": "1.0.0",
-      "description": "比特币币种",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/BTC.js",
+      "description": "币种涨幅",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/PriceWidgets.js",
       "thumb": "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-      "name": "BTC",
-      "title": "比特币",
+      "name": "PriceWidgets",
+      "title": "网络货币",
       "html": [
         "<h4 align=\"center\">迁移自JSBox脚本</h4>",
         "<li>原项目：<a href='https://github.com/wuzeyou/PriceWidgets'>wuzeyou/PriceWidgets</a></li>",
