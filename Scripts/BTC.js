@@ -1,9 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: deep-blue; icon-glyph: magic;
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: deep-gray; icon-glyph: car;
+// icon-color: deep-blue; icon-glyph: dollar;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
