@@ -4,7 +4,7 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
-const { DmYY, Runing } = require('./DmYY');
+const {DmYY, Runing} = require('./DmYY');
 
 // @组件代码开始
 class Widget extends DmYY {
@@ -13,15 +13,15 @@ class Widget extends DmYY {
     this.en = ' btc';
     this.name = '比特币';
     config.runsInApp &&
-      this.registerAction(
+    this.registerAction(
         '关注种类',
         async () => {
           return this.setAlertInput('比特币种类', '设置关注种类', {
             btcType: 'BTC,ETH,BNB',
           });
         },
-        { name: 'centsign.circle', color: '#feda31' }
-      );
+        {name: 'centsign.circle', color: '#feda31'},
+    );
     config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
   }
 
@@ -43,12 +43,12 @@ class Widget extends DmYY {
     this.cacheData(this.settings.btcType);
   };
 
-  cacheData = async (params = '') => {
+  cacheData = async (params) => {
     try {
       const ids = await this.transforBtcType(params);
       let response = await this.$request.get(
-        `${this.endpoint}/coins/markets?vs_currency=usd&ids=${ids}`,
-        'STRING'
+          `${this.endpoint}/coins/markets?vs_currency=usd&ids=${ids}`,
+          'STRING',
       );
       this.dataSource = [];
       response = JSON.parse(response);
@@ -96,23 +96,26 @@ class Widget extends DmYY {
     }
   };
 
-  transforBtcType = async (params = 'BTC,ETH,BNB') => {
-    const btcType = params.split(',');
+  transforBtcType = async (params) => {
+    let btcType;
+    if (params) btcType = params.split(',');
+
     const btcAll = await this.getAllJson();
-    return btcType
-      .map((item) => {
-        const result =
+
+    if (!btcType) return btcAll.filter((item, index) => index < 6).map(
+        item => item.id).join(',');
+
+    return btcType.map((item) => {
+      const result =
           btcAll.find((btc) => btc.symbol.toUpperCase() === item) || {};
-        return result.id;
-      })
-      .filter((item) => !!item)
-      .join(',');
+      return result.id;
+    }).filter((item) => !!item).join(',');
   };
 
   getAllJson = async () => {
     const cachePath = this.FILE_MGR.joinPath(
-      this.FILE_MGR.libraryDirectory(),
-      `${Script.name()}/datas`
+        this.FILE_MGR.libraryDirectory(),
+        `${Script.name()}/datas`,
     );
     const filename = `${cachePath}/BTC.json`;
     if (!this.FILE_MGR.fileExists(cachePath))
@@ -123,7 +126,7 @@ class Widget extends DmYY {
       return JSON.parse(data);
     } else {
       const response = await this.$request.get(
-        `${this.endpoint}/coins/markets?vs_currency=usd&ids=`
+          `${this.endpoint}/coins/markets?vs_currency=usd&ids=`,
       );
       const data = Data.fromString(JSON.stringify(response));
       this.FILE_MGR.write(filename, data);
@@ -190,11 +193,11 @@ class Widget extends DmYY {
     widget.addSpacer();
 
     const trend = widget.addText(
-      `${market.price_change_percentage_24h.toFixed(2)}%`
+        `${market.price_change_percentage_24h.toFixed(2)}%`,
     );
     trend.font = Font.semiboldSystemFont(16);
     trend.textColor =
-      market.price_change_percentage_24h >= 0 ? Color.green() : Color.red();
+        market.price_change_percentage_24h >= 0 ? Color.green() : Color.red();
 
     trend.rightAlignText();
     const price = widget.addText(`$ ${market.current_price}`);
@@ -204,7 +207,7 @@ class Widget extends DmYY {
     price.lineLimit = 1;
     price.minimumScaleFactor = 0.1;
     const history = widget.addText(
-      `H: ${market.high_24h}, L: ${market.low_24h}`
+        `H: ${market.high_24h}, L: ${market.low_24h}`,
     );
     history.font = Font.systemFont(10);
     history.textColor = Color.gray();
@@ -251,7 +254,7 @@ class Widget extends DmYY {
     bottomCenterStack.addSpacer();
 
     const historyText = bottomCenterStack.addText(
-      `H: ${market.high_24h}, L: ${market.low_24h}`
+        `H: ${market.high_24h}, L: ${market.low_24h}`,
     );
     historyText.textColor = Color.gray();
     historyText.font = this.provideFont('semibold', 10);
@@ -264,11 +267,11 @@ class Widget extends DmYY {
     rateStack.centerAlignContent();
     rateStack.cornerRadius = 4;
     rateStack.backgroundColor =
-      market.price_change_percentage_24h >= 0 ? Color.green() : Color.red();
+        market.price_change_percentage_24h >= 0 ? Color.green() : Color.red();
     const rateText = rateStack.addText(
-      (market.price_change_percentage_24h >= 0 ? '+' : '') +
+        (market.price_change_percentage_24h >= 0 ? '+' : '') +
         market.price_change_percentage_24h.toFixed(2) +
-        '%'
+        '%',
     );
     rateText.font = this.provideFont('heavy', 14);
     rateText.minimumScaleFactor = 0.01;
