@@ -553,7 +553,8 @@ class DmYY {
       const row = new UITableRow();
       row.dismissOnSelect = !!item.dismissOnSelect;
       if (item.url) {
-        const rowIcon = row.addImageAtURL(item.url);
+        const imageIcon = await this.$request.get(item.url,"IMG");
+        const rowIcon = row.addImage(imageIcon);
         rowIcon.widthWeight = 100;
       } else {
         const icon = item.icon || {};
