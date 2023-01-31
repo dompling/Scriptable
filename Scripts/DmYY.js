@@ -221,7 +221,31 @@ class DmYY {
     // Pixel sizes and positions for widgets on all supported phones.
     function phoneSizes() {
       return {
-        // 12 Pro Max
+        // 14 Pro Max
+        "2796": {
+          small: 510,
+          medium: 1092,
+          large: 1146,
+          left: 99,
+          right: 681,
+          top: 282,
+          middle: 918,
+          bottom: 1554
+        },
+
+        // 14 Pro
+        "2556": {
+          small: 474,
+          medium: 1014,
+          large: 1062,
+          left: 82,
+          right: 622,
+          top: 270,
+          middle: 858,
+          bottom: 1446
+        },
+        
+        // 13 Pro Max, 12 Pro Max
         2778: {
           small: 510,
           medium: 1092,
@@ -233,7 +257,7 @@ class DmYY {
           bottom: 1518,
         },
 
-        // 12 and 12 Pro
+        // 13, 13 Pro, 12, 12 Pro
         2532: {
           small: 474,
           medium: 1014,
@@ -269,7 +293,7 @@ class DmYY {
           bottom: 1000,
         },
 
-        // 11 Pro, XS, X, 12 mini
+        // 13 mini, 12 mini / 11 Pro, XS, X
         2436: {
           x: {
             small: 465,
@@ -589,42 +613,42 @@ class DmYY {
 
       row.onSelect = item.onClick
         ? async () => {
-            try {
-              await item.onClick(item, table);
-            } catch (e) {
-              console.log(e);
-            }
+          try {
+            await item.onClick(item, table);
+          } catch (e) {
+            console.log(e);
           }
+        }
         : async () => {
-            if (item.type == 'input') {
-              await this.setLightAndDark(
-                item['title'],
-                item['desc'],
-                item['val']
-              );
-            } else if (item.type == 'setBackground') {
-              const backImage = await this.getWidgetScreenShot();
-              if (backImage) {
-                await this.setBackgroundImage(backImage, true);
-                await this.setBackgroundNightImage(backImage, true);
-              }
-            } else if (item.type == 'removeBackground') {
-              const options = ['取消', '清空'];
-              const message = '该操作不可逆，会清空所有背景图片！';
-              const index = await this.generateAlert(message, options);
-              if (index === 0) return;
-              await this.setBackgroundImage(false, true);
-              await this.setBackgroundNightImage(false, true);
-            } else {
-              const backImage = await this.chooseImg();
-              if (!backImage || !(await this.verifyImage(backImage))) return;
-              if (item.type == 'setDayBackground')
-                await this.setBackgroundImage(backImage, true);
-              if (item.type == 'setNightBackground')
-                await this.setBackgroundNightImage(backImage, true);
+          if (item.type == 'input') {
+            await this.setLightAndDark(
+              item['title'],
+              item['desc'],
+              item['val']
+            );
+          } else if (item.type == 'setBackground') {
+            const backImage = await this.getWidgetScreenShot();
+            if (backImage) {
+              await this.setBackgroundImage(backImage, true);
+              await this.setBackgroundNightImage(backImage, true);
             }
-            await this.renderDmYYTables(table);
-          };
+          } else if (item.type == 'removeBackground') {
+            const options = ['取消', '清空'];
+            const message = '该操作不可逆，会清空所有背景图片！';
+            const index = await this.generateAlert(message, options);
+            if (index === 0) return;
+            await this.setBackgroundImage(false, true);
+            await this.setBackgroundNightImage(false, true);
+          } else {
+            const backImage = await this.chooseImg();
+            if (!backImage || !(await this.verifyImage(backImage))) return;
+            if (item.type == 'setDayBackground')
+              await this.setBackgroundImage(backImage, true);
+            if (item.type == 'setNightBackground')
+              await this.setBackgroundNightImage(backImage, true);
+          }
+          await this.renderDmYYTables(table);
+        };
       table.addRow(row);
     }
     table.reload();
@@ -959,10 +983,10 @@ class DmYY {
       (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
       for (
         var c = 1732584193,
-          f = -271733879,
-          i = -1732584194,
-          a = 271733878,
-          h = 0;
+        f = -271733879,
+        i = -1732584194,
+        a = 271733878,
+        h = 0;
         h < n.length;
         h += 16
       )
@@ -1098,8 +1122,8 @@ class DmYY {
           c = [];
         for (
           u[15] = c[15] = void 0,
-            16 < o.length && (o = i(o, 8 * n.length)),
-            r = 0;
+          16 < o.length && (o = i(o, 8 * n.length)),
+          r = 0;
           r < 16;
           r += 1
         )
@@ -1211,7 +1235,7 @@ class DmYY {
     if (json) {
       try {
         res = JSON.parse(cache);
-      } catch (e) {}
+      } catch (e) { }
     } else {
       res = cache;
     }
