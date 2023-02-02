@@ -553,7 +553,7 @@ class DmYY {
       const row = new UITableRow();
       row.dismissOnSelect = !!item.dismissOnSelect;
       if (item.url) {
-        const imageIcon = await this.$request.get(item.url,"IMG");
+        const imageIcon = await this.$request.get(item.url, 'IMG');
         const rowIcon = row.addImage(imageIcon);
         rowIcon.widthWeight = 100;
       } else {
@@ -579,9 +579,11 @@ class DmYY {
         valText.titleColor = Color.blue();
         valText.titleFont = Font.mediumSystemFont(fontSize);
       } else {
-        const imgCell = UITableCell.imageAtURL(
-          'https://gitee.com/scriptableJS/Scriptable/raw/master/images/more.png'
+        const forward = await this.$request.get(
+          `https://img.icons8.com/ios/512/more-than.png`,
+          'IMG'
         );
+        const imgCell = UITableCell.image(forward);
         imgCell.rightAligned();
         imgCell.widthWeight = 500;
         row.addCell(imgCell);
