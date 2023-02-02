@@ -825,10 +825,10 @@ class DmYY {
       FileManager[
         module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
       ]();
-
+  
     this.cacheImage = this.FILE_MGR.joinPath(
-      this.FILE_MGR.libraryDirectory(),
-      `${Script.name()}/images`
+      this.FILE_MGR.documentsDirectory(),
+      `/images/${Script.name()}`
     );
 
     if (!this.FILE_MGR.fileExists(this.cacheImage)) {
