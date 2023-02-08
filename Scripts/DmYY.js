@@ -658,25 +658,25 @@ class DmYY {
             title: '清空背景图片',
             onClick: async (_, __, previewWebView) => {
               const options = [
-                '取消',
                 '清空日间',
                 '清空夜间',
                 '清空透明',
                 `清空全部`,
+                '取消',
               ];
               const message = '该操作不可逆，会清空背景图片！';
               const index = await this.generateAlert(message, options);
-              if (index === 0) return;
+              if (index === 4) return;
               switch (index) {
-                case 1:
+                case 0:
                   await this.setBackgroundImage(false, 'dayBg');
                   this.insertTextByElementId(previewWebView, 'dayBg', ``);
                   return;
-                case 2:
+                case 1:
                   await this.setBackgroundImage(false, 'nightBg');
                   this.insertTextByElementId(previewWebView, 'nightBg', ``);
                   return;
-                case 3:
+                case 2:
                   await this.setBackgroundImage(false, 'transparentBg');
                   this.insertTextByElementId(
                     previewWebView,
@@ -1108,7 +1108,7 @@ class DmYY {
         } else if (menuItem.type === 'color') {
           defaultHtml = `<input class="form-item__input" name="${idName}" type="color" enterkeyhint="done" value="${menuItem.defaultValue}">`;
         } else if (menuItem.type === 'img') {
-          const cachePath = `${this.cacheImage}/${menuItem.name}`;
+          const cachePath = `${this.cacheImage}/${menuItem.name}.jpg`;
           if (this.FILE_MGR.fileExists(cachePath)) {
             const imageSrc = `data:image/png;base64,${Data.fromFile(
               cachePath
