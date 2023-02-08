@@ -1197,10 +1197,9 @@ class DmYY {
           })()`,
         true
       );
-      
+
       const { code, data } = JSON.parse(event);
 
-    
       const actionItem = actionsConfig.find(
         (item) => (item.name || item.val) === code
       );
@@ -1527,14 +1526,14 @@ class DmYY {
     if (this.FILE_MGR.fileExists(this.cacheImageBgPath[0]))
       return Image.fromFile(this.cacheImageBgPath[0]);
 
-    if (
-      Device.isUsingDarkAppearance() &&
-      this.FILE_MGR.fileExists(this.cacheImageBgPath[1])
-    )
-      return Image.fromFile(this.cacheImageBgPath[1]);
-
-    if (this.FILE_MGR.fileExists(this.cacheImageBgPath[2]))
-      return this.cacheImageBgPath[2];
+    if (Device.isUsingDarkAppearance())
+      return this.FILE_MGR.fileExists(this.cacheImageBgPath[1])
+        ? Image.fromFile(this.cacheImageBgPath[1])
+        : undefined;
+    else
+      return this.FILE_MGR.fileExists(this.cacheImageBgPath[2])
+        ? Image.fromFile(this.cacheImageBgPath[2])
+        : undefined;
   }
 
   /**
