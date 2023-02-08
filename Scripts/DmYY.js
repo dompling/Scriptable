@@ -792,7 +792,11 @@ class DmYY {
     return `data:image/png;base64,${Data.fromPNG(sfImg).toBase64String()}`;
   };
 
-  async renderAppView(options = [], previewWebView = new WebView()) {
+  async renderAppView(
+    options = [],
+    renderAvatar = false,
+    previewWebView = new WebView()
+  ) {
     const settingItemFontSize = 14,
       authorNameFontSize = 20,
       authorDescFontSize = 12;
@@ -1126,23 +1130,28 @@ class DmYY {
           <style>${style}</style>
         </head>
         <body>
-          <div class="list">
-            <form class="list__body" action="javascript:void(0);">
-              <label id="author" class="form-item-auth form-item--link">
-                <div class="form-label">
-                  <img class="form-label-author-avatar" src="https://avatars.githubusercontent.com/u/23498579?v=4"/>
-                  <div>
-                    <div class="form-item-auth-name">dompling</div>
-                    <div class="form-item-auth-desc">18岁，来自九仙山的设计师</div>
-                  </div>
-                </div>
-                <div id="reset_val" class="form-item-right-desc">
-                  重置所有
-                </div>
-                <i class="iconfont icon-arrow-right"></i>
-              </label>
-            </form>
-          </div>
+        ${
+          renderAvatar
+            ? ` 
+        <div class="list">
+        <form class="list__body" action="javascript:void(0);">
+          <label id="author" class="form-item-auth form-item--link">
+            <div class="form-label">
+              <img class="form-label-author-avatar" src="https://avatars.githubusercontent.com/u/23498579?v=4"/>
+              <div>
+                <div class="form-item-auth-name">dompling</div>
+                <div class="form-item-auth-desc">18岁，来自九仙山的设计师</div>
+              </div>
+            </div>
+            <div id="reset_val" class="form-item-right-desc">
+              重置所有
+            </div>
+            <i class="iconfont icon-arrow-right"></i>
+          </label>
+        </form>
+      </div>`
+            : ''
+        }
           ${configList}  
         <footer>
           <div class="copyright"><div> </div><div>© 界面样式修改自 <a href="javascript:invoke('safari', 'https://www.imarkr.com');">@iMarkr.</a></div></div>
@@ -1708,7 +1717,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         { title: '预览组件', menu: preview },
         { title: '组件配置', menu: actions },
       ];
-      return M.renderAppView(menuConfig);
+      return M.renderAppView(menuConfig, true);
     }
   }
 };
