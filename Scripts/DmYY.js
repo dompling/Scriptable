@@ -472,7 +472,7 @@ class DmYY {
       a.addCancelAction('取消');
       const id = await a.presentAlert();
       if (id === -1) return;
-      this.settings[val] = a.textFieldValue(0);
+      this.settings[val] = a.textFieldValue(0) || '';
       this.saveSettings();
     } catch (e) {
       console.log(e);
@@ -499,7 +499,7 @@ class DmYY {
     if (id === -1) return;
     const data = {};
     Object.keys(opt).forEach((key, index) => {
-      data[key] = a.textFieldValue(index);
+      data[key] = a.textFieldValue(index) || '';
     });
     // 保存到本地
     if (isSave) {
@@ -777,10 +777,6 @@ class DmYY {
     );
   };
 
-  dismissWeb = (webView) => {
-    webView.evaluateJavaScript('window.close()', false);
-  };
-
   insertTextByElementId = (webView, elementId, text) => {
     const scripts = `document.getElementById("${elementId}_val").innerHTML=\`${text}\`;`;
     webView.evaluateJavaScript(scripts, false);
@@ -1021,20 +1017,27 @@ class DmYY {
       
         // 切换ico的loading效果
         const toggleIcoLoading = (e) => {
-            const target = e.currentTarget
-            target.classList.add('loading')
-            const icon = e.currentTarget.querySelector('.iconfont')
-            const className = icon.className
-            icon.className = 'iconfont icon-loading'
-            const listener = (event) => {
-              const { code } = event.detail
-              if (code === 'finishLoading') {
-                target.classList.remove('loading')
-                icon.className = className
-                window.removeEventListener('JWeb', listener);
+           try{
+              const target = e.currentTarget
+              target.classList.add('loading')
+              const icon = e.currentTarget.querySelector('.iconfont')
+              const className = icon.className
+              icon.className = 'iconfont icon-loading'
+              const listener = (event) => {
+                const { code } = event.detail
+                if (code === 'finishLoading') {
+                  target.classList.remove('loading')
+                  icon.className = className
+                  window.removeEventListener('JWeb', listener);
+                }
               }
-            }
-            window.addEventListener('JWeb', listener)
+              window.addEventListener('JWeb', listener)
+           }catch(e){
+              for (const loading of document.querySelectorAll('.icon-loading')) {
+                loading.classList.remove('loading');
+                loading.className = "iconfont icon-arrow-right";
+              }
+           }
         };
   
         for (const btn of document.querySelectorAll('.form-item')) {
@@ -1177,19 +1180,14 @@ class DmYY {
     });
 
     const injectListener = async () => {
-      const event = await previewWebView
-        .evaluateJavaScript(
-          `(() => {
+      const event = await previewWebView.evaluateJavaScript(
+        `(() => {
             try {
-              const controller = new AbortController()
-              const listener = (e) => {
-                completion(e.detail)
-                controller.abort()
-              }
               window.addEventListener(
                 'JBridge',
-                listener,
-                { signal: controller.signal }
+                (e)=>{
+                  completion(JSON.stringify(e.detail||{}))
+                }
               )
             } catch (e) {
                 alert("预览界面出错：" + e);
@@ -1197,14 +1195,12 @@ class DmYY {
                 return;
             }
           })()`,
-          true
-        )
-        .catch((err) => {
-          console.error(err);
-          this.dismissLoading(previewWebView);
-        });
-      const { code, data } = event;
+        true
+      );
+      
+      const { code, data } = JSON.parse(event);
 
+    
       const actionItem = actionsConfig.find(
         (item) => (item.name || item.val) === code
       );
@@ -1219,7 +1215,6 @@ class DmYY {
           await this.setBackgroundImage(false, 'nightBg', false);
           await this.setBackgroundImage(false, 'transparentBg', false);
           this.saveSettings(false);
-          this.dismissWeb(previewWebView);
           await this.notify('重置成功', '请关闭窗口之后，重新运行当前脚本');
         }
       }
@@ -1726,9 +1721,10 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         { title: '预览组件', menu: preview },
         { title: '组件配置', menu: actions },
       ];
-      M.renderAppView(menuConfig, true);
+      await M.renderAppView(menuConfig, true);
     }
   }
 };
+
 // await new DmYY().setWidgetConfig();
 module.exports = { DmYY, Runing };
