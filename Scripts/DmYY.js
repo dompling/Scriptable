@@ -5,8 +5,8 @@
 /*
  * Author: 2Ya
  * Github: https://github.com/dompling
+ * UI 配置升级 感谢 @LSP 大佬提供代码
  */
-
 class DmYY {
   constructor(arg, defaultSettings) {
     this.arg = arg;
@@ -19,13 +19,11 @@ class DmYY {
     this.isNight = Device.isUsingDarkAppearance();
   }
 
-  _actions = {};
-  BACKGROUND_NIGHT_KEY;
+  _actions = [];
   widgetColor;
   backGroundColor;
   useBoxJS = true;
   isNight;
-  _actionsIcon = {};
 
   // 获取 Request 对象
   getRequest = (url = '') => {
@@ -33,7 +31,10 @@ class DmYY {
   };
 
   // 发起请求
-  http = async (options = { headers: {}, url: '' }, type = 'JSON') => {
+  http = async (
+    options = { headers: {}, url: '', cache: tru },
+    type = 'JSON'
+  ) => {
     let request;
     try {
       if (type === 'IMG') {
@@ -458,12 +459,12 @@ class DmYY {
     return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h));
   }
 
-  setLightAndDark = async (title, desc, val) => {
+  setLightAndDark = async (title, desc, val, placeholder = '') => {
     try {
       const a = new Alert();
       a.title = title;
       a.message = desc;
-      a.addTextField('', `${this.settings[val]}`);
+      a.addTextField(placeholder, `${this.settings[val]}`);
       a.addAction('确定');
       a.addCancelAction('取消');
       const id = await a.presentAlert();
@@ -537,100 +538,170 @@ class DmYY {
    * @returns {Promise<void>}
    */
   setWidgetConfig = async () => {
-    const table = new UITable();
-    table.showSeparators = true;
-    await this.renderDmYYTables(table);
-    await table.present();
-  };
+    const basic = [
+      {
+        icon: { name: 'arrow.clockwise', color: '#1890ff' },
+        type: 'input',
+        title: '刷新时间',
+        desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
+        val: 'refreshAfterDate',
+      },
+      {
+        icon: { name: 'sun.max.fill', color: '#d48806' },
+        type: 'color',
+        title: '白天字体颜色',
+        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
+        val: 'lightColor',
+      },
+      {
+        icon: { name: 'moon.stars.fill', color: '#d4b106' },
+        type: 'color',
+        title: '晚上字体颜色',
+        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
+        val: 'darkColor',
+      },
+    ];
 
-  async preferences(table, arr, outfit) {
-    let header = new UITableRow();
-    let heading = header.addText(outfit);
-    heading.titleFont = Font.mediumSystemFont(17);
-    heading.centerAligned();
-    table.addRow(header);
-    for (const item of arr) {
-      const row = new UITableRow();
-      row.dismissOnSelect = !!item.dismissOnSelect;
-      if (item.url) {
-        const imageIcon = await this.$request.get(item.url, 'IMG');
-        const rowIcon = row.addImage(imageIcon);
-        rowIcon.widthWeight = 100;
-      } else {
-        const icon = item.icon || {};
-        const image = await this.drawTableIcon(
-          icon.name,
-          icon.color,
-          item.cornerWidth
-        );
-        const imageCell = row.addImage(image);
-        imageCell.widthWeight = 100;
-      }
-      let rowTitle = row.addText(item['title']);
-      rowTitle.widthWeight = 400;
-      rowTitle.titleFont = Font.systemFont(16);
-      if (this.settings[item.val] || item.val) {
-        let valText = row.addText(
-          `${this.settings[item.val] || item.val}`.toUpperCase()
-        );
-        const fontSize = !item.val ? 26 : 16;
-        valText.widthWeight = 500;
-        valText.rightAligned();
-        valText.titleColor = Color.blue();
-        valText.titleFont = Font.mediumSystemFont(fontSize);
-      } else {
-        const forward = await this.$request.get(
-          `https://img.icons8.com/ios/512/more-than.png`,
-          'IMG'
-        );
-        const imgCell = UITableCell.image(forward);
-        imgCell.rightAligned();
-        imgCell.widthWeight = 500;
-        row.addCell(imgCell);
-      }
+    const boxjs = {
+      icon: { name: 'shippingbox', color: '#f7bb10' },
+      type: 'input',
+      title: 'BoxJS 域名',
+      desc: '',
+      val: 'boxjsDomain',
+    };
 
-      row.onSelect = item.onClick
-        ? async () => {
-            try {
-              await item.onClick(item, table);
-            } catch (e) {
-              console.log(e);
-            }
-          }
-        : async () => {
-            if (item.type == 'input') {
-              await this.setLightAndDark(
-                item['title'],
-                item['desc'],
-                item['val']
-              );
-            } else if (item.type == 'setBackground') {
+    if (this.useBoxJS) basic.push(boxjs);
+
+    return this.renderAppView([
+      { title: '基础设置', menu: basic },
+      {
+        title: '背景设置',
+        menu: [
+          {
+            icon: { name: 'photo', color: '#13c2c2' },
+            type: 'color',
+            title: '白天背景颜色',
+            desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
+            val: 'lightBgColor',
+          },
+          {
+            icon: { name: 'photo.fill', color: '#52c41a' },
+            type: 'color',
+            title: '晚上背景颜色',
+            desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
+            val: 'darkBgColor',
+          },
+        ],
+      },
+      {
+        menu: [
+          {
+            icon: { name: 'photo.on.rectangle', color: '#fa8c16' },
+            name: 'dayBg',
+            type: 'img',
+            title: '日间背景',
+          },
+          {
+            icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
+            name: 'nightBg',
+            type: 'img',
+            title: '夜间背景',
+          },
+          {
+            icon: { name: 'text.below.photo', color: '#faad14' },
+            type: 'img',
+            name: 'transparentBg',
+            title: '透明背景',
+            onClick: async (_, __, previewWebView) => {
               const backImage = await this.getWidgetScreenShot();
-              if (backImage) {
-                await this.setBackgroundImage(backImage, true);
-                await this.setBackgroundNightImage(backImage, true);
-              }
-            } else if (item.type == 'removeBackground') {
-              const options = ['取消', '清空'];
-              const message = '该操作不可逆，会清空所有背景图片！';
+              if (!backImage || !(await this.verifyImage(backImage))) return;
+              const base64Img = await this.setBackgroundImage(
+                backImage,
+                'transparentBg'
+              );
+              this.insertTextByElementId(
+                previewWebView,
+                'transparentBg',
+                `<img id="transparentBg_img" src="${base64Img}" width="30" height="30" />`
+              );
+              this.dismissLoading(previewWebView);
+            },
+          },
+        ],
+      },
+      {
+        menu: [
+          {
+            icon: { name: 'record.circle', color: '#722ed1' },
+            type: 'input',
+            title: '日间蒙层',
+            desc: '完全透明请设置为0',
+            val: 'lightOpacity',
+          },
+          {
+            icon: { name: 'record.circle.fill', color: '#eb2f96' },
+            type: 'input',
+            title: '夜间蒙层',
+            desc: '完全透明请设置为0',
+            val: 'darkOpacity',
+          },
+        ],
+      },
+      {
+        menu: [
+          {
+            icon: { name: 'clear', color: '#f5222d' },
+            name: 'removeBackground',
+            title: '清空背景图片',
+            onClick: async (_, __, previewWebView) => {
+              const options = [
+                '取消',
+                '清空日间',
+                '清空夜间',
+                '清空透明',
+                `清空全部`,
+              ];
+              const message = '该操作不可逆，会清空背景图片！';
               const index = await this.generateAlert(message, options);
               if (index === 0) return;
-              await this.setBackgroundImage(false, true);
-              await this.setBackgroundNightImage(false, true);
-            } else {
-              const backImage = await this.chooseImg();
-              if (!backImage || !(await this.verifyImage(backImage))) return;
-              if (item.type == 'setDayBackground')
-                await this.setBackgroundImage(backImage, true);
-              if (item.type == 'setNightBackground')
-                await this.setBackgroundNightImage(backImage, true);
-            }
-            await this.renderDmYYTables(table);
-          };
-      table.addRow(row);
-    }
-    table.reload();
-  }
+              switch (index) {
+                case 1:
+                  await this.setBackgroundImage(false, 'dayBg');
+                  this.insertTextByElementId(previewWebView, 'dayBg', ``);
+                  return;
+                case 2:
+                  await this.setBackgroundImage(false, 'nightBg');
+                  this.insertTextByElementId(previewWebView, 'nightBg', ``);
+                  return;
+                case 3:
+                  await this.setBackgroundImage(false, 'transparentBg');
+                  this.insertTextByElementId(
+                    previewWebView,
+                    'transparentBg',
+                    ``
+                  );
+                  return;
+                default:
+                  await this.setBackgroundImage(false, 'dayBg');
+                  await this.setBackgroundImage(false, 'nightBg');
+                  await this.setBackgroundImage(false, 'transparentBg');
+                  this.insertTextByElementId(previewWebView, 'dayBg', ``);
+                  this.insertTextByElementId(previewWebView, 'nightBg', ``);
+                  this.insertTextByElementId(
+                    previewWebView,
+                    'transparentBg',
+                    ``
+                  );
+                  break;
+              }
+            },
+          },
+        ],
+      },
+    ]).catch((e) => {
+      console.log(e);
+    });
+  };
 
   drawTableIcon = async (
     icon = 'square.grid.2x2',
@@ -641,36 +712,36 @@ class DmYY {
     sfi.applyFont(Font.mediumSystemFont(30));
     const imgData = Data.fromPNG(sfi.image).toBase64String();
     const html = `
-    <img id="sourceImg" src="data:image/png;base64,${imgData}" />
-    <img id="silhouetteImg" src="" />
-    <canvas id="mainCanvas" />
-    `;
+        <img id="sourceImg" src="data:image/png;base64,${imgData}" />
+        <img id="silhouetteImg" src="" />
+        <canvas id="mainCanvas" />
+        `;
     const js = `
-    var canvas = document.createElement("canvas");
-    var sourceImg = document.getElementById("sourceImg");
-    var silhouetteImg = document.getElementById("silhouetteImg");
-    var ctx = canvas.getContext('2d');
-    var size = sourceImg.width > sourceImg.height ? sourceImg.width : sourceImg.height;
-    canvas.width = size;
-    canvas.height = size;
-    ctx.drawImage(sourceImg, (canvas.width - sourceImg.width) / 2, (canvas.height - sourceImg.height) / 2);
-    var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    var pix = imgData.data;
-    //convert the image into a silhouette
-    for (var i=0, n = pix.length; i < n; i+= 4){
-      //set red to 0
-      pix[i] = 255;
-      //set green to 0
-      pix[i+1] = 255;
-      //set blue to 0
-      pix[i+2] = 255;
-      //retain the alpha value
-      pix[i+3] = pix[i+3];
-    }
-    ctx.putImageData(imgData,0,0);
-    silhouetteImg.src = canvas.toDataURL();
-    output=canvas.toDataURL()
-    `;
+        var canvas = document.createElement("canvas");
+        var sourceImg = document.getElementById("sourceImg");
+        var silhouetteImg = document.getElementById("silhouetteImg");
+        var ctx = canvas.getContext('2d');
+        var size = sourceImg.width > sourceImg.height ? sourceImg.width : sourceImg.height;
+        canvas.width = size;
+        canvas.height = size;
+        ctx.drawImage(sourceImg, (canvas.width - sourceImg.width) / 2, (canvas.height - sourceImg.height) / 2);
+        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var pix = imgData.data;
+        //convert the image into a silhouette
+        for (var i=0, n = pix.length; i < n; i+= 4){
+          //set red to 0
+          pix[i] = 255;
+          //set green to 0
+          pix[i+1] = 255;
+          //set blue to 0
+          pix[i+2] = 255;
+          //retain the alpha value
+          pix[i+3] = pix[i+3];
+        }
+        ctx.putImageData(imgData,0,0);
+        silhouetteImg.src = canvas.toDataURL();
+        output=canvas.toDataURL()
+        `;
 
     let wv = new WebView();
     await wv.loadHTML(html);
@@ -696,121 +767,447 @@ class DmYY {
     return ctx.getImage();
   };
 
-  async renderDmYYTables(table) {
-    const basic = [
-      {
-        icon: { name: 'arrow.clockwise', color: '#1890ff' },
-        type: 'input',
-        title: '刷新时间',
-        desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
-        val: 'refreshAfterDate',
-      },
-      {
-        icon: { name: 'photo', color: '#13c2c2' },
-        type: 'input',
-        title: '白天背景颜色',
-        desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
-        val: 'lightBgColor',
-      },
-      {
-        icon: { name: 'photo.fill', color: '#52c41a' },
-        type: 'input',
-        title: '晚上背景颜色',
-        desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
-        val: 'darkBgColor',
-      },
-      {
-        icon: { name: 'sun.max.fill', color: '#d48806' },
-        type: 'input',
-        title: '白天字体颜色',
-        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
-        val: 'lightColor',
-      },
-      {
-        icon: { name: 'moon.stars.fill', color: '#d4b106' },
-        type: 'input',
-        title: '晚上字体颜色',
-        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
-        val: 'darkColor',
-      },
-    ];
-    const background = [
-      {
-        icon: { name: 'text.below.photo', color: '#faad14' },
-        type: 'setBackground',
-        title: '透明背景设置',
-      },
-      {
-        icon: { name: 'photo.on.rectangle', color: '#fa8c16' },
-        type: 'setDayBackground',
-        title: '白天背景图片',
-      },
-      {
-        icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
-        type: 'setNightBackground',
-        title: '晚上背景图片',
-      },
-      {
-        icon: { name: 'record.circle', color: '#722ed1' },
-        type: 'input',
-        title: '白天蒙层透明',
-        desc: '完全透明请设置为0',
-        val: 'lightOpacity',
-      },
-      {
-        icon: { name: 'record.circle.fill', color: '#eb2f96' },
-        type: 'input',
-        title: '晚上蒙层透明',
-        desc: '完全透明请设置为0',
-        val: 'darkOpacity',
-      },
-      {
-        icon: { name: 'clear', color: '#f5222d' },
-        type: 'removeBackground',
-        title: '清空背景图片',
-      },
-    ];
-    const boxjs = {
-      icon: { name: 'shippingbox', color: '#f7bb10' },
-      type: 'input',
-      title: 'BoxJS 域名',
-      desc: '',
-      val: 'boxjsDomain',
-    };
-    if (this.useBoxJS) basic.push(boxjs);
-    table.removeAllRows();
-    let topRow = new UITableRow();
-    topRow.height = 60;
-    let leftText = topRow.addButton('Github');
-    leftText.widthWeight = 0.3;
-    leftText.onTap = async () => {
-      await Safari.openInApp('https://github.com/dompling/Scriptable');
-    };
-    let centerRow = topRow.addImageAtURL(
-      'https://s3.ax1x.com/2021/03/16/6y4oJ1.png'
+  dismissLoading = (webView) => {
+    webView.evaluateJavaScript(
+      "window.dispatchEvent(new CustomEvent('JWeb', { detail: { code: 'finishLoading' } }))",
+      false
     );
-    centerRow.widthWeight = 0.4;
-    centerRow.centerAligned();
-    centerRow.onTap = async () => {
-      await Safari.open('https://t.me/Scriptable_JS');
+  };
+
+  insertTextByElementId = (webView, elementId, text) => {
+    const scripts = `document.getElementById("${elementId}_val").innerHTML=\`${text}\`;`;
+    webView.evaluateJavaScript(scripts, false);
+  };
+
+  loadSF2B64 = async (
+    icon = 'square.grid.2x2',
+    color = '#56A8D6',
+    cornerWidth = 42
+  ) => {
+    const sfImg = await this.drawTableIcon(icon, color, cornerWidth);
+    return `data:image/png;base64,${Data.fromPNG(sfImg).toBase64String()}`;
+  };
+
+  async renderAppView(options = [], previewWebView = new WebView()) {
+    const settingItemFontSize = 16,
+      authorNameFontSize = 20,
+      authorDescFontSize = 12;
+    // ================== 配置界面样式 ===================
+    const style = `
+      :root {
+        --color-primary: #007aff;
+        --divider-color: rgba(60,60,67,0.16);
+        --card-background: #fff;
+        --card-radius: 8px;
+        --list-header-color: rgba(60,60,67,0.6);
+      }
+      * {
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      body {
+        margin: 10px 0;
+        -webkit-font-smoothing: antialiased;
+        font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+        accent-color: var(--color-primary);
+        background: #f6f6f6;
+      }
+      .list {
+        margin: 15px;
+      }
+      .list__header {
+        margin: 0 18px;
+        color: var(--list-header-color);
+        font-size: 13px;
+      }
+      .list__body {
+        margin-top: 10px;
+        background: var(--card-background);
+        border-radius: var(--card-radius);
+        overflow: hidden;
+      }
+      .form-item-auth {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 4em;
+        padding: 0.5em 18px;
+        position: relative;
+      }
+      .form-item-auth-name {
+        margin: 0px 12px;
+        font-size: ${authorNameFontSize}px;
+        font-weight: 430;
+      }
+      .form-item-auth-desc {
+        margin: 0px 12px;
+        font-size: ${authorDescFontSize}px;
+        font-weight: 400;
+      }
+      .form-label-author-avatar {
+        width: 62px;
+        height: 62px;
+        border-radius:50%;
+        border: 1px solid #F6D377;
+      }
+      .form-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: ${settingItemFontSize}px;
+        font-weight: 400;
+        min-height: 2.2em;
+        padding: 0.5em 18px;
+        position: relative;
+      }
+      .form-label {
+        display: flex;
+        align-items: center;
+      }
+      .form-label-img {
+        height: 30px;
+      }
+      .form-label-title {
+        margin-left: 8px
+      }
+      .bottom-bg {
+        margin: 30px 15px 15px 15px;
+      }
+      .form-item--link .icon-arrow-right {
+        color: #86868b;
+      }
+      .form-item-right-desc {
+        font-size: 13px;
+        color: #86868b;
+        margin: 0 4px 0 auto; 
+      }
+      .form-item + .form-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 20px;
+        right: 0;
+        border-top: 0.5px solid var(--divider-color);
+      }
+      .form-item input[type="checkbox"] {
+        width: 2em;
+        height: 2em;
+      }
+      input[type='number'] {
+        width: 6em;
+        height: 2.3em;
+        outline-style: none;
+        text-align: right;
+        padding: 0px 10px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        color: #86868b;
+      }
+      input[type='input'] {
+        width: 6em;
+        height: 2.3em;
+        outline-style: none;
+        text-align: right;
+        padding: 0px 10px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        color: #86868b;
+      }
+      input[type='text'] {
+        width: 6em;
+        height: 2.3em;
+        outline-style: none;
+        text-align: right;
+        padding: 0px 10px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        color: #86868b;
+      }
+      input[type='checkbox'][role='switch'] {
+        position: relative;
+        display: inline-block;
+        appearance: none;
+        width: 40px;
+        height: 24px;
+        border-radius: 24px;
+        background: #ccc;
+        transition: 0.3s ease-in-out;
+      }
+      input[type='checkbox'][role='switch']::before {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        transition: 0.3s ease-in-out;
+      }
+      input[type='checkbox'][role='switch']:checked {
+        background: var(--color-primary);
+      }
+      input[type='checkbox'][role='switch']:checked::before {
+        transform: translateX(16px);
+      }
+      .copyright {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 15px;
+        font-size: 10px;
+        color: #86868b;
+      }
+      .copyright a {
+        color: #515154;
+        text-decoration: none;
+      }
+      .preview.loading {
+        pointer-events: none;
+      }
+      .icon-loading {
+        display: inline-block;
+        animation: 1s linear infinite spin;
+      }
+      .normal-loading {
+        display: inline-block;
+        animation: 20s linear infinite spin;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(1turn);
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --divider-color: rgba(84,84,88,0.65);
+          --card-background: #1c1c1e;
+          --list-header-color: rgba(235,235,245,0.6);
+        }
+        body {
+          background: #000;
+          color: #fff;
+        }
+      }`;
+
+    const js = `
+      (() => {
+  
+        window.invoke = (code, data) => {
+          window.dispatchEvent(
+            new CustomEvent(
+              'JBridge',
+              { detail: { code, data } }
+            )
+          )
+        }
+      
+        // 切换ico的loading效果
+        const toggleIcoLoading = (e) => {
+            const target = e.currentTarget
+            target.classList.add('loading')
+            const icon = e.currentTarget.querySelector('.iconfont')
+            const className = icon.className
+            icon.className = 'iconfont icon-loading'
+            const listener = (event) => {
+              const { code } = event.detail
+              if (code === 'finishLoading') {
+                target.classList.remove('loading')
+                icon.className = className
+                window.removeEventListener('JWeb', listener);
+              }
+            }
+            window.addEventListener('JWeb', listener)
+        };
+  
+        for (const btn of document.querySelectorAll('.form-item')) {
+            btn.addEventListener('click', (e) => {
+              toggleIcoLoading(e);
+              if(e.target.id) invoke(e.target.id);
+            })
+        }
+  
+         for (const btn of document.querySelectorAll('.form-item__input')) {
+            btn.addEventListener('change', (e) => {
+              if(e.target.name) invoke(e.target.name, e.target.value);
+            })
+        }
+  
+      })()`;
+
+    let configList = ``;
+    let actionsConfig = [];
+    for (const key in options) {
+      const item = options[key];
+      actionsConfig = [...item.menu, ...actionsConfig];
+      configList += ` 
+      <div class="list">   
+          <div class="list__header">${item.title || ''}</div>
+           <form id="form_${key}" class="list__body" action="javascript:void(0);">
+         `;
+
+      for (const menuItem of item.menu) {
+        let iconBase64 = ``;
+        if (menuItem.url) {
+          try {
+            const imageIcon = await this.$request.get(menuItem.url, 'IMG');
+            if (menuItem.url.indexOf('png') !== -1) {
+              iconBase64 = `data:image/png;base64,${Data.fromPNG(
+                imageIcon
+              ).toBase64String()}`;
+            } else {
+              iconBase64 = `data:image/png;base64,${Data.fromJPEG(
+                imageIcon
+              ).toBase64String()}`;
+            }
+          } catch (e) {
+            iconBase64 = await this.loadSF2B64('photo');
+          }
+        } else {
+          const icon = menuItem.icon || {};
+          iconBase64 = await this.loadSF2B64(icon.name, icon.color);
+        }
+        const idName = menuItem.name || menuItem.val;
+        menuItem.defaultValue = '';
+        let defaultHtml = ``;
+        if (menuItem.val !== undefined)
+          menuItem.defaultValue = this.settings[menuItem.val] || '';
+
+        if (menuItem.defaultValue && menuItem.type === 'input') {
+          defaultHtml = menuItem.defaultValue;
+        } else if (menuItem.type === 'color') {
+          defaultHtml = `<input class="form-item__input" name="${idName}" type="color" enterkeyhint="done" value="${menuItem.defaultValue}">`;
+        } else if (menuItem.type === 'img') {
+          const cachePath = `${this.cacheImage}/${menuItem.name}`;
+          if (this.FILE_MGR.fileExists(cachePath)) {
+            const imageSrc = `data:image/png;base64,${Data.fromFile(
+              cachePath
+            ).toBase64String()}`;
+            defaultHtml = `<img id="${idName}_img" src="${imageSrc}" width="30" height="30"/>`;
+          }
+        }
+
+        configList += `     
+          <label id="${idName}" class="form-item form-item--link">
+              <div class="form-label item-none">
+                  <img class="form-label-img" class="form-label-img" src="${iconBase64}"/>
+                  <div class="form-label-title">${menuItem.title}</div>
+              </div>
+              <div id="${idName}_val" class="form-item-right-desc">
+                ${defaultHtml}
+              </div>
+              <i id="iconfont-${idName}" class="iconfont icon-arrow-right"></i>
+          </label>
+      `;
+      }
+      configList += `</form></div>`;
+    }
+
+    const html = `
+      <html>
+        <head>
+          <meta name='viewport' content='width=device-width, user-scalable=no'>
+          <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_3791881_bf011w225k4.css" type="text/css">
+          <style>${style}</style>
+        </head>
+        <body>
+          ${configList}  
+        <footer>
+          <div class="copyright"><div> </div><div>© 界面样式修改自 <a href="javascript:invoke('safari', 'https://www.imarkr.com');">@iMarkr.</a></div></div>
+        </footer>
+         <script>${js}</script>
+        </body>
+      </html>`;
+
+    // 预览web
+    await previewWebView.loadHTML(html).catch((err) => {
+      console.log(err);
+    });
+
+    const injectListener = async () => {
+      const event = await previewWebView
+        .evaluateJavaScript(
+          `(() => {
+            try {
+              const controller = new AbortController()
+              const listener = (e) => {
+                completion(e.detail)
+                controller.abort()
+              }
+              window.addEventListener(
+                'JBridge',
+                listener,
+                { signal: controller.signal }
+              )
+            } catch (e) {
+                alert("预览界面出错：" + e);
+                throw new Error("界面处理出错: " + e);
+                return;
+            }
+          })()`,
+          true
+        )
+        .catch((err) => {
+          console.error(err);
+          this.dismissLoading(previewWebView);
+        });
+      const { code, data } = event;
+
+      const actionItem = actionsConfig.find(
+        (item) => (item.name || item.val) === code
+      );
+
+      if (!actionItem) {
+        this.notify('异常提示', '当前操作异常');
+      } else {
+        const idName = actionItem?.name || actionItem?.val;
+        if (actionItem?.onClick) {
+          await actionItem?.onClick?.(actionItem, data, previewWebView);
+        } else if (actionItem.type == 'input') {
+          await this.setLightAndDark(
+            actionItem['title'],
+            actionItem['desc'],
+            actionItem['val'],
+            actionItem['placeholder']
+          );
+          this.insertTextByElementId(
+            previewWebView,
+            idName,
+            this.settings[actionItem.val]
+          );
+        } else if (actionItem.type === 'img') {
+          const backImage = await this.chooseImg();
+          if (!backImage || !(await this.verifyImage(backImage))) return;
+          const base64Img = await this.setBackgroundImage(backImage, idName);
+          this.insertTextByElementId(
+            previewWebView,
+            idName,
+            `<img src="${base64Img}" width="30" height="30" />`
+          );
+        } else {
+          if (data !== undefined) {
+            this.settings[actionItem.val] = data;
+            this.saveSettings(false);
+          }
+        }
+      }
+      this.dismissLoading(previewWebView);
+
+      injectListener();
     };
-    let rightText = topRow.addButton('重置所有');
-    rightText.widthWeight = 0.3;
-    rightText.rightAligned();
-    rightText.onTap = async () => {
-      const options = ['取消', '重置'];
-      const message =
-        '该操作不可逆，会清空所有组件配置！重置后请重新打开设置菜单。';
-      const index = await this.generateAlert(message, options);
-      if (index === 0) return;
-      this.settings = {};
-      await this.setBackgroundImage(false, false);
-      this.FILE_MGR.remove(this.cacheImage);
-      this.saveSettings();
-    };
-    table.addRow(topRow);
-    await this.preferences(table, basic, '基础设置');
-    await this.preferences(table, background, '背景图片');
+
+    injectListener().catch((e) => {
+      console.error(e);
+      this.dismissLoading(previewWebView);
+      if (!config.runsInApp) {
+        this.notify('主界面', `🚫 ${e}`);
+      }
+    });
+
+    previewWebView.present();
   }
 
   init(widgetFamily = config.widgetFamily) {
@@ -825,11 +1222,17 @@ class DmYY {
       FileManager[
         module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
       ]();
-  
+
     this.cacheImage = this.FILE_MGR.joinPath(
       this.FILE_MGR.documentsDirectory(),
       `/images/${Script.name()}`
     );
+
+    this.cacheImageBgPath = [
+      `${this.cacheImage}/transparentBg`,
+      `${this.cacheImage}/dayBg`,
+      `${this.cacheImage}/nightBg`,
+    ];
 
     if (!this.FILE_MGR.fileExists(this.cacheImage)) {
       this.FILE_MGR.createDirectory(this.cacheImage, true);
@@ -837,15 +1240,6 @@ class DmYY {
 
     // 本地，用于存储图片等
     this.FILE_MGR_LOCAL = FileManager.local();
-    this.BACKGROUND_KEY = this.FILE_MGR_LOCAL.joinPath(
-      this.FILE_MGR_LOCAL.documentsDirectory(),
-      'bg_' + this.SETTING_KEY + '.jpg'
-    );
-
-    this.BACKGROUND_NIGHT_KEY = this.FILE_MGR_LOCAL.joinPath(
-      this.FILE_MGR_LOCAL.documentsDirectory(),
-      'bg_' + this.SETTING_KEY + 'night.jpg'
-    );
 
     this.settings = this.getSettings();
 
@@ -861,18 +1255,24 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
 
     this.prefix = this.settings.boxjsDomain;
-    const lightBgColor = this.getColors(this.settings.lightBgColor);
-    const darkBgColor = this.getColors(this.settings.darkBgColor);
-    if (lightBgColor.length > 1 || darkBgColor.length > 1) {
-      this.backGroundColor = !Device.isUsingDarkAppearance()
-        ? this.getBackgroundColor(lightBgColor)
-        : this.getBackgroundColor(darkBgColor);
-    } else if (lightBgColor.length > 0 && darkBgColor.length > 0) {
-      this.backGroundColor = Color.dynamic(
-        new Color(this.settings.lightBgColor),
-        new Color(this.settings.darkBgColor)
-      );
-    }
+
+    this.backGroundColor = Color.dynamic(
+      new Color(this.settings.lightBgColor),
+      new Color(this.settings.darkBgColor)
+    );
+
+    // const lightBgColor = this.getColors(this.settings.lightBgColor);
+    // const darkBgColor = this.getColors(this.settings.darkBgColor);
+    // if (lightBgColor.length > 1 || darkBgColor.length > 1) {
+    //   this.backGroundColor = !Device.isUsingDarkAppearance()
+    //     ? this.getBackgroundColor(lightBgColor)
+    //     : this.getBackgroundColor(darkBgColor);
+    // } else if (lightBgColor.length > 0 && darkBgColor.length > 0) {
+    // this.backGroundColor = Color.dynamic(
+    //     new Color(this.settings.lightBgColor),
+    //     new Color(this.settings.darkBgColor)
+    //   );
+    // }
 
     this.widgetColor = Color.dynamic(
       new Color(this.settings.lightColor),
@@ -902,9 +1302,22 @@ class DmYY {
    * @param {string} name 操作函数名
    * @param {func} func 点击后执行的函数
    */
-  registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }) {
-    this._actions[name] = func.bind(this);
-    this._actionsIcon[name] = icon;
+  registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }, type) {
+    if (typeof name === 'object') return this._actions.push(name);
+    const action = {
+      name,
+      type,
+      title: name,
+      onClick: func.bind(this),
+    };
+
+    if (typeof icon === 'string') {
+      action.url = icon;
+    } else {
+      action.icon = icon;
+    }
+
+    this._actions.push(action);
   }
 
   /**
@@ -929,195 +1342,8 @@ class DmYY {
    * md5 加密字符串
    * @param {string} str 要加密成md5的数据
    */
-  md5(str) {
-    function d(n, t) {
-      var r = (65535 & n) + (65535 & t);
-      return (((n >> 16) + (t >> 16) + (r >> 16)) << 16) | (65535 & r);
-    }
-
-    function f(n, t, r, e, o, u) {
-      return d(((c = d(d(t, n), d(e, u))) << (f = o)) | (c >>> (32 - f)), r);
-      var c, f;
-    }
-
-    function l(n, t, r, e, o, u, c) {
-      return f((t & r) | (~t & e), n, t, o, u, c);
-    }
-
-    function v(n, t, r, e, o, u, c) {
-      return f((t & e) | (r & ~e), n, t, o, u, c);
-    }
-
-    function g(n, t, r, e, o, u, c) {
-      return f(t ^ r ^ e, n, t, o, u, c);
-    }
-
-    function m(n, t, r, e, o, u, c) {
-      return f(r ^ (t | ~e), n, t, o, u, c);
-    }
-
-    function i(n, t) {
-      var r, e, o, u;
-      (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
-      for (
-        var c = 1732584193,
-          f = -271733879,
-          i = -1732584194,
-          a = 271733878,
-          h = 0;
-        h < n.length;
-        h += 16
-      )
-        (c = l((r = c), (e = f), (o = i), (u = a), n[h], 7, -680876936)),
-          (a = l(a, c, f, i, n[h + 1], 12, -389564586)),
-          (i = l(i, a, c, f, n[h + 2], 17, 606105819)),
-          (f = l(f, i, a, c, n[h + 3], 22, -1044525330)),
-          (c = l(c, f, i, a, n[h + 4], 7, -176418897)),
-          (a = l(a, c, f, i, n[h + 5], 12, 1200080426)),
-          (i = l(i, a, c, f, n[h + 6], 17, -1473231341)),
-          (f = l(f, i, a, c, n[h + 7], 22, -45705983)),
-          (c = l(c, f, i, a, n[h + 8], 7, 1770035416)),
-          (a = l(a, c, f, i, n[h + 9], 12, -1958414417)),
-          (i = l(i, a, c, f, n[h + 10], 17, -42063)),
-          (f = l(f, i, a, c, n[h + 11], 22, -1990404162)),
-          (c = l(c, f, i, a, n[h + 12], 7, 1804603682)),
-          (a = l(a, c, f, i, n[h + 13], 12, -40341101)),
-          (i = l(i, a, c, f, n[h + 14], 17, -1502002290)),
-          (c = v(
-            c,
-            (f = l(f, i, a, c, n[h + 15], 22, 1236535329)),
-            i,
-            a,
-            n[h + 1],
-            5,
-            -165796510
-          )),
-          (a = v(a, c, f, i, n[h + 6], 9, -1069501632)),
-          (i = v(i, a, c, f, n[h + 11], 14, 643717713)),
-          (f = v(f, i, a, c, n[h], 20, -373897302)),
-          (c = v(c, f, i, a, n[h + 5], 5, -701558691)),
-          (a = v(a, c, f, i, n[h + 10], 9, 38016083)),
-          (i = v(i, a, c, f, n[h + 15], 14, -660478335)),
-          (f = v(f, i, a, c, n[h + 4], 20, -405537848)),
-          (c = v(c, f, i, a, n[h + 9], 5, 568446438)),
-          (a = v(a, c, f, i, n[h + 14], 9, -1019803690)),
-          (i = v(i, a, c, f, n[h + 3], 14, -187363961)),
-          (f = v(f, i, a, c, n[h + 8], 20, 1163531501)),
-          (c = v(c, f, i, a, n[h + 13], 5, -1444681467)),
-          (a = v(a, c, f, i, n[h + 2], 9, -51403784)),
-          (i = v(i, a, c, f, n[h + 7], 14, 1735328473)),
-          (c = g(
-            c,
-            (f = v(f, i, a, c, n[h + 12], 20, -1926607734)),
-            i,
-            a,
-            n[h + 5],
-            4,
-            -378558
-          )),
-          (a = g(a, c, f, i, n[h + 8], 11, -2022574463)),
-          (i = g(i, a, c, f, n[h + 11], 16, 1839030562)),
-          (f = g(f, i, a, c, n[h + 14], 23, -35309556)),
-          (c = g(c, f, i, a, n[h + 1], 4, -1530992060)),
-          (a = g(a, c, f, i, n[h + 4], 11, 1272893353)),
-          (i = g(i, a, c, f, n[h + 7], 16, -155497632)),
-          (f = g(f, i, a, c, n[h + 10], 23, -1094730640)),
-          (c = g(c, f, i, a, n[h + 13], 4, 681279174)),
-          (a = g(a, c, f, i, n[h], 11, -358537222)),
-          (i = g(i, a, c, f, n[h + 3], 16, -722521979)),
-          (f = g(f, i, a, c, n[h + 6], 23, 76029189)),
-          (c = g(c, f, i, a, n[h + 9], 4, -640364487)),
-          (a = g(a, c, f, i, n[h + 12], 11, -421815835)),
-          (i = g(i, a, c, f, n[h + 15], 16, 530742520)),
-          (c = m(
-            c,
-            (f = g(f, i, a, c, n[h + 2], 23, -995338651)),
-            i,
-            a,
-            n[h],
-            6,
-            -198630844
-          )),
-          (a = m(a, c, f, i, n[h + 7], 10, 1126891415)),
-          (i = m(i, a, c, f, n[h + 14], 15, -1416354905)),
-          (f = m(f, i, a, c, n[h + 5], 21, -57434055)),
-          (c = m(c, f, i, a, n[h + 12], 6, 1700485571)),
-          (a = m(a, c, f, i, n[h + 3], 10, -1894986606)),
-          (i = m(i, a, c, f, n[h + 10], 15, -1051523)),
-          (f = m(f, i, a, c, n[h + 1], 21, -2054922799)),
-          (c = m(c, f, i, a, n[h + 8], 6, 1873313359)),
-          (a = m(a, c, f, i, n[h + 15], 10, -30611744)),
-          (i = m(i, a, c, f, n[h + 6], 15, -1560198380)),
-          (f = m(f, i, a, c, n[h + 13], 21, 1309151649)),
-          (c = m(c, f, i, a, n[h + 4], 6, -145523070)),
-          (a = m(a, c, f, i, n[h + 11], 10, -1120210379)),
-          (i = m(i, a, c, f, n[h + 2], 15, 718787259)),
-          (f = m(f, i, a, c, n[h + 9], 21, -343485551)),
-          (c = d(c, r)),
-          (f = d(f, e)),
-          (i = d(i, o)),
-          (a = d(a, u));
-      return [c, f, i, a];
-    }
-
-    function a(n) {
-      for (var t = '', r = 32 * n.length, e = 0; e < r; e += 8)
-        t += String.fromCharCode((n[e >> 5] >>> e % 32) & 255);
-      return t;
-    }
-
-    function h(n) {
-      var t = [];
-      for (t[(n.length >> 2) - 1] = void 0, e = 0; e < t.length; e += 1)
-        t[e] = 0;
-      for (var r = 8 * n.length, e = 0; e < r; e += 8)
-        t[e >> 5] |= (255 & n.charCodeAt(e / 8)) << e % 32;
-      return t;
-    }
-
-    function e(n) {
-      for (var t, r = '0123456789abcdef', e = '', o = 0; o < n.length; o += 1)
-        (t = n.charCodeAt(o)),
-          (e += r.charAt((t >>> 4) & 15) + r.charAt(15 & t));
-      return e;
-    }
-
-    function r(n) {
-      return unescape(encodeURIComponent(n));
-    }
-
-    function o(n) {
-      return a(i(h((t = r(n))), 8 * t.length));
-      var t;
-    }
-
-    function u(n, t) {
-      return (function (n, t) {
-        var r,
-          e,
-          o = h(n),
-          u = [],
-          c = [];
-        for (
-          u[15] = c[15] = void 0,
-            16 < o.length && (o = i(o, 8 * n.length)),
-            r = 0;
-          r < 16;
-          r += 1
-        )
-          (u[r] = 909522486 ^ o[r]), (c[r] = 1549556828 ^ o[r]);
-        return (
-          (e = i(u.concat(h(t)), 512 + 8 * t.length)), a(i(c.concat(e), 640))
-        );
-      })(r(n), r(t));
-    }
-
-    function t(n, t, r) {
-      return t ? (r ? u(t, n) : e(u(t, n))) : r ? o(n) : e(o(n));
-    }
-
-    return t(str);
-  }
+  // prettier-ignore
+  md5(str){function d(n,t){var r=(65535&n)+(65535&t);return(((n>>16)+(t>>16)+(r>>16))<<16)|(65535&r)}function f(n,t,r,e,o,u){return d(((c=d(d(t,n),d(e,u)))<<(f=o))|(c>>>(32-f)),r);var c,f}function l(n,t,r,e,o,u,c){return f((t&r)|(~t&e),n,t,o,u,c)}function v(n,t,r,e,o,u,c){return f((t&e)|(r&~e),n,t,o,u,c)}function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}function i(n,t){var r,e,o,u;(n[t>>5]|=128<<t%32),(n[14+(((t+64)>>>9)<<4)]=t);for(var c=1732584193,f=-271733879,i=-1732584194,a=271733878,h=0;h<n.length;h+=16)(c=l((r=c),(e=f),(o=i),(u=a),n[h],7,-680876936)),(a=l(a,c,f,i,n[h+1],12,-389564586)),(i=l(i,a,c,f,n[h+2],17,606105819)),(f=l(f,i,a,c,n[h+3],22,-1044525330)),(c=l(c,f,i,a,n[h+4],7,-176418897)),(a=l(a,c,f,i,n[h+5],12,1200080426)),(i=l(i,a,c,f,n[h+6],17,-1473231341)),(f=l(f,i,a,c,n[h+7],22,-45705983)),(c=l(c,f,i,a,n[h+8],7,1770035416)),(a=l(a,c,f,i,n[h+9],12,-1958414417)),(i=l(i,a,c,f,n[h+10],17,-42063)),(f=l(f,i,a,c,n[h+11],22,-1990404162)),(c=l(c,f,i,a,n[h+12],7,1804603682)),(a=l(a,c,f,i,n[h+13],12,-40341101)),(i=l(i,a,c,f,n[h+14],17,-1502002290)),(c=v(c,(f=l(f,i,a,c,n[h+15],22,1236535329)),i,a,n[h+1],5,-165796510)),(a=v(a,c,f,i,n[h+6],9,-1069501632)),(i=v(i,a,c,f,n[h+11],14,643717713)),(f=v(f,i,a,c,n[h],20,-373897302)),(c=v(c,f,i,a,n[h+5],5,-701558691)),(a=v(a,c,f,i,n[h+10],9,38016083)),(i=v(i,a,c,f,n[h+15],14,-660478335)),(f=v(f,i,a,c,n[h+4],20,-405537848)),(c=v(c,f,i,a,n[h+9],5,568446438)),(a=v(a,c,f,i,n[h+14],9,-1019803690)),(i=v(i,a,c,f,n[h+3],14,-187363961)),(f=v(f,i,a,c,n[h+8],20,1163531501)),(c=v(c,f,i,a,n[h+13],5,-1444681467)),(a=v(a,c,f,i,n[h+2],9,-51403784)),(i=v(i,a,c,f,n[h+7],14,1735328473)),(c=g(c,(f=v(f,i,a,c,n[h+12],20,-1926607734)),i,a,n[h+5],4,-378558)),(a=g(a,c,f,i,n[h+8],11,-2022574463)),(i=g(i,a,c,f,n[h+11],16,1839030562)),(f=g(f,i,a,c,n[h+14],23,-35309556)),(c=g(c,f,i,a,n[h+1],4,-1530992060)),(a=g(a,c,f,i,n[h+4],11,1272893353)),(i=g(i,a,c,f,n[h+7],16,-155497632)),(f=g(f,i,a,c,n[h+10],23,-1094730640)),(c=g(c,f,i,a,n[h+13],4,681279174)),(a=g(a,c,f,i,n[h],11,-358537222)),(i=g(i,a,c,f,n[h+3],16,-722521979)),(f=g(f,i,a,c,n[h+6],23,76029189)),(c=g(c,f,i,a,n[h+9],4,-640364487)),(a=g(a,c,f,i,n[h+12],11,-421815835)),(i=g(i,a,c,f,n[h+15],16,530742520)),(c=m(c,(f=g(f,i,a,c,n[h+2],23,-995338651)),i,a,n[h],6,-198630844)),(a=m(a,c,f,i,n[h+7],10,1126891415)),(i=m(i,a,c,f,n[h+14],15,-1416354905)),(f=m(f,i,a,c,n[h+5],21,-57434055)),(c=m(c,f,i,a,n[h+12],6,1700485571)),(a=m(a,c,f,i,n[h+3],10,-1894986606)),(i=m(i,a,c,f,n[h+10],15,-1051523)),(f=m(f,i,a,c,n[h+1],21,-2054922799)),(c=m(c,f,i,a,n[h+8],6,1873313359)),(a=m(a,c,f,i,n[h+15],10,-30611744)),(i=m(i,a,c,f,n[h+6],15,-1560198380)),(f=m(f,i,a,c,n[h+13],21,1309151649)),(c=m(c,f,i,a,n[h+4],6,-145523070)),(a=m(a,c,f,i,n[h+11],10,-1120210379)),(i=m(i,a,c,f,n[h+2],15,718787259)),(f=m(f,i,a,c,n[h+9],21,-343485551)),(c=d(c,r)),(f=d(f,e)),(i=d(i,o)),(a=d(a,u));return[c,f,i,a]}function a(n){for(var t='',r=32*n.length,e=0;e<r;e+=8)t+=String.fromCharCode((n[e>>5]>>>e%32)&255);return t}function h(n){var t=[];for(t[(n.length>>2)-1]=void 0,e=0;e<t.length;e+=1)t[e]=0;for(var r=8*n.length,e=0;e<r;e+=8)t[e>>5]|=(255&n.charCodeAt(e/8))<<e%32;return t}function e(n){for(var t,r='0123456789abcdef',e='',o=0;o<n.length;o+=1)(t=n.charCodeAt(o)),(e+=r.charAt((t>>>4)&15)+r.charAt(15&t));return e}function r(n){return unescape(encodeURIComponent(n))}function o(n){return a(i(h((t=r(n))),8*t.length));var t}function u(n,t){return(function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)(u[r]=909522486^o[r]),(c[r]=1549556828^o[r]);return((e=i(u.concat(h(t)),512+8*t.length)),a(i(c.concat(e),640)))})(r(n),r(t))}function t(n,t,r){return t?(r?u(t,n):e(u(t,n))):r?o(n):e(o(n))}return t(str)}
 
   /**
    * 渲染标题内容
@@ -1239,54 +1465,39 @@ class DmYY {
    * @reutrn img | false
    */
   getBackgroundImage() {
-    let result = null;
-    if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
-      result = Image.fromFile(this.BACKGROUND_KEY);
-    }
+    if (this.FILE_MGR.fileExists(this.cacheImageBgPath[0]))
+      return Image.fromFile(this.cacheImageBgPath[0]);
+
     if (
       Device.isUsingDarkAppearance() &&
-      this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)
-    ) {
-      result = Image.fromFile(this.BACKGROUND_NIGHT_KEY);
-    }
-    return result;
+      this.FILE_MGR.fileExists(this.cacheImageBgPath[1])
+    )
+      return Image.fromFile(this.cacheImageBgPath[1]);
+
+    if (this.FILE_MGR.fileExists(this.cacheImageBgPath[2]))
+      return this.cacheImageBgPath[2];
   }
 
   /**
    * 设置当前组件的背景图片
    * @param {Image} img
    */
-  setBackgroundImage(img, notify = true) {
+  setBackgroundImage(img, key, notify = true) {
+    const cacheKey = `${this.cacheImage}/${key}`;
     if (!img) {
       // 移除背景
-      if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_KEY)) {
-        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_KEY);
-      }
+      if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(cacheKey);
       if (notify)
         this.notify('移除成功', '小组件白天背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
-      // 全部设置一遍，
-      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_KEY, img);
+      this.FILE_MGR.writeImage(cacheKey, img);
+
       if (notify)
         this.notify('设置成功', '小组件白天背景图片已设置！稍后刷新生效');
-    }
-  }
-
-  setBackgroundNightImage(img, notify = true) {
-    if (!img) {
-      // 移除背景
-      if (this.FILE_MGR_LOCAL.fileExists(this.BACKGROUND_NIGHT_KEY)) {
-        this.FILE_MGR_LOCAL.remove(this.BACKGROUND_NIGHT_KEY);
-      }
-      if (notify)
-        this.notify('移除成功', '小组件夜间背景图片已移除，稍后刷新生效');
-    } else {
-      // 设置背景
-      // 全部设置一遍，
-      this.FILE_MGR_LOCAL.writeImage(this.BACKGROUND_NIGHT_KEY, img);
-      if (notify)
-        this.notify('设置成功', '小组件夜间背景图片已设置！稍后刷新生效');
+      return `data:image/png;base64,${Data.fromFile(
+        cacheKey
+      ).toBase64String()}`;
     }
   }
 
@@ -1413,7 +1624,6 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     if (!act || !M['_actions']) {
       // 弹出选择菜单
       const actions = M['_actions'];
-      const table = new UITable();
       const onClick = async (item) => {
         M.widgetFamily = item.val;
         w = await M.render();
@@ -1426,48 +1636,37 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       };
       const preview = [
         {
-          url: 'https://pic1.imgdb.cn/item/63315c3616f2c2beb1a2931a.png',
+          icon: { name: 'app', color: '#504ED5' },
           title: '小尺寸',
           val: 'small',
+          name: 'small',
           dismissOnSelect: true,
           onClick,
         },
         {
-          url: 'https://pic1.imgdb.cn/item/63315c2c16f2c2beb1a28706.png',
+          icon: { name: 'rectangle', color: '#504ED5' },
           title: '中尺寸',
           val: 'medium',
+          name: 'medium',
           dismissOnSelect: true,
           onClick,
         },
         {
-          url: 'https://pic1.imgdb.cn/item/63315c2716f2c2beb1a27f24.png',
+          icon: { name: 'app', color: '#504ED5' },
           title: '大尺寸',
           val: 'large',
+          name: 'large',
           dismissOnSelect: true,
           onClick,
         },
       ];
-      await M.preferences(table, preview, '预览组件');
-      const extra = [];
-      for (let _ in actions) {
-        const iconItem = M._actionsIcon[_];
-        const isUrl = typeof iconItem === 'string';
-        const actionItem = {
-          title: _,
-          onClick: actions[_],
-        };
-        if (isUrl) {
-          actionItem.url = iconItem;
-        } else {
-          actionItem.icon = iconItem;
-        }
-        extra.push(actionItem);
-      }
-      await M.preferences(table, extra, '配置组件');
-      return table.present();
+      const menuConfig = [
+        { title: '预览组件', menu: preview },
+        { title: '组件配置', menu: actions },
+      ];
+      return M.renderAppView(menuConfig);
     }
   }
 };
-
 // await new DmYY().setWidgetConfig();
 module.exports = { DmYY, Runing };

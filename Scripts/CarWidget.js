@@ -10,36 +10,32 @@ const { DmYY, Runing } = require('./DmYY');
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    config.runsInApp &&
-      this.registerAction(
-        '油价设置',
-        () => {
-          return this.setAlertInput('油价设置', '设置类型', {
-            oilNumber: '89|92|95|98|0',
-          });
-        },
-        { name: 'paperplane', color: '#722ed1' }
-      );
-    config.runsInApp &&
-      this.registerAction(
-        '依赖插件',
-        () => {
-          return this.setAlertInput('设置依赖插件', '汽车的依赖插件例如 Ftms', {
-            filePath: '',
-          });
-        },
-        { name: 'car', color: '#f5222d' }
-      );
-    config.runsInApp &&
-      this.registerAction(
-        '缩放比例',
-        () => {
-          return this.setAlertInput('设置缩放比例', '比例越大进度条越长', {
-            scale: '比例默认值1',
-          });
-        },
-        { name: 'plus.viewfinder', color: '#fa8c16' }
-      );
+    if (config.runsInApp) {
+      this.registerAction({
+        icon: { name: 'paperplane', color: '#722ed1' },
+        type: 'input',
+        title: '油价设置',
+        desc: '89|92|95|0',
+        val: 'oilNumber',
+      });
+
+      this.registerAction({
+        icon: { name: 'car', color: '#f5222d' },
+        type: 'input',
+        title: '依赖插件',
+        desc: '汽车的依赖插件例如 Ftms',
+        val: 'filePath',
+      });
+
+      this.registerAction({
+        icon: { name: 'plus.viewfinder', color: '#fa8c16' },
+        type: 'input',
+        title: '缩放比例',
+        desc: '比例越大进度条越长',
+        placeholder: '取值 0~1',
+        val: 'scale',
+      });
+    }
 
     config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
     this.cacheName = this.md5(`dataSouce_${this.en}`);
