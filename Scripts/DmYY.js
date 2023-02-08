@@ -32,8 +32,11 @@ class DmYY {
 
   // 发起请求
   http = async (
-    options = { headers: {}, url: '', cache: tru },
-    type = 'JSON'
+    options = { headers: {}, url: '' },
+    type = 'JSON',
+    onError = () => {
+      return SFSymbol.named('photo').image;
+    }
   ) => {
     let request;
     try {
@@ -67,13 +70,13 @@ class DmYY {
       return await request.loadJSON();
     } catch (e) {
       console.log('error:' + e);
-      if (type === 'IMG') return SFSymbol.named('photo').image;
+      if (type === 'IMG') return onError?.();
     }
   };
 
   //request 接口请求
   $request = {
-    get: async (url = '', options = {}, type = 'JSON') => {
+    get: (url = '', options = {}, type = 'JSON') => {
       let params = { ...options, method: 'GET' };
       if (typeof url === 'object') {
         params = { ...params, ...url };
@@ -82,9 +85,9 @@ class DmYY {
       }
       let _type = type;
       if (typeof options === 'string') _type = options;
-      return await this.http(params, _type);
+      return this.http(params, _type);
     },
-    post: async (url = '', options = {}, type = 'JSON') => {
+    post: (url = '', options = {}, type = 'JSON') => {
       let params = { ...options, method: 'POST' };
       if (typeof url === 'object') {
         params = { ...params, ...url };
@@ -93,7 +96,7 @@ class DmYY {
       }
       let _type = type;
       if (typeof options === 'string') _type = options;
-      return await this.http(params, _type);
+      return this.http(params, _type);
     },
   };
 
@@ -705,7 +708,7 @@ class DmYY {
 
   drawTableIcon = async (
     icon = 'square.grid.2x2',
-    color = '#e8e8e8',
+    color = '#504ED5',
     cornerWidth = 42
   ) => {
     const sfi = SFSymbol.named(icon);
@@ -1073,19 +1076,22 @@ class DmYY {
           };
         }
         if (menuItem.url) {
-          try {
-            const imageIcon = await this.$request.get(menuItem.url, 'IMG');
-            if (menuItem.url.indexOf('png') !== -1) {
-              iconBase64 = `data:image/png;base64,${Data.fromPNG(
-                imageIcon
-              ).toBase64String()}`;
-            } else {
-              iconBase64 = `data:image/png;base64,${Data.fromJPEG(
-                imageIcon
-              ).toBase64String()}`;
+          const imageIcon = await this.http(
+            { url: menuItem.url },
+            'IMG',
+            () => {
+              return this.drawTableIcon('gear');
             }
-          } catch (e) {
-            iconBase64 = await this.loadSF2B64('gear');
+          );
+
+          if (menuItem.url.indexOf('png') !== -1) {
+            iconBase64 = `data:image/png;base64,${Data.fromPNG(
+              imageIcon
+            ).toBase64String()}`;
+          } else {
+            iconBase64 = `data:image/png;base64,${Data.fromJPEG(
+              imageIcon
+            ).toBase64String()}`;
           }
         } else {
           const icon = menuItem.icon || {};
@@ -1285,9 +1291,9 @@ class DmYY {
     );
 
     this.cacheImageBgPath = [
-      `${this.cacheImage}/transparentBg`,
-      `${this.cacheImage}/dayBg`,
-      `${this.cacheImage}/nightBg`,
+      `${this.cacheImage}/transparentBg.jpg`,
+      `${this.cacheImage}/dayBg.jpg`,
+      `${this.cacheImage}/nightBg.jpg`,
     ];
 
     if (!this.FILE_MGR.fileExists(this.cacheImage)) {
@@ -1541,7 +1547,7 @@ class DmYY {
    * @param {Image} img
    */
   setBackgroundImage(img, key, notify = true) {
-    const cacheKey = `${this.cacheImage}/${key}`;
+    const cacheKey = `${this.cacheImage}/${key}.jpg`;
     if (!img) {
       // 移除背景
       if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(cacheKey);
@@ -1722,7 +1728,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         { title: '预览组件', menu: preview },
         { title: '组件配置', menu: actions },
       ];
-      return M.renderAppView(menuConfig, true);
+      M.renderAppView(menuConfig, true);
     }
   }
 };
