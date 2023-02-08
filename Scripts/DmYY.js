@@ -1227,7 +1227,7 @@ class DmYY {
           this.insertTextByElementId(
             previewWebView,
             idName,
-            this.settings[actionItem.val]
+            this.settings[actionItem.val] || ''
           );
         } else if (actionItem.type === 'img') {
           const backImage = await this.chooseImg();
