@@ -685,8 +685,8 @@ class DmYY {
                   );
                   return;
                 default:
-                  await this.setBackgroundImage(false, 'dayBg');
-                  await this.setBackgroundImage(false, 'nightBg');
+                  await this.setBackgroundImage(false, 'dayBg', false);
+                  await this.setBackgroundImage(false, 'nightBg', false);
                   await this.setBackgroundImage(false, 'transparentBg');
                   this.insertTextByElementId(previewWebView, 'dayBg', ``);
                   this.insertTextByElementId(previewWebView, 'nightBg', ``);
@@ -1551,14 +1551,12 @@ class DmYY {
     if (!img) {
       // 移除背景
       if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(cacheKey);
-      if (notify)
-        this.notify('移除成功', '小组件白天背景图片已移除，稍后刷新生效');
+      if (notify) this.notify('移除成功', '背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
       this.FILE_MGR.writeImage(cacheKey, img);
 
-      if (notify)
-        this.notify('设置成功', '小组件白天背景图片已设置！稍后刷新生效');
+      if (notify) this.notify('设置成功', '背景图片已设置！稍后刷新生效');
       return `data:image/png;base64,${Data.fromFile(
         cacheKey
       ).toBase64String()}`;
