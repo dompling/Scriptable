@@ -1067,6 +1067,11 @@ class DmYY {
 
       for (const menuItem of item.menu) {
         let iconBase64 = ``;
+        if (menuItem.children) {
+          menuItem.onClick = () => {
+            this.renderAppView(menuItem.children);
+          };
+        }
         if (menuItem.url) {
           try {
             const imageIcon = await this.$request.get(menuItem.url, 'IMG');
