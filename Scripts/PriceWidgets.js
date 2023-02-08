@@ -12,17 +12,18 @@ class Widget extends DmYY {
     super(arg);
     this.en = ' btc';
     this.name = '比特币';
-    config.runsInApp &&
-      this.registerAction(
-        '关注种类',
-        async () => {
-          return this.setAlertInput('比特币种类', '设置关注种类', {
-            btcType: 'BTC,ETH,BNB',
-          });
-        },
-        { name: 'centsign.circle', color: '#feda31' }
-      );
-    config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
+
+    if (config.runsInApp) {
+      this.registerAction({
+        icon: { name: 'centsign.circle', color: '#feda31' },
+        type: 'input',
+        title: '比特币种类',
+        desc: '设置关注种类',
+        placeholder: 'BTC,ETH,BNB',
+        val: 'btcType',
+      });
+      this.registerAction('基础设置', this.setWidgetConfig);
+    }
   }
 
   format = (str) => {

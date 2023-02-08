@@ -464,7 +464,7 @@ class DmYY {
       const a = new Alert();
       a.title = title;
       a.message = desc;
-      a.addTextField(placeholder, `${this.settings[val]}`);
+      a.addTextField(placeholder, `${this.settings[val] || ''}`);
       a.addAction('确定');
       a.addCancelAction('取消');
       const id = await a.presentAlert();
@@ -774,6 +774,10 @@ class DmYY {
     );
   };
 
+  dismissWeb = (webView) => {
+    webView.evaluateJavaScript('window.close()', false);
+  };
+
   insertTextByElementId = (webView, elementId, text) => {
     const scripts = `document.getElementById("${elementId}_val").innerHTML=\`${text}\`;`;
     webView.evaluateJavaScript(scripts, false);
@@ -789,7 +793,7 @@ class DmYY {
   };
 
   async renderAppView(options = [], previewWebView = new WebView()) {
-    const settingItemFontSize = 16,
+    const settingItemFontSize = 14,
       authorNameFontSize = 20,
       authorDescFontSize = 12;
     // ================== 配置界面样式 ===================
@@ -880,6 +884,9 @@ class DmYY {
         font-size: 13px;
         color: #86868b;
         margin: 0 4px 0 auto; 
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .form-item + .form-item::before {
         content: "";
@@ -1035,7 +1042,12 @@ class DmYY {
               if(e.target.name) invoke(e.target.name, e.target.value);
             })
         }
-  
+
+        document.querySelectorAll('.form-item-auth')[0].addEventListener('click', (e) => {
+           toggleIcoLoading(e);
+           invoke("reset");
+        })
+        
       })()`;
 
     let configList = ``;
@@ -1064,7 +1076,7 @@ class DmYY {
               ).toBase64String()}`;
             }
           } catch (e) {
-            iconBase64 = await this.loadSF2B64('photo');
+            iconBase64 = await this.loadSF2B64('gear');
           }
         } else {
           const icon = menuItem.icon || {};
@@ -1114,6 +1126,23 @@ class DmYY {
           <style>${style}</style>
         </head>
         <body>
+          <div class="list">
+            <form class="list__body" action="javascript:void(0);">
+              <label id="author" class="form-item-auth form-item--link">
+                <div class="form-label">
+                  <img class="form-label-author-avatar" src="https://avatars.githubusercontent.com/u/23498579?v=4"/>
+                  <div>
+                    <div class="form-item-auth-name">dompling</div>
+                    <div class="form-item-auth-desc">18岁，来自九仙山的设计师</div>
+                  </div>
+                </div>
+                <div id="reset_val" class="form-item-right-desc">
+                  重置所有
+                </div>
+                <i class="iconfont icon-arrow-right"></i>
+              </label>
+            </form>
+          </div>
           ${configList}  
         <footer>
           <div class="copyright"><div> </div><div>© 界面样式修改自 <a href="javascript:invoke('safari', 'https://www.imarkr.com');">@iMarkr.</a></div></div>
@@ -1160,9 +1189,22 @@ class DmYY {
         (item) => (item.name || item.val) === code
       );
 
-      if (!actionItem) {
-        this.notify('异常提示', '当前操作异常');
-      } else {
+      if (code === 'reset') {
+        const options = ['取消', '确定'];
+        const message = '确定要重置当前所有配置吗？';
+        const index = await this.generateAlert(message, options);
+        if (index === 1) {
+          this.settings = {};
+          await this.setBackgroundImage(false, 'dayBg', false);
+          await this.setBackgroundImage(false, 'nightBg', false);
+          await this.setBackgroundImage(false, 'transparentBg', false);
+          this.saveSettings(false);
+          this.dismissWeb(previewWebView);
+          await this.notify('重置成功', '请关闭窗口之后，重新运行当前脚本');
+        }
+      }
+
+      if (actionItem) {
         const idName = actionItem?.name || actionItem?.val;
         if (actionItem?.onClick) {
           await actionItem?.onClick?.(actionItem, data, previewWebView);
@@ -1255,6 +1297,8 @@ class DmYY {
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
 
     this.prefix = this.settings.boxjsDomain;
+
+    config.runsInApp && this.saveSettings(false);
 
     this.backGroundColor = Color.dynamic(
       new Color(this.settings.lightBgColor),

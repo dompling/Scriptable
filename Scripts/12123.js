@@ -4,7 +4,7 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
-const {DmYY, Runing} = require('./DmYY');
+const { DmYY, Runing } = require('./DmYY');
 
 const API_PARAMS = {
   api4: 'biz.vio.detail.query',
@@ -14,7 +14,7 @@ const API_PARAMS = {
   alipay: 'alipays://platformapi/startapp?appId=2019050964403523',
   api2: 'biz.vio.peccancyChannelList.query',
   status:
-      'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Flicense%2Flicense',
+    'alipays://platformapi/startapp?appId=2019050964403523&page=pages%2Flicense%2Flicense',
   update: 'https://gitcode.net/4qiao/scriptable/raw/master/api/violation.js',
   api3: 'biz.vio.peccancyUnhandleInfoList.query',
   Ver: 'Version 1.2\n\nverifyToken过期需打开Quantumult-X',
@@ -32,19 +32,23 @@ class Widget extends DmYY {
     this.en = '12123';
     this.name = '交管 12123';
     config.runsInApp &&
-    this.registerAction(
-        'Token',
-        async () => {
+      this.registerAction({
+        icon: { name: 'paperplane', color: '#722ed1' },
+        type: 'input',
+        title: 'Token',
+        desc: '微信小程序交管12123获取',
+        val: 'Token',
+        onClick: async () => {
           const token = this.settings.token;
-          this.settings.token = (await this.getCache('wx_12123', false)) ||
-              token;
+          this.settings.token =
+            (await this.getCache('wx_12123', false)) || token;
           if (this.settings.token) this.saveSettings(false);
           return this.setAlertInput('Token', '设置 token', {
             token: '微信小程序交管12123获取',
           });
         },
-        {name: 'paperplane', color: '#722ed1'},
-    );
+      });
+
     config.runsInApp && this.registerAction('基础设置', this.setWidgetConfig);
   }
 
@@ -65,25 +69,25 @@ class Widget extends DmYY {
       title: '川 G88888',
       icon: 'car.fill',
       listItem: [
-        {label: '未处违法', value: `0`, unit: '条'},
-        {label: '车辆状态', value: '正常'},
-        {label: '上次更新', value: '00:00'},
+        { label: '未处违法', value: `0`, unit: '条' },
+        { label: '车辆状态', value: '正常' },
+        { label: '上次更新', value: '00:00' },
       ],
     },
     right: {
       title: '驾驶证',
       icon: 'creditcard.fill',
       listItem: [
-        {label: '证件状态', value: '正常'},
-        {label: '累计扣分', value: `0`, unit: '分'},
-        {label: '重置日期', value: '—'},
+        { label: '证件状态', value: '正常' },
+        { label: '累计扣分', value: `0`, unit: '分' },
+        { label: '重置日期', value: '—' },
       ],
     },
   };
 
   init = async () => {
     this.settings.token =
-        (await this.getCache('wx_12123', false)) || this.settings.token;
+      (await this.getCache('wx_12123', false)) || this.settings.token;
     if (this.settings.dataSource) {
       this.dataSource = this.settings.dataSource;
     } else {
@@ -117,22 +121,22 @@ class Widget extends DmYY {
 
         const details = await this.$request.post(API_PARAMS.infoURL, {
           body: `params=${encodeURIComponent(
-              JSON.stringify({
-                api: 'biz.user.integration.query',
-                productId: API_PARAMS.productId,
-                ...params,
-              }),
+            JSON.stringify({
+              api: 'biz.user.integration.query',
+              productId: API_PARAMS.productId,
+              ...params,
+            })
           )}`,
         });
 
         console.log(details);
 
         if (details.success) {
-          const {drivingLicense, vehicles} = details.data;
+          const { drivingLicense, vehicles } = details.data;
           const reaccDate = drivingLicense.reaccDate.split('-');
           this.dataSource.right.title = `驾驶证 ${drivingLicense.allowToDrive}`;
           this.dataSource.right.listItem[1].value =
-              drivingLicense.cumulativePoint;
+            drivingLicense.cumulativePoint;
           this.dataSource.right.listItem[2].value = `${reaccDate[1]}-${reaccDate[2]}`;
 
           if (vehicles.length) {
@@ -146,9 +150,9 @@ class Widget extends DmYY {
         this.saveSettings(false);
       } else {
         this.notify(
-            `verifyToken已过期 ⚠️`,
-            '点击通知框自动跳转到支付宝小程序交管12123页面获取最新的Token ( 请确保已打开辅助工具 )',
-            API_PARAMS.alipay,
+          `verifyToken已过期 ⚠️`,
+          '点击通知框自动跳转到支付宝小程序交管12123页面获取最新的Token ( 请确保已打开辅助工具 )',
+          API_PARAMS.alipay
         );
       }
     } catch (e) {
