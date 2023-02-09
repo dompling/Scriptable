@@ -11,11 +11,7 @@ class DmYY {
   constructor(arg, defaultSettings) {
     this.arg = arg;
     this.defaultSettings = defaultSettings || {};
-    try {
-      this.init();
-    } catch (error) {
-      console.log(error);
-    }
+    this._init();
     this.isNight = Device.isUsingDarkAppearance();
   }
 
@@ -1467,7 +1463,7 @@ class DmYY {
     previewWebView.present();
   }
 
-  init(widgetFamily = config.widgetFamily) {
+  _init(widgetFamily = config.widgetFamily) {
     // 组件大小：small,medium,large
     this.widgetFamily = widgetFamily;
     this.SETTING_KEY = this.md5(Script.name());
@@ -1915,14 +1911,14 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         M[key] = extra[key];
       });
     }
-    if (__size) M.init(__size);
+    if (__size) M._init(__size);
     if (!act || !M['_actions']) {
       // 弹出选择菜单
       const actions = M['_actions'];
       const onClick = async (item) => {
         M.widgetFamily = item.val;
          try {
-          M.init();
+          M._init(item.val);
         } catch (error) {
           console.log("初始化异常:" + error);
         }
