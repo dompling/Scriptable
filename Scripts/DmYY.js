@@ -149,8 +149,12 @@ class DmYY {
 
   // 选择图片并缓存
   chooseImg = async () => {
-    return Photos.fromLibrary().catch(() => {
-      console.log('取消选择图片');
+    return Photos.fromLibrary().then(async(response)=>{
+      const bool = this.verifyImage(response);
+      if(bool) return response;
+      throw new Error("图片超过限制");
+    }).catch((err) => {
+      console.log('图片选择异常:'+err);
     });
   };
 
@@ -846,7 +850,8 @@ class DmYY {
                   }
 
                   const backImage = await this.chooseImg();
-                  const base64Img = await this.setBackgroundImage(
+                  if(backImage){
+                    const base64Img = await this.setBackgroundImage(
                     backImage,
                     cachePath
                   );
@@ -856,6 +861,8 @@ class DmYY {
                     _.name,
                     `<img src="${base64Img}"/>`
                   );
+                  }
+                  
 
                   break;
                 case 1:
@@ -1422,18 +1429,19 @@ class DmYY {
             );
           } else if (actionItem.type === 'img') {
             const backImage = await this.chooseImg();
-            if (!backImage || !(await this.verifyImage(backImage))) return;
-            const cachePath = `${actionItem.val}/${actionItem.name}`;
-            const base64Img = await this.setBackgroundImage(
-              backImage,
-              cachePath,
-              false
-            );
-            this.insertTextByElementId(
-              previewWebView,
-              idName,
-              `<img src="${base64Img}"/>`
-            );
+            if(backImage){
+               const cachePath = `${actionItem.val}/${actionItem.name}`;
+                const base64Img = await this.setBackgroundImage(
+                  backImage,
+                  cachePath,
+                  false
+                );
+                this.insertTextByElementId(
+                  previewWebView,
+                  idName,
+                  `<img src="${base64Img}"/>`
+                );
+            }
           } else {
             if (data !== undefined) {
               this.settings[actionItem.val] = data;
