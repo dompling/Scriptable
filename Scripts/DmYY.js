@@ -19,11 +19,13 @@ class DmYY {
     this.isNight = Device.isUsingDarkAppearance();
   }
 
+  BaseCacheKey = 'DmYY';
   _actions = [];
   widgetColor;
   backGroundColor;
-  useBoxJS = true;
   isNight;
+
+  userConfigKey = ['avatar', 'nickname', 'homePageDesc'];
 
   // 获取 Request 对象
   getRequest = (url = '') => {
@@ -147,7 +149,9 @@ class DmYY {
 
   // 选择图片并缓存
   chooseImg = async () => {
-    return await Photos.fromLibrary();
+    return Photos.fromLibrary().catch(() => {
+      console.log('取消选择图片');
+    });
   };
 
   // 设置 widget 背景图片
@@ -509,6 +513,26 @@ class DmYY {
     return data;
   };
 
+  setBaseAlertInput = async (title, desc, opt = {}, isSave = true) => {
+    const a = new Alert();
+    a.title = title;
+    a.message = !desc ? '' : desc;
+    Object.keys(opt).forEach((key) => {
+      a.addTextField(opt[key], this.baseSettings[key] || '');
+    });
+    a.addAction('确定');
+    a.addCancelAction('取消');
+    const id = await a.presentAlert();
+    if (id === -1) return;
+    const data = {};
+    Object.keys(opt).forEach((key, index) => {
+      data[key] = a.textFieldValue(index) || '';
+    });
+    // 保存到本地
+    if (isSave) return this.saveBaseSettings(data);
+    return data;
+  };
+
   /**
    * 设置当前项目的 boxJS 缓存
    * @param opt key value
@@ -565,16 +589,6 @@ class DmYY {
       },
     ];
 
-    const boxjs = {
-      icon: { name: 'shippingbox', color: '#f7bb10' },
-      type: 'input',
-      title: 'BoxJS 域名',
-      desc: '',
-      val: 'boxjsDomain',
-    };
-
-    if (this.useBoxJS) basic.push(boxjs);
-
     return this.renderAppView([
       { title: '基础设置', menu: basic },
       {
@@ -603,31 +617,34 @@ class DmYY {
             name: 'dayBg',
             type: 'img',
             title: '日间背景',
+            val: this.cacheImage,
           },
           {
             icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
             name: 'nightBg',
             type: 'img',
             title: '夜间背景',
+            val: this.cacheImage,
           },
           {
             icon: { name: 'text.below.photo', color: '#faad14' },
             type: 'img',
             name: 'transparentBg',
             title: '透明背景',
-            onClick: async (_, __, previewWebView) => {
+            val: this.cacheImage,
+            onClick: async (item, __, previewWebView) => {
               const backImage = await this.getWidgetScreenShot();
               if (!backImage || !(await this.verifyImage(backImage))) return;
+              const cachePath = `${item.val}/${item.name}`;
               const base64Img = await this.setBackgroundImage(
                 backImage,
-                'transparentBg'
+                cachePath
               );
               this.insertTextByElementId(
                 previewWebView,
-                'transparentBg',
-                `<img id="transparentBg_img" src="${base64Img}" width="30" height="30" />`
+                item.name,
+                `<img src="${base64Img}"  />`
               );
-              this.dismissLoading(previewWebView);
             },
           },
         ],
@@ -791,6 +808,160 @@ class DmYY {
     return `data:image/png;base64,${Data.fromPNG(sfImg).toBase64String()}`;
   };
 
+  setUserInfo = async () => {
+    const baseOnClick = async (item, _, previewWebView) => {
+      const data = await this.setBaseAlertInput(item.title, item.desc, {
+        [item.val]: item.placeholder,
+      });
+      if (!data) return;
+      this.insertTextByElementId(previewWebView, item.name, data[item.val]);
+    };
+
+    return this.renderAppView([
+      {
+        title: '个性设置',
+        menu: [
+          {
+            icon: { name: 'person', color: '#fa541c' },
+            name: this.userConfigKey[0],
+            title: '首页头像',
+            type: 'img',
+            val: this.baseImage,
+            onClick: async (_, __, previewWebView) => {
+              const options = ['相册选择', '在线链接', '取消'];
+              const message = '设置个性化头像';
+              const index = await this.generateAlert(message, options);
+              if (index === 2) return;
+              const cachePath = `${_.val}/${_.name}`;
+              switch (index) {
+                case 0:
+                  const albumOptions = ['选择图片', '清空图片', '取消'];
+
+                  const albumIndex = await this.generateAlert('', albumOptions);
+                  if (albumIndex === 2) return;
+                  if (albumIndex === 1) {
+                    await this.setBackgroundImage(false, _.name, false);
+                    this.insertTextByElementId(previewWebView, _.name, ``);
+                    return;
+                  }
+
+                  const backImage = await this.chooseImg();
+                  const base64Img = await this.setBackgroundImage(
+                    backImage,
+                    cachePath
+                  );
+
+                  this.insertTextByElementId(
+                    previewWebView,
+                    _.name,
+                    `<img src="${base64Img}"/>`
+                  );
+
+                  break;
+                case 1:
+                  const data = await this.setBaseAlertInput(
+                    '在线链接',
+                    '首页头像在线链接',
+                    {
+                      avatar: '🔗请输入 URL 图片链接',
+                    }
+                  );
+                  if (!data) return;
+
+                  if (data[_.name] !== '') {
+                    const backImage = await this.$request.get(
+                      data[_.name],
+                      'IMG'
+                    );
+                    const base64Img = await this.setBackgroundImage(
+                      backImage,
+                      cachePath
+                    );
+
+                    this.insertTextByElementId(
+                      previewWebView,
+                      _.name,
+                      `<img src="${base64Img}"/>`
+                    );
+                  } else {
+                    await this.setBackgroundImage(false, cachePath);
+                    this.insertTextByElementId(previewWebView, 'avatar');
+                  }
+
+                  break;
+                default:
+                  break;
+              }
+            },
+          },
+          {
+            icon: { name: 'pencil', color: '#fa8c16' },
+            type: 'input',
+            title: '首页昵称',
+            desc: '个性化首页昵称',
+            placeholder: '👤请输入头像昵称',
+            val: this.userConfigKey[1],
+            name: this.userConfigKey[1],
+            defaultValue: this.baseSettings.nickname,
+            onClick: baseOnClick,
+          },
+          {
+            icon: { name: 'lineweight', color: '#a0d911' },
+            type: 'input',
+            title: '首页昵称描述',
+            desc: '个性化首页昵称描述',
+            placeholder: '请输入描述',
+            val: this.userConfigKey[2],
+            name: this.userConfigKey[2],
+            defaultValue: this.baseSettings.homePageDesc,
+            onClick: baseOnClick,
+          },
+        ],
+      },
+      {
+        menu: [
+          {
+            icon: { name: 'shippingbox', color: '#f7bb10' },
+            type: 'input',
+            title: 'BoxJS 域名',
+            desc: '设置BoxJS访问域名，如：boxjs.net 或 boxjs.com',
+            val: 'boxjsDomain',
+            name: 'boxjsDomain',
+            placeholder: 'boxjs.net',
+            defaultValue: this.baseSettings.boxjsDomain,
+            onClick: baseOnClick,
+          },
+          {
+            icon: { name: 'clear', color: '#f5222d' },
+            title: '恢复默认设置',
+            name: 'reset',
+            onClick: async () => {
+              const options = ['取消', '确定'];
+              const message = '确定要恢复当前所有配置吗？';
+              const index = await this.generateAlert(message, options);
+              if (index === 1) {
+                this.settings = {};
+                this.baseSettings = {};
+                for (const item of this.cacheImageBgPath) {
+                  await this.setBackgroundImage(false, item, false);
+                }
+                this.saveSettings(false);
+                this.saveBaseSettings();
+                await this.notify(
+                  '重置成功',
+                  '请关闭窗口之后，重新运行当前脚本'
+                );
+                Safari.open(
+                  `scriptable:///run/${encodeURIComponent(Script.name())}`
+                );
+              }
+            },
+          },
+        ],
+      },
+    ]);
+  };
+
   async renderAppView(
     options = [],
     renderAvatar = false,
@@ -891,6 +1062,13 @@ class DmYY {
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
+      .form-item-right-desc img{
+        width:30px;
+        height:30px;
+        border-radius:3px;
+      }
+
       .form-item + .form-item::before {
         content: "";
         position: absolute;
@@ -1042,26 +1220,29 @@ class DmYY {
   
         for (const btn of document.querySelectorAll('.form-item')) {
             btn.addEventListener('click', (e) => {
+              if(!e.target.id)return;
               toggleIcoLoading(e);
-              if(e.target.id) invoke(e.target.id);
+              invoke(e.target.id);
             })
         }
   
          for (const btn of document.querySelectorAll('.form-item__input')) {
             btn.addEventListener('change', (e) => {
-              if(e.target.name) invoke(e.target.name, e.target.value);
+               if(!e.target.name)return;
+               invoke(e.target.name, e.target.value);
             })
         }
 
         document.querySelectorAll('.form-item-auth')[0].addEventListener('click', (e) => {
            toggleIcoLoading(e);
-           invoke("reset");
+           invoke("userInfo");
         })
         
       })()`;
 
     let configList = ``;
     let actionsConfig = [];
+
     for (const key in options) {
       const item = options[key];
       actionsConfig = [...item.menu, ...actionsConfig];
@@ -1101,9 +1282,9 @@ class DmYY {
           iconBase64 = await this.loadSF2B64(icon.name, icon.color);
         }
         const idName = menuItem.name || menuItem.val;
-        menuItem.defaultValue = '';
+
         let defaultHtml = ``;
-        if (menuItem.val !== undefined)
+        if (menuItem.val !== undefined && !menuItem.defaultValue)
           menuItem.defaultValue = this.settings[menuItem.val] || '';
 
         if (menuItem.defaultValue && menuItem.type === 'input') {
@@ -1111,12 +1292,12 @@ class DmYY {
         } else if (menuItem.type === 'color') {
           defaultHtml = `<input class="form-item__input" name="${idName}" type="color" enterkeyhint="done" value="${menuItem.defaultValue}">`;
         } else if (menuItem.type === 'img') {
-          const cachePath = `${this.cacheImage}/${menuItem.name}.jpg`;
+          const cachePath = `${menuItem.val}/${menuItem.name}`;
           if (this.FILE_MGR.fileExists(cachePath)) {
             const imageSrc = `data:image/png;base64,${Data.fromFile(
               cachePath
             ).toBase64String()}`;
-            defaultHtml = `<img id="${idName}_img" src="${imageSrc}" width="30" height="30"/>`;
+            defaultHtml = `<img src="${imageSrc}"/>`;
           }
         }
 
@@ -1136,6 +1317,44 @@ class DmYY {
       configList += `</form></div>`;
     }
 
+    let avatarHtml = '';
+    if (renderAvatar) {
+      const cachePath = `${this.baseImage}/${this.userConfigKey[0]}`;
+      const avatarConfig = {
+        avatar: `https://avatars.githubusercontent.com/u/23498579?v=4`,
+        nickname: this.baseSettings[this.userConfigKey[1]] || 'Dompling',
+        homPageDesc:
+          this.baseSettings[this.userConfigKey[2]] ||
+          '18岁，来自九仙山的设计师',
+      };
+
+      if (this.FILE_MGR.fileExists(cachePath)) {
+        avatarConfig.avatar = `data:image/png;base64,${Data.fromFile(
+          cachePath
+        ).toBase64String()}`;
+      }
+
+      avatarHtml = `
+      <div class="list">
+          <form class="list__body" action="javascript:void(0);">
+            <label id="userInfo" class="form-item-auth form-item--link">
+              <div class="form-label">
+                <img class="form-label-author-avatar" src="${avatarConfig.avatar}"/>
+                <div>
+                  <div class="form-item-auth-name">${avatarConfig.nickname}</div>
+                  <div class="form-item-auth-desc">${avatarConfig.homPageDesc}</div>
+                </div>
+              </div>
+              <div id="userInfo_val" class="form-item-right-desc">
+                个性化设置
+              </div>
+              <i class="iconfont icon-arrow-right"></i>
+            </label>
+          </form>
+      </div>
+      `;
+    }
+
     const html = `
       <html>
         <head>
@@ -1144,28 +1363,7 @@ class DmYY {
           <style>${style}</style>
         </head>
         <body>
-        ${
-          renderAvatar
-            ? ` 
-        <div class="list">
-        <form class="list__body" action="javascript:void(0);">
-          <label id="author" class="form-item-auth form-item--link">
-            <div class="form-label">
-              <img class="form-label-author-avatar" src="https://avatars.githubusercontent.com/u/23498579?v=4"/>
-              <div>
-                <div class="form-item-auth-name">dompling</div>
-                <div class="form-item-auth-desc">18岁，来自九仙山的设计师</div>
-              </div>
-            </div>
-            <div id="reset_val" class="form-item-right-desc">
-              重置所有
-            </div>
-            <i class="iconfont icon-arrow-right"></i>
-          </label>
-        </form>
-      </div>`
-            : ''
-        }
+          ${avatarHtml}
           ${configList}  
         <footer>
           <div class="copyright"><div> </div><div>© 界面样式修改自 <a href="javascript:invoke('safari', 'https://www.imarkr.com');">@iMarkr.</a></div></div>
@@ -1199,59 +1397,54 @@ class DmYY {
       );
 
       const { code, data } = JSON.parse(event);
+      try {
+        const actionItem = actionsConfig.find(
+          (item) => (item.name || item.val) === code
+        );
 
-      const actionItem = actionsConfig.find(
-        (item) => (item.name || item.val) === code
-      );
+        if (code === 'userInfo') await this.setUserInfo();
 
-      if (code === 'reset') {
-        const options = ['取消', '确定'];
-        const message = '确定要重置当前所有配置吗？';
-        const index = await this.generateAlert(message, options);
-        if (index === 1) {
-          this.settings = {};
-          await this.setBackgroundImage(false, 'dayBg', false);
-          await this.setBackgroundImage(false, 'nightBg', false);
-          await this.setBackgroundImage(false, 'transparentBg', false);
-          this.saveSettings(false);
-          await this.notify('重置成功', '请关闭窗口之后，重新运行当前脚本');
-        }
-      }
-
-      if (actionItem) {
-        const idName = actionItem?.name || actionItem?.val;
-        if (actionItem?.onClick) {
-          await actionItem?.onClick?.(actionItem, data, previewWebView);
-        } else if (actionItem.type == 'input') {
-          await this.setLightAndDark(
-            actionItem['title'],
-            actionItem['desc'],
-            actionItem['val'],
-            actionItem['placeholder']
-          );
-          this.insertTextByElementId(
-            previewWebView,
-            idName,
-            this.settings[actionItem.val] || ''
-          );
-        } else if (actionItem.type === 'img') {
-          const backImage = await this.chooseImg();
-          if (!backImage || !(await this.verifyImage(backImage))) return;
-          const base64Img = await this.setBackgroundImage(backImage, idName);
-          this.insertTextByElementId(
-            previewWebView,
-            idName,
-            `<img src="${base64Img}" width="30" height="30" />`
-          );
-        } else {
-          if (data !== undefined) {
-            this.settings[actionItem.val] = data;
-            this.saveSettings(false);
+        if (actionItem) {
+          const idName = actionItem?.name || actionItem?.val;
+          if (actionItem?.onClick) {
+            await actionItem?.onClick?.(actionItem, data, previewWebView);
+          } else if (actionItem.type == 'input') {
+            await this.setLightAndDark(
+              actionItem['title'],
+              actionItem['desc'],
+              actionItem['val'],
+              actionItem['placeholder']
+            );
+            this.insertTextByElementId(
+              previewWebView,
+              idName,
+              this.settings[actionItem.val] || ''
+            );
+          } else if (actionItem.type === 'img') {
+            const backImage = await this.chooseImg();
+            if (!backImage || !(await this.verifyImage(backImage))) return;
+            const cachePath = `${actionItem.val}/${actionItem.name}`;
+            const base64Img = await this.setBackgroundImage(
+              backImage,
+              cachePath,
+              false
+            );
+            this.insertTextByElementId(
+              previewWebView,
+              idName,
+              `<img src="${base64Img}"/>`
+            );
+          } else {
+            if (data !== undefined) {
+              this.settings[actionItem.val] = data;
+              this.saveSettings(false);
+            }
           }
         }
+      } catch (error) {
+        console.log('异常操作：' + error);
       }
       this.dismissLoading(previewWebView);
-
       injectListener();
     };
 
@@ -1284,10 +1477,16 @@ class DmYY {
       `/images/${Script.name()}`
     );
 
+    this.baseImage = this.FILE_MGR.joinPath(
+      this.FILE_MGR.documentsDirectory(),
+      `/images/`
+    );
+
     this.cacheImageBgPath = [
-      `${this.cacheImage}/transparentBg.jpg`,
-      `${this.cacheImage}/dayBg.jpg`,
-      `${this.cacheImage}/nightBg.jpg`,
+      `${this.cacheImage}/transparentBg`,
+      `${this.cacheImage}/dayBg`,
+      `${this.cacheImage}/nightBg`,
+      `${this.baseImage}/avatar`,
     ];
 
     if (!this.FILE_MGR.fileExists(this.cacheImage)) {
@@ -1299,13 +1498,15 @@ class DmYY {
 
     this.settings = this.getSettings();
 
+    this.baseSettings = this.getBaseSettings();
+
     this.settings = { ...this.defaultSettings, ...this.settings };
 
     this.settings.lightColor = this.settings.lightColor || '#000000';
     this.settings.darkColor = this.settings.darkColor || '#ffffff';
     this.settings.lightBgColor = this.settings.lightBgColor || '#ffffff';
     this.settings.darkBgColor = this.settings.darkBgColor || '#000000';
-    this.settings.boxjsDomain = this.settings.boxjsDomain || 'boxjs.net';
+    this.settings.boxjsDomain = this.baseSettings.boxjsDomain || 'boxjs.net';
     this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
     this.settings.lightOpacity = this.settings.lightOpacity || '0.4';
     this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
@@ -1494,6 +1695,7 @@ class DmYY {
     if (Keychain.contains(this.SETTING_KEY)) {
       cache = Keychain.get(this.SETTING_KEY);
     }
+
     if (json) {
       try {
         res = JSON.parse(cache);
@@ -1503,6 +1705,32 @@ class DmYY {
     }
 
     return res;
+  }
+
+  getBaseSettings(json = true) {
+    let res = json ? {} : '';
+    let cache = '';
+    if (Keychain.contains(this.BaseCacheKey)) {
+      cache = Keychain.get(this.BaseCacheKey);
+    }
+
+    if (json) {
+      try {
+        res = JSON.parse(cache);
+      } catch (e) {}
+    } else {
+      res = cache;
+    }
+
+    return res;
+  }
+
+  saveBaseSettings(res = {}, notify = true) {
+    const data = { ...(this.baseSettings || {}), ...res };
+    this.baseSettings = data;
+    Keychain.set(this.BaseCacheKey, JSON.stringify(data));
+    if (notify) this.notify('设置成功', '通用设置需重新运行脚本生效');
+    return data;
   }
 
   /**
@@ -1515,7 +1743,10 @@ class DmYY {
         ? JSON.stringify(this.settings)
         : String(this.settings);
     Keychain.set(this.SETTING_KEY, res);
+
     if (notify) this.notify('设置成功', '桌面组件稍后将自动刷新');
+
+    return res;
   }
 
   /**
@@ -1526,7 +1757,7 @@ class DmYY {
     if (this.FILE_MGR.fileExists(this.cacheImageBgPath[0]))
       return Image.fromFile(this.cacheImageBgPath[0]);
 
-    if (Device.isUsingDarkAppearance())
+    if (!this.isNight)
       return this.FILE_MGR.fileExists(this.cacheImageBgPath[1])
         ? Image.fromFile(this.cacheImageBgPath[1])
         : undefined;
@@ -1540,8 +1771,8 @@ class DmYY {
    * 设置当前组件的背景图片
    * @param {Image} img
    */
-  setBackgroundImage(img, key, notify = true) {
-    const cacheKey = `${this.cacheImage}/${key}.jpg`;
+  setBackgroundImage(img, filePath = this.baseImage, notify = true) {
+    const cacheKey = filePath;
     if (!img) {
       // 移除背景
       if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(cacheKey);
