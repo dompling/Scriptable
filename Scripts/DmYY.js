@@ -1921,6 +1921,11 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const actions = M['_actions'];
       const onClick = async (item) => {
         M.widgetFamily = item.val;
+         try {
+          M.init();
+        } catch (error) {
+          console.log("初始化异常:" + error);
+        }
         w = await M.render();
         const fnc = item.val
           .toLowerCase()
