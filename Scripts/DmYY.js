@@ -145,13 +145,15 @@ class DmYY {
 
   // 选择图片并缓存
   chooseImg = async () => {
-    return Photos.fromLibrary().then(async(response)=>{
-      const bool = this.verifyImage(response);
-      if(bool) return response;
-      throw new Error("图片超过限制");
-    }).catch((err) => {
-      console.log('图片选择异常:'+err);
-    });
+    return Photos.fromLibrary()
+      .then(async (response) => {
+        const bool = this.verifyImage(response);
+        if (bool) return response;
+        throw new Error('图片超过限制');
+      })
+      .catch((err) => {
+        console.log('图片选择异常:' + err);
+      });
   };
 
   // 设置 widget 背景图片
@@ -673,6 +675,7 @@ class DmYY {
             icon: { name: 'clear', color: '#f5222d' },
             name: 'removeBackground',
             title: '清空背景图片',
+            val: `${this.cacheImage}/`,
             onClick: async (_, __, previewWebView) => {
               const options = [
                 '清空日间',
@@ -686,15 +689,15 @@ class DmYY {
               if (index === 4) return;
               switch (index) {
                 case 0:
-                  await this.setBackgroundImage(false, 'dayBg');
+                  await this.setBackgroundImage(false, _.val + 'dayBg');
                   this.insertTextByElementId(previewWebView, 'dayBg', ``);
                   return;
                 case 1:
-                  await this.setBackgroundImage(false, 'nightBg');
+                  await this.setBackgroundImage(false, _.val + 'nightBg');
                   this.insertTextByElementId(previewWebView, 'nightBg', ``);
                   return;
                 case 2:
-                  await this.setBackgroundImage(false, 'transparentBg');
+                  await this.setBackgroundImage(false, _.val + 'transparentBg');
                   this.insertTextByElementId(
                     previewWebView,
                     'transparentBg',
@@ -702,9 +705,13 @@ class DmYY {
                   );
                   return;
                 default:
-                  await this.setBackgroundImage(false, 'dayBg', false);
-                  await this.setBackgroundImage(false, 'nightBg', false);
-                  await this.setBackgroundImage(false, 'transparentBg');
+                  await this.setBackgroundImage(false, _.val + 'dayBg', false);
+                  await this.setBackgroundImage(
+                    false,
+                    _.val + 'nightBg',
+                    false
+                  );
+                  await this.setBackgroundImage(false, _.val + 'transparentBg');
                   this.insertTextByElementId(previewWebView, 'dayBg', ``);
                   this.insertTextByElementId(previewWebView, 'nightBg', ``);
                   this.insertTextByElementId(
@@ -846,19 +853,18 @@ class DmYY {
                   }
 
                   const backImage = await this.chooseImg();
-                  if(backImage){
+                  if (backImage) {
                     const base64Img = await this.setBackgroundImage(
-                    backImage,
-                    cachePath
-                  );
+                      backImage,
+                      cachePath
+                    );
 
-                  this.insertTextByElementId(
-                    previewWebView,
-                    _.name,
-                    `<img src="${base64Img}"/>`
-                  );
+                    this.insertTextByElementId(
+                      previewWebView,
+                      _.name,
+                      `<img src="${base64Img}"/>`
+                    );
                   }
-                  
 
                   break;
                 case 1:
@@ -1425,18 +1431,18 @@ class DmYY {
             );
           } else if (actionItem.type === 'img') {
             const backImage = await this.chooseImg();
-            if(backImage){
-               const cachePath = `${actionItem.val}/${actionItem.name}`;
-                const base64Img = await this.setBackgroundImage(
-                  backImage,
-                  cachePath,
-                  false
-                );
-                this.insertTextByElementId(
-                  previewWebView,
-                  idName,
-                  `<img src="${base64Img}"/>`
-                );
+            if (backImage) {
+              const cachePath = `${actionItem.val}/${actionItem.name}`;
+              const base64Img = await this.setBackgroundImage(
+                backImage,
+                cachePath,
+                false
+              );
+              this.insertTextByElementId(
+                previewWebView,
+                idName,
+                `<img src="${base64Img}"/>`
+              );
             }
           } else {
             if (data !== undefined) {
@@ -1917,10 +1923,10 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       const actions = M['_actions'];
       const onClick = async (item) => {
         M.widgetFamily = item.val;
-         try {
+        try {
           M._init(item.val);
         } catch (error) {
-          console.log("初始化异常:" + error);
+          console.log('初始化异常:' + error);
         }
         w = await M.render();
         const fnc = item.val
@@ -1932,7 +1938,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       };
       const preview = [
         {
-          icon: { name: 'app', color: '#504ED5' },
+          url: `https://raw.githubusercontent.com/dompling/Scriptable/master/images/small.png`,
           title: '小尺寸',
           val: 'small',
           name: 'small',
@@ -1940,7 +1946,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
           onClick,
         },
         {
-          icon: { name: 'rectangle', color: '#504ED5' },
+          url: `https://raw.githubusercontent.com/dompling/Scriptable/master/images/medium.png`,
           title: '中尺寸',
           val: 'medium',
           name: 'medium',
@@ -1948,7 +1954,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
           onClick,
         },
         {
-          icon: { name: 'app', color: '#504ED5' },
+          url: `https://raw.githubusercontent.com/dompling/Scriptable/master/images/large.png`,
           title: '大尺寸',
           val: 'large',
           name: 'large',
