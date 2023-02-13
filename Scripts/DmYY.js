@@ -17,6 +17,7 @@ class DmYY {
 
   BaseCacheKey = 'DmYY';
   _actions = [];
+  _menuActions = [];
   widgetColor;
   backGroundColor;
   isNight;
@@ -477,9 +478,10 @@ class DmYY {
       a.addAction('确定');
       a.addCancelAction('取消');
       const id = await a.presentAlert();
-      if (id === -1) return;
+      if (id === -1) return false;
       this.settings[val] = a.textFieldValue(0) || '';
       this.saveSettings();
+      return true;
     } catch (e) {
       console.log(e);
     }
@@ -960,15 +962,17 @@ class DmYY {
                   '重置成功',
                   '请关闭窗口之后，重新运行当前脚本'
                 );
-                Safari.open(
-                  `scriptable:///run/${encodeURIComponent(Script.name())}`
-                );
+                this.reopenScript();
               }
             },
           },
         ],
       },
     ]);
+  };
+
+  reopenScript = () => {
+    Safari.open(`scriptable:///run/${encodeURIComponent(Script.name())}`);
   };
 
   async renderAppView(
@@ -1050,12 +1054,14 @@ class DmYY {
       .form-label {
         display: flex;
         align-items: center;
+        flex-wrap:nowrap
       }
       .form-label-img {
         height: 30px;
       }
       .form-label-title {
-        margin-left: 8px
+        margin-left: 8px;
+        white-space: nowrap;
       }
       .bottom-bg {
         margin: 30px 15px 15px 15px;
@@ -1063,6 +1069,7 @@ class DmYY {
       .form-item--link .icon-arrow-right {
         color: #86868b;
       }
+
       .form-item-right-desc {
         font-size: 13px;
         color: #86868b;
@@ -1070,6 +1077,8 @@ class DmYY {
         max-width: 100px;
         overflow: hidden;
         text-overflow: ellipsis;
+        display:flex;
+        align-items: center;
       }
 
       .form-item-right-desc img{
@@ -1090,8 +1099,8 @@ class DmYY {
         width: 2em;
         height: 2em;
       }
-      input[type='number'] {
-        width: 6em;
+      input[type='input'],select {
+        width: 100%;
         height: 2.3em;
         outline-style: none;
         text-align: right;
@@ -1099,26 +1108,7 @@ class DmYY {
         border: 1px solid #ddd;
         font-size: 14px;
         color: #86868b;
-      }
-      input[type='input'] {
-        width: 6em;
-        height: 2.3em;
-        outline-style: none;
-        text-align: right;
-        padding: 0px 10px;
-        border: 1px solid #ddd;
-        font-size: 14px;
-        color: #86868b;
-      }
-      input[type='text'] {
-        width: 6em;
-        height: 2.3em;
-        outline-style: none;
-        text-align: right;
-        padding: 0px 10px;
-        border: 1px solid #ddd;
-        font-size: 14px;
-        color: #86868b;
+        border-radius:4px;
       }
       input[type='checkbox'][role='switch'] {
         position: relative;
@@ -1227,7 +1217,7 @@ class DmYY {
            }
         };
   
-        for (const btn of document.querySelectorAll('.form-item')) {
+        for (const btn of document.querySelectorAll('.label-link')) {
             btn.addEventListener('click', (e) => {
               if(!e.target.id)return;
               toggleIcoLoading(e);
@@ -1238,14 +1228,16 @@ class DmYY {
          for (const btn of document.querySelectorAll('.form-item__input')) {
             btn.addEventListener('change', (e) => {
                if(!e.target.name)return;
-               invoke(e.target.name, e.target.value);
+               invoke(e.target.name,e.target.type==="checkbox"?\`\${e.target.checked}\`: e.target.value);
             })
         }
 
-        document.querySelectorAll('.form-item-auth')[0].addEventListener('click', (e) => {
-           toggleIcoLoading(e);
-           invoke("userInfo");
-        })
+        if(${renderAvatar}){
+          document.querySelectorAll('.form-item-auth')[0].addEventListener('click', (e) => {
+            toggleIcoLoading(e);
+            invoke("userInfo");
+          })
+        }
         
       })()`;
 
@@ -1265,7 +1257,11 @@ class DmYY {
         let iconBase64 = ``;
         if (menuItem.children) {
           menuItem.onClick = () => {
-            this.renderAppView(menuItem.children);
+            return this.renderAppView(
+              typeof menuItem.children === 'function'
+                ? menuItem.children()
+                : menuItem.children
+            );
           };
         }
         if (menuItem.url) {
@@ -1296,10 +1292,8 @@ class DmYY {
         if (menuItem.val !== undefined && !menuItem.defaultValue)
           menuItem.defaultValue = this.settings[menuItem.val] || '';
 
-        if (menuItem.defaultValue && menuItem.type === 'input') {
-          defaultHtml = menuItem.defaultValue;
-        } else if (menuItem.type === 'color') {
-          defaultHtml = `<input class="form-item__input" name="${idName}" type="color" enterkeyhint="done" value="${menuItem.defaultValue}">`;
+        if (menuItem.type === 'input') {
+          defaultHtml = menuItem.defaultValue || '';
         } else if (menuItem.type === 'img') {
           const cachePath = `${menuItem.val}/${menuItem.name}`;
           if (this.FILE_MGR.fileExists(cachePath)) {
@@ -1308,10 +1302,32 @@ class DmYY {
             ).toBase64String()}`;
             defaultHtml = `<img src="${imageSrc}"/>`;
           }
+        } else if (menuItem.type === 'select') {
+          let selectOptions = '';
+
+          menuItem.options.forEach((option) => {
+            let selected = `selected="selected"`;
+            selectOptions += `<option value="${option}" ${
+              menuItem.defaultValue === option ? selected : ''
+            }>${option}</option>`;
+          });
+          defaultHtml = `<select class="form-item__input" name="${idName}">${selectOptions}</select>`;
+        } else if (menuItem.type === 'switch') {
+          const checked =
+            menuItem.defaultValue === 'true' ? `checked="checked"` : '';
+          defaultHtml += `<input class="form-item__input" name="${idName}" role="switch" type="checkbox" value="true" ${checked} />`;
+        } else if (menuItem.type) {
+          defaultHtml = `<input class="form-item__input" placeholder="${
+            menuItem.placeholder || '请输入'
+          }" name="${idName}" type="${
+            menuItem.type
+          }" enterkeyhint="done" value="${menuItem.defaultValue}">`;
         }
 
         configList += `     
-          <label id="${idName}" class="form-item form-item--link">
+          <label id="${idName}" class="form-item form-item--link ${
+          !defaultHtml || menuItem.type === 'input' ? 'label-link' : ''
+        }">
               <div class="form-label item-none">
                   <img class="form-label-img" class="form-label-img" src="${iconBase64}"/>
                   <div class="form-label-title">${menuItem.title}</div>
@@ -1381,10 +1397,9 @@ class DmYY {
         </body>
       </html>`;
 
+    Pasteboard.copy(html);
     // 预览web
-    await previewWebView.loadHTML(html).catch((err) => {
-      console.log(err);
-    });
+    await previewWebView.loadHTML(html);
 
     const injectListener = async () => {
       const event = await previewWebView.evaluateJavaScript(
@@ -1418,17 +1433,19 @@ class DmYY {
           if (actionItem?.onClick) {
             await actionItem?.onClick?.(actionItem, data, previewWebView);
           } else if (actionItem.type == 'input') {
-            await this.setLightAndDark(
-              actionItem['title'],
-              actionItem['desc'],
-              actionItem['val'],
-              actionItem['placeholder']
-            );
-            this.insertTextByElementId(
-              previewWebView,
-              idName,
-              this.settings[actionItem.val] || ''
-            );
+            if (
+              await this.setLightAndDark(
+                actionItem['title'],
+                actionItem['desc'],
+                actionItem['val'],
+                actionItem['placeholder']
+              )
+            )
+              this.insertTextByElementId(
+                previewWebView,
+                idName,
+                this.settings[actionItem.val] || ''
+              );
           } else if (actionItem.type === 'img') {
             const backImage = await this.chooseImg();
             if (backImage) {
@@ -1572,7 +1589,10 @@ class DmYY {
    * @param {func} func 点击后执行的函数
    */
   registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }, type) {
-    if (typeof name === 'object') return this._actions.push(name);
+    if (typeof name === 'object' && !name.menu) return this._actions.push(name);
+    if (typeof name === 'object' && name.menu)
+      return this._menuActions.push(name);
+
     const action = {
       name,
       type,
@@ -1962,14 +1982,15 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
           onClick,
         },
       ];
+
       const menuConfig = [
         { title: '预览组件', menu: preview },
         { title: '组件配置', menu: actions },
+        ...M['_menuActions'],
       ];
       await M.renderAppView(menuConfig, true);
     }
   }
 };
-
 // await new DmYY().setWidgetConfig();
 module.exports = { DmYY, Runing };
