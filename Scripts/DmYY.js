@@ -1397,7 +1397,7 @@ class DmYY {
         </body>
       </html>`;
 
-    Pasteboard.copy(html);
+    
     // 预览web
     await previewWebView.loadHTML(html);
 
