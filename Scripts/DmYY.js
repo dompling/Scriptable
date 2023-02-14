@@ -145,16 +145,17 @@ class DmYY {
   };
 
   // 选择图片并缓存
-  chooseImg = async () => {
-    return Photos.fromLibrary()
-      .then(async (response) => {
-        const bool = this.verifyImage(response);
-        if (bool) return response;
-        throw new Error('图片超过限制');
-      })
-      .catch((err) => {
-        console.log('图片选择异常:' + err);
-      });
+  chooseImg = async (verify = false) => {
+    const response = await Photos.fromLibrary().catch((err) => {
+      console.log('图片选择异常:' + err);
+    });
+
+    if (verify) {
+      const bool = this.verifyImage(response);
+      if (bool) return response;
+      throw new Error('图片超过限制');
+    }
+    return response;
   };
 
   // 设置 widget 背景图片
@@ -622,6 +623,7 @@ class DmYY {
             type: 'img',
             title: '日间背景',
             val: this.cacheImage,
+            verify: true,
           },
           {
             icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
@@ -629,6 +631,7 @@ class DmYY {
             type: 'img',
             title: '夜间背景',
             val: this.cacheImage,
+            verify: true,
           },
           {
             icon: { name: 'text.below.photo', color: '#faad14' },
@@ -640,15 +643,10 @@ class DmYY {
               const backImage = await this.getWidgetScreenShot();
               if (!backImage || !(await this.verifyImage(backImage))) return;
               const cachePath = `${item.val}/${item.name}`;
-              const base64Img = await this.setBackgroundImage(
-                backImage,
-                cachePath
-              );
-              this.insertTextByElementId(
+              await this.htmlChangeImage(backImage, cachePath, {
                 previewWebView,
-                item.name,
-                `<img src="${base64Img}"  />`
-              );
+                id: item.name,
+              });
             },
           },
         ],
@@ -679,6 +677,7 @@ class DmYY {
             title: '清空背景图片',
             val: `${this.cacheImage}/`,
             onClick: async (_, __, previewWebView) => {
+              const ids = ['dayBg', 'nightBg', 'transparentBg'];
               const options = [
                 '清空日间',
                 '清空夜间',
@@ -690,37 +689,19 @@ class DmYY {
               const index = await this.generateAlert(message, options);
               if (index === 4) return;
               switch (index) {
-                case 0:
-                  await this.setBackgroundImage(false, _.val + 'dayBg');
-                  this.insertTextByElementId(previewWebView, 'dayBg', ``);
-                  return;
-                case 1:
-                  await this.setBackgroundImage(false, _.val + 'nightBg');
-                  this.insertTextByElementId(previewWebView, 'nightBg', ``);
-                  return;
-                case 2:
-                  await this.setBackgroundImage(false, _.val + 'transparentBg');
-                  this.insertTextByElementId(
-                    previewWebView,
-                    'transparentBg',
-                    ``
-                  );
+                case 3:
+                  for (const id of ids) {
+                    await this.htmlChangeImage(false, `${_.val}${ids[id]}`, {
+                      previewWebView,
+                      id: ids[id],
+                    });
+                  }
                   return;
                 default:
-                  await this.setBackgroundImage(false, _.val + 'dayBg', false);
-                  await this.setBackgroundImage(
-                    false,
-                    _.val + 'nightBg',
-                    false
-                  );
-                  await this.setBackgroundImage(false, _.val + 'transparentBg');
-                  this.insertTextByElementId(previewWebView, 'dayBg', ``);
-                  this.insertTextByElementId(previewWebView, 'nightBg', ``);
-                  this.insertTextByElementId(
+                  await this.htmlChangeImage(false, `${_.val}${ids[index]}`, {
                     previewWebView,
-                    'transparentBg',
-                    ``
-                  );
+                    id: ids[index],
+                  });
                   break;
               }
             },
@@ -737,8 +718,13 @@ class DmYY {
     color = '#504ED5',
     cornerWidth = 42
   ) => {
-    const sfi = SFSymbol.named(icon);
-    sfi.applyFont(Font.mediumSystemFont(30));
+    let sfi = SFSymbol.named('square.grid.2x2');
+    try {
+      sfi = SFSymbol.named(icon);
+      sfi.applyFont(Font.mediumSystemFont(30));
+    } catch (e) {
+      console.log(`图标(${icon})异常：` + e);
+    }
     const imgData = Data.fromPNG(sfi.image).toBase64String();
     const html = `
         <img id="sourceImg" src="data:image/png;base64,${imgData}" />
@@ -849,23 +835,19 @@ class DmYY {
                   const albumIndex = await this.generateAlert('', albumOptions);
                   if (albumIndex === 2) return;
                   if (albumIndex === 1) {
-                    await this.setBackgroundImage(false, _.name, false);
-                    this.insertTextByElementId(previewWebView, _.name, ``);
+                    await this.htmlChangeImage(false, cachePath, {
+                      previewWebView,
+                      id: _.name,
+                    });
                     return;
                   }
 
                   const backImage = await this.chooseImg();
                   if (backImage) {
-                    const base64Img = await this.setBackgroundImage(
-                      backImage,
-                      cachePath
-                    );
-
-                    this.insertTextByElementId(
+                    await this.htmlChangeImage(backImage, cachePath, {
                       previewWebView,
-                      _.name,
-                      `<img src="${base64Img}"/>`
-                    );
+                      id: _.name,
+                    });
                   }
 
                   break;
@@ -884,19 +866,15 @@ class DmYY {
                       data[_.name],
                       'IMG'
                     );
-                    const base64Img = await this.setBackgroundImage(
-                      backImage,
-                      cachePath
-                    );
-
-                    this.insertTextByElementId(
+                    await this.htmlChangeImage(backImage, cachePath, {
                       previewWebView,
-                      _.name,
-                      `<img src="${base64Img}"/>`
-                    );
+                      id: _.name,
+                    });
                   } else {
-                    await this.setBackgroundImage(false, cachePath);
-                    this.insertTextByElementId(previewWebView, 'avatar');
+                    await this.htmlChangeImage(false, cachePath, {
+                      previewWebView,
+                      id: _.name,
+                    });
                   }
 
                   break;
@@ -953,9 +931,13 @@ class DmYY {
               if (index === 1) {
                 this.settings = {};
                 this.baseSettings = {};
+
+                this.FILE_MGR.remove(this.cacheImage);
+
                 for (const item of this.cacheImageBgPath) {
                   await this.setBackgroundImage(false, item, false);
                 }
+
                 this.saveSettings(false);
                 this.saveBaseSettings();
                 await this.notify(
@@ -969,6 +951,16 @@ class DmYY {
         ],
       },
     ]);
+  };
+
+  htmlChangeImage = async (image, path, { previewWebView, id }) => {
+    const base64Img = await this.setBackgroundImage(image, path, false);
+    console.log(path);
+    this.insertTextByElementId(
+      previewWebView,
+      id,
+      base64Img ? `<img src="${base64Img}"/>` : ''
+    );
   };
 
   reopenScript = () => {
@@ -1074,7 +1066,7 @@ class DmYY {
         font-size: 13px;
         color: #86868b;
         margin: 0 4px 0 auto; 
-        max-width: 100px;
+        max-width: 130px;
         overflow: hidden;
         text-overflow: ellipsis;
         display:flex;
@@ -1099,7 +1091,7 @@ class DmYY {
         width: 2em;
         height: 2em;
       }
-      input[type='input'],select {
+      input[type='input'],select,input[type='date'] {
         width: 100%;
         height: 2.3em;
         outline-style: none;
@@ -1217,7 +1209,7 @@ class DmYY {
            }
         };
   
-        for (const btn of document.querySelectorAll('.label-link')) {
+        for (const btn of document.querySelectorAll('.form-item')) {
             btn.addEventListener('click', (e) => {
               if(!e.target.id)return;
               toggleIcoLoading(e);
@@ -1289,8 +1281,8 @@ class DmYY {
         const idName = menuItem.name || menuItem.val;
 
         let defaultHtml = ``;
-        if (menuItem.val !== undefined && !menuItem.defaultValue)
-          menuItem.defaultValue = this.settings[menuItem.val] || '';
+        if (idName !== undefined && !menuItem.defaultValue)
+          menuItem.defaultValue = this.settings[idName] || '';
 
         if (menuItem.type === 'input') {
           defaultHtml = menuItem.defaultValue || '';
@@ -1304,7 +1296,6 @@ class DmYY {
           }
         } else if (menuItem.type === 'select') {
           let selectOptions = '';
-
           menuItem.options.forEach((option) => {
             let selected = `selected="selected"`;
             selectOptions += `<option value="${option}" ${
@@ -1321,13 +1312,11 @@ class DmYY {
             menuItem.placeholder || '请输入'
           }" name="${idName}" type="${
             menuItem.type
-          }" enterkeyhint="done" value="${menuItem.defaultValue}">`;
+          }" enterkeyhint="done" value="${menuItem.defaultValue || ''}">`;
         }
 
         configList += `     
-          <label id="${idName}" class="form-item form-item--link ${
-          !defaultHtml || menuItem.type === 'input' ? 'label-link' : ''
-        }">
+          <label id="${idName}" class="form-item form-item--link">
               <div class="form-label item-none">
                   <img class="form-label-img" class="form-label-img" src="${iconBase64}"/>
                   <div class="form-label-title">${menuItem.title}</div>
@@ -1397,7 +1386,6 @@ class DmYY {
         </body>
       </html>`;
 
-    
     // 预览web
     await previewWebView.loadHTML(html);
 
@@ -1437,33 +1425,43 @@ class DmYY {
               await this.setLightAndDark(
                 actionItem['title'],
                 actionItem['desc'],
-                actionItem['val'],
+                idName,
                 actionItem['placeholder']
               )
             )
               this.insertTextByElementId(
                 previewWebView,
                 idName,
-                this.settings[actionItem.val] || ''
+                this.settings[idName] || ''
               );
           } else if (actionItem.type === 'img') {
-            const backImage = await this.chooseImg();
-            if (backImage) {
-              const cachePath = `${actionItem.val}/${actionItem.name}`;
-              const base64Img = await this.setBackgroundImage(
-                backImage,
-                cachePath,
-                false
-              );
-              this.insertTextByElementId(
-                previewWebView,
-                idName,
-                `<img src="${base64Img}"/>`
-              );
+            const cachePath = `${actionItem.val}/${actionItem.name}`;
+            const options = ['相册选择', '清空图片', '取消'];
+            const message = '相册图片选择，请选择合适图片大小';
+            const index = await this.generateAlert(message, options);
+            switch (index) {
+              case 0:
+                const backImage = await this.chooseImg(actionItem.verify);
+                if (backImage) {
+                  const cachePath = `${actionItem.val}/${actionItem.name}`;
+                  await this.htmlChangeImage(backImage, cachePath, {
+                    previewWebView,
+                    id: idName,
+                  });
+                }
+                break;
+              case 1:
+                await this.htmlChangeImage(false, cachePath, {
+                  previewWebView,
+                  id: idName,
+                });
+                break;
+              default:
+                break;
             }
           } else {
             if (data !== undefined) {
-              this.settings[actionItem.val] = data;
+              this.settings[idName] = data;
               this.saveSettings(false);
             }
           }
@@ -1632,7 +1630,150 @@ class DmYY {
    * @param {string} str 要加密成md5的数据
    */
   // prettier-ignore
-  md5(str){function d(n,t){var r=(65535&n)+(65535&t);return(((n>>16)+(t>>16)+(r>>16))<<16)|(65535&r)}function f(n,t,r,e,o,u){return d(((c=d(d(t,n),d(e,u)))<<(f=o))|(c>>>(32-f)),r);var c,f}function l(n,t,r,e,o,u,c){return f((t&r)|(~t&e),n,t,o,u,c)}function v(n,t,r,e,o,u,c){return f((t&e)|(r&~e),n,t,o,u,c)}function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}function i(n,t){var r,e,o,u;(n[t>>5]|=128<<t%32),(n[14+(((t+64)>>>9)<<4)]=t);for(var c=1732584193,f=-271733879,i=-1732584194,a=271733878,h=0;h<n.length;h+=16)(c=l((r=c),(e=f),(o=i),(u=a),n[h],7,-680876936)),(a=l(a,c,f,i,n[h+1],12,-389564586)),(i=l(i,a,c,f,n[h+2],17,606105819)),(f=l(f,i,a,c,n[h+3],22,-1044525330)),(c=l(c,f,i,a,n[h+4],7,-176418897)),(a=l(a,c,f,i,n[h+5],12,1200080426)),(i=l(i,a,c,f,n[h+6],17,-1473231341)),(f=l(f,i,a,c,n[h+7],22,-45705983)),(c=l(c,f,i,a,n[h+8],7,1770035416)),(a=l(a,c,f,i,n[h+9],12,-1958414417)),(i=l(i,a,c,f,n[h+10],17,-42063)),(f=l(f,i,a,c,n[h+11],22,-1990404162)),(c=l(c,f,i,a,n[h+12],7,1804603682)),(a=l(a,c,f,i,n[h+13],12,-40341101)),(i=l(i,a,c,f,n[h+14],17,-1502002290)),(c=v(c,(f=l(f,i,a,c,n[h+15],22,1236535329)),i,a,n[h+1],5,-165796510)),(a=v(a,c,f,i,n[h+6],9,-1069501632)),(i=v(i,a,c,f,n[h+11],14,643717713)),(f=v(f,i,a,c,n[h],20,-373897302)),(c=v(c,f,i,a,n[h+5],5,-701558691)),(a=v(a,c,f,i,n[h+10],9,38016083)),(i=v(i,a,c,f,n[h+15],14,-660478335)),(f=v(f,i,a,c,n[h+4],20,-405537848)),(c=v(c,f,i,a,n[h+9],5,568446438)),(a=v(a,c,f,i,n[h+14],9,-1019803690)),(i=v(i,a,c,f,n[h+3],14,-187363961)),(f=v(f,i,a,c,n[h+8],20,1163531501)),(c=v(c,f,i,a,n[h+13],5,-1444681467)),(a=v(a,c,f,i,n[h+2],9,-51403784)),(i=v(i,a,c,f,n[h+7],14,1735328473)),(c=g(c,(f=v(f,i,a,c,n[h+12],20,-1926607734)),i,a,n[h+5],4,-378558)),(a=g(a,c,f,i,n[h+8],11,-2022574463)),(i=g(i,a,c,f,n[h+11],16,1839030562)),(f=g(f,i,a,c,n[h+14],23,-35309556)),(c=g(c,f,i,a,n[h+1],4,-1530992060)),(a=g(a,c,f,i,n[h+4],11,1272893353)),(i=g(i,a,c,f,n[h+7],16,-155497632)),(f=g(f,i,a,c,n[h+10],23,-1094730640)),(c=g(c,f,i,a,n[h+13],4,681279174)),(a=g(a,c,f,i,n[h],11,-358537222)),(i=g(i,a,c,f,n[h+3],16,-722521979)),(f=g(f,i,a,c,n[h+6],23,76029189)),(c=g(c,f,i,a,n[h+9],4,-640364487)),(a=g(a,c,f,i,n[h+12],11,-421815835)),(i=g(i,a,c,f,n[h+15],16,530742520)),(c=m(c,(f=g(f,i,a,c,n[h+2],23,-995338651)),i,a,n[h],6,-198630844)),(a=m(a,c,f,i,n[h+7],10,1126891415)),(i=m(i,a,c,f,n[h+14],15,-1416354905)),(f=m(f,i,a,c,n[h+5],21,-57434055)),(c=m(c,f,i,a,n[h+12],6,1700485571)),(a=m(a,c,f,i,n[h+3],10,-1894986606)),(i=m(i,a,c,f,n[h+10],15,-1051523)),(f=m(f,i,a,c,n[h+1],21,-2054922799)),(c=m(c,f,i,a,n[h+8],6,1873313359)),(a=m(a,c,f,i,n[h+15],10,-30611744)),(i=m(i,a,c,f,n[h+6],15,-1560198380)),(f=m(f,i,a,c,n[h+13],21,1309151649)),(c=m(c,f,i,a,n[h+4],6,-145523070)),(a=m(a,c,f,i,n[h+11],10,-1120210379)),(i=m(i,a,c,f,n[h+2],15,718787259)),(f=m(f,i,a,c,n[h+9],21,-343485551)),(c=d(c,r)),(f=d(f,e)),(i=d(i,o)),(a=d(a,u));return[c,f,i,a]}function a(n){for(var t='',r=32*n.length,e=0;e<r;e+=8)t+=String.fromCharCode((n[e>>5]>>>e%32)&255);return t}function h(n){var t=[];for(t[(n.length>>2)-1]=void 0,e=0;e<t.length;e+=1)t[e]=0;for(var r=8*n.length,e=0;e<r;e+=8)t[e>>5]|=(255&n.charCodeAt(e/8))<<e%32;return t}function e(n){for(var t,r='0123456789abcdef',e='',o=0;o<n.length;o+=1)(t=n.charCodeAt(o)),(e+=r.charAt((t>>>4)&15)+r.charAt(15&t));return e}function r(n){return unescape(encodeURIComponent(n))}function o(n){return a(i(h((t=r(n))),8*t.length));var t}function u(n,t){return(function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)(u[r]=909522486^o[r]),(c[r]=1549556828^o[r]);return((e=i(u.concat(h(t)),512+8*t.length)),a(i(c.concat(e),640)))})(r(n),r(t))}function t(n,t,r){return t?(r?u(t,n):e(u(t,n))):r?o(n):e(o(n))}return t(str)}
+  md5(str) {
+    function d(n, t) {
+      var r = (65535 & n) + (65535 & t);
+      return (((n >> 16) + (t >> 16) + (r >> 16)) << 16) | (65535 & r);
+    }
+
+    function f(n, t, r, e, o, u) {
+      return d(((c = d(d(t, n), d(e, u))) << (f = o)) | (c >>> (32 - f)), r);
+      var c, f;
+    }
+
+    function l(n, t, r, e, o, u, c) {
+      return f(
+          (t & r) | (~t & e), n, t, o, u, c);
+    }
+
+    function v(n, t, r, e, o, u, c) {
+      return f(
+          (t & e) | (r & ~e), n, t, o, u, c);
+    }
+
+    function g(n, t, r, e, o, u, c) {return f(t ^ r ^ e, n, t, o, u, c);}
+
+    function m(n, t, r, e, o, u, c) {return f(r ^ (t | ~e), n, t, o, u, c);}
+
+    function i(n, t) {
+      var r, e, o, u;
+      (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
+      for (var c = 1732584193, f = -271733879, i = -1732584194, a = 271733878, h = 0; h <
+      n.length; h += 16) (c = l(
+          (r = c), (e = f), (o = i), (u = a), n[h], 7, -680876936)), (a = l(
+          a, c, f, i, n[h + 1], 12, -389564586)), (i = l(
+          i, a, c, f, n[h + 2], 17, 606105819)), (f = l(
+          f, i, a, c, n[h + 3], 22, -1044525330)), (c = l(
+          c, f, i, a, n[h + 4], 7, -176418897)), (a = l(
+          a, c, f, i, n[h + 5], 12, 1200080426)), (i = l(
+          i, a, c, f, n[h + 6], 17, -1473231341)), (f = l(
+          f, i, a, c, n[h + 7], 22, -45705983)), (c = l(
+          c, f, i, a, n[h + 8], 7, 1770035416)), (a = l(
+          a, c, f, i, n[h + 9], 12, -1958414417)), (i = l(
+          i, a, c, f, n[h + 10], 17, -42063)), (f = l(
+          f, i, a, c, n[h + 11], 22, -1990404162)), (c = l(
+          c, f, i, a, n[h + 12], 7, 1804603682)), (a = l(
+          a, c, f, i, n[h + 13], 12, -40341101)), (i = l(
+          i, a, c, f, n[h + 14], 17, -1502002290)), (c = v(
+          c, (f = l(f, i, a, c, n[h + 15], 22, 1236535329)), i, a, n[h + 1], 5,
+          -165796510,
+      )), (a = v(a, c, f, i, n[h + 6], 9, -1069501632)), (i = v(
+          i, a, c, f, n[h + 11], 14, 643717713)), (f = v(
+          f, i, a, c, n[h], 20, -373897302)), (c = v(
+          c, f, i, a, n[h + 5], 5, -701558691)), (a = v(
+          a, c, f, i, n[h + 10], 9, 38016083)), (i = v(
+          i, a, c, f, n[h + 15], 14, -660478335)), (f = v(
+          f, i, a, c, n[h + 4], 20, -405537848)), (c = v(
+          c, f, i, a, n[h + 9], 5, 568446438)), (a = v(
+          a, c, f, i, n[h + 14], 9, -1019803690)), (i = v(
+          i, a, c, f, n[h + 3], 14, -187363961)), (f = v(
+          f, i, a, c, n[h + 8], 20, 1163531501)), (c = v(
+          c, f, i, a, n[h + 13], 5, -1444681467)), (a = v(
+          a, c, f, i, n[h + 2], 9, -51403784)), (i = v(
+          i, a, c, f, n[h + 7], 14, 1735328473)), (c = g(
+          c, (f = v(f, i, a, c, n[h + 12], 20, -1926607734)), i, a, n[h + 5], 4,
+          -378558,
+      )), (a = g(a, c, f, i, n[h + 8], 11, -2022574463)), (i = g(
+          i, a, c, f, n[h + 11], 16, 1839030562)), (f = g(
+          f, i, a, c, n[h + 14], 23, -35309556)), (c = g(
+          c, f, i, a, n[h + 1], 4, -1530992060)), (a = g(
+          a, c, f, i, n[h + 4], 11, 1272893353)), (i = g(
+          i, a, c, f, n[h + 7], 16, -155497632)), (f = g(
+          f, i, a, c, n[h + 10], 23, -1094730640)), (c = g(
+          c, f, i, a, n[h + 13], 4, 681279174)), (a = g(
+          a, c, f, i, n[h], 11, -358537222)), (i = g(
+          i, a, c, f, n[h + 3], 16, -722521979)), (f = g(
+          f, i, a, c, n[h + 6], 23, 76029189)), (c = g(
+          c, f, i, a, n[h + 9], 4, -640364487)), (a = g(
+          a, c, f, i, n[h + 12], 11, -421815835)), (i = g(
+          i, a, c, f, n[h + 15], 16, 530742520)), (c = m(
+          c, (f = g(f, i, a, c, n[h + 2], 23, -995338651)), i, a, n[h], 6,
+          -198630844,
+      )), (a = m(a, c, f, i, n[h + 7], 10, 1126891415)), (i = m(
+          i, a, c, f, n[h + 14], 15, -1416354905)), (f = m(
+          f, i, a, c, n[h + 5], 21, -57434055)), (c = m(
+          c, f, i, a, n[h + 12], 6, 1700485571)), (a = m(
+          a, c, f, i, n[h + 3], 10, -1894986606)), (i = m(
+          i, a, c, f, n[h + 10], 15, -1051523)), (f = m(
+          f, i, a, c, n[h + 1], 21, -2054922799)), (c = m(
+          c, f, i, a, n[h + 8], 6, 1873313359)), (a = m(
+          a, c, f, i, n[h + 15], 10, -30611744)), (i = m(
+          i, a, c, f, n[h + 6], 15, -1560198380)), (f = m(
+          f, i, a, c, n[h + 13], 21, 1309151649)), (c = m(
+          c, f, i, a, n[h + 4], 6, -145523070)), (a = m(
+          a, c, f, i, n[h + 11], 10, -1120210379)), (i = m(
+          i, a, c, f, n[h + 2], 15, 718787259)), (f = m(
+          f, i, a, c, n[h + 9], 21, -343485551)), (c = d(c, r)), (f = d(
+          f, e)), (i = d(i, o)), (a = d(a, u));
+      return [c, f, i, a];
+    }
+
+    function a(n) {
+      for (var t = '', r = 32 * n.length, e = 0; e <
+      r; e += 8) t += String.fromCharCode((n[e >> 5] >>> e % 32) & 255);
+      return t;
+    }
+
+    function h(n) {
+      var t = [];
+      for (t[(n.length >> 2) - 1] = void 0, e = 0; e <
+      t.length; e += 1) t[e] = 0;
+      for (var r = 8 * n.length, e = 0; e < r; e += 8) t[e >> 5] |= (255 &
+          n.charCodeAt(e / 8)) << e % 32;
+      return t;
+    }
+
+    function e(n) {
+      for (var t, r = '0123456789abcdef', e = '', o = 0; o <
+      n.length; o += 1) (t = n.charCodeAt(o)), (e += r.charAt((t >>> 4) & 15) +
+          r.charAt(15 & t));
+      return e;
+    }
+
+    function r(n) {return unescape(encodeURIComponent(n));}
+
+    function o(n) {
+      return a(i(h((t = r(n))), 8 * t.length));
+      var t;
+    }
+
+    function u(n, t) {
+      return (function(n, t) {
+        var r, e, o = h(n), u = [], c = [];
+        for (u[15] = c[15] = void 0, 16 < o.length &&
+        (o = i(o, 8 * n.length)), r = 0; r < 16; r += 1) (u[r] = 909522486 ^
+            o[r]), (c[r] = 1549556828 ^ o[r]);
+        return ((e = i(u.concat(h(t)), 512 + 8 * t.length)), a(
+            i(c.concat(e), 640)));
+      })(r(n), r(t));
+    }
+
+    function t(n, t, r) {
+      return t ? (r ? u(t, n) : e(u(t, n))) : r ? o(n) : e(o(n));
+    }
+
+    return t(str);
+  }
 
   /**
    * 渲染标题内容
