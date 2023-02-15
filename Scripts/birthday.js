@@ -5,15 +5,13 @@
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
 const { DmYY, Runing } = require('./DmYY');
-const { Calendar } = require('./Calendar');
-const $ = new Calendar();
 const mainTextSize = 13; // 倒数、农历、生日文字大小
 const now = new Date();
 const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
 const widthMode = Device.model() === 'iPad' ? 110 : 400; // 中号组件图片尺寸
 
-const heightMode = Device.model() === 'iPad' ? 110 : 380; // 中号组件图片尺寸
+const heightMode = Device.model() === 'iPad' ? 100 : 380; // 中号组件图片尺寸
 
 // @组件代码开始
 class Widget extends DmYY {
@@ -220,6 +218,54 @@ class Widget extends DmYY {
     return tmpBirth;
   };
 
+  daysBetween = (d) => {
+    let now = new Date();
+    let date = new Date(d.cYear, d.cMonth - 1, d.cDay);
+    return parseInt((date.getTime() - now.getTime()) / (24 * 3600 * 1000));
+  };
+
+  getAstroToEmoji = (astro) => {
+    const data = {
+      白羊座: '♈',
+      金牛座: '♉',
+      双子座: '♊',
+      巨蟹座: '♋',
+      狮子座: '♌',
+      处女座: '♍',
+      天秤座: '♎',
+      天蝎座: '♏',
+      射手座: '♐',
+      摩羯座: '♑',
+      水瓶座: '♒',
+      双鱼座: '♓',
+      蛇夫座: '⛎',
+    };
+    return data[astro] || '';
+  };
+
+  getAnimalZodiacToEmoji = (zodiac) => {
+    const data = {
+      鼠: '🐭',
+      牛: '🐂',
+      虎: '🐯',
+      兔: '🐇',
+      龙: '🐲',
+      蛇: '🐍',
+      马: '🐴',
+      羊: '🐑',
+      猴: '🐵',
+      鸡: '🐔',
+      狗: '🐶',
+      猪: '🐷',
+    };
+    return data[zodiac] || '';
+  };
+
+  verifyTime(date) {
+    let dateFormat = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+    return dateFormat.test(date);
+  }
+
   getEdayNumber = (date) => {
     var initDay = date.split('-');
     var obj = {
@@ -227,16 +273,25 @@ class Widget extends DmYY {
       cMonth: parseInt(initDay[1]),
       cDay: parseInt(initDay[2]),
     };
-    return Math.abs(this.$.daysBetween(obj));
+    return Math.abs(this.daysBetween(obj));
+  };
+
+  ajax = async (opt) => {
+    const type = opt.nongli ? 'lunar' : 'solar';
+    return (
+      await this.$request.post(`https://www.iamwawa.cn/home/nongli/ajax`, {
+        body: `type=${type}&year=${opt.year}&month=${opt.month}&day=${opt.day}`,
+      })
+    ).data;
   };
 
   init = async () => {
     await this.FILE_MGR.fileExists(this.LEFT_IMG_KEY);
     this.defaultData = {
       username: this.settings.nickname || '', // 姓名
-      time: this.settings.birthday || today, // 生日日期
+      time: this.settings.birthday || '2022-12-19', // 生日日期
       nongli: this.settings.nongli === 'true' || '', // 农历生日
-      eday: this.settings.eday || today, //相识
+      eday: this.settings.eday || '2022-12-19', //相识
       bless: this.settings.bless || '',
       nicknameShadow: this.settings.nicknameShadow || '#e8e8e8',
       isLeapMonth: false, //如果是农历闰月第四个参数赋值true即可
@@ -252,41 +307,48 @@ class Widget extends DmYY {
       isLeapMonth,
     };
 
-    const response = {};
-
-    var solarData;
-    if (nongli === 'true') {
-      solarData = this.$.lunar2solar(opt.year, opt.month, opt.day, isLeapMonth);
+    if (this.settings.ajax) {
+      this.ajax(opt).then((res) => {
+        this.settings.ajax = res;
+      });
     } else {
-      solarData = this.$.solar2lunar(opt.year, opt.month, opt.day);
+      this.settings.ajax = await this.ajax(opt);
     }
-    response.gregorian = solarData;
-    response.animal = `${solarData.Animal}`;
-    response.astro = `${this.$.getAstroToEmoji(solarData.astro)}-${
-      solarData.astro
-    }`;
-    if (this.$.verifyTime(eday)) {
+    this.saveSettings(false);
+    const response = this.settings.ajax;
+
+    response.animalEmoji = `${this.getAnimalZodiacToEmoji(response.animal)}`;
+    response.astro = `${this.getAstroToEmoji(response.constellation)}`;
+
+    if (this.verifyTime(eday)) {
       response.meetDay = this.getEdayNumber(eday);
     }
 
-    response.birthdayText = this.$.birthday(opt);
-    response.nextBirthday = response.birthdayText[0];
-
     this.contentText = { ...response, data: {} };
-    console.log(this.contentText);
-    const { gregorian, nextBirthday } = this.contentText;
-    const birth = `${nextBirthday.cYear}-${nextBirthday.cMonth}-${nextBirthday.cDay}`;
-    const { IMonthCn, IDayCn } = gregorian;
+
+    this.contentText.this_year_lunar_solar =
+      this.contentText.this_year_lunar_solar
+        .replace('年', '-')
+        .replace('月', '-')
+        .replace('日', '');
+    this.contentText.next_year_lunar_solar =
+      this.contentText.next_year_lunar_solar
+        .replace('年', '-')
+        .replace('月', '-')
+        .replace('日', '');
+    this.contentText.solar = this.contentText.solar
+      .replace('年', '-')
+      .replace('月', '-')
+      .replace('日', '');
+
     const tmpBirth = this.getAge(this.defaultData.eday);
     let ageYear = tmpBirth.year > 0 ? `${tmpBirth.year}岁` : '';
     let ageMonth = tmpBirth.month > 0 ? `${tmpBirth.month}月` : '';
     let ageDay = tmpBirth.day > 0 ? `${tmpBirth.day}天` : '1天';
     const age = ageYear + ageMonth + ageDay;
     const dayIcon = tmpBirth.day + '.circle.fill';
+
     this.contentText.data = {
-      birth,
-      IMonthCn,
-      IDayCn,
       tmpBirth,
       ageYear,
       ageMonth,
@@ -322,17 +384,19 @@ class Widget extends DmYY {
   };
 
   animalImg = (text) => {
-    const { time, nongli, isLeapMonth } = this.defaultData;
-    const _data = time.split('-');
-    const opt = {
-      year: parseInt(_data[0]),
-      month: parseInt(_data[1]),
-      day: parseInt(_data[2]),
-      nongli: nongli === 'true',
-      isLeapMonth,
+    const { this_year_lunar_solar, solar } = this.contentText;
+
+    const nextBirthday = {
+      year: this_year_lunar_solar.split('-')[0],
+      month: this_year_lunar_solar.split('-')[1],
+      day: this_year_lunar_solar.split('-')[2],
     };
 
-    const { nextBirthday } = this.contentText;
+    const preData = {
+      year: solar.split('-')[0],
+      month: solar.split('-')[1],
+      day: solar.split('-')[2],
+    };
 
     const extraTextColor = 'fc8ac3'; //环形进度条中心背景颜色及名字、meetDay颜色
     const ringColor = 'fc5ead'; //环形进度条颜色
@@ -349,28 +413,14 @@ class Widget extends DmYY {
     canvas.opaque = false;
     canvas.respectScreenScale = true;
 
-    var preData;
-    if (nongli) {
-      preData = this.$.lunar2solar(
-        `${nextBirthday.lYear}` - 1,
-        opt.month,
-        opt.day,
-        isLeapMonth
-      );
-    } else {
-      preData = this.$.solar2lunar(
-        `${nextBirthday.cYear}` - 1,
-        opt.month,
-        opt.day
-      );
-    }
     const today = new Date();
     const thenDate = new Date(
-      `${nextBirthday.cYear}`,
-      `${nextBirthday.cMonth}` - 1,
-      `${nextBirthday.cDay}`
+      `${nextBirthday.year}`,
+      `${nextBirthday.month}` - 1,
+      `${nextBirthday.day}`
     );
-    const passDate = new Date(preData.cYear, preData.cMonth - 1, preData.cDay);
+
+    const passDate = new Date(preData.year, preData.month - 1, preData.day);
 
     const gap = today.getTime() - passDate.getTime();
     const gap2 = thenDate.getTime() - passDate.getTime();
@@ -406,15 +456,11 @@ class Widget extends DmYY {
     canvas.setLineWidth(0);
     canvas.fillEllipse(ringBG);
 
-    const canvTextRect = new Rect(
-      0,
-      80 - canvTextSize / 2,
-      canvSize,
-      canvTextSize
-    );
+    const canvTextRect = new Rect(0, 70 - canvTextSize / 2, canvSize, 80);
     canvas.setTextAlignedCenter();
     canvas.setTextColor(cfontColor);
     canvas.setFont(Font.mediumRoundedSystemFont(canvTextSize));
+    canvas.setFont(this.provideFont('ultralight', 68));
     canvas.drawTextInRect(`${text}`, canvTextRect);
 
     return canvas.getImage();
@@ -422,18 +468,10 @@ class Widget extends DmYY {
 
   renderMedium = (widget) => {
     const {
-      animal,
-      data: {
-        birth,
-        IMonthCn,
-        IDayCn,
-        tmpBirth,
-        ageYear,
-        ageMonth,
-        ageDay,
-        age,
-        dayIcon,
-      },
+      this_year_lunar_solar,
+      lunar_date,
+      animalEmoji,
+      data: { tmpBirth, ageYear, ageMonth, age, dayIcon },
     } = this.contentText;
 
     const phoneSize = Device.screenSize();
@@ -469,10 +507,7 @@ class Widget extends DmYY {
 
     userStack.addSpacer();
 
-    userStack.addImage(this.animalImg(animal));
-    // animalWidgetText.textColor = this.widgetColor;
-    // animalWidgetText.font = this.provideFont('italic', 14);
-    // animalWidgetText.textOpacity = 0.6;
+    userStack.addImage(this.animalImg(animalEmoji));
 
     rightStack.addSpacer(20);
     if (tmpBirth.year > 0 && tmpBirth.month > 0 && tmpBirth.day > 0) {
@@ -497,7 +532,7 @@ class Widget extends DmYY {
       icon: 'calendar',
       color: '#30d15b',
       title: '农历',
-      text: `${IMonthCn}${IDayCn}`,
+      text: `${lunar_date}`,
     });
 
     rightStack.addSpacer();
@@ -506,7 +541,7 @@ class Widget extends DmYY {
       icon: 'app.gift.fill',
       color: '#fc6d6d',
       title: '生日',
-      text: birth,
+      text: `${this_year_lunar_solar}`,
     });
 
     rightStack.addSpacer();
@@ -516,16 +551,9 @@ class Widget extends DmYY {
 
   renderSmall = (widget) => {
     const {
-      data: {
-        birth,
-        IMonthCn,
-        IDayCn,
-        tmpBirth,
-        ageYear,
-        ageMonth,
-        age,
-        dayIcon,
-      },
+      this_year_lunar_solar,
+      lunar_date,
+      data: { tmpBirth, ageYear, ageMonth, age, dayIcon },
     } = this.contentText;
 
     const containerStack = widget.addStack();
@@ -583,7 +611,7 @@ class Widget extends DmYY {
       icon: 'calendar',
       color: '#30d15b',
       title: '农历',
-      text: `${IMonthCn}${IDayCn}`,
+      text: `${lunar_date}`,
     });
 
     containerStack.addSpacer();
@@ -592,7 +620,7 @@ class Widget extends DmYY {
       icon: 'app.gift.fill',
       color: '#fc6d6d',
       title: '生日',
-      text: birth,
+      text: `${this_year_lunar_solar}`,
     });
 
     containerStack.addSpacer();
@@ -620,4 +648,4 @@ class Widget extends DmYY {
 }
 
 // @组件代码结束
-await Runing(Widget, '', false, { $ }); //远程开发环境
+await Runing(Widget); //远程开发环境
