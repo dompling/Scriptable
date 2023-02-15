@@ -4,12 +4,16 @@
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === 'undefined') require = importModule;
-const {DmYY, Runing} = require('./DmYY');
-const {Calendar} = require('./Calendar');
+const { DmYY, Runing } = require('./DmYY');
+const { Calendar } = require('./Calendar');
 const $ = new Calendar();
 const mainTextSize = 13; // 倒数、农历、生日文字大小
 const now = new Date();
 const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+
+const widthMode = Device.model() === 'iPad' ? 110 : 400; // 中号组件图片尺寸
+
+const heightMode = Device.model() === 'iPad' ? 110 : 380; // 中号组件图片尺寸
 
 // @组件代码开始
 class Widget extends DmYY {
@@ -26,7 +30,7 @@ class Widget extends DmYY {
 
     if (config.runsInApp) {
       this.registerAction({
-        icon: {name: 'person.badge.plus', color: '#52c41a'},
+        icon: { name: 'person.badge.plus', color: '#52c41a' },
         type: 'img',
         title: '头像',
         name: 'avatar',
@@ -129,7 +133,7 @@ class Widget extends DmYY {
     for (let i = startYear; i <= endYear; i++) {
       let currYear = 365;
       let yearMonth = 12;
-      if (((i % 4 == 0 && i % 100 !== 0) || i % 400 == 0)) {
+      if ((i % 4 == 0 && i % 100 !== 0) || i % 400 == 0) {
         allDays += 366;
         currYear = 366;
       }
@@ -147,7 +151,7 @@ class Widget extends DmYY {
         if (m == 1 || m == 3 || m == 8 || m == 10 || m == 12) {
           fullDays = 31;
         } else if (m == 2) {
-          if (((i % 4 == 0 && i % 100 !== 0) || i % 400 == 0)) {
+          if ((i % 4 == 0 && i % 100 !== 0) || i % 400 == 0) {
             fullDays = 29;
           } else {
             fullDays = 28;
@@ -178,11 +182,12 @@ class Widget extends DmYY {
       var d1 = allDayArr[0].currDays;
       var d2 = allDayArr[1].currDays;
       //月份天数浮动因子决定准确性
-      let cfDay = allDayArr[0].fullDays >
-      allDayArr[allDayArr.length - 1].fullDays ? allDayArr[allDayArr.length -
-      1].fullDays : allDayArr[0].fullDays;
-      if ((d1 + d2) >= cfDay) {
-        tmpBirth.day = (d1 + d2) - cfDay;
+      let cfDay =
+        allDayArr[0].fullDays > allDayArr[allDayArr.length - 1].fullDays
+          ? allDayArr[allDayArr.length - 1].fullDays
+          : allDayArr[0].fullDays;
+      if (d1 + d2 >= cfDay) {
+        tmpBirth.day = d1 + d2 - cfDay;
         tmpBirth.month += 1;
       } else {
         tmpBirth.day = d1 + d2;
@@ -195,11 +200,12 @@ class Widget extends DmYY {
         sumFullDay += allDayArr[i].fullDays;
       }
       //月份天数浮动因子决定准确性
-      let cfDay = allDayArr[0].fullDays >
-      allDayArr[allDayArr.length - 1].fullDays ? allDayArr[allDayArr.length -
-      1].fullDays : allDayArr[0].fullDays;
-      if ((d1 + d2) >= cfDay) {
-        tmpBirth.day = (d1 + d2) - cfDay;
+      let cfDay =
+        allDayArr[0].fullDays > allDayArr[allDayArr.length - 1].fullDays
+          ? allDayArr[allDayArr.length - 1].fullDays
+          : allDayArr[0].fullDays;
+      if (d1 + d2 >= cfDay) {
+        tmpBirth.day = d1 + d2 - cfDay;
         tmpBirth.month += 1;
       } else {
         tmpBirth.day = d1 + d2;
@@ -208,7 +214,7 @@ class Widget extends DmYY {
 
       if (tmpBirth.month >= 12) {
         tmpBirth.year += Math.floor(tmpBirth.month / 12);
-        tmpBirth.month = tmpBirth.month - (tmpBirth.year * 12);
+        tmpBirth.month = tmpBirth.month - tmpBirth.year * 12;
       }
     }
     return tmpBirth;
@@ -236,7 +242,7 @@ class Widget extends DmYY {
       isLeapMonth: false, //如果是农历闰月第四个参数赋值true即可
     };
 
-    const {time, nongli, isLeapMonth, eday} = this.defaultData;
+    const { time, nongli, isLeapMonth, eday } = this.defaultData;
     const _data = time.split('-');
     const opt = {
       year: parseInt(_data[0]),
@@ -256,8 +262,9 @@ class Widget extends DmYY {
     }
     response.gregorian = solarData;
     response.animal = `${solarData.Animal}`;
-    response.astro = `${this.$.getAstroToEmoji(
-        solarData.astro)}-${solarData.astro}`;
+    response.astro = `${this.$.getAstroToEmoji(solarData.astro)}-${
+      solarData.astro
+    }`;
     if (this.$.verifyTime(eday)) {
       response.meetDay = this.getEdayNumber(eday);
     }
@@ -265,11 +272,11 @@ class Widget extends DmYY {
     response.birthdayText = this.$.birthday(opt);
     response.nextBirthday = response.birthdayText[0];
 
-    this.contentText = {...response, data: {}};
+    this.contentText = { ...response, data: {} };
     console.log(this.contentText);
-    const {gregorian, nextBirthday} = this.contentText;
+    const { gregorian, nextBirthday } = this.contentText;
     const birth = `${nextBirthday.cYear}-${nextBirthday.cMonth}-${nextBirthday.cDay}`;
-    const {IMonthCn, IDayCn} = gregorian;
+    const { IMonthCn, IDayCn } = gregorian;
     const tmpBirth = this.getAge(this.defaultData.eday);
     let ageYear = tmpBirth.year > 0 ? `${tmpBirth.year}岁` : '';
     let ageMonth = tmpBirth.month > 0 ? `${tmpBirth.month}月` : '';
@@ -289,7 +296,7 @@ class Widget extends DmYY {
     };
   };
 
-  rowCell = (widget, {icon, color, title, text, dayImage = false}) => {
+  rowCell = (widget, { icon, color, title, text, dayImage = false }) => {
     const subWidget = widget.addStack();
     subWidget.centerAlignContent();
 
@@ -312,11 +319,10 @@ class Widget extends DmYY {
       dayIcon.imageSize = new Size(mainTextSize + 1, mainTextSize + 1);
       dayIcon.tintColor = new Color('#1ab6f8');
     }
-
   };
 
   animalImg = (text) => {
-    const {time, nongli, isLeapMonth} = this.defaultData;
+    const { time, nongli, isLeapMonth } = this.defaultData;
     const _data = time.split('-');
     const opt = {
       year: parseInt(_data[0]),
@@ -326,7 +332,7 @@ class Widget extends DmYY {
       isLeapMonth,
     };
 
-    const {nextBirthday} = this.contentText;
+    const { nextBirthday } = this.contentText;
 
     const extraTextColor = 'fc8ac3'; //环形进度条中心背景颜色及名字、meetDay颜色
     const ringColor = 'fc5ead'; //环形进度条颜色
@@ -346,21 +352,29 @@ class Widget extends DmYY {
     var preData;
     if (nongli) {
       preData = this.$.lunar2solar(
-          `${nextBirthday.lYear}` - 1, opt.month, opt.day, isLeapMonth);
+        `${nextBirthday.lYear}` - 1,
+        opt.month,
+        opt.day,
+        isLeapMonth
+      );
     } else {
       preData = this.$.solar2lunar(
-          `${nextBirthday.cYear}` - 1, opt.month, opt.day);
+        `${nextBirthday.cYear}` - 1,
+        opt.month,
+        opt.day
+      );
     }
     const today = new Date();
     const thenDate = new Date(
-        `${nextBirthday.cYear}`, `${nextBirthday.cMonth}` - 1,
-        `${nextBirthday.cDay}`,
+      `${nextBirthday.cYear}`,
+      `${nextBirthday.cMonth}` - 1,
+      `${nextBirthday.cDay}`
     );
     const passDate = new Date(preData.cYear, preData.cMonth - 1, preData.cDay);
 
     const gap = today.getTime() - passDate.getTime();
     const gap2 = thenDate.getTime() - passDate.getTime();
-    const deg = Math.floor(gap / gap2 * 100 * 3.6);
+    const deg = Math.floor((gap / gap2) * 100 * 3.6);
 
     let ctr = new Point(canvSize / 2, canvSize / 2);
     const bgx = ctr.x - canvRadius;
@@ -374,24 +388,30 @@ class Widget extends DmYY {
     canvas.strokeEllipse(bgr);
 
     for (let t = 0; t < deg; t++) {
-      const rect_x = ctr.x + canvRadius * Math.sin((t * Math.PI) / 180) -
-          canvWidth / 2;
-      const rect_y = ctr.y - canvRadius * Math.cos((t * Math.PI) / 180) -
-          canvWidth / 2;
+      const rect_x =
+        ctr.x + canvRadius * Math.sin((t * Math.PI) / 180) - canvWidth / 2;
+      const rect_y =
+        ctr.y - canvRadius * Math.cos((t * Math.PI) / 180) - canvWidth / 2;
       const rect_r = new Rect(rect_x, rect_y, canvWidth, canvWidth);
       canvas.fillEllipse(rect_r);
     }
 
     const ringBG = new Rect(
-        bgx + canvWidth / 2 + 8, bgy + canvWidth / 2 + 8,
-        canvRadius * 2 - canvWidth - 16, canvRadius * 2 - canvWidth - 16,
+      bgx + canvWidth / 2 + 8,
+      bgy + canvWidth / 2 + 8,
+      canvRadius * 2 - canvWidth - 16,
+      canvRadius * 2 - canvWidth - 16
     );
     canvas.setFillColor(centerColor);
     canvas.setLineWidth(0);
     canvas.fillEllipse(ringBG);
 
     const canvTextRect = new Rect(
-        0, 80 - canvTextSize / 2, canvSize, canvTextSize);
+      0,
+      80 - canvTextSize / 2,
+      canvSize,
+      canvTextSize
+    );
     canvas.setTextAlignedCenter();
     canvas.setTextColor(cfontColor);
     canvas.setFont(Font.mediumRoundedSystemFont(canvTextSize));
@@ -417,9 +437,6 @@ class Widget extends DmYY {
     } = this.contentText;
 
     const phoneSize = Device.screenSize();
-    const widthMode = Device.model() === 'iPad' ? 110 : 400;
-
-    const heightMode = Device.model() === 'iPad' ? 110 : 380;
     const radio = phoneSize.width / phoneSize.height;
     const containerStack = widget.addStack();
     containerStack.layoutHorizontally();
@@ -459,7 +476,6 @@ class Widget extends DmYY {
 
     rightStack.addSpacer(20);
     if (tmpBirth.year > 0 && tmpBirth.month > 0 && tmpBirth.day > 0) {
-
       this.rowCell(rightStack, {
         icon: 'hourglass',
         color: '#1ab6f8',
@@ -467,36 +483,31 @@ class Widget extends DmYY {
         text: ageYear + ageMonth,
         dayImage: dayIcon,
       });
-
     } else {
-
       this.rowCell(rightStack, {
         icon: 'hourglass',
         color: '#1ab6f8',
         title: '年龄',
         text: age,
       });
-
     }
     rightStack.addSpacer();
 
-    this.rowCell(
-        rightStack, {
-          icon: 'calendar',
-          color: '#30d15b',
-          title: '农历',
-          text: `${IMonthCn}${IDayCn}`,
-        });
+    this.rowCell(rightStack, {
+      icon: 'calendar',
+      color: '#30d15b',
+      title: '农历',
+      text: `${IMonthCn}${IDayCn}`,
+    });
 
     rightStack.addSpacer();
 
     this.rowCell(rightStack, {
-          icon: 'app.gift.fill',
-          color: '#fc6d6d',
-          title: '生日',
-          text: birth,
-        },
-    );
+      icon: 'app.gift.fill',
+      color: '#fc6d6d',
+      title: '生日',
+      text: birth,
+    });
 
     rightStack.addSpacer();
 
@@ -551,7 +562,6 @@ class Widget extends DmYY {
     containerStack.addSpacer();
 
     if (tmpBirth.year > 0 && tmpBirth.month > 0 && tmpBirth.day > 0) {
-
       this.rowCell(containerStack, {
         icon: 'hourglass',
         color: '#1ab6f8',
@@ -559,36 +569,31 @@ class Widget extends DmYY {
         text: ageYear + ageMonth,
         dayImage: dayIcon,
       });
-
     } else {
-
       this.rowCell(containerStack, {
         icon: 'hourglass',
         color: '#1ab6f8',
         title: '年龄',
         text: age,
       });
-
     }
     containerStack.addSpacer();
 
-    this.rowCell(
-        containerStack, {
-          icon: 'calendar',
-          color: '#30d15b',
-          title: '农历',
-          text: `${IMonthCn}${IDayCn}`,
-        });
+    this.rowCell(containerStack, {
+      icon: 'calendar',
+      color: '#30d15b',
+      title: '农历',
+      text: `${IMonthCn}${IDayCn}`,
+    });
 
     containerStack.addSpacer();
 
     this.rowCell(containerStack, {
-          icon: 'app.gift.fill',
-          color: '#fc6d6d',
-          title: '生日',
-          text: birth,
-        },
-    );
+      icon: 'app.gift.fill',
+      color: '#fc6d6d',
+      title: '生日',
+      text: birth,
+    });
 
     containerStack.addSpacer();
 
@@ -615,4 +620,4 @@ class Widget extends DmYY {
 }
 
 // @组件代码结束
-await Runing(Widget, '', false, {$}); //远程开发环境
+await Runing(Widget, '', false, { $ }); //远程开发环境
