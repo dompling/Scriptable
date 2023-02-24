@@ -286,7 +286,7 @@ class Widget extends DmYY {
   };
 
   init = async () => {
-    await this.FILE_MGR.fileExists(this.LEFT_IMG_KEY);
+    await this.FILE_MGR.fileExistsExtra(this.LEFT_IMG_KEY);
     this.defaultData = {
       username: this.settings.nickname || '', // 姓名
       time: this.settings.birthday || '2022-12-19', // 生日日期
@@ -471,6 +471,7 @@ class Widget extends DmYY {
       this_year_lunar_solar,
       lunar_date,
       animalEmoji,
+      meetDay,
       data: { tmpBirth, ageYear, ageMonth, age, dayIcon },
     } = this.contentText;
 
@@ -498,12 +499,22 @@ class Widget extends DmYY {
     userStack.layoutHorizontally();
     userStack.centerAlignContent();
 
-    const userWidgetText = userStack.addText(this.defaultData.username);
+    const nameStack = userStack.addStack();
+    nameStack.layoutVertically();
+
+    const userWidgetText = nameStack.addText(this.defaultData.username);
     userWidgetText.textColor = this.widgetColor;
     userWidgetText.font = this.provideFont('italic', 22);
     userWidgetText.shadowColor = new Color(this.defaultData.nicknameShadow);
     userWidgetText.shadowOffset = new Point(3, 3);
     userWidgetText.shadowRadius = 3;
+
+    nameStack.addSpacer(5);
+    this.provideText(`相遇${meetDay}天`, nameStack, {
+      font: 'Party Let',
+      size: 12,
+      opacity: 0.8,
+    });
 
     userStack.addSpacer();
 
@@ -515,7 +526,7 @@ class Widget extends DmYY {
         icon: 'hourglass',
         color: '#1ab6f8',
         title: '年龄',
-        text: ageYear + ageMonth,
+        text: `${ageYear + ageMonth}`,
         dayImage: dayIcon,
       });
     } else {
@@ -553,18 +564,20 @@ class Widget extends DmYY {
     const {
       this_year_lunar_solar,
       lunar_date,
+      meetDay,
       data: { tmpBirth, ageYear, ageMonth, age, dayIcon },
     } = this.contentText;
 
     const containerStack = widget.addStack();
+    containerStack.layoutVertically();
 
     containerStack.addSpacer();
 
-    containerStack.layoutVertically();
-    const avatarStack = containerStack.addStack();
-    avatarStack.layoutHorizontally();
-    avatarStack.centerAlignContent();
+    const topStack = containerStack.addStack();
+    topStack.layoutHorizontally();
+    topStack.centerAlignContent();
 
+    const avatarStack = topStack.addStack();
     let avatarImg = SFSymbol.named(`photo`).image;
     if (this.FILE_MGR.fileExists(this.LEFT_IMG_KEY)) {
       avatarImg = Image.fromFile(this.LEFT_IMG_KEY);
@@ -576,16 +589,26 @@ class Widget extends DmYY {
     avatarStack.borderColor = Color.green();
     avatarStack.borderWidth = 1;
 
-    avatarStack.addSpacer();
+    topStack.addSpacer(20);
 
-    const userWidgetText = avatarStack.addText(this.defaultData.username);
+    const nameStack = topStack.addStack();
+    nameStack.addSpacer();
+    nameStack.layoutVertically();
+    nameStack.centerAlignContent();
+
+    const userWidgetText = nameStack.addText(this.defaultData.username);
     userWidgetText.textColor = this.widgetColor;
-    userWidgetText.font = this.provideFont('italic', 22);
+    userWidgetText.font = this.provideFont('italic', 16);
     userWidgetText.shadowColor = new Color(this.defaultData.nicknameShadow);
     userWidgetText.shadowOffset = new Point(3, 3);
     userWidgetText.shadowRadius = 3;
 
-    avatarStack.addSpacer();
+    nameStack.addSpacer(5);
+    this.provideText(`相遇${meetDay}天`, nameStack, {
+      font: 'Party Let',
+      size: 12,
+      opacity: 0.8,
+    });
 
     containerStack.addSpacer();
 

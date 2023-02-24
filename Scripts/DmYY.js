@@ -31,11 +31,11 @@ class DmYY {
 
   // 发起请求
   http = async (
-      options = {headers: {}, url: ''},
-      type = 'JSON',
-      onError = () => {
-        return SFSymbol.named('photo').image;
-      },
+    options = { headers: {}, url: '' },
+    type = 'JSON',
+    onError = () => {
+      return SFSymbol.named('photo').image;
+    }
   ) => {
     let request;
     try {
@@ -58,7 +58,7 @@ class DmYY {
       Object.keys(options).forEach((key) => {
         request[key] = options[key];
       });
-      request.headers = {...this.defaultHeaders, ...options.headers};
+      request.headers = { ...this.defaultHeaders, ...options.headers };
 
       if (type === 'JSON') {
         return await request.loadJSON();
@@ -76,9 +76,9 @@ class DmYY {
   //request 接口请求
   $request = {
     get: (url = '', options = {}, type = 'JSON') => {
-      let params = {...options, method: 'GET'};
+      let params = { ...options, method: 'GET' };
       if (typeof url === 'object') {
-        params = {...params, ...url};
+        params = { ...params, ...url };
       } else {
         params.url = url;
       }
@@ -87,9 +87,9 @@ class DmYY {
       return this.http(params, _type);
     },
     post: (url = '', options = {}, type = 'JSON') => {
-      let params = {...options, method: 'POST'};
+      let params = { ...options, method: 'POST' };
       if (typeof url === 'object') {
-        params = {...params, ...url};
+        params = { ...params, ...url };
       } else {
         params.url = url;
       }
@@ -105,8 +105,8 @@ class DmYY {
       let url = 'http://' + this.prefix + '/query/boxdata';
       if (key) url = 'http://' + this.prefix + '/query/data/' + key;
       const boxdata = await this.$request.get(
-          url,
-          key ? {timeoutInterval: 1} : {},
+        url,
+        key ? { timeoutInterval: 1 } : {}
       );
       if (key) {
         this.settings.BoxJSData = {
@@ -124,9 +124,9 @@ class DmYY {
       }
       if (notify)
         await this.notify(
-            `${this.name} - BoxJS 数据读取失败`,
-            '请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程',
-            'https://chavyleung.gitbook.io/boxjs/awesome/videos',
+          `${this.name} - BoxJS 数据读取失败`,
+          '请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程',
+          'https://chavyleung.gitbook.io/boxjs/awesome/videos'
         );
       return false;
     }
@@ -162,12 +162,12 @@ class DmYY {
     const backgroundImage = await this.getBackgroundImage();
     if (backgroundImage) {
       const opacity = Device.isUsingDarkAppearance()
-          ? Number(this.settings.darkOpacity)
-          : Number(this.settings.lightOpacity);
+        ? Number(this.settings.darkOpacity)
+        : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
-          backgroundImage,
-          '#000',
-          opacity,
+        backgroundImage,
+        '#000',
+        opacity
       );
       return true;
     } else {
@@ -185,21 +185,21 @@ class DmYY {
    * @param img Image
    */
   verifyImage = async (img = {}) => {
-    const {width, height} = img.size;
+    const { width, height } = img.size;
     const direct = true;
     if (width > 1000) {
       const options = ['取消', '打开图像处理'];
       const message =
-          '您的图片像素为' +
-          width +
-          ' x ' +
-          height +
-          '\n' +
-          '请将图片' +
-          (direct ? '宽度' : '高度') +
-          '调整到 1000 以下\n' +
-          (!direct ? '宽度' : '高度') +
-          '自动适应';
+        '您的图片像素为' +
+        width +
+        ' x ' +
+        height +
+        '\n' +
+        '请将图片' +
+        (direct ? '宽度' : '高度') +
+        '调整到 1000 以下\n' +
+        (!direct ? '宽度' : '高度') +
+        '自动适应';
       const index = await this.generateAlert(message, options);
       if (index === 1)
         Safari.openInApp('https://www.sojson.com/image/change.html', false);
@@ -364,7 +364,7 @@ class DmYY {
     }
 
     let message =
-        title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
+      title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
     let exitOptions = ['我已截图', '前去截图 >'];
     let shouldExit = await this.generateAlert(message, exitOptions);
     if (shouldExit) return;
@@ -408,12 +408,12 @@ class DmYY {
 
     message = '要设置透明背景的小组件在哪个位置？';
     message +=
-        height === 1136
-            ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
-            : '';
+      height === 1136
+        ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
+        : '';
 
     // Determine image crop based on phone size.
-    let crop = {w: '', h: '', x: '', y: ''};
+    let crop = { w: '', h: '', x: '', y: '' };
     if (widgetSize === '小尺寸') {
       crop.w = phone.small;
       crop.h = phone.small;
@@ -507,7 +507,7 @@ class DmYY {
     });
     // 保存到本地
     if (isSave) {
-      this.settings = {...this.settings, ...data};
+      this.settings = { ...this.settings, ...data };
       return this.saveSettings();
     }
     return data;
@@ -553,9 +553,9 @@ class DmYY {
     } catch (e) {
       console.log(e);
       this.notify(
-          this.name,
-          'BoxJS 缓存读取失败！点击查看相关教程',
-          'https://chavyleung.gitbook.io/boxjs/awesome/videos',
+        this.name,
+        'BoxJS 缓存读取失败！点击查看相关教程',
+        'https://chavyleung.gitbook.io/boxjs/awesome/videos'
       );
     }
   };
@@ -567,21 +567,21 @@ class DmYY {
   setWidgetConfig = async () => {
     const basic = [
       {
-        icon: {name: 'arrow.clockwise', color: '#1890ff'},
+        icon: { name: 'arrow.clockwise', color: '#1890ff' },
         type: 'input',
         title: '刷新时间',
         desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
         val: 'refreshAfterDate',
       },
       {
-        icon: {name: 'sun.max.fill', color: '#d48806'},
+        icon: { name: 'sun.max.fill', color: '#d48806' },
         type: 'color',
         title: '白天字体颜色',
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
         val: 'lightColor',
       },
       {
-        icon: {name: 'moon.stars.fill', color: '#d4b106'},
+        icon: { name: 'moon.stars.fill', color: '#d4b106' },
         type: 'color',
         title: '晚上字体颜色',
         desc: '请自行去网站上搜寻颜色（Hex 颜色）',
@@ -590,19 +590,19 @@ class DmYY {
     ];
 
     return this.renderAppView([
-      {title: '基础设置', menu: basic},
+      { title: '基础设置', menu: basic },
       {
         title: '背景设置',
         menu: [
           {
-            icon: {name: 'photo', color: '#13c2c2'},
+            icon: { name: 'photo', color: '#13c2c2' },
             type: 'color',
             title: '白天背景颜色',
             desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
             val: 'lightBgColor',
           },
           {
-            icon: {name: 'photo.fill', color: '#52c41a'},
+            icon: { name: 'photo.fill', color: '#52c41a' },
             type: 'color',
             title: '晚上背景颜色',
             desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
@@ -613,7 +613,7 @@ class DmYY {
       {
         menu: [
           {
-            icon: {name: 'photo.on.rectangle', color: '#fa8c16'},
+            icon: { name: 'photo.on.rectangle', color: '#fa8c16' },
             name: 'dayBg',
             type: 'img',
             title: '日间背景',
@@ -621,7 +621,7 @@ class DmYY {
             verify: true,
           },
           {
-            icon: {name: 'photo.fill.on.rectangle.fill', color: '#fa541c'},
+            icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
             name: 'nightBg',
             type: 'img',
             title: '夜间背景',
@@ -629,7 +629,7 @@ class DmYY {
             verify: true,
           },
           {
-            icon: {name: 'text.below.photo', color: '#faad14'},
+            icon: { name: 'text.below.photo', color: '#faad14' },
             type: 'img',
             name: 'transparentBg',
             title: '透明背景',
@@ -649,14 +649,14 @@ class DmYY {
       {
         menu: [
           {
-            icon: {name: 'record.circle', color: '#722ed1'},
+            icon: { name: 'record.circle', color: '#722ed1' },
             type: 'input',
             title: '日间蒙层',
             desc: '完全透明请设置为0',
             val: 'lightOpacity',
           },
           {
-            icon: {name: 'record.circle.fill', color: '#eb2f96'},
+            icon: { name: 'record.circle.fill', color: '#eb2f96' },
             type: 'input',
             title: '夜间蒙层',
             desc: '完全透明请设置为0',
@@ -667,7 +667,7 @@ class DmYY {
       {
         menu: [
           {
-            icon: {name: 'clear', color: '#f5222d'},
+            icon: { name: 'clear', color: '#f5222d' },
             name: 'removeBackground',
             title: '清空背景图片',
             val: `${this.cacheImage}/`,
@@ -709,9 +709,9 @@ class DmYY {
   };
 
   drawTableIcon = async (
-      icon = 'square.grid.2x2',
-      color = '#504ED5',
-      cornerWidth = 42,
+    icon = 'square.grid.2x2',
+    color = '#504ED5',
+    cornerWidth = 42
   ) => {
     let sfi = SFSymbol.named('square.grid.2x2');
     try {
@@ -779,8 +779,8 @@ class DmYY {
 
   dismissLoading = (webView) => {
     webView.evaluateJavaScript(
-        'window.dispatchEvent(new CustomEvent(\'JWeb\', { detail: { code: \'finishLoading\' } }))',
-        false,
+      "window.dispatchEvent(new CustomEvent('JWeb', { detail: { code: 'finishLoading' } }))",
+      false
     );
   };
 
@@ -790,9 +790,9 @@ class DmYY {
   };
 
   loadSF2B64 = async (
-      icon = 'square.grid.2x2',
-      color = '#56A8D6',
-      cornerWidth = 42,
+    icon = 'square.grid.2x2',
+    color = '#56A8D6',
+    cornerWidth = 42
   ) => {
     const sfImg = await this.drawTableIcon(icon, color, cornerWidth);
     return `data:image/png;base64,${Data.fromPNG(sfImg).toBase64String()}`;
@@ -812,7 +812,7 @@ class DmYY {
         title: '个性设置',
         menu: [
           {
-            icon: {name: 'person', color: '#fa541c'},
+            icon: { name: 'person', color: '#fa541c' },
             name: this.userConfigKey[0],
             title: '首页头像',
             type: 'img',
@@ -848,18 +848,18 @@ class DmYY {
                   break;
                 case 1:
                   const data = await this.setBaseAlertInput(
-                      '在线链接',
-                      '首页头像在线链接',
-                      {
-                        avatar: '🔗请输入 URL 图片链接',
-                      },
+                    '在线链接',
+                    '首页头像在线链接',
+                    {
+                      avatar: '🔗请输入 URL 图片链接',
+                    }
                   );
                   if (!data) return;
 
                   if (data[_.name] !== '') {
                     const backImage = await this.$request.get(
-                        data[_.name],
-                        'IMG',
+                      data[_.name],
+                      'IMG'
                     );
                     await this.htmlChangeImage(backImage, cachePath, {
                       previewWebView,
@@ -879,7 +879,7 @@ class DmYY {
             },
           },
           {
-            icon: {name: 'pencil', color: '#fa8c16'},
+            icon: { name: 'pencil', color: '#fa8c16' },
             type: 'input',
             title: '首页昵称',
             desc: '个性化首页昵称',
@@ -890,7 +890,7 @@ class DmYY {
             onClick: baseOnClick,
           },
           {
-            icon: {name: 'lineweight', color: '#a0d911'},
+            icon: { name: 'lineweight', color: '#a0d911' },
             type: 'input',
             title: '首页昵称描述',
             desc: '个性化首页昵称描述',
@@ -905,7 +905,7 @@ class DmYY {
       {
         menu: [
           {
-            icon: {name: 'shippingbox', color: '#f7bb10'},
+            icon: { name: 'shippingbox', color: '#f7bb10' },
             type: 'input',
             title: 'BoxJS 域名',
             desc: '设置BoxJS访问域名，如：boxjs.net 或 boxjs.com',
@@ -916,7 +916,7 @@ class DmYY {
             onClick: baseOnClick,
           },
           {
-            icon: {name: 'clear', color: '#f5222d'},
+            icon: { name: 'clear', color: '#f5222d' },
             title: '恢复默认设置',
             name: 'reset',
             onClick: async () => {
@@ -936,8 +936,8 @@ class DmYY {
                 this.saveSettings(false);
                 this.saveBaseSettings();
                 await this.notify(
-                    '重置成功',
-                    '请关闭窗口之后，重新运行当前脚本',
+                  '重置成功',
+                  '请关闭窗口之后，重新运行当前脚本'
                 );
                 this.reopenScript();
               }
@@ -948,13 +948,13 @@ class DmYY {
     ]);
   };
 
-  htmlChangeImage = async (image, path, {previewWebView, id}) => {
+  htmlChangeImage = async (image, path, { previewWebView, id }) => {
     const base64Img = await this.setBackgroundImage(image, path, false);
     console.log(path);
     this.insertTextByElementId(
-        previewWebView,
-        id,
-        base64Img ? `<img src="${base64Img}"/>` : '',
+      previewWebView,
+      id,
+      base64Img ? `<img src="${base64Img}"/>` : ''
     );
   };
 
@@ -963,13 +963,13 @@ class DmYY {
   };
 
   async renderAppView(
-      options = [],
-      renderAvatar = false,
-      previewWebView = new WebView(),
+    options = [],
+    renderAvatar = false,
+    previewWebView = new WebView()
   ) {
     const settingItemFontSize = 14,
-        authorNameFontSize = 20,
-        authorDescFontSize = 12;
+      authorNameFontSize = 20,
+      authorDescFontSize = 12;
     // ================== 配置界面样式 ===================
     const style = `
       :root {
@@ -1245,28 +1245,28 @@ class DmYY {
         if (menuItem.children) {
           menuItem.onClick = () => {
             return this.renderAppView(
-                typeof menuItem.children === 'function'
-                    ? menuItem.children()
-                    : menuItem.children,
+              typeof menuItem.children === 'function'
+                ? menuItem.children()
+                : menuItem.children
             );
           };
         }
         if (menuItem.url) {
           const imageIcon = await this.http(
-              {url: menuItem.url},
-              'IMG',
-              () => {
-                return this.drawTableIcon('gear');
-              },
+            { url: menuItem.url },
+            'IMG',
+            () => {
+              return this.drawTableIcon('gear');
+            }
           );
 
           if (menuItem.url.indexOf('png') !== -1) {
             iconBase64 = `data:image/png;base64,${Data.fromPNG(
-                imageIcon,
+              imageIcon
             ).toBase64String()}`;
           } else {
             iconBase64 = `data:image/png;base64,${Data.fromJPEG(
-                imageIcon,
+              imageIcon
             ).toBase64String()}`;
           }
         } else {
@@ -1285,7 +1285,7 @@ class DmYY {
           const cachePath = `${menuItem.val}/${menuItem.name}`;
           if (await this.FILE_MGR.fileExistsExtra(cachePath)) {
             const imageSrc = `data:image/png;base64,${Data.fromFile(
-                cachePath,
+              cachePath
             ).toBase64String()}`;
             defaultHtml = `<img src="${imageSrc}"/>`;
           }
@@ -1294,19 +1294,19 @@ class DmYY {
           menuItem.options.forEach((option) => {
             let selected = `selected="selected"`;
             selectOptions += `<option value="${option}" ${
-                menuItem.defaultValue === option ? selected : ''
+              menuItem.defaultValue === option ? selected : ''
             }>${option}</option>`;
           });
           defaultHtml = `<select class="form-item__input" name="${idName}">${selectOptions}</select>`;
         } else if (menuItem.type === 'switch') {
           const checked =
-              menuItem.defaultValue === 'true' ? `checked="checked"` : '';
+            menuItem.defaultValue === 'true' ? `checked="checked"` : '';
           defaultHtml += `<input class="form-item__input" name="${idName}" role="switch" type="checkbox" value="true" ${checked} />`;
         } else if (menuItem.type) {
           defaultHtml = `<input class="form-item__input" placeholder="${
-              menuItem.placeholder || '请输入'
+            menuItem.placeholder || '请输入'
           }" name="${idName}" type="${
-              menuItem.type
+            menuItem.type
           }" enterkeyhint="done" value="${menuItem.defaultValue || ''}">`;
         }
 
@@ -1333,13 +1333,13 @@ class DmYY {
         avatar: `https://avatars.githubusercontent.com/u/23498579?v=4`,
         nickname: this.baseSettings[this.userConfigKey[1]] || 'Dompling',
         homPageDesc:
-            this.baseSettings[this.userConfigKey[2]] ||
-            '18岁，来自九仙山的设计师',
+          this.baseSettings[this.userConfigKey[2]] ||
+          '18岁，来自九仙山的设计师',
       };
 
       if (await this.FILE_MGR.fileExistsExtra(cachePath)) {
         avatarConfig.avatar = `data:image/png;base64,${Data.fromFile(
-            cachePath,
+          cachePath
         ).toBase64String()}`;
       }
 
@@ -1386,7 +1386,7 @@ class DmYY {
 
     const injectListener = async () => {
       const event = await previewWebView.evaluateJavaScript(
-          `(() => {
+        `(() => {
             try {
               window.addEventListener(
                 'JBridge',
@@ -1400,13 +1400,13 @@ class DmYY {
                 return;
             }
           })()`,
-          true,
+        true
       );
 
-      const {code, data} = JSON.parse(event);
+      const { code, data } = JSON.parse(event);
       try {
         const actionItem = actionsConfig.find(
-            (item) => (item.name || item.val) === code,
+          (item) => (item.name || item.val) === code
         );
 
         if (code === 'userInfo') await this.setUserInfo();
@@ -1417,17 +1417,17 @@ class DmYY {
             await actionItem?.onClick?.(actionItem, data, previewWebView);
           } else if (actionItem.type == 'input') {
             if (
-                await this.setLightAndDark(
-                    actionItem['title'],
-                    actionItem['desc'],
-                    idName,
-                    actionItem['placeholder'],
-                )
+              await this.setLightAndDark(
+                actionItem['title'],
+                actionItem['desc'],
+                idName,
+                actionItem['placeholder']
+              )
             )
               this.insertTextByElementId(
-                  previewWebView,
-                  idName,
-                  this.settings[idName] || '',
+                previewWebView,
+                idName,
+                this.settings[idName] || ''
               );
           } else if (actionItem.type === 'img') {
             const cachePath = `${actionItem.val}/${actionItem.name}`;
@@ -1488,9 +1488,9 @@ class DmYY {
     // 文件管理器
     // 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
     this.FILE_MGR =
-        FileManager[
-            module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
-            ]();
+      FileManager[
+        module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
+      ]();
 
     this.FILE_MGR.fileExistsExtra = async (filePath) => {
       const file = this.FILE_MGR.fileExists(filePath);
@@ -1499,13 +1499,13 @@ class DmYY {
     };
 
     this.cacheImage = this.FILE_MGR.joinPath(
-        this.FILE_MGR.documentsDirectory(),
-        `/images/${Script.name()}`,
+      this.FILE_MGR.documentsDirectory(),
+      `/images/${Script.name()}`
     );
 
     this.baseImage = this.FILE_MGR.joinPath(
-        this.FILE_MGR.documentsDirectory(),
-        `/images/`,
+      this.FILE_MGR.documentsDirectory(),
+      `/images/`
     );
 
     this.cacheImageBgPath = [
@@ -1526,7 +1526,7 @@ class DmYY {
 
     this.baseSettings = this.getBaseSettings();
 
-    this.settings = {...this.defaultSettings, ...this.settings};
+    this.settings = { ...this.defaultSettings, ...this.settings };
 
     this.settings.lightColor = this.settings.lightColor || '#000000';
     this.settings.darkColor = this.settings.darkColor || '#ffffff';
@@ -1542,8 +1542,8 @@ class DmYY {
     config.runsInApp && this.saveSettings(false);
 
     this.backGroundColor = Color.dynamic(
-        new Color(this.settings.lightBgColor),
-        new Color(this.settings.darkBgColor),
+      new Color(this.settings.lightBgColor),
+      new Color(this.settings.darkBgColor)
     );
 
     // const lightBgColor = this.getColors(this.settings.lightBgColor);
@@ -1560,8 +1560,8 @@ class DmYY {
     // }
 
     this.widgetColor = Color.dynamic(
-        new Color(this.settings.lightColor),
-        new Color(this.settings.darkColor),
+      new Color(this.settings.lightColor),
+      new Color(this.settings.darkColor)
     );
   }
 
@@ -1587,7 +1587,7 @@ class DmYY {
    * @param {string} name 操作函数名
    * @param {func} func 点击后执行的函数
    */
-  registerAction(name, func, icon = {name: 'gear', color: '#096dd9'}, type) {
+  registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }, type) {
     if (typeof name === 'object' && !name.menu) return this._actions.push(name);
     if (typeof name === 'object' && name.menu)
       return this._menuActions.push(name);
@@ -1849,8 +1849,8 @@ class DmYY {
     ctx.size = img.size;
 
     ctx.drawImageInRect(
-        img,
-        new Rect(0, 0, img.size['width'], img.size['height']),
+      img,
+      new Rect(0, 0, img.size['width'], img.size['height'])
     );
     ctx.setFillColor(new Color(color, opacity));
     ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
@@ -1898,7 +1898,7 @@ class DmYY {
   }
 
   saveBaseSettings(res = {}, notify = true) {
-    const data = {...(this.baseSettings || {}), ...res};
+    const data = { ...(this.baseSettings || {}), ...res };
     this.baseSettings = data;
     Keychain.set(this.BaseCacheKey, JSON.stringify(data));
     if (notify) this.notify('设置成功', '通用设置需重新运行脚本生效');
@@ -1911,9 +1911,9 @@ class DmYY {
    */
   saveSettings(notify = true) {
     let res =
-        typeof this.settings === 'object'
-            ? JSON.stringify(this.settings)
-            : String(this.settings);
+      typeof this.settings === 'object'
+        ? JSON.stringify(this.settings)
+        : String(this.settings);
     Keychain.set(this.SETTING_KEY, res);
 
     if (notify) this.notify('设置成功', '桌面组件稍后将自动刷新');
@@ -1930,13 +1930,13 @@ class DmYY {
       return Image.fromFile(this.cacheImageBgPath[0]);
 
     if (!this.isNight)
-      return await this.FILE_MGR.fileExistsExtra(this.cacheImageBgPath[1])
-          ? Image.fromFile(this.cacheImageBgPath[1])
-          : undefined;
+      return (await this.FILE_MGR.fileExistsExtra(this.cacheImageBgPath[1]))
+        ? Image.fromFile(this.cacheImageBgPath[1])
+        : undefined;
     else
-      return await this.FILE_MGR.fileExistsExtra(this.cacheImageBgPath[2])
-          ? Image.fromFile(this.cacheImageBgPath[2])
-          : undefined;
+      return (await this.FILE_MGR.fileExistsExtra(this.cacheImageBgPath[2]))
+        ? Image.fromFile(this.cacheImageBgPath[2])
+        : undefined;
   }
 
   /**
@@ -1947,8 +1947,7 @@ class DmYY {
     const cacheKey = filePath;
     if (!img) {
       // 移除背景
-      if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(
-          cacheKey);
+      if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(cacheKey);
       if (notify) this.notify('移除成功', '背景图片已移除，稍后刷新生效');
     } else {
       // 设置背景
@@ -1956,17 +1955,17 @@ class DmYY {
 
       if (notify) this.notify('设置成功', '背景图片已设置！稍后刷新生效');
       return `data:image/png;base64,${Data.fromFile(
-          cacheKey,
+        cacheKey
       ).toBase64String()}`;
     }
   }
 
   getRandomArrayElements(arr, count) {
     let shuffled = arr.slice(0),
-        i = arr.length,
-        min = i - count,
-        temp,
-        index;
+      i = arr.length,
+      min = i - count,
+      temp,
+      index;
     min = min > 0 ? min : 0;
     while (i-- > min) {
       index = Math.floor((i + 1) * Math.random());
@@ -1978,39 +1977,39 @@ class DmYY {
   }
 
   textFormat = {
-    defaultText: {size: 14, font: 'regular', color: this.widgetColor},
-    battery: {size: 10, font: 'bold', color: this.widgetColor},
-    title: {size: 16, font: 'semibold', color: this.widgetColor},
-    SFMono: {size: 12, font: 'SF Mono', color: this.widgetColor},
+    defaultText: { size: 14, font: 'regular', color: this.widgetColor },
+    battery: { size: 10, font: 'bold', color: this.widgetColor },
+    title: { size: 16, font: 'semibold', color: this.widgetColor },
+    SFMono: { size: 12, font: 'SF Mono', color: this.widgetColor },
   };
 
   provideFont = (fontName, fontSize) => {
     const fontGenerator = {
-      ultralight: function() {
+      ultralight: function () {
         return Font.ultraLightSystemFont(fontSize);
       },
-      light: function() {
+      light: function () {
         return Font.lightSystemFont(fontSize);
       },
-      regular: function() {
+      regular: function () {
         return Font.regularSystemFont(fontSize);
       },
-      medium: function() {
+      medium: function () {
         return Font.mediumSystemFont(fontSize);
       },
-      semibold: function() {
+      semibold: function () {
         return Font.semiboldSystemFont(fontSize);
       },
-      bold: function() {
+      bold: function () {
         return Font.boldSystemFont(fontSize);
       },
-      heavy: function() {
+      heavy: function () {
         return Font.heavySystemFont(fontSize);
       },
-      black: function() {
+      black: function () {
         return Font.blackSystemFont(fontSize);
       },
-      italic: function() {
+      italic: function () {
         return Font.italicSystemFont(fontSize);
       },
     };
@@ -2022,17 +2021,15 @@ class DmYY {
     return new Font(fontName, fontSize);
   };
 
-  provideText = (
-      string,
-      container,
-      format = {
-        font: 'light',
-        size: 14,
-        color: this.widgetColor,
-        opacity: 1,
-        minimumScaleFactor: 1,
-      },
-  ) => {
+  provideText = (string, container, format) => {
+    format = {
+      font: 'light',
+      size: 14,
+      color: this.widgetColor,
+      opacity: 1,
+      minimumScaleFactor: 1,
+      ...format,
+    };
     const textItem = container.addText(string);
     const textFont = format.font;
     const textSize = format.size;
@@ -2073,7 +2070,7 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       Script.complete();
     }
   } else {
-    let {act, __arg, __size} = args.queryParameters;
+    let { act, __arg, __size } = args.queryParameters;
     M = new Widget(__arg || default_args || '');
     if (extra) {
       Object.keys(extra).forEach((key) => {
@@ -2092,8 +2089,9 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
           console.log('初始化异常:' + error);
         }
         w = await M.render();
-        const fnc = item.val.toLowerCase().replace(
-            /( |^)[a-z]/g, (L) => L.toUpperCase());
+        const fnc = item.val
+          .toLowerCase()
+          .replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
         if (w) return w[`present${fnc}`]();
       };
 
@@ -2132,8 +2130,8 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       }
 
       const menuConfig = [
-        {title: '预览组件', menu: preview},
-        {title: '组件配置', menu: actions},
+        { title: '预览组件', menu: preview },
+        { title: '组件配置', menu: actions },
         ...M['_menuActions'],
       ];
       await M.renderAppView(menuConfig, true);
@@ -2141,4 +2139,4 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
   }
 };
 // await new DmYY().setWidgetConfig();
-module.exports = {DmYY, Runing};
+module.exports = { DmYY, Runing };
