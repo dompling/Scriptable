@@ -3,101 +3,101 @@
 // icon-color: deep-gray; icon-glyph: car;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === 'undefined') require = importModule;
-const { DmYY, Runing } = require('./DmYY');
+if (typeof require === "undefined") require = importModule;
+const { DmYY, Runing } = require("./DmYY");
 const mainTextSize = 13; // 倒数、农历、生日文字大小
 const now = new Date();
 const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
-const widthMode = Device.model() === 'iPad' ? 110 : 400; // 中号组件图片尺寸
+const widthMode = Device.model() === "iPad" ? 110 : 400; // 中号组件图片尺寸
 
-const heightMode = Device.model() === 'iPad' ? 100 : 380; // 中号组件图片尺寸
+const heightMode = Device.model() === "iPad" ? 100 : 380; // 中号组件图片尺寸
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg, {
-      lightBgColor: '#2581f2',
-      darkBgColor: '#2581f2',
-      darkColor: '#fff',
-      lightColor: '#fff',
+      lightBgColor: "#2581f2",
+      darkBgColor: "#2581f2",
+      darkColor: "#fff",
+      lightColor: "#fff",
     });
-    this.en = 'birthday';
-    this.name = '破壳日';
+    this.en = "birthday";
+    this.name = "破壳日";
     this.LEFT_IMG_KEY = `${this.cacheImage}/avatar`;
 
     if (config.runsInApp) {
       this.registerAction({
-        icon: { name: 'person.badge.plus', color: '#52c41a' },
-        type: 'img',
-        title: '头像',
-        name: 'avatar',
+        icon: { name: "person.badge.plus", color: "#52c41a" },
+        type: "img",
+        title: "头像",
+        name: "avatar",
         val: this.cacheImage,
       });
 
       this.registerAction({
         icon: {
-          name: 'rectangle.and.pencil.and.ellipsis',
-          color: '#f5222d',
+          name: "rectangle.and.pencil.and.ellipsis",
+          color: "#f5222d",
         },
-        type: 'input',
-        title: '昵称',
-        placeholder: '用户昵称',
-        name: 'nickname',
+        type: "input",
+        title: "昵称",
+        placeholder: "用户昵称",
+        name: "nickname",
       });
 
       this.registerAction({
         icon: {
-          name: 'rectangle',
-          color: '#a68585',
+          name: "rectangle",
+          color: "#a68585",
         },
-        type: 'color',
-        title: '昵称阴影',
-        placeholder: '昵称阴影',
-        name: 'nicknameShadow',
+        type: "color",
+        title: "昵称阴影",
+        placeholder: "昵称阴影",
+        name: "nicknameShadow",
       });
 
       this.registerAction({
         icon: {
-          name: 'bubble.left',
-          color: '#faf61c',
+          name: "bubble.left",
+          color: "#faf61c",
         },
-        type: 'input',
-        title: '寄语',
-        name: 'bless',
+        type: "input",
+        title: "寄语",
+        name: "bless",
       });
 
       this.registerAction({
         icon: {
-          name: '25.square.fill',
-          color: '#fa541c',
+          name: "25.square.fill",
+          color: "#fa541c",
         },
-        type: 'switch',
-        title: '农历',
-        name: 'nongli',
+        type: "switch",
+        title: "农历",
+        name: "nongli",
       });
 
       this.registerAction({
         icon: {
-          name: 'calendar',
-          color: '#fa8c16',
+          name: "calendar",
+          color: "#fa8c16",
         },
-        type: 'date',
-        title: '破壳日',
-        name: 'birthday',
+        type: "date",
+        title: "破壳日",
+        name: "birthday",
       });
 
       this.registerAction({
         icon: {
-          name: 'calendar.badge.clock',
-          color: '#8016fa',
+          name: "calendar.badge.clock",
+          color: "#8016fa",
         },
-        type: 'date',
-        title: '相识',
-        name: 'eday',
+        type: "date",
+        title: "相识",
+        name: "eday",
       });
 
-      this.registerAction('基础设置', this.setWidgetConfig);
+      this.registerAction("基础设置", this.setWidgetConfig);
     }
   }
 
@@ -107,10 +107,10 @@ class Widget extends DmYY {
     tmpBirth.month = 0;
     tmpBirth.day = 0;
 
-    if (beginStr == null || beginStr == '') {
+    if (beginStr == null || beginStr == "") {
       return;
     }
-    let startDate = new Date(beginStr.replace(/-/g, '/'));
+    let startDate = new Date(beginStr.replace(/-/g, "/"));
     let today = new Date();
 
     let startYear = startDate.getFullYear();
@@ -226,39 +226,39 @@ class Widget extends DmYY {
 
   getAstroToEmoji = (astro) => {
     const data = {
-      白羊座: '♈',
-      金牛座: '♉',
-      双子座: '♊',
-      巨蟹座: '♋',
-      狮子座: '♌',
-      处女座: '♍',
-      天秤座: '♎',
-      天蝎座: '♏',
-      射手座: '♐',
-      摩羯座: '♑',
-      水瓶座: '♒',
-      双鱼座: '♓',
-      蛇夫座: '⛎',
+      白羊座: "♈",
+      金牛座: "♉",
+      双子座: "♊",
+      巨蟹座: "♋",
+      狮子座: "♌",
+      处女座: "♍",
+      天秤座: "♎",
+      天蝎座: "♏",
+      射手座: "♐",
+      摩羯座: "♑",
+      水瓶座: "♒",
+      双鱼座: "♓",
+      蛇夫座: "⛎",
     };
-    return data[astro] || '';
+    return data[astro] || "";
   };
 
   getAnimalZodiacToEmoji = (zodiac) => {
     const data = {
-      鼠: '🐭',
-      牛: '🐂',
-      虎: '🐯',
-      兔: '🐇',
-      龙: '🐲',
-      蛇: '🐍',
-      马: '🐴',
-      羊: '🐑',
-      猴: '🐵',
-      鸡: '🐔',
-      狗: '🐶',
-      猪: '🐷',
+      鼠: "🐭",
+      牛: "🐂",
+      虎: "🐯",
+      兔: "🐇",
+      龙: "🐲",
+      蛇: "🐍",
+      马: "🐴",
+      羊: "🐑",
+      猴: "🐵",
+      鸡: "🐔",
+      狗: "🐶",
+      猪: "🐷",
     };
-    return data[zodiac] || '';
+    return data[zodiac] || "";
   };
 
   verifyTime(date) {
@@ -267,7 +267,7 @@ class Widget extends DmYY {
   }
 
   getEdayNumber = (date) => {
-    var initDay = date.split('-');
+    var initDay = date.split("-");
     var obj = {
       cYear: parseInt(initDay[0]),
       cMonth: parseInt(initDay[1]),
@@ -277,7 +277,7 @@ class Widget extends DmYY {
   };
 
   ajax = async (opt) => {
-    const type = opt.nongli ? 'lunar' : 'solar';
+    const type = opt.nongli ? "lunar" : "solar";
     return (
       await this.$request.post(`https://www.iamwawa.cn/home/nongli/ajax`, {
         body: `type=${type}&year=${opt.year}&month=${opt.month}&day=${opt.day}`,
@@ -288,17 +288,17 @@ class Widget extends DmYY {
   init = async () => {
     await this.FILE_MGR.fileExistsExtra(this.LEFT_IMG_KEY);
     this.defaultData = {
-      username: this.settings.nickname || '', // 姓名
-      time: this.settings.birthday || '2022-12-19', // 生日日期
-      nongli: this.settings.nongli === 'true' || '', // 农历生日
-      eday: this.settings.eday || '2022-12-19', //相识
-      bless: this.settings.bless || '',
-      nicknameShadow: this.settings.nicknameShadow || '#e8e8e8',
+      username: this.settings.nickname || "", // 姓名
+      time: this.settings.birthday || "2022-12-19", // 生日日期
+      nongli: this.settings.nongli === "true" || "", // 农历生日
+      eday: this.settings.eday || "2022-12-19", //相识
+      bless: this.settings.bless || "",
+      nicknameShadow: this.settings.nicknameShadow || "#e8e8e8",
       isLeapMonth: false, //如果是农历闰月第四个参数赋值true即可
     };
 
     const { time, nongli, isLeapMonth, eday } = this.defaultData;
-    const _data = time.split('-');
+    const _data = time.split("-");
     const opt = {
       year: parseInt(_data[0]),
       month: parseInt(_data[1]),
@@ -310,6 +310,7 @@ class Widget extends DmYY {
     if (this.settings.ajax) {
       this.ajax(opt).then((res) => {
         this.settings.ajax = res;
+        this.saveSettings(false);
       });
     } else {
       this.settings.ajax = await this.ajax(opt);
@@ -328,25 +329,25 @@ class Widget extends DmYY {
 
     this.contentText.this_year_lunar_solar =
       this.contentText.this_year_lunar_solar
-        .replace('年', '-')
-        .replace('月', '-')
-        .replace('日', '');
+        .replace("年", "-")
+        .replace("月", "-")
+        .replace("日", "");
     this.contentText.next_year_lunar_solar =
       this.contentText.next_year_lunar_solar
-        .replace('年', '-')
-        .replace('月', '-')
-        .replace('日', '');
+        .replace("年", "-")
+        .replace("月", "-")
+        .replace("日", "");
     this.contentText.solar = this.contentText.solar
-      .replace('年', '-')
-      .replace('月', '-')
-      .replace('日', '');
+      .replace("年", "-")
+      .replace("月", "-")
+      .replace("日", "");
 
     const tmpBirth = this.getAge(this.defaultData.eday);
-    let ageYear = tmpBirth.year > 0 ? `${tmpBirth.year}岁` : '';
-    let ageMonth = tmpBirth.month > 0 ? `${tmpBirth.month}月` : '';
-    let ageDay = tmpBirth.day > 0 ? `${tmpBirth.day}天` : '1天';
+    let ageYear = tmpBirth.year > 0 ? `${tmpBirth.year}岁` : "";
+    let ageMonth = tmpBirth.month > 0 ? `${tmpBirth.month}月` : "";
+    let ageDay = tmpBirth.day > 0 ? `${tmpBirth.day}天` : "1天";
     const age = ageYear + ageMonth + ageDay;
-    const dayIcon = tmpBirth.day + '.circle.fill';
+    const dayIcon = tmpBirth.day + ".circle.fill";
 
     this.contentText.data = {
       tmpBirth,
@@ -366,11 +367,11 @@ class Widget extends DmYY {
     subImg.tintColor = new Color(color);
     subImg.imageSize = new Size(mainTextSize, mainTextSize);
     subWidget.addSpacer(4);
-    const subTitle = subWidget.addText(title || '');
+    const subTitle = subWidget.addText(title || "");
     subTitle.font = Font.systemFont(mainTextSize);
     subTitle.textColor = this.widgetColor;
     subWidget.addSpacer();
-    const subValue = subWidget.addText(text || '');
+    const subValue = subWidget.addText(text || "");
     subValue.font = Font.systemFont(mainTextSize);
     subValue.textColor = this.widgetColor;
     subValue.lineLimit = 1;
@@ -379,7 +380,7 @@ class Widget extends DmYY {
       subWidget.addSpacer(2);
       let dayIcon = subWidget.addImage(dayImage.image);
       dayIcon.imageSize = new Size(mainTextSize + 1, mainTextSize + 1);
-      dayIcon.tintColor = new Color('#1ab6f8');
+      dayIcon.tintColor = new Color("#1ab6f8");
     }
   };
 
@@ -387,19 +388,19 @@ class Widget extends DmYY {
     const { this_year_lunar_solar, solar } = this.contentText;
 
     const nextBirthday = {
-      year: this_year_lunar_solar.split('-')[0],
-      month: this_year_lunar_solar.split('-')[1],
-      day: this_year_lunar_solar.split('-')[2],
+      year: this_year_lunar_solar.split("-")[0],
+      month: this_year_lunar_solar.split("-")[1],
+      day: this_year_lunar_solar.split("-")[2],
     };
 
     const preData = {
-      year: solar.split('-')[0],
-      month: solar.split('-')[1],
-      day: solar.split('-')[2],
+      year: solar.split("-")[0],
+      month: solar.split("-")[1],
+      day: solar.split("-")[2],
     };
 
-    const extraTextColor = 'fc8ac3'; //环形进度条中心背景颜色及名字、meetDay颜色
-    const ringColor = 'fc5ead'; //环形进度条颜色
+    const extraTextColor = "fc8ac3"; //环形进度条中心背景颜色及名字、meetDay颜色
+    const ringColor = "fc5ead"; //环形进度条颜色
     const canvSize = 172;
     const canvTextSize = 45;
     const canvas = new DrawContext();
@@ -408,7 +409,7 @@ class Widget extends DmYY {
     const cbgColor = new Color(ringColor, 0.2);
     const cfgColor = new Color(ringColor);
     const centerColor = new Color(extraTextColor);
-    const cfontColor = new Color('ffffff');
+    const cfontColor = new Color("ffffff");
     canvas.size = new Size(canvSize, canvSize);
     canvas.opaque = false;
     canvas.respectScreenScale = true;
@@ -460,7 +461,7 @@ class Widget extends DmYY {
     canvas.setTextAlignedCenter();
     canvas.setTextColor(cfontColor);
     canvas.setFont(Font.mediumRoundedSystemFont(canvTextSize));
-    canvas.setFont(this.provideFont('ultralight', 68));
+    canvas.setFont(this.provideFont("ultralight", 68));
     canvas.drawTextInRect(`${text}`, canvTextRect);
 
     return canvas.getImage();
@@ -504,14 +505,14 @@ class Widget extends DmYY {
 
     const userWidgetText = nameStack.addText(this.defaultData.username);
     userWidgetText.textColor = this.widgetColor;
-    userWidgetText.font = this.provideFont('italic', 22);
+    userWidgetText.font = this.provideFont("italic", 22);
     userWidgetText.shadowColor = new Color(this.defaultData.nicknameShadow);
     userWidgetText.shadowOffset = new Point(3, 3);
     userWidgetText.shadowRadius = 3;
 
     nameStack.addSpacer(5);
     this.provideText(`相遇${meetDay}天`, nameStack, {
-      font: 'Party Let',
+      font: "Party Let",
       size: 12,
       opacity: 0.8,
     });
@@ -523,35 +524,35 @@ class Widget extends DmYY {
     rightStack.addSpacer(20);
     if (tmpBirth.year > 0 && tmpBirth.month > 0 && tmpBirth.day > 0) {
       this.rowCell(rightStack, {
-        icon: 'hourglass',
-        color: '#1ab6f8',
-        title: '年龄',
+        icon: "hourglass",
+        color: "#1ab6f8",
+        title: "年龄",
         text: `${ageYear + ageMonth}`,
         dayImage: dayIcon,
       });
     } else {
       this.rowCell(rightStack, {
-        icon: 'hourglass',
-        color: '#1ab6f8',
-        title: '年龄',
+        icon: "hourglass",
+        color: "#1ab6f8",
+        title: "年龄",
         text: age,
       });
     }
     rightStack.addSpacer();
 
     this.rowCell(rightStack, {
-      icon: 'calendar',
-      color: '#30d15b',
-      title: '农历',
+      icon: "calendar",
+      color: "#30d15b",
+      title: "农历",
       text: `${lunar_date}`,
     });
 
     rightStack.addSpacer();
 
     this.rowCell(rightStack, {
-      icon: 'app.gift.fill',
-      color: '#fc6d6d',
-      title: '生日',
+      icon: "app.gift.fill",
+      color: "#fc6d6d",
+      title: "生日",
       text: `${this_year_lunar_solar}`,
     });
 
@@ -598,14 +599,14 @@ class Widget extends DmYY {
 
     const userWidgetText = nameStack.addText(this.defaultData.username);
     userWidgetText.textColor = this.widgetColor;
-    userWidgetText.font = this.provideFont('italic', 16);
+    userWidgetText.font = this.provideFont("italic", 16);
     userWidgetText.shadowColor = new Color(this.defaultData.nicknameShadow);
     userWidgetText.shadowOffset = new Point(3, 3);
     userWidgetText.shadowRadius = 3;
 
     nameStack.addSpacer(5);
     this.provideText(`相遇${meetDay}天`, nameStack, {
-      font: 'Party Let',
+      font: "Party Let",
       size: 12,
       opacity: 0.8,
     });
@@ -614,35 +615,35 @@ class Widget extends DmYY {
 
     if (tmpBirth.year > 0 && tmpBirth.month > 0 && tmpBirth.day > 0) {
       this.rowCell(containerStack, {
-        icon: 'hourglass',
-        color: '#1ab6f8',
-        title: '年龄',
+        icon: "hourglass",
+        color: "#1ab6f8",
+        title: "年龄",
         text: ageYear + ageMonth,
         dayImage: dayIcon,
       });
     } else {
       this.rowCell(containerStack, {
-        icon: 'hourglass',
-        color: '#1ab6f8',
-        title: '年龄',
+        icon: "hourglass",
+        color: "#1ab6f8",
+        title: "年龄",
         text: age,
       });
     }
     containerStack.addSpacer();
 
     this.rowCell(containerStack, {
-      icon: 'calendar',
-      color: '#30d15b',
-      title: '农历',
+      icon: "calendar",
+      color: "#30d15b",
+      title: "农历",
       text: `${lunar_date}`,
     });
 
     containerStack.addSpacer();
 
     this.rowCell(containerStack, {
-      icon: 'app.gift.fill',
-      color: '#fc6d6d',
-      title: '生日',
+      icon: "app.gift.fill",
+      color: "#fc6d6d",
+      title: "生日",
       text: `${this_year_lunar_solar}`,
     });
 
@@ -659,10 +660,10 @@ class Widget extends DmYY {
     await this.init();
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
-    if (this.widgetFamily === 'medium') {
+    if (this.widgetFamily === "medium") {
       widget.setPadding(0, 0, 0, 0);
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === 'large') {
+    } else if (this.widgetFamily === "large") {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
