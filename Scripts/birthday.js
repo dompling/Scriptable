@@ -311,6 +311,7 @@ class Widget extends DmYY {
       this.ajax(opt).then((res) => {
         this.settings.ajax = res;
         this.saveSettings(false);
+        
       });
     } else {
       this.settings.ajax = await this.ajax(opt);
