@@ -2,7 +2,7 @@
 
 >首先安装 TF版的 [scriptable](https://testflight.apple.com/join/uN1vTqxk)
 
-> 网页安装：（推荐：⭐️⭐️⭐️⭐️⭐️）[WebStore](https://scriptablejs.gitee.io/store/#/)
+> 网页安装：（推荐：⭐️⭐️⭐️⭐️⭐️）[WebStore](https://dompling.github.io/store/#/menu)
 > 安装教程：[网页安装步骤](https://t.me/Scriptable_JS/101536)
 
 - 作者：<a href="https://raw.githubusercontent.com/dompling/Scriptable/master/install.json" download="2214962083.js">@2Ya - 订阅安装包</a>
