@@ -507,6 +507,27 @@
           "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
       ]
+    },
+    {
+      "version": "1.0.0",
+      "description": "Spotify",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Spotify.js",
+      "thumb": "https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico",
+      "name": "Spotify",
+      "title": "声田音乐",
+      "html": [
+        "<h4 align=\"center\">Spotify</h4>",
+        "<li>1.打开网站<a href=\"https://developer.spotify.com/dashboard\">Developer Spotify</a></li>",
+        "<li>2.Create App 创建 app</li>",
+        "<li>3.其他随意回调地址填写 <font color=\"red\">scriptable:///run/Spotify?openEditor=true</font> </li>",
+        "<li>4.在创建好的 App 设置复制客户端Id (Client ID)</li>"
+      ],
+      "depend": [
+        {
+          "name": "DmYY",
+          "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
+        }
+      ]
     }
   ]
 }

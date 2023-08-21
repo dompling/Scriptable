@@ -11,35 +11,36 @@ class DmYY {
   constructor(arg, defaultSettings) {
     this.arg = arg;
     this.defaultSettings = defaultSettings || {};
+    this.SETTING_KEY = this.md5(Script.name());
     this._init();
     this.isNight = Device.isUsingDarkAppearance();
   }
 
-  BaseCacheKey = 'DmYY';
+  BaseCacheKey = "DmYY";
   _actions = [];
   _menuActions = [];
   widgetColor;
   backGroundColor;
   isNight;
 
-  userConfigKey = ['avatar', 'nickname', 'homePageDesc'];
+  userConfigKey = ["avatar", "nickname", "homePageDesc"];
 
   // 获取 Request 对象
-  getRequest = (url = '') => {
+  getRequest = (url = "") => {
     return new Request(url);
   };
 
   // 发起请求
   http = async (
-    options = { headers: {}, url: '' },
-    type = 'JSON',
+    options = { headers: {}, url: "" },
+    type = "JSON",
     onError = () => {
-      return SFSymbol.named('photo').image;
+      return SFSymbol.named("photo").image;
     }
   ) => {
     let request;
     try {
-      if (type === 'IMG') {
+      if (type === "IMG") {
         const fileName = `${this.cacheImage}/${this.md5(options.url)}`;
         request = this.getRequest(options.url);
         let response;
@@ -60,50 +61,50 @@ class DmYY {
       });
       request.headers = { ...this.defaultHeaders, ...options.headers };
 
-      if (type === 'JSON') {
+      if (type === "JSON") {
         return await request.loadJSON();
       }
-      if (type === 'STRING') {
+      if (type === "STRING") {
         return await request.loadString();
       }
       return await request.loadJSON();
     } catch (e) {
-      console.log('error:' + e);
-      if (type === 'IMG') return onError?.();
+      console.log("error:" + e);
+      if (type === "IMG") return onError?.();
     }
   };
 
   //request 接口请求
   $request = {
-    get: (url = '', options = {}, type = 'JSON') => {
-      let params = { ...options, method: 'GET' };
-      if (typeof url === 'object') {
+    get: (url = "", options = {}, type = "JSON") => {
+      let params = { ...options, method: "GET" };
+      if (typeof url === "object") {
         params = { ...params, ...url };
       } else {
         params.url = url;
       }
       let _type = type;
-      if (typeof options === 'string') _type = options;
+      if (typeof options === "string") _type = options;
       return this.http(params, _type);
     },
-    post: (url = '', options = {}, type = 'JSON') => {
-      let params = { ...options, method: 'POST' };
-      if (typeof url === 'object') {
+    post: (url = "", options = {}, type = "JSON") => {
+      let params = { ...options, method: "POST" };
+      if (typeof url === "object") {
         params = { ...params, ...url };
       } else {
         params.url = url;
       }
       let _type = type;
-      if (typeof options === 'string') _type = options;
+      if (typeof options === "string") _type = options;
       return this.http(params, _type);
     },
   };
 
   // 获取 boxJS 缓存
-  getCache = async (key = '', notify = true) => {
+  getCache = async (key = "", notify = true) => {
     try {
-      let url = 'http://' + this.prefix + '/query/boxdata';
-      if (key) url = 'http://' + this.prefix + '/query/data/' + key;
+      let url = "http://" + this.prefix + "/query/boxdata";
+      if (key) url = "http://" + this.prefix + "/query/data/" + key;
       const boxdata = await this.$request.get(
         url,
         key ? { timeoutInterval: 1 } : {}
@@ -125,15 +126,15 @@ class DmYY {
       if (notify)
         await this.notify(
           `${this.name} - BoxJS 数据读取失败`,
-          '请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程',
-          'https://chavyleung.gitbook.io/boxjs/awesome/videos'
+          "请检查 BoxJS 域名是否为代理复写的域名，如（boxjs.net 或 boxjs.com）。\n若没有配置 BoxJS 相关模块，请点击通知查看教程",
+          "https://chavyleung.gitbook.io/boxjs/awesome/videos"
         );
       return false;
     }
   };
 
   transforJSON = (str) => {
-    if (typeof str == 'string') {
+    if (typeof str == "string") {
       try {
         return JSON.parse(str);
       } catch (e) {
@@ -141,13 +142,13 @@ class DmYY {
         return str;
       }
     }
-    console.log('It is not a string!');
+    console.log("It is not a string!");
   };
 
   // 选择图片并缓存
   chooseImg = async (verify = false) => {
     const response = await Photos.fromLibrary().catch((err) => {
-      console.log('图片选择异常:' + err);
+      console.log("图片选择异常:" + err);
     });
     if (verify) {
       const bool = await this.verifyImage(response);
@@ -166,7 +167,7 @@ class DmYY {
         : Number(this.settings.lightOpacity);
       widget.backgroundImage = await this.shadowImage(
         backgroundImage,
-        '#000',
+        "#000",
         opacity
       );
       return true;
@@ -188,21 +189,21 @@ class DmYY {
     const { width, height } = img.size;
     const direct = true;
     if (width > 1000) {
-      const options = ['取消', '打开图像处理'];
+      const options = ["取消", "打开图像处理"];
       const message =
-        '您的图片像素为' +
+        "您的图片像素为" +
         width +
-        ' x ' +
+        " x " +
         height +
-        '\n' +
-        '请将图片' +
-        (direct ? '宽度' : '高度') +
-        '调整到 1000 以下\n' +
-        (!direct ? '宽度' : '高度') +
-        '自动适应';
+        "\n" +
+        "请将图片" +
+        (direct ? "宽度" : "高度") +
+        "调整到 1000 以下\n" +
+        (!direct ? "宽度" : "高度") +
+        "自动适应";
       const index = await this.generateAlert(message, options);
       if (index === 1)
-        Safari.openInApp('https://www.sojson.com/image/change.html', false);
+        Safari.openInApp("https://www.sojson.com/image/change.html", false);
       return false;
     }
     return true;
@@ -364,8 +365,8 @@ class DmYY {
     }
 
     let message =
-      title || '开始之前，请先前往桌面，截取空白界面的截图。然后回来继续';
-    let exitOptions = ['我已截图', '前去截图 >'];
+      title || "开始之前，请先前往桌面，截取空白界面的截图。然后回来继续";
+    let exitOptions = ["我已截图", "前去截图 >"];
     let shouldExit = await this.generateAlert(message, exitOptions);
     if (shouldExit) return;
 
@@ -374,15 +375,15 @@ class DmYY {
     let height = img.size.height;
     let phone = phoneSizes()[height];
     if (!phone) {
-      message = '好像您选择的照片不是正确的截图，请先前往桌面';
-      await this.generateAlert(message, ['我已知晓']);
+      message = "好像您选择的照片不是正确的截图，请先前往桌面";
+      await this.generateAlert(message, ["我已知晓"]);
       return;
     }
 
     // Extra setup needed for 2436-sized phones.
     if (height === 2436) {
       const files = this.FILE_MGR_LOCAL;
-      let cacheName = 'mz-phone-type';
+      let cacheName = "mz-phone-type";
       let cachePath = files.joinPath(files.libraryDirectory(), cacheName);
 
       // If we already cached the phone size, load it.
@@ -391,70 +392,70 @@ class DmYY {
         phone = phone[typeString];
         // Otherwise, prompt the user.
       } else {
-        message = '您的📱型号是?';
-        let types = ['iPhone 12 mini', 'iPhone 11 Pro, XS, or X'];
+        message = "您的📱型号是?";
+        let types = ["iPhone 12 mini", "iPhone 11 Pro, XS, or X"];
         let typeIndex = await this.generateAlert(message, types);
-        let type = typeIndex === 0 ? 'mini' : 'x';
+        let type = typeIndex === 0 ? "mini" : "x";
         phone = phone[type];
         files.writeString(cachePath, type);
       }
     }
 
     // Prompt for widget size and position.
-    message = '截图中要设置透明背景组件的尺寸类型是？';
-    let sizes = ['小尺寸', '中尺寸', '大尺寸'];
+    message = "截图中要设置透明背景组件的尺寸类型是？";
+    let sizes = ["小尺寸", "中尺寸", "大尺寸"];
     let size = await this.generateAlert(message, sizes);
     let widgetSize = sizes[size];
 
-    message = '要设置透明背景的小组件在哪个位置？';
+    message = "要设置透明背景的小组件在哪个位置？";
     message +=
       height === 1136
-        ? ' （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）'
-        : '';
+        ? " （备注：当前设备只支持两行小组件，所以下边选项中的「中间」和「底部」的选项是一致的）"
+        : "";
 
     // Determine image crop based on phone size.
-    let crop = { w: '', h: '', x: '', y: '' };
-    if (widgetSize === '小尺寸') {
+    let crop = { w: "", h: "", x: "", y: "" };
+    if (widgetSize === "小尺寸") {
       crop.w = phone.small;
       crop.h = phone.small;
       let positions = [
-        '左上角',
-        '右上角',
-        '中间左',
-        '中间右',
-        '左下角',
-        '右下角',
+        "左上角",
+        "右上角",
+        "中间左",
+        "中间右",
+        "左下角",
+        "右下角",
       ];
       let _posotions = [
-        'Top left',
-        'Top right',
-        'Middle left',
-        'Middle right',
-        'Bottom left',
-        'Bottom right',
+        "Top left",
+        "Top right",
+        "Middle left",
+        "Middle right",
+        "Bottom left",
+        "Bottom right",
       ];
       let position = await this.generateAlert(message, positions);
 
       // Convert the two words into two keys for the phone size dictionary.
-      let keys = _posotions[position].toLowerCase().split(' ');
+      let keys = _posotions[position].toLowerCase().split(" ");
       crop.y = phone[keys[0]];
       crop.x = phone[keys[1]];
-    } else if (widgetSize === '中尺寸') {
+    } else if (widgetSize === "中尺寸") {
       crop.w = phone.medium;
       crop.h = phone.small;
 
       // Medium and large widgets have a fixed x-value.
       crop.x = phone.left;
-      let positions = ['顶部', '中间', '底部'];
-      let _positions = ['Top', 'Middle', 'Bottom'];
+      let positions = ["顶部", "中间", "底部"];
+      let _positions = ["Top", "Middle", "Bottom"];
       let position = await this.generateAlert(message, positions);
       let key = _positions[position].toLowerCase();
       crop.y = phone[key];
-    } else if (widgetSize === '大尺寸') {
+    } else if (widgetSize === "大尺寸") {
       crop.w = phone.medium;
       crop.h = phone.large;
       crop.x = phone.left;
-      let positions = ['顶部', '底部'];
+      let positions = ["顶部", "底部"];
       let position = await this.generateAlert(message, positions);
 
       // Large widgets at the bottom have the "middle" y-value.
@@ -465,17 +466,17 @@ class DmYY {
     return cropImage(img, new Rect(crop.x, crop.y, crop.w, crop.h));
   }
 
-  setLightAndDark = async (title, desc, val, placeholder = '') => {
+  setLightAndDark = async (title, desc, val, placeholder = "") => {
     try {
       const a = new Alert();
       a.title = title;
       a.message = desc;
-      a.addTextField(placeholder, `${this.settings[val] || ''}`);
-      a.addAction('确定');
-      a.addCancelAction('取消');
+      a.addTextField(placeholder, `${this.settings[val] || ""}`);
+      a.addAction("确定");
+      a.addCancelAction("取消");
       const id = await a.presentAlert();
       if (id === -1) return false;
-      this.settings[val] = a.textFieldValue(0) || '';
+      this.settings[val] = a.textFieldValue(0) || "";
       this.saveSettings();
       return true;
     } catch (e) {
@@ -493,17 +494,17 @@ class DmYY {
   setAlertInput = async (title, desc, opt = {}, isSave = true) => {
     const a = new Alert();
     a.title = title;
-    a.message = !desc ? '' : desc;
+    a.message = !desc ? "" : desc;
     Object.keys(opt).forEach((key) => {
       a.addTextField(opt[key], this.settings[key]);
     });
-    a.addAction('确定');
-    a.addCancelAction('取消');
+    a.addAction("确定");
+    a.addCancelAction("取消");
     const id = await a.presentAlert();
     if (id === -1) return;
     const data = {};
     Object.keys(opt).forEach((key, index) => {
-      data[key] = a.textFieldValue(index) || '';
+      data[key] = a.textFieldValue(index) || "";
     });
     // 保存到本地
     if (isSave) {
@@ -516,17 +517,17 @@ class DmYY {
   setBaseAlertInput = async (title, desc, opt = {}, isSave = true) => {
     const a = new Alert();
     a.title = title;
-    a.message = !desc ? '' : desc;
+    a.message = !desc ? "" : desc;
     Object.keys(opt).forEach((key) => {
-      a.addTextField(opt[key], this.baseSettings[key] || '');
+      a.addTextField(opt[key], this.baseSettings[key] || "");
     });
-    a.addAction('确定');
-    a.addCancelAction('取消');
+    a.addAction("确定");
+    a.addCancelAction("取消");
     const id = await a.presentAlert();
     if (id === -1) return;
     const data = {};
     Object.keys(opt).forEach((key, index) => {
-      data[key] = a.textFieldValue(index) || '';
+      data[key] = a.textFieldValue(index) || "";
     });
     // 保存到本地
     if (isSave) return this.saveBaseSettings(data);
@@ -539,14 +540,14 @@ class DmYY {
    * @returns {Promise<void>}
    */
   setCacheBoxJSData = async (opt = {}) => {
-    const options = ['取消', '确定'];
-    const message = '代理缓存仅支持 BoxJS 相关的代理！';
+    const options = ["取消", "确定"];
+    const message = "代理缓存仅支持 BoxJS 相关的代理！";
     const index = await this.generateAlert(message, options);
     if (index === 0) return;
     try {
       const boxJSData = await this.getCache();
       Object.keys(opt).forEach((key) => {
-        this.settings[key] = boxJSData[opt[key]] || '';
+        this.settings[key] = boxJSData[opt[key]] || "";
       });
       // 保存到本地
       this.saveSettings();
@@ -554,8 +555,8 @@ class DmYY {
       console.log(e);
       this.notify(
         this.name,
-        'BoxJS 缓存读取失败！点击查看相关教程',
-        'https://chavyleung.gitbook.io/boxjs/awesome/videos'
+        "BoxJS 缓存读取失败！点击查看相关教程",
+        "https://chavyleung.gitbook.io/boxjs/awesome/videos"
       );
     }
   };
@@ -567,72 +568,72 @@ class DmYY {
   setWidgetConfig = async () => {
     const basic = [
       {
-        icon: { name: 'arrow.clockwise', color: '#1890ff' },
-        type: 'input',
-        title: '刷新时间',
-        desc: '刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟',
-        val: 'refreshAfterDate',
+        icon: { name: "arrow.clockwise", color: "#1890ff" },
+        type: "input",
+        title: "刷新时间",
+        desc: "刷新时间仅供参考，具体刷新时间由系统判断，单位：分钟",
+        val: "refreshAfterDate",
       },
       {
-        icon: { name: 'sun.max.fill', color: '#d48806' },
-        type: 'color',
-        title: '白天字体颜色',
-        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
-        val: 'lightColor',
+        icon: { name: "sun.max.fill", color: "#d48806" },
+        type: "color",
+        title: "白天字体颜色",
+        desc: "请自行去网站上搜寻颜色（Hex 颜色）",
+        val: "lightColor",
       },
       {
-        icon: { name: 'moon.stars.fill', color: '#d4b106' },
-        type: 'color',
-        title: '晚上字体颜色',
-        desc: '请自行去网站上搜寻颜色（Hex 颜色）',
-        val: 'darkColor',
+        icon: { name: "moon.stars.fill", color: "#d4b106" },
+        type: "color",
+        title: "晚上字体颜色",
+        desc: "请自行去网站上搜寻颜色（Hex 颜色）",
+        val: "darkColor",
       },
     ];
 
     return this.renderAppView([
-      { title: '基础设置', menu: basic },
+      { title: "基础设置", menu: basic },
       {
-        title: '背景设置',
+        title: "背景设置",
         menu: [
           {
-            icon: { name: 'photo', color: '#13c2c2' },
-            type: 'color',
-            title: '白天背景颜色',
-            desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
-            val: 'lightBgColor',
+            icon: { name: "photo", color: "#13c2c2" },
+            type: "color",
+            title: "白天背景颜色",
+            desc: "请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔",
+            val: "lightBgColor",
           },
           {
-            icon: { name: 'photo.fill', color: '#52c41a' },
-            type: 'color',
-            title: '晚上背景颜色',
-            desc: '请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔',
-            val: 'darkBgColor',
+            icon: { name: "photo.fill", color: "#52c41a" },
+            type: "color",
+            title: "晚上背景颜色",
+            desc: "请自行去网站上搜寻颜色（Hex 颜色）\n支持渐变色，各颜色之间以英文逗号分隔",
+            val: "darkBgColor",
           },
         ],
       },
       {
         menu: [
           {
-            icon: { name: 'photo.on.rectangle', color: '#fa8c16' },
-            name: 'dayBg',
-            type: 'img',
-            title: '日间背景',
+            icon: { name: "photo.on.rectangle", color: "#fa8c16" },
+            name: "dayBg",
+            type: "img",
+            title: "日间背景",
             val: this.cacheImage,
             verify: true,
           },
           {
-            icon: { name: 'photo.fill.on.rectangle.fill', color: '#fa541c' },
-            name: 'nightBg',
-            type: 'img',
-            title: '夜间背景',
+            icon: { name: "photo.fill.on.rectangle.fill", color: "#fa541c" },
+            name: "nightBg",
+            type: "img",
+            title: "夜间背景",
             val: this.cacheImage,
             verify: true,
           },
           {
-            icon: { name: 'text.below.photo', color: '#faad14' },
-            type: 'img',
-            name: 'transparentBg',
-            title: '透明背景',
+            icon: { name: "text.below.photo", color: "#faad14" },
+            type: "img",
+            name: "transparentBg",
+            title: "透明背景",
             val: this.cacheImage,
             onClick: async (item, __, previewWebView) => {
               const backImage = await this.getWidgetScreenShot();
@@ -649,38 +650,38 @@ class DmYY {
       {
         menu: [
           {
-            icon: { name: 'record.circle', color: '#722ed1' },
-            type: 'input',
-            title: '日间蒙层',
-            desc: '完全透明请设置为0',
-            val: 'lightOpacity',
+            icon: { name: "record.circle", color: "#722ed1" },
+            type: "input",
+            title: "日间蒙层",
+            desc: "完全透明请设置为0",
+            val: "lightOpacity",
           },
           {
-            icon: { name: 'record.circle.fill', color: '#eb2f96' },
-            type: 'input',
-            title: '夜间蒙层',
-            desc: '完全透明请设置为0',
-            val: 'darkOpacity',
+            icon: { name: "record.circle.fill", color: "#eb2f96" },
+            type: "input",
+            title: "夜间蒙层",
+            desc: "完全透明请设置为0",
+            val: "darkOpacity",
           },
         ],
       },
       {
         menu: [
           {
-            icon: { name: 'clear', color: '#f5222d' },
-            name: 'removeBackground',
-            title: '清空背景图片',
+            icon: { name: "clear", color: "#f5222d" },
+            name: "removeBackground",
+            title: "清空背景图片",
             val: `${this.cacheImage}/`,
             onClick: async (_, __, previewWebView) => {
-              const ids = ['dayBg', 'nightBg', 'transparentBg'];
+              const ids = ["dayBg", "nightBg", "transparentBg"];
               const options = [
-                '清空日间',
-                '清空夜间',
-                '清空透明',
+                "清空日间",
+                "清空夜间",
+                "清空透明",
                 `清空全部`,
-                '取消',
+                "取消",
               ];
-              const message = '该操作不可逆，会清空背景图片！';
+              const message = "该操作不可逆，会清空背景图片！";
               const index = await this.generateAlert(message, options);
               if (index === 4) return;
               switch (index) {
@@ -703,17 +704,34 @@ class DmYY {
           },
         ],
       },
+      {
+        title:"重置组件",
+        menu:[
+          {
+            icon: { name: "trash", color: "#D85888" },
+            title: "重置",
+            desc: "重置当前组件配置",
+            name:"reset",
+            val: "reset",
+            onClick:()=>{
+              this.settings = {}
+              this.saveSettings();
+              this.reopenScript();
+            }
+          },
+        ]
+      }
     ]).catch((e) => {
       console.log(e);
     });
   };
 
   drawTableIcon = async (
-    icon = 'square.grid.2x2',
-    color = '#504ED5',
+    icon = "square.grid.2x2",
+    color = "#504ED5",
     cornerWidth = 42
   ) => {
-    let sfi = SFSymbol.named('square.grid.2x2');
+    let sfi = SFSymbol.named("square.grid.2x2");
     try {
       sfi = SFSymbol.named(icon);
       sfi.applyFont(Font.mediumSystemFont(30));
@@ -790,8 +808,8 @@ class DmYY {
   };
 
   loadSF2B64 = async (
-    icon = 'square.grid.2x2',
-    color = '#56A8D6',
+    icon = "square.grid.2x2",
+    color = "#56A8D6",
     cornerWidth = 42
   ) => {
     const sfImg = await this.drawTableIcon(icon, color, cornerWidth);
@@ -809,25 +827,25 @@ class DmYY {
 
     return this.renderAppView([
       {
-        title: '个性设置',
+        title: "个性设置",
         menu: [
           {
-            icon: { name: 'person', color: '#fa541c' },
+            icon: { name: "person", color: "#fa541c" },
             name: this.userConfigKey[0],
-            title: '首页头像',
-            type: 'img',
+            title: "首页头像",
+            type: "img",
             val: this.baseImage,
             onClick: async (_, __, previewWebView) => {
-              const options = ['相册选择', '在线链接', '取消'];
-              const message = '设置个性化头像';
+              const options = ["相册选择", "在线链接", "取消"];
+              const message = "设置个性化头像";
               const index = await this.generateAlert(message, options);
               if (index === 2) return;
               const cachePath = `${_.val}/${_.name}`;
               switch (index) {
                 case 0:
-                  const albumOptions = ['选择图片', '清空图片', '取消'];
+                  const albumOptions = ["选择图片", "清空图片", "取消"];
 
-                  const albumIndex = await this.generateAlert('', albumOptions);
+                  const albumIndex = await this.generateAlert("", albumOptions);
                   if (albumIndex === 2) return;
                   if (albumIndex === 1) {
                     await this.htmlChangeImage(false, cachePath, {
@@ -848,18 +866,18 @@ class DmYY {
                   break;
                 case 1:
                   const data = await this.setBaseAlertInput(
-                    '在线链接',
-                    '首页头像在线链接',
+                    "在线链接",
+                    "首页头像在线链接",
                     {
-                      avatar: '🔗请输入 URL 图片链接',
+                      avatar: "🔗请输入 URL 图片链接",
                     }
                   );
                   if (!data) return;
 
-                  if (data[_.name] !== '') {
+                  if (data[_.name] !== "") {
                     const backImage = await this.$request.get(
                       data[_.name],
-                      'IMG'
+                      "IMG"
                     );
                     await this.htmlChangeImage(backImage, cachePath, {
                       previewWebView,
@@ -879,22 +897,22 @@ class DmYY {
             },
           },
           {
-            icon: { name: 'pencil', color: '#fa8c16' },
-            type: 'input',
-            title: '首页昵称',
-            desc: '个性化首页昵称',
-            placeholder: '👤请输入头像昵称',
+            icon: { name: "pencil", color: "#fa8c16" },
+            type: "input",
+            title: "首页昵称",
+            desc: "个性化首页昵称",
+            placeholder: "👤请输入头像昵称",
             val: this.userConfigKey[1],
             name: this.userConfigKey[1],
             defaultValue: this.baseSettings.nickname,
             onClick: baseOnClick,
           },
           {
-            icon: { name: 'lineweight', color: '#a0d911' },
-            type: 'input',
-            title: '首页昵称描述',
-            desc: '个性化首页昵称描述',
-            placeholder: '请输入描述',
+            icon: { name: "lineweight", color: "#a0d911" },
+            type: "input",
+            title: "首页昵称描述",
+            desc: "个性化首页昵称描述",
+            placeholder: "请输入描述",
             val: this.userConfigKey[2],
             name: this.userConfigKey[2],
             defaultValue: this.baseSettings.homePageDesc,
@@ -905,23 +923,23 @@ class DmYY {
       {
         menu: [
           {
-            icon: { name: 'shippingbox', color: '#f7bb10' },
-            type: 'input',
-            title: 'BoxJS 域名',
-            desc: '设置BoxJS访问域名，如：boxjs.net 或 boxjs.com',
-            val: 'boxjsDomain',
-            name: 'boxjsDomain',
-            placeholder: 'boxjs.net',
+            icon: { name: "shippingbox", color: "#f7bb10" },
+            type: "input",
+            title: "BoxJS 域名",
+            desc: "设置BoxJS访问域名，如：boxjs.net 或 boxjs.com",
+            val: "boxjsDomain",
+            name: "boxjsDomain",
+            placeholder: "boxjs.net",
             defaultValue: this.baseSettings.boxjsDomain,
             onClick: baseOnClick,
           },
           {
-            icon: { name: 'clear', color: '#f5222d' },
-            title: '恢复默认设置',
-            name: 'reset',
+            icon: { name: "clear", color: "#f5222d" },
+            title: "恢复默认设置",
+            name: "reset",
             onClick: async () => {
-              const options = ['取消', '确定'];
-              const message = '确定要恢复当前所有配置吗？';
+              const options = ["取消", "确定"];
+              const message = "确定要恢复当前所有配置吗？";
               const index = await this.generateAlert(message, options);
               if (index === 1) {
                 this.settings = {};
@@ -936,8 +954,8 @@ class DmYY {
                 this.saveSettings(false);
                 this.saveBaseSettings();
                 await this.notify(
-                  '重置成功',
-                  '请关闭窗口之后，重新运行当前脚本'
+                  "重置成功",
+                  "请关闭窗口之后，重新运行当前脚本"
                 );
                 this.reopenScript();
               }
@@ -954,7 +972,7 @@ class DmYY {
     this.insertTextByElementId(
       previewWebView,
       id,
-      base64Img ? `<img src="${base64Img}"/>` : ''
+      base64Img ? `<img src="${base64Img}"/>` : ""
     );
   };
 
@@ -1236,7 +1254,7 @@ class DmYY {
       actionsConfig = [...item.menu, ...actionsConfig];
       configList += ` 
       <div class="list">   
-          <div class="list__header">${item.title || ''}</div>
+          <div class="list__header">${item.title || ""}</div>
            <form id="form_${key}" class="list__body" action="javascript:void(0);">
          `;
 
@@ -1245,7 +1263,7 @@ class DmYY {
         if (menuItem.children) {
           menuItem.onClick = () => {
             return this.renderAppView(
-              typeof menuItem.children === 'function'
+              typeof menuItem.children === "function"
                 ? menuItem.children()
                 : menuItem.children
             );
@@ -1254,13 +1272,13 @@ class DmYY {
         if (menuItem.url) {
           const imageIcon = await this.http(
             { url: menuItem.url },
-            'IMG',
+            "IMG",
             () => {
-              return this.drawTableIcon('gear');
+              return this.drawTableIcon("gear");
             }
           );
 
-          if (menuItem.url.indexOf('png') !== -1) {
+          if (menuItem.url.indexOf("png") !== -1) {
             iconBase64 = `data:image/png;base64,${Data.fromPNG(
               imageIcon
             ).toBase64String()}`;
@@ -1277,11 +1295,11 @@ class DmYY {
 
         let defaultHtml = ``;
         if (idName !== undefined && !menuItem.defaultValue)
-          menuItem.defaultValue = this.settings[idName] || '';
+          menuItem.defaultValue = this.settings[idName] || "";
 
-        if (menuItem.type === 'input') {
-          defaultHtml = menuItem.defaultValue || '';
-        } else if (menuItem.type === 'img') {
+        if (menuItem.type === "input") {
+          defaultHtml = menuItem.defaultValue || "";
+        } else if (menuItem.type === "img") {
           const cachePath = `${menuItem.val}/${menuItem.name}`;
           if (await this.FILE_MGR.fileExistsExtra(cachePath)) {
             const imageSrc = `data:image/png;base64,${Data.fromFile(
@@ -1289,25 +1307,25 @@ class DmYY {
             ).toBase64String()}`;
             defaultHtml = `<img src="${imageSrc}"/>`;
           }
-        } else if (menuItem.type === 'select') {
-          let selectOptions = '';
+        } else if (menuItem.type === "select") {
+          let selectOptions = "";
           menuItem.options.forEach((option) => {
             let selected = `selected="selected"`;
             selectOptions += `<option value="${option}" ${
-              menuItem.defaultValue === option ? selected : ''
+              menuItem.defaultValue === option ? selected : ""
             }>${option}</option>`;
           });
           defaultHtml = `<select class="form-item__input" name="${idName}">${selectOptions}</select>`;
-        } else if (menuItem.type === 'switch') {
+        } else if (menuItem.type === "switch") {
           const checked =
-            menuItem.defaultValue === 'true' ? `checked="checked"` : '';
+            menuItem.defaultValue === "true" ? `checked="checked"` : "";
           defaultHtml += `<input class="form-item__input" name="${idName}" role="switch" type="checkbox" value="true" ${checked} />`;
         } else if (menuItem.type) {
           defaultHtml = `<input class="form-item__input" placeholder="${
-            menuItem.placeholder || '请输入'
+            menuItem.placeholder || "请输入"
           }" name="${idName}" type="${
             menuItem.type
-          }" enterkeyhint="done" value="${menuItem.defaultValue || ''}">`;
+          }" enterkeyhint="done" value="${menuItem.defaultValue || ""}">`;
         }
 
         configList += `     
@@ -1326,15 +1344,15 @@ class DmYY {
       configList += `</form></div>`;
     }
 
-    let avatarHtml = '';
+    let avatarHtml = "";
     if (renderAvatar) {
       const cachePath = `${this.baseImage}/${this.userConfigKey[0]}`;
       const avatarConfig = {
         avatar: `https://avatars.githubusercontent.com/u/23498579?v=4`,
-        nickname: this.baseSettings[this.userConfigKey[1]] || 'Dompling',
+        nickname: this.baseSettings[this.userConfigKey[1]] || "Dompling",
         homPageDesc:
           this.baseSettings[this.userConfigKey[2]] ||
-          '18岁，来自九仙山的设计师',
+          "18岁，来自九仙山的设计师",
       };
 
       if (await this.FILE_MGR.fileExistsExtra(cachePath)) {
@@ -1409,30 +1427,30 @@ class DmYY {
           (item) => (item.name || item.val) === code
         );
 
-        if (code === 'userInfo') await this.setUserInfo();
+        if (code === "userInfo") await this.setUserInfo();
 
         if (actionItem) {
           const idName = actionItem?.name || actionItem?.val;
           if (actionItem?.onClick) {
             await actionItem?.onClick?.(actionItem, data, previewWebView);
-          } else if (actionItem.type == 'input') {
+          } else if (actionItem.type == "input") {
             if (
               await this.setLightAndDark(
-                actionItem['title'],
-                actionItem['desc'],
+                actionItem["title"],
+                actionItem["desc"],
                 idName,
-                actionItem['placeholder']
+                actionItem["placeholder"]
               )
             )
               this.insertTextByElementId(
                 previewWebView,
                 idName,
-                this.settings[idName] || ''
+                this.settings[idName] || ""
               );
-          } else if (actionItem.type === 'img') {
+          } else if (actionItem.type === "img") {
             const cachePath = `${actionItem.val}/${actionItem.name}`;
-            const options = ['相册选择', '清空图片', '取消'];
-            const message = '相册图片选择，请选择合适图片大小';
+            const options = ["相册选择", "清空图片", "取消"];
+            const message = "相册图片选择，请选择合适图片大小";
             const index = await this.generateAlert(message, options);
             switch (index) {
               case 0:
@@ -1462,7 +1480,7 @@ class DmYY {
           }
         }
       } catch (error) {
-        console.log('异常操作：' + error);
+        console.log("异常操作：" + error);
       }
       this.dismissLoading(previewWebView);
       injectListener();
@@ -1472,7 +1490,7 @@ class DmYY {
       console.error(e);
       this.dismissLoading(previewWebView);
       if (!config.runsInApp) {
-        this.notify('主界面', `🚫 ${e}`);
+        this.notify("主界面", `🚫 ${e}`);
       }
     });
 
@@ -1482,14 +1500,13 @@ class DmYY {
   _init(widgetFamily = config.widgetFamily) {
     // 组件大小：small,medium,large
     this.widgetFamily = widgetFamily;
-    this.SETTING_KEY = this.md5(Script.name());
     //用于配置所有的组件相关设置
 
     // 文件管理器
     // 提示：缓存数据不要用这个操作，这个是操作源码目录的，缓存建议存放在local temp目录中
     this.FILE_MGR =
       FileManager[
-        module.filename.includes('Documents/iCloud~') ? 'iCloud' : 'local'
+        module.filename.includes("Documents/iCloud~") ? "iCloud" : "local"
       ]();
 
     this.FILE_MGR.fileExistsExtra = async (filePath) => {
@@ -1528,14 +1545,14 @@ class DmYY {
 
     this.settings = { ...this.defaultSettings, ...this.settings };
 
-    this.settings.lightColor = this.settings.lightColor || '#000000';
-    this.settings.darkColor = this.settings.darkColor || '#ffffff';
-    this.settings.lightBgColor = this.settings.lightBgColor || '#ffffff';
-    this.settings.darkBgColor = this.settings.darkBgColor || '#000000';
-    this.settings.boxjsDomain = this.baseSettings.boxjsDomain || 'boxjs.net';
-    this.settings.refreshAfterDate = this.settings.refreshAfterDate || '30';
-    this.settings.lightOpacity = this.settings.lightOpacity || '0.4';
-    this.settings.darkOpacity = this.settings.darkOpacity || '0.7';
+    this.settings.lightColor = this.settings.lightColor || "#000000";
+    this.settings.darkColor = this.settings.darkColor || "#ffffff";
+    this.settings.lightBgColor = this.settings.lightBgColor || "#ffffff";
+    this.settings.darkBgColor = this.settings.darkBgColor || "#000000";
+    this.settings.boxjsDomain = this.baseSettings.boxjsDomain || "boxjs.net";
+    this.settings.refreshAfterDate = this.settings.refreshAfterDate || "30";
+    this.settings.lightOpacity = this.settings.lightOpacity || "0.4";
+    this.settings.darkOpacity = this.settings.darkOpacity || "0.7";
 
     this.prefix = this.settings.boxjsDomain;
 
@@ -1565,8 +1582,8 @@ class DmYY {
     );
   }
 
-  getColors = (color = '') => {
-    const colors = typeof color === 'string' ? color.split(',') : color;
+  getColors = (color = "") => {
+    const colors = typeof color === "string" ? color.split(",") : color;
     return colors;
   };
 
@@ -1587,9 +1604,9 @@ class DmYY {
    * @param {string} name 操作函数名
    * @param {func} func 点击后执行的函数
    */
-  registerAction(name, func, icon = { name: 'gear', color: '#096dd9' }, type) {
-    if (typeof name === 'object' && !name.menu) return this._actions.push(name);
-    if (typeof name === 'object' && name.menu)
+  registerAction(name, func, icon = { name: "gear", color: "#096dd9" }, type) {
+    if (typeof name === "object" && !name.menu) return this._actions.push(name);
+    if (typeof name === "object" && name.menu)
       return this._menuActions.push(name);
 
     const action = {
@@ -1599,7 +1616,7 @@ class DmYY {
       onClick: func.bind(this),
     };
 
-    if (typeof icon === 'string') {
+    if (typeof icon === "string") {
       action.url = icon;
     } else {
       action.icon = icon;
@@ -1631,150 +1648,7 @@ class DmYY {
    * @param {string} str 要加密成md5的数据
    */
   // prettier-ignore
-  md5(str) {
-    function d(n, t) {
-      var r = (65535 & n) + (65535 & t);
-      return (((n >> 16) + (t >> 16) + (r >> 16)) << 16) | (65535 & r);
-    }
-
-    function f(n, t, r, e, o, u) {
-      return d(((c = d(d(t, n), d(e, u))) << (f = o)) | (c >>> (32 - f)), r);
-      var c, f;
-    }
-
-    function l(n, t, r, e, o, u, c) {
-      return f(
-          (t & r) | (~t & e), n, t, o, u, c);
-    }
-
-    function v(n, t, r, e, o, u, c) {
-      return f(
-          (t & e) | (r & ~e), n, t, o, u, c);
-    }
-
-    function g(n, t, r, e, o, u, c) {return f(t ^ r ^ e, n, t, o, u, c);}
-
-    function m(n, t, r, e, o, u, c) {return f(r ^ (t | ~e), n, t, o, u, c);}
-
-    function i(n, t) {
-      var r, e, o, u;
-      (n[t >> 5] |= 128 << t % 32), (n[14 + (((t + 64) >>> 9) << 4)] = t);
-      for (var c = 1732584193, f = -271733879, i = -1732584194, a = 271733878, h = 0; h <
-      n.length; h += 16) (c = l(
-          (r = c), (e = f), (o = i), (u = a), n[h], 7, -680876936)), (a = l(
-          a, c, f, i, n[h + 1], 12, -389564586)), (i = l(
-          i, a, c, f, n[h + 2], 17, 606105819)), (f = l(
-          f, i, a, c, n[h + 3], 22, -1044525330)), (c = l(
-          c, f, i, a, n[h + 4], 7, -176418897)), (a = l(
-          a, c, f, i, n[h + 5], 12, 1200080426)), (i = l(
-          i, a, c, f, n[h + 6], 17, -1473231341)), (f = l(
-          f, i, a, c, n[h + 7], 22, -45705983)), (c = l(
-          c, f, i, a, n[h + 8], 7, 1770035416)), (a = l(
-          a, c, f, i, n[h + 9], 12, -1958414417)), (i = l(
-          i, a, c, f, n[h + 10], 17, -42063)), (f = l(
-          f, i, a, c, n[h + 11], 22, -1990404162)), (c = l(
-          c, f, i, a, n[h + 12], 7, 1804603682)), (a = l(
-          a, c, f, i, n[h + 13], 12, -40341101)), (i = l(
-          i, a, c, f, n[h + 14], 17, -1502002290)), (c = v(
-          c, (f = l(f, i, a, c, n[h + 15], 22, 1236535329)), i, a, n[h + 1], 5,
-          -165796510,
-      )), (a = v(a, c, f, i, n[h + 6], 9, -1069501632)), (i = v(
-          i, a, c, f, n[h + 11], 14, 643717713)), (f = v(
-          f, i, a, c, n[h], 20, -373897302)), (c = v(
-          c, f, i, a, n[h + 5], 5, -701558691)), (a = v(
-          a, c, f, i, n[h + 10], 9, 38016083)), (i = v(
-          i, a, c, f, n[h + 15], 14, -660478335)), (f = v(
-          f, i, a, c, n[h + 4], 20, -405537848)), (c = v(
-          c, f, i, a, n[h + 9], 5, 568446438)), (a = v(
-          a, c, f, i, n[h + 14], 9, -1019803690)), (i = v(
-          i, a, c, f, n[h + 3], 14, -187363961)), (f = v(
-          f, i, a, c, n[h + 8], 20, 1163531501)), (c = v(
-          c, f, i, a, n[h + 13], 5, -1444681467)), (a = v(
-          a, c, f, i, n[h + 2], 9, -51403784)), (i = v(
-          i, a, c, f, n[h + 7], 14, 1735328473)), (c = g(
-          c, (f = v(f, i, a, c, n[h + 12], 20, -1926607734)), i, a, n[h + 5], 4,
-          -378558,
-      )), (a = g(a, c, f, i, n[h + 8], 11, -2022574463)), (i = g(
-          i, a, c, f, n[h + 11], 16, 1839030562)), (f = g(
-          f, i, a, c, n[h + 14], 23, -35309556)), (c = g(
-          c, f, i, a, n[h + 1], 4, -1530992060)), (a = g(
-          a, c, f, i, n[h + 4], 11, 1272893353)), (i = g(
-          i, a, c, f, n[h + 7], 16, -155497632)), (f = g(
-          f, i, a, c, n[h + 10], 23, -1094730640)), (c = g(
-          c, f, i, a, n[h + 13], 4, 681279174)), (a = g(
-          a, c, f, i, n[h], 11, -358537222)), (i = g(
-          i, a, c, f, n[h + 3], 16, -722521979)), (f = g(
-          f, i, a, c, n[h + 6], 23, 76029189)), (c = g(
-          c, f, i, a, n[h + 9], 4, -640364487)), (a = g(
-          a, c, f, i, n[h + 12], 11, -421815835)), (i = g(
-          i, a, c, f, n[h + 15], 16, 530742520)), (c = m(
-          c, (f = g(f, i, a, c, n[h + 2], 23, -995338651)), i, a, n[h], 6,
-          -198630844,
-      )), (a = m(a, c, f, i, n[h + 7], 10, 1126891415)), (i = m(
-          i, a, c, f, n[h + 14], 15, -1416354905)), (f = m(
-          f, i, a, c, n[h + 5], 21, -57434055)), (c = m(
-          c, f, i, a, n[h + 12], 6, 1700485571)), (a = m(
-          a, c, f, i, n[h + 3], 10, -1894986606)), (i = m(
-          i, a, c, f, n[h + 10], 15, -1051523)), (f = m(
-          f, i, a, c, n[h + 1], 21, -2054922799)), (c = m(
-          c, f, i, a, n[h + 8], 6, 1873313359)), (a = m(
-          a, c, f, i, n[h + 15], 10, -30611744)), (i = m(
-          i, a, c, f, n[h + 6], 15, -1560198380)), (f = m(
-          f, i, a, c, n[h + 13], 21, 1309151649)), (c = m(
-          c, f, i, a, n[h + 4], 6, -145523070)), (a = m(
-          a, c, f, i, n[h + 11], 10, -1120210379)), (i = m(
-          i, a, c, f, n[h + 2], 15, 718787259)), (f = m(
-          f, i, a, c, n[h + 9], 21, -343485551)), (c = d(c, r)), (f = d(
-          f, e)), (i = d(i, o)), (a = d(a, u));
-      return [c, f, i, a];
-    }
-
-    function a(n) {
-      for (var t = '', r = 32 * n.length, e = 0; e <
-      r; e += 8) t += String.fromCharCode((n[e >> 5] >>> e % 32) & 255);
-      return t;
-    }
-
-    function h(n) {
-      var t = [];
-      for (t[(n.length >> 2) - 1] = void 0, e = 0; e <
-      t.length; e += 1) t[e] = 0;
-      for (var r = 8 * n.length, e = 0; e < r; e += 8) t[e >> 5] |= (255 &
-          n.charCodeAt(e / 8)) << e % 32;
-      return t;
-    }
-
-    function e(n) {
-      for (var t, r = '0123456789abcdef', e = '', o = 0; o <
-      n.length; o += 1) (t = n.charCodeAt(o)), (e += r.charAt((t >>> 4) & 15) +
-          r.charAt(15 & t));
-      return e;
-    }
-
-    function r(n) {return unescape(encodeURIComponent(n));}
-
-    function o(n) {
-      return a(i(h((t = r(n))), 8 * t.length));
-      var t;
-    }
-
-    function u(n, t) {
-      return (function(n, t) {
-        var r, e, o = h(n), u = [], c = [];
-        for (u[15] = c[15] = void 0, 16 < o.length &&
-        (o = i(o, 8 * n.length)), r = 0; r < 16; r += 1) (u[r] = 909522486 ^
-            o[r]), (c[r] = 1549556828 ^ o[r]);
-        return ((e = i(u.concat(h(t)), 512 + 8 * t.length)), a(
-            i(c.concat(e), 640)));
-      })(r(n), r(t));
-    }
-
-    function t(n, t, r) {
-      return t ? (r ? u(t, n) : e(u(t, n))) : r ? o(n) : e(o(n));
-    }
-
-    return t(str);
-  }
+  md5(str){function d(n,t){var r=(65535&n)+(65535&t);return(((n>>16)+(t>>16)+(r>>16))<<16)|(65535&r)}function f(n,t,r,e,o,u){return d(((c=d(d(t,n),d(e,u)))<<(f=o))|(c>>>(32-f)),r);var c,f}function l(n,t,r,e,o,u,c){return f((t&r)|(~t&e),n,t,o,u,c)}function v(n,t,r,e,o,u,c){return f((t&e)|(r&~e),n,t,o,u,c)}function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}function i(n,t){var r,e,o,u;(n[t>>5]|=128<<t%32),(n[14+(((t+64)>>>9)<<4)]=t);for(var c=1732584193,f=-271733879,i=-1732584194,a=271733878,h=0;h<n.length;h+=16)(c=l((r=c),(e=f),(o=i),(u=a),n[h],7,-680876936)),(a=l(a,c,f,i,n[h+1],12,-389564586)),(i=l(i,a,c,f,n[h+2],17,606105819)),(f=l(f,i,a,c,n[h+3],22,-1044525330)),(c=l(c,f,i,a,n[h+4],7,-176418897)),(a=l(a,c,f,i,n[h+5],12,1200080426)),(i=l(i,a,c,f,n[h+6],17,-1473231341)),(f=l(f,i,a,c,n[h+7],22,-45705983)),(c=l(c,f,i,a,n[h+8],7,1770035416)),(a=l(a,c,f,i,n[h+9],12,-1958414417)),(i=l(i,a,c,f,n[h+10],17,-42063)),(f=l(f,i,a,c,n[h+11],22,-1990404162)),(c=l(c,f,i,a,n[h+12],7,1804603682)),(a=l(a,c,f,i,n[h+13],12,-40341101)),(i=l(i,a,c,f,n[h+14],17,-1502002290)),(c=v(c,(f=l(f,i,a,c,n[h+15],22,1236535329)),i,a,n[h+1],5,-165796510,)),(a=v(a,c,f,i,n[h+6],9,-1069501632)),(i=v(i,a,c,f,n[h+11],14,643717713)),(f=v(f,i,a,c,n[h],20,-373897302)),(c=v(c,f,i,a,n[h+5],5,-701558691)),(a=v(a,c,f,i,n[h+10],9,38016083)),(i=v(i,a,c,f,n[h+15],14,-660478335)),(f=v(f,i,a,c,n[h+4],20,-405537848)),(c=v(c,f,i,a,n[h+9],5,568446438)),(a=v(a,c,f,i,n[h+14],9,-1019803690)),(i=v(i,a,c,f,n[h+3],14,-187363961)),(f=v(f,i,a,c,n[h+8],20,1163531501)),(c=v(c,f,i,a,n[h+13],5,-1444681467)),(a=v(a,c,f,i,n[h+2],9,-51403784)),(i=v(i,a,c,f,n[h+7],14,1735328473)),(c=g(c,(f=v(f,i,a,c,n[h+12],20,-1926607734)),i,a,n[h+5],4,-378558,)),(a=g(a,c,f,i,n[h+8],11,-2022574463)),(i=g(i,a,c,f,n[h+11],16,1839030562)),(f=g(f,i,a,c,n[h+14],23,-35309556)),(c=g(c,f,i,a,n[h+1],4,-1530992060)),(a=g(a,c,f,i,n[h+4],11,1272893353)),(i=g(i,a,c,f,n[h+7],16,-155497632)),(f=g(f,i,a,c,n[h+10],23,-1094730640)),(c=g(c,f,i,a,n[h+13],4,681279174)),(a=g(a,c,f,i,n[h],11,-358537222)),(i=g(i,a,c,f,n[h+3],16,-722521979)),(f=g(f,i,a,c,n[h+6],23,76029189)),(c=g(c,f,i,a,n[h+9],4,-640364487)),(a=g(a,c,f,i,n[h+12],11,-421815835)),(i=g(i,a,c,f,n[h+15],16,530742520)),(c=m(c,(f=g(f,i,a,c,n[h+2],23,-995338651)),i,a,n[h],6,-198630844,)),(a=m(a,c,f,i,n[h+7],10,1126891415)),(i=m(i,a,c,f,n[h+14],15,-1416354905)),(f=m(f,i,a,c,n[h+5],21,-57434055)),(c=m(c,f,i,a,n[h+12],6,1700485571)),(a=m(a,c,f,i,n[h+3],10,-1894986606)),(i=m(i,a,c,f,n[h+10],15,-1051523)),(f=m(f,i,a,c,n[h+1],21,-2054922799)),(c=m(c,f,i,a,n[h+8],6,1873313359)),(a=m(a,c,f,i,n[h+15],10,-30611744)),(i=m(i,a,c,f,n[h+6],15,-1560198380)),(f=m(f,i,a,c,n[h+13],21,1309151649)),(c=m(c,f,i,a,n[h+4],6,-145523070)),(a=m(a,c,f,i,n[h+11],10,-1120210379)),(i=m(i,a,c,f,n[h+2],15,718787259)),(f=m(f,i,a,c,n[h+9],21,-343485551)),(c=d(c,r)),(f=d(f,e)),(i=d(i,o)),(a=d(a,u));return[c,f,i,a]}function a(n){for(var t='',r=32*n.length,e=0;e<r;e+=8)t+=String.fromCharCode((n[e>>5]>>>e%32)&255);return t}function h(n){var t=[];for(t[(n.length>>2)-1]=void 0,e=0;e<t.length;e+=1)t[e]=0;for(var r=8*n.length,e=0;e<r;e+=8)t[e>>5]|=(255&n.charCodeAt(e/8))<<e%32;return t}function e(n){for(var t,r='0123456789abcdef',e='',o=0;o<n.length;o+=1)(t=n.charCodeAt(o)),(e+=r.charAt((t>>>4)&15)+r.charAt(15&t));return e}function r(n){return unescape(encodeURIComponent(n))}function o(n){return a(i(h((t=r(n))),8*t.length));var t}function u(n,t){return(function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)(u[r]=909522486^o[r]),(c[r]=1549556828^o[r]);return((e=i(u.concat(h(t)),512+8*t.length)),a(i(c.concat(e),640)))})(r(n),r(t))}function t(n,t,r){return t?(r?u(t,n):e(u(t,n))):r?o(n):e(o(n))}return t(str)}
 
   /**
    * 渲染标题内容
@@ -1787,7 +1661,7 @@ class DmYY {
     let header = widget.addStack();
     header.centerAlignContent();
     try {
-      const image = await this.$request.get(icon, 'IMG');
+      const image = await this.$request.get(icon, "IMG");
       let _icon = header.addImage(image);
       _icon.imageSize = new Size(14, 14);
       _icon.cornerRadius = 4;
@@ -1841,7 +1715,7 @@ class DmYY {
    * @param {string} color 遮罩背景颜色
    * @param {float} opacity 透明度
    */
-  async shadowImage(img, color = '#000000', opacity = 0.7) {
+  async shadowImage(img, color = "#000000", opacity = 0.7) {
     if (!img) return;
     if (opacity === 0) return img;
     let ctx = new DrawContext();
@@ -1850,10 +1724,10 @@ class DmYY {
 
     ctx.drawImageInRect(
       img,
-      new Rect(0, 0, img.size['width'], img.size['height'])
+      new Rect(0, 0, img.size["width"], img.size["height"])
     );
     ctx.setFillColor(new Color(color, opacity));
-    ctx.fillRect(new Rect(0, 0, img.size['width'], img.size['height']));
+    ctx.fillRect(new Rect(0, 0, img.size["width"], img.size["height"]));
     return await ctx.getImage();
   }
 
@@ -1862,8 +1736,8 @@ class DmYY {
    * @param {boolean} json 是否为json格式
    */
   getSettings(json = true) {
-    let res = json ? {} : '';
-    let cache = '';
+    let res = json ? {} : "";
+    let cache = "";
     if (Keychain.contains(this.SETTING_KEY)) {
       cache = Keychain.get(this.SETTING_KEY);
     }
@@ -1880,8 +1754,8 @@ class DmYY {
   }
 
   getBaseSettings(json = true) {
-    let res = json ? {} : '';
-    let cache = '';
+    let res = json ? {} : "";
+    let cache = "";
     if (Keychain.contains(this.BaseCacheKey)) {
       cache = Keychain.get(this.BaseCacheKey);
     }
@@ -1901,7 +1775,7 @@ class DmYY {
     const data = { ...(this.baseSettings || {}), ...res };
     this.baseSettings = data;
     Keychain.set(this.BaseCacheKey, JSON.stringify(data));
-    if (notify) this.notify('设置成功', '通用设置需重新运行脚本生效');
+    if (notify) this.notify("设置成功", "通用设置需重新运行脚本生效");
     return data;
   }
 
@@ -1911,12 +1785,12 @@ class DmYY {
    */
   saveSettings(notify = true) {
     let res =
-      typeof this.settings === 'object'
+      typeof this.settings === "object"
         ? JSON.stringify(this.settings)
         : String(this.settings);
     Keychain.set(this.SETTING_KEY, res);
 
-    if (notify) this.notify('设置成功', '桌面组件稍后将自动刷新');
+    if (notify) this.notify("设置成功", "桌面组件稍后将自动刷新");
 
     return res;
   }
@@ -1948,12 +1822,12 @@ class DmYY {
     if (!img) {
       // 移除背景
       if (this.FILE_MGR.fileExists(cacheKey)) this.FILE_MGR.remove(cacheKey);
-      if (notify) this.notify('移除成功', '背景图片已移除，稍后刷新生效');
+      if (notify) this.notify("移除成功", "背景图片已移除，稍后刷新生效");
     } else {
       // 设置背景
       this.FILE_MGR.writeImage(cacheKey, img);
 
-      if (notify) this.notify('设置成功', '背景图片已设置！稍后刷新生效');
+      if (notify) this.notify("设置成功", "背景图片已设置！稍后刷新生效");
       return `data:image/png;base64,${Data.fromFile(
         cacheKey
       ).toBase64String()}`;
@@ -1977,10 +1851,10 @@ class DmYY {
   }
 
   textFormat = {
-    defaultText: { size: 14, font: 'regular', color: this.widgetColor },
-    battery: { size: 10, font: 'bold', color: this.widgetColor },
-    title: { size: 16, font: 'semibold', color: this.widgetColor },
-    SFMono: { size: 12, font: 'SF Mono', color: this.widgetColor },
+    defaultText: { size: 14, font: "regular", color: this.widgetColor },
+    battery: { size: 10, font: "bold", color: this.widgetColor },
+    title: { size: 16, font: "semibold", color: this.widgetColor },
+    SFMono: { size: 12, font: "SF Mono", color: this.widgetColor },
   };
 
   provideFont = (fontName, fontSize) => {
@@ -2023,7 +1897,7 @@ class DmYY {
 
   provideText = (string, container, format) => {
     format = {
-      font: 'light',
+      font: "light",
       size: 14,
       color: this.widgetColor,
       opacity: 1,
@@ -2044,11 +1918,11 @@ class DmYY {
 }
 
 // @base.end
-const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
+const Runing = async (Widget, default_args = "", isDebug = true, extra) => {
   let M = null;
   // 判断hash是否和当前设备匹配
   if (config.runsInWidget) {
-    M = new Widget(args.widgetParameter || '');
+    M = new Widget(args.widgetParameter || "");
 
     if (extra) {
       Object.keys(extra).forEach((key) => {
@@ -2071,22 +1945,22 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
     }
   } else {
     let { act, __arg, __size } = args.queryParameters;
-    M = new Widget(__arg || default_args || '');
+    M = new Widget(__arg || default_args || "");
     if (extra) {
       Object.keys(extra).forEach((key) => {
         M[key] = extra[key];
       });
     }
     if (__size) M._init(__size);
-    if (!act || !M['_actions']) {
+    if (!act || !M["_actions"]) {
       // 弹出选择菜单
-      const actions = M['_actions'];
+      const actions = M["_actions"];
       const onClick = async (item) => {
         M.widgetFamily = item.val;
         try {
           M._init(item.val);
         } catch (error) {
-          console.log('初始化异常:' + error);
+          console.log("初始化异常:" + error);
         }
         w = await M.render();
         const fnc = item.val
@@ -2095,13 +1969,14 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
         if (w) return w[`present${fnc}`]();
       };
 
-      const preview = [];
+      const preview = [],
+        lockView = [];
       if (M.renderSmall) {
         preview.push({
           url: `https://raw.githubusercontent.com/dompling/Scriptable/master/images/small.png`,
-          title: '小尺寸',
-          val: 'small',
-          name: 'small',
+          title: "小尺寸",
+          val: "small",
+          name: "small",
           dismissOnSelect: true,
           onClick,
         });
@@ -2110,9 +1985,9 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       if (M.renderMedium) {
         preview.push({
           url: `https://raw.githubusercontent.com/dompling/Scriptable/master/images/medium.png`,
-          title: '中尺寸',
-          val: 'medium',
-          name: 'medium',
+          title: "中尺寸",
+          val: "medium",
+          name: "medium",
           dismissOnSelect: true,
           onClick,
         });
@@ -2121,18 +1996,61 @@ const Runing = async (Widget, default_args = '', isDebug = true, extra) => {
       if (M.renderLarge) {
         preview.push({
           url: `https://raw.githubusercontent.com/dompling/Scriptable/master/images/large.png`,
-          title: '大尺寸',
-          val: 'large',
-          name: 'large',
+          title: "大尺寸",
+          val: "large",
+          name: "large",
+          dismissOnSelect: true,
+          onClick,
+        });
+      }
+
+      if (M.renderAccessoryInline) {
+        lockView.push({
+          icon: {
+            color: "#4676EE",
+            name: "list.triangle",
+          },
+          title: "锁屏列表",
+          val: "accessoryInline",
+          name: "accessoryInline",
+          dismissOnSelect: true,
+          onClick,
+        });
+      }
+
+      if (M.renderAccessoryRectangular) {
+        lockView.push({
+          icon: {
+            color: "#4676EE",
+            name: "arrow.rectanglepath",
+          },
+          title: "锁屏 2x",
+          val: "accessoryRectangular",
+          name: "accessoryRectangular",
+          dismissOnSelect: true,
+          onClick,
+        });
+      }
+
+      if (M.renderAccessoryCircular) {
+        lockView.push({
+          icon: {
+            color: "#4676EE",
+            name: "circle.circle",
+          },
+          title: "锁屏 1x",
+          val: "accessoryCircular",
+          name: "accessoryCircular",
           dismissOnSelect: true,
           onClick,
         });
       }
 
       const menuConfig = [
-        { title: '预览组件', menu: preview },
-        { title: '组件配置', menu: actions },
-        ...M['_menuActions'],
+        ...(preview ? [{ title: "预览组件", menu: preview }] : []),
+        ...(lockView.length ? [{ title: "锁屏组件", menu: lockView }] : []),
+        { title: "组件配置", menu: actions },
+        ...M["_menuActions"],
       ];
       await M.renderAppView(menuConfig, true);
     }
