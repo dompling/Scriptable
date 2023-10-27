@@ -1056,6 +1056,9 @@ class DmYY {
         padding: 0.5em 18px;
         position: relative;
       }
+      label > * {
+        pointer-events: none;
+      }
       .form-label {
         display: flex;
         align-items: center;
