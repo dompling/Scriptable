@@ -1046,14 +1046,14 @@ class DmYY {
         border-radius:50%;
         border: 1px solid #F6D377;
       }
-      .form-item {
+      .form-item, .form-item-Switch {
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-size: ${settingItemFontSize}px;
         font-weight: 400;
         min-height: 2.2em;
-        padding: 0.5em 18px;
+        padding: 0.5em 10px;
         position: relative;
       }
       label > * {
@@ -1095,14 +1095,18 @@ class DmYY {
         border-radius:3px;
       }
 
-      .form-item + .form-item::before {
+      .form-item + .form-item::before,
+      .form-item-switch + .form-item::before,
+      .form-item + .form-item-switch::before
+       {
         content: "";
         position: absolute;
         top: 0;
-        left: 20px;
+        left: 0;
         right: 0;
         border-top: 0.5px solid var(--divider-color);
       }
+
       .form-item input[type="checkbox"] {
         width: 2em;
         height: 2em;
@@ -1330,9 +1334,16 @@ class DmYY {
             menuItem.type
           }" enterkeyhint="done" value="${menuItem.defaultValue || ""}">`;
         }
-
+  
+        let addLable = "";
+        if(menuItem.type === "switch" || menuItem.type === "checkbox") {   
+            addLable = `<label id="${idName}" class="form-item-switch form-item--link">`;
+        } else {
+            addLable = `<label id="${idName}" class="form-item form-item--link">`;
+        }
+        
         configList += `     
-          <label id="${idName}" class="form-item form-item--link">
+          ${addLable}
               <div class="form-label item-none">
                   <img class="form-label-img" class="form-label-img" src="${iconBase64}"/>
                   <div class="form-label-title">${menuItem.title}</div>
