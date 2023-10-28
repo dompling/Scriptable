@@ -1046,7 +1046,7 @@ class DmYY {
         border-radius:50%;
         border: 1px solid #F6D377;
       }
-      .form-item, .form-item-Switch {
+      .form-item, .form-item-switch {
         display: flex;
         align-items: center;
         justify-content: space-between;
