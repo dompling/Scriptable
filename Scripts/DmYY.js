@@ -1096,8 +1096,9 @@ class DmYY {
       }
 
       .form-item + .form-item::before,
+      .form-item + .form-item-switch::before,
       .form-item-switch + .form-item::before,
-      .form-item + .form-item-switch::before
+      .form-item-switch + .form-item-switch::before
        {
         content: "";
         position: absolute;
