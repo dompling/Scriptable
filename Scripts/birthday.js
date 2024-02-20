@@ -16,12 +16,7 @@ const heightMode = Device.model() === "iPad" ? 100 : 380; // 中号组件图片�
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
-    super(arg, {
-      lightBgColor: "#2581f2",
-      darkBgColor: "#2581f2",
-      darkColor: "#fff",
-      lightColor: "#fff",
-    });
+    super(arg);
     this.en = "birthday";
     this.name = "破壳日";
     this.LEFT_IMG_KEY = `${this.cacheImage}/avatar`;
@@ -379,7 +374,7 @@ class Widget extends DmYY {
 
     if (dayImage) {
       subWidget.addSpacer(2);
-      let dayIcon = subWidget.addImage(dayImage.image);
+      let dayIcon = subWidget.addImage(SFSymbol.named(dayImage).image);
       dayIcon.imageSize = new Size(mainTextSize + 1, mainTextSize + 1);
       dayIcon.tintColor = new Color("#1ab6f8");
     }
