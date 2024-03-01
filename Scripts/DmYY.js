@@ -7,6 +7,16 @@
  * Github: https://github.com/dompling
  * UI 配置升级 感谢 @LSP 大佬提供代码
  */
+
+const named = SFSymbol.named;
+SFSymbol.named = (str) => {
+  const current = named(str);
+  if (!current.image) {
+    return named("photo");
+  }
+  return current;
+};
+
 class DmYY {
   constructor(arg, defaultSettings) {
     this.arg = arg;
@@ -705,22 +715,22 @@ class DmYY {
         ],
       },
       {
-        title:"重置组件",
-        menu:[
+        title: "重置组件",
+        menu: [
           {
             icon: { name: "trash", color: "#D85888" },
             title: "重置",
             desc: "重置当前组件配置",
-            name:"reset",
+            name: "reset",
             val: "reset",
-            onClick:()=>{
-              this.settings = {}
+            onClick: () => {
+              this.settings = {};
               this.saveSettings();
               this.reopenScript();
-            }
+            },
           },
-        ]
-      }
+        ],
+      },
     ]).catch((e) => {
       console.log(e);
     });
@@ -1335,14 +1345,14 @@ class DmYY {
             menuItem.type
           }" enterkeyhint="done" value="${menuItem.defaultValue || ""}">`;
         }
-  
+
         let addLable = "";
-        if(menuItem.type === "switch" || menuItem.type === "checkbox") {   
-            addLable = `<label id="${idName}" class="form-item-switch form-item--link">`;
+        if (menuItem.type === "switch" || menuItem.type === "checkbox") {
+          addLable = `<label id="${idName}" class="form-item-switch form-item--link">`;
         } else {
-            addLable = `<label id="${idName}" class="form-item form-item--link">`;
+          addLable = `<label id="${idName}" class="form-item form-item--link">`;
         }
-        
+
         configList += `     
           ${addLable}
               <div class="form-label item-none">

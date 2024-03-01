@@ -301,7 +301,7 @@ class Widget extends DmYY {
       nongli,
       isLeapMonth,
     };
-
+    
     if (this.settings.ajax) {
       this.ajax(opt).then((res) => {
         this.settings.ajax = res;
@@ -523,8 +523,7 @@ class Widget extends DmYY {
         icon: "hourglass",
         color: "#1ab6f8",
         title: "年龄",
-        text: `${ageYear + ageMonth}`,
-        dayImage: dayIcon,
+        text: `${ageYear + ageMonth} ${tmpBirth.day} 天`,
       });
     } else {
       this.rowCell(rightStack, {
