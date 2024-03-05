@@ -314,8 +314,8 @@ class Widget extends DmYY {
     this.saveSettings(false);
     const response = this.settings.ajax;
 
-    response.animalEmoji = `${this.getAnimalZodiacToEmoji(response.animal)}`;
-    response.astro = `${this.getAstroToEmoji(response.constellation)}`;
+    response.animalEmoji = `${this.getAnimalZodiacToEmoji(response.sx)}`;
+    response.astro = `${this.getAstroToEmoji(response.xz)}`;
 
     if (this.verifyTime(eday)) {
       response.meetDay = this.getEdayNumber(eday);
@@ -613,8 +613,7 @@ class Widget extends DmYY {
         icon: "hourglass",
         color: "#1ab6f8",
         title: "年龄",
-        text: ageYear + ageMonth,
-        dayImage: dayIcon,
+        text: `${ageYear + ageMonth} ${tmpBirth.day} 天`,
       });
     } else {
       this.rowCell(containerStack, {
