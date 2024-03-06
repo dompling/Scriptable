@@ -337,8 +337,8 @@ class Widget extends DmYY {
       .replace("年", "-")
       .replace("月", "-")
       .replace("日", "");
-
-    const tmpBirth = this.getAge(this.defaultData.eday);
+    
+    const tmpBirth = this.getAge(this.defaultData.time);
     let ageYear = tmpBirth.year > 0 ? `${tmpBirth.year}岁` : "";
     let ageMonth = tmpBirth.month > 0 ? `${tmpBirth.month}月` : "";
     let ageDay = tmpBirth.day > 0 ? `${tmpBirth.day}天` : "1天";
