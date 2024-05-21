@@ -303,9 +303,9 @@ class Widget extends DmYY {
   };
 
   init = async () => {
-    widthMode = this.settings.avatarWidth || widthMode;
-    heightMode = this.settings.avatarHeight || heightMode;
-    mainTextSize = this.settings.mainTextSize || mainTextSize;
+    widthMode = Number(this.settings.avatarWidth) || widthMode;
+    heightMode = Number(this.settings.avatarHeight) || heightMode;
+    mainTextSize = Number(this.settings.mainTextSize) || mainTextSize;
 
     await this.FILE_MGR.fileExistsExtra(this.LEFT_IMG_KEY);
     this.defaultData = {
