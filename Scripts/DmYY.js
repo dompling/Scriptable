@@ -2074,8 +2074,8 @@ const Runing = async (Widget, default_args = "", isDebug = true, extra) => {
       const menuConfig = [
         ...(preview ? [{ title: "预览组件", menu: preview }] : []),
         ...(lockView.length ? [{ title: "锁屏组件", menu: lockView }] : []),
-        { title: "组件配置", menu: actions },
         ...M["_menuActions"],
+        { title: "组件配置", menu: actions },
       ];
       await M.renderAppView(menuConfig, true);
     }

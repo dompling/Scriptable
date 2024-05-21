@@ -5,13 +5,11 @@
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
 if (typeof require === "undefined") require = importModule;
 const { DmYY, Runing } = require("./DmYY");
-const mainTextSize = 13; // 倒数、农历、生日文字大小
-const now = new Date();
-const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+let mainTextSize = 13; // 倒数、农历、生日文字大小
 
-const widthMode = Device.model() === "iPad" ? 110 : 400; // 中号组件图片尺寸
+let widthMode = 110; // 中号组件图片尺寸
 
-const heightMode = Device.model() === "iPad" ? 100 : 380; // 中号组件图片尺寸
+let heightMode = 100; // 中号组件图片尺寸
 
 // @组件代码开始
 class Widget extends DmYY {
@@ -23,11 +21,35 @@ class Widget extends DmYY {
 
     if (config.runsInApp) {
       this.registerAction({
-        icon: { name: "person.badge.plus", color: "#52c41a" },
-        type: "img",
-        title: "头像",
-        name: "avatar",
-        val: this.cacheImage,
+        title: "头像设置",
+        menu: [
+          {
+            icon: { name: "person.badge.plus", color: "#52c41a" },
+            type: "img",
+            title: "头像",
+            name: "avatar",
+            val: this.cacheImage,
+          },
+          {
+            icon: { name: "arrow.left.and.right", color: "#13c2c2" },
+            type: "input",
+            title: "头像宽度",
+            name: "avatarWidth",
+          },
+          {
+            icon: { name: "arrow.up.and.down", color: "#1890ff" },
+            type: "input",
+            title: "头像高度",
+            name: "avatarHeight",
+          },
+        ],
+      });
+
+      this.registerAction({
+        icon: { name: "a.square", color: "#eb2f96" },
+        type: "input",
+        title: "主文字大小",
+        name: "mainTextSize",
       });
 
       this.registerAction({
@@ -281,6 +303,10 @@ class Widget extends DmYY {
   };
 
   init = async () => {
+    widthMode = this.settings.avatarWidth || widthMode;
+    heightMode = this.settings.avatarHeight || heightMode;
+    mainTextSize = this.settings.mainTextSize || mainTextSize;
+
     await this.FILE_MGR.fileExistsExtra(this.LEFT_IMG_KEY);
     this.defaultData = {
       username: this.settings.nickname || "", // 姓名
@@ -301,12 +327,11 @@ class Widget extends DmYY {
       nongli,
       isLeapMonth,
     };
-    
+
     if (this.settings.ajax) {
       this.ajax(opt).then((res) => {
         this.settings.ajax = res;
         this.saveSettings(false);
-        
       });
     } else {
       this.settings.ajax = await this.ajax(opt);
@@ -337,7 +362,7 @@ class Widget extends DmYY {
       .replace("年", "-")
       .replace("月", "-")
       .replace("日", "");
-    
+
     const tmpBirth = this.getAge(this.defaultData.time);
     let ageYear = tmpBirth.year > 0 ? `${tmpBirth.year}岁` : "";
     let ageMonth = tmpBirth.month > 0 ? `${tmpBirth.month}月` : "";
