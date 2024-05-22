@@ -526,7 +526,7 @@ class Widget extends DmYY {
 
     const userWidgetText = nameStack.addText(this.defaultData.username);
     userWidgetText.textColor = this.widgetColor;
-    userWidgetText.font = this.provideFont("italic", 22);
+    userWidgetText.font = this.provideFont("italic", mainTextSize + 10);
     userWidgetText.shadowColor = new Color(this.defaultData.nicknameShadow);
     userWidgetText.shadowOffset = new Point(3, 3);
     userWidgetText.shadowRadius = 3;
@@ -534,7 +534,7 @@ class Widget extends DmYY {
     nameStack.addSpacer(5);
     this.provideText(`相遇${meetDay}天`, nameStack, {
       font: "Party Let",
-      size: 12,
+      size: mainTextSize,
       opacity: 0.8,
     });
 
