@@ -482,8 +482,10 @@ completion(response);
   Run = () => {
     try {
       if (config.runsInApp) {
-        this.registerAction('默认账号', this.actionSettings);
-        this.registerAction('清除账号', this.deletedVpn);
+        this.registerAction('默认账号', this.actionSettings, {
+          name: "text.badge.star",
+          color: "#a0d911",
+        });
         this.registerAction('新增账号', async () => {
           const account = await this.setAlertInput(
               '添加账号', '添加账号数据，添加完成之后请去设置默认账号', {
@@ -502,6 +504,13 @@ completion(response);
           this.settings.dataSource = this.settings.dataSource.filter(
               item => item);
           this.saveSettings();
+        },{
+          name: "text.badge.plus",
+          color: "#fadb14",
+        });
+        this.registerAction('清除账号', this.deletedVpn, {
+          name: "text.badge.xmark",
+          color: "#f5222d",
         });
         this.registerAction('基础设置', this.setWidgetConfig);
       }
