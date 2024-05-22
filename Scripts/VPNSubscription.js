@@ -3,39 +3,40 @@
 // icon-color: deep-gray; icon-glyph: paper-plane;
 
 // 添加require，是为了vscode中可以正确引入包，以获得自动补全等功能
-if (typeof require === 'undefined') require = importModule;
-const {DmYY, Runing} = require('./DmYY');
+if (typeof require === "undefined") require = importModule;
+const { DmYY, Runing } = require("./DmYY");
 
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
     super(arg);
-    this.name = 'VPNSubscription';
-    this.en = 'VPNSubscription';
+    this.name = "VPNSubscription";
+    this.en = "VPNSubscription";
     this.CACHE_KEY = this.md5(`dataSouce_${this.en}`);
     this.Run();
   }
 
   useBoxJS = false;
-  today = '';
-  logo = 'https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif';
+  today = "";
+  logo =
+    "https://raw.githubusercontent.com/58xinian/icon/master/glados_animation.gif";
 
   dataSource = {
-    restData: '0',
-    usedData: '0',
-    totalData: '0',
-    todayData: '0',
+    restData: "0",
+    usedData: "0",
+    totalData: "0",
+    todayData: "0",
     isCheckIn: false,
   };
 
   account = {
-    title: '',
-    url: '',
+    title: "",
+    url: "",
   };
 
-  color1 = ['#ef0a6a', '#b6359c'];
-  color2 = ['#ff54fa', '#fad126'];
-  color3 = ['#28cfb3', '#72d7cc'];
+  color1 = ["#ef0a6a", "#b6359c"];
+  color2 = ["#ff54fa", "#fad126"];
+  color3 = ["#28cfb3", "#72d7cc"];
 
   chartConfig = (data, color, value) => {
     console.log(data);
@@ -49,7 +50,8 @@ class Widget extends DmYY {
         "data": [${parseFloat(data[0])}],
         "borderWidth": 0,
         "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
-        color[0])}),
+          color[0]
+        )}),
       }
     ]
   },
@@ -75,7 +77,8 @@ class Widget extends DmYY {
        "data": [${parseFloat(data[1])}],
         "borderWidth": 0,
         "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
-        color[1])}),
+          color[1]
+        )}),
       }
     ]
   },
@@ -108,7 +111,8 @@ class Widget extends DmYY {
         "data": [${parseFloat(data[2])}],
         "borderWidth": 0,
         "backgroundColor": getGradientFillHelper('vertical', ${JSON.stringify(
-        color[2])}),
+          color[2]
+        )}),
       }
     ]
   },
@@ -140,7 +144,7 @@ class Widget extends DmYY {
     console.log(template1);
     console.log(template2);
     console.log(template3);
-    return {template1, template2, template3};
+    return { template1, template2, template3 };
   };
 
   init = async () => {
@@ -162,13 +166,13 @@ class Widget extends DmYY {
 
   async getdata(url) {
     const req = new Request(url);
-    req.method = 'GET';
+    req.method = "GET";
     await req.load();
-    let resp = req.response.headers['subscription-userinfo'];
+    let resp = req.response.headers["subscription-userinfo"];
     resp = [
-      (parseInt(resp.match(/upload=([0-9]+);?/)[1])).toFixed(2),
-      (parseInt(resp.match(/download=([0-9]+);?/)[1])).toFixed(2),
-      (parseInt(resp.match(/total=([0-9]+);?/)[1])).toFixed(2),
+      parseInt(resp.match(/upload=([0-9]+);?/)[1]).toFixed(2),
+      parseInt(resp.match(/download=([0-9]+);?/)[1]).toFixed(2),
+      parseInt(resp.match(/total=([0-9]+);?/)[1]).toFixed(2),
     ];
     console.log(resp);
     return resp;
@@ -176,35 +180,36 @@ class Widget extends DmYY {
 
   gradient = (color) => {
     const linear = new LinearGradient();
-    linear.colors = color.map(item => new Color(item));
+    linear.colors = color.map((item) => new Color(item));
     linear.locations = [0, 0.5];
     return linear;
   };
 
   formatFileSize(fileSize) {
-    if (fileSize < (1024 * 1024)) {
+    if (fileSize < 1024 * 1024) {
       let temp = fileSize / 1024;
       temp = temp.toFixed(2);
-      return temp + 'KB';
-    } else if (fileSize < (1024 * 1024 * 1024)) {
+      return temp + "KB";
+    } else if (fileSize < 1024 * 1024 * 1024) {
       let temp = fileSize / (1024 * 1024);
       temp = temp.toFixed(2);
-      return temp + 'MB';
-    } else if (fileSize < (1024 * 1024 * 1024 * 1024)) {
+      return temp + "MB";
+    } else if (fileSize < 1024 * 1024 * 1024 * 1024) {
       let temp = fileSize / (1024 * 1024 * 1024);
       temp = temp.toFixed(2);
-      return temp + 'GB';
+      return temp + "GB";
     } else {
       let temp = fileSize / (1024 * 1024 * 1024 * 1024);
       temp = temp.toFixed(2);
-      return temp + 'TB';
+      return temp + "TB";
     }
   }
 
   createChart = async (size, chart) => {
-    const url = `https://quickchart.io/chart?w=${size.w}&h=${size.h}&f=png&c=${encodeURIComponent(
-        chart)}`;
-    return await this.$request.get(url, 'IMG');
+    const url = `https://quickchart.io/chart?w=${size.w}&h=${
+      size.h
+    }&f=png&c=${encodeURIComponent(chart)}`;
+    return await this.$request.get(url, "IMG");
   };
 
   setContent = async (w, size, viewSize) => {
@@ -212,16 +217,14 @@ class Widget extends DmYY {
     const use = this.dataSource.usedData;
     const today = this.dataSource.todayData;
     const total = this.dataSource.totalData;
-    const data1 = Math.floor(rest / total * 100);
-    const data2 = Math.floor(use / total * 100);
+    const data1 = Math.floor((rest / total) * 100);
+    const data2 = Math.floor((use / total) * 100);
     const data3 = Math.floor((today / total) * 100);
-    const data = [
-      data1 || 0, data2 || 0, data3 || 0,
-    ];
-    const {template1, template2, template3} = this.chartConfig(
-        data,
-        [this.color1, this.color2, this.color3],
-        this.formatFileSize(this.dataSource.restData),
+    const data = [data1 || 0, data2 || 0, data3 || 0];
+    const { template1, template2, template3 } = this.chartConfig(
+      data,
+      [this.color1, this.color2, this.color3],
+      this.formatFileSize(this.dataSource.restData)
     );
 
     const stackContent = w.addStack();
@@ -237,7 +240,6 @@ class Widget extends DmYY {
     const stackContent3 = stackContent2.addStack();
     stackContent3.size = stackSize;
     stackContent3.backgroundImage = await this.createChart(size, template3);
-
   };
 
   setLabelCell = async (stack, data) => {
@@ -250,7 +252,7 @@ class Widget extends DmYY {
     stackIcon.cornerRadius = 8;
     if (data.isImg) {
       try {
-        const icon = await this.$request.get(data.icon, 'IMG');
+        const icon = await this.$request.get(data.icon, "IMG");
         stackIcon.addImage(icon);
       } catch (e) {
         console.log(e);
@@ -262,14 +264,14 @@ class Widget extends DmYY {
     stackCell.addSpacer(5);
 
     const stackTitle = stackCell.addStack();
-    const title = {...this.textFormat.title};
+    const title = { ...this.textFormat.title };
     title.color = this.widgetColor;
     this.provideText(data.title, stackTitle, title);
 
     stackCell.addSpacer(5);
 
     const stackValue = stackCell.addStack();
-    const value = {...this.textFormat.defaultText};
+    const value = { ...this.textFormat.defaultText };
     value.color = this.widgetColor;
     this.provideText(data.value, stackValue, title);
 
@@ -277,7 +279,7 @@ class Widget extends DmYY {
   };
 
   setFooterCell = (stack, data) => {
-    const title = {...this.textFormat.title};
+    const title = { ...this.textFormat.title };
     title.color = this.widgetColor;
     title.size = 10;
 
@@ -298,7 +300,7 @@ class Widget extends DmYY {
     this.provideText(data.value, stackText, title);
     stackText.addSpacer();
 
-    const desc = {...this.textFormat.defaultText};
+    const desc = { ...this.textFormat.defaultText };
     desc.color = this.widgetColor;
     desc.size = 8;
 
@@ -315,7 +317,9 @@ class Widget extends DmYY {
     stackLeft.centerAlignContent();
     try {
       const imgIcon = await this.$request.get(
-          this.account.icon || this.logo, 'IMG');
+        this.account.icon || this.logo,
+        "IMG"
+      );
       const stackImgItem = stackLeft.addImage(imgIcon);
       stackImgItem.imageSize = new Size(12, 12);
       stackImgItem.cornerRadius = 4;
@@ -323,7 +327,7 @@ class Widget extends DmYY {
     } catch (e) {
       console.log(e);
     }
-    const title = {...this.textFormat.title};
+    const title = { ...this.textFormat.title };
     title.color = this.widgetColor;
     title.size = 12;
     this.provideText(this.account.title, stackLeft, title);
@@ -331,18 +335,21 @@ class Widget extends DmYY {
 
     const stackRight = stackHeader.addStack();
     stackRight.centerAlignContent();
-    const calendar = SFSymbol.named('waveform.path.badge.minus');
+    const calendar = SFSymbol.named("waveform.path.badge.minus");
     const imgCalendar = stackRight.addImage(calendar.image);
     imgCalendar.imageSize = new Size(12, 12);
-    imgCalendar.tintColor = new Color('#00b800');
+    imgCalendar.tintColor = new Color("#00b800");
     stackRight.addSpacer(5);
     this.provideText(
-        this.formatFileSize(this.dataSource.todayData), stackRight, title);
+      this.formatFileSize(this.dataSource.todayData),
+      stackRight,
+      title
+    );
     w.addSpacer();
 
     const stackContent = w.addStack();
     stackContent.addSpacer();
-    await this.setContent(stackContent, {w: 360, h: 360}, new Size(80, 80));
+    await this.setContent(stackContent, { w: 360, h: 360 }, new Size(80, 80));
     stackContent.addSpacer();
 
     w.addSpacer();
@@ -352,7 +359,7 @@ class Widget extends DmYY {
     const stackFooterLeft = stackFooter.addStack();
     this.setFooterCell(stackFooterLeft, {
       value: this.formatFileSize(this.dataSource.restData),
-      label: '剩余',
+      label: "剩余",
       color: this.color1,
     });
 
@@ -361,7 +368,7 @@ class Widget extends DmYY {
     const stackFooterRight = stackFooter.addStack();
     this.setFooterCell(stackFooterRight, {
       value: this.formatFileSize(this.dataSource.usedData),
-      label: '累计',
+      label: "累计",
       color: this.color2,
     });
 
@@ -371,48 +378,38 @@ class Widget extends DmYY {
   renderMedium = async (w) => {
     const stackBody = w.addStack();
     const stackLeft = stackBody.addStack();
-    await this.setContent(stackLeft, {w: 360, h: 360}, new Size(140, 140));
+    await this.setContent(stackLeft, { w: 360, h: 360 }, new Size(140, 140));
     stackBody.addSpacer(10);
     const stackRight = stackBody.addStack();
     stackRight.layoutVertically();
-    await this.setLabelCell(
-        stackRight, {
-          icon: this.account.icon || this.logo,
-          title: this.account.title,
-          value: ``,
-          isImg: true,
-        });
-    await this.setLabelCell(
-        stackRight,
-        {
-          icon: this.gradient(this.color3),
-          title: '上传',
-          value: this.formatFileSize(this.dataSource.todayData),
-        },
-    );
-    await this.setLabelCell(
-        stackRight,
-        {
-          icon: this.gradient(this.color2),
-          title: '累计',
-          value: this.formatFileSize(this.dataSource.usedData),
-        },
-    );
+    await this.setLabelCell(stackRight, {
+      icon: this.account.icon || this.logo,
+      title: this.account.title,
+      value: ``,
+      isImg: true,
+    });
+    await this.setLabelCell(stackRight, {
+      icon: this.gradient(this.color3),
+      title: "上传",
+      value: this.formatFileSize(this.dataSource.todayData),
+    });
+    await this.setLabelCell(stackRight, {
+      icon: this.gradient(this.color2),
+      title: "累计",
+      value: this.formatFileSize(this.dataSource.usedData),
+    });
 
-    await this.setLabelCell(
-        stackRight,
-        {
-          icon: this.gradient(this.color1),
-          title: '剩余',
-          value: this.formatFileSize(this.dataSource.restData),
-        },
-    );
+    await this.setLabelCell(stackRight, {
+      icon: this.gradient(this.color1),
+      title: "剩余",
+      value: this.formatFileSize(this.dataSource.restData),
+    });
 
     return w;
   };
 
   renderLarge = async (w) => {
-    w.addText('暂不支持');
+    w.addText("暂不支持");
     return w;
   };
 
@@ -424,9 +421,9 @@ class Widget extends DmYY {
     await this.init();
     const widget = new ListWidget();
     await this.getWidgetBackgroundImage(widget);
-    if (this.widgetFamily === 'medium') {
+    if (this.widgetFamily === "medium") {
       return await this.renderMedium(widget);
-    } else if (this.widgetFamily === 'large') {
+    } else if (this.widgetFamily === "large") {
       return await this.renderLarge(widget);
     } else {
       return await this.renderSmall(widget);
@@ -436,33 +433,51 @@ class Widget extends DmYY {
   Run = () => {
     try {
       if (config.runsInApp) {
-        this.registerAction('默认订阅', this.actionSettings);
-        this.registerAction('清除订阅', this.deletedVpn);
-        this.registerAction('新增订阅', async () => {
+        this.registerAction("默认订阅", this.actionSettings, {
+          name: "text.badge.star",
+          color: "#a0d911",
+        });
+        this.registerAction("新增订阅", async () => {
           const account = await this.setAlertInput(
-              '添加订阅', '添加订阅数据，添加完成之后请去设置默认订阅', {
-                title: '机场名',
-                icon: '图标',
-                url: '订阅地址',
-              }, false);
+            "添加订阅",
+            "添加订阅数据，添加完成之后请去设置默认订阅",
+            {
+              title: "机场名",
+              icon: "图标",
+              url: "订阅地址",
+            },
+            false
+          );
           if (!this.settings.dataSource) this.settings.dataSource = [];
           if (!account) return;
           if (account.title && account.url) {
             this.settings.dataSource.push(account);
           }
           this.settings.dataSource = this.settings.dataSource.filter(
-              item => item);
+            (item) => item
+          );
           this.saveSettings();
+        },{
+          name: "text.badge.plus",
+          color: "#fadb14",
         });
-        this.registerAction('基础设置', this.setWidgetConfig);
+        this.registerAction("清除订阅", this.deletedVpn, {
+          name: "text.badge.xmark",
+          color: "#f5222d",
+        });
+        this.registerAction("基础设置", this.setWidgetConfig);
       }
       this.account = this.settings.account || this.account;
-      this.CACHE_KEY += '_' + this.account.title;
-      const index = typeof args.widgetParameter === 'string' ? parseInt(
-          args.widgetParameter) : false;
-      if (this.settings.dataSource && this.settings.dataSource[index] &&
-          index !==
-          false) {
+      this.CACHE_KEY += "_" + this.account.title;
+      const index =
+        typeof args.widgetParameter === "string"
+          ? parseInt(args.widgetParameter)
+          : false;
+      if (
+        this.settings.dataSource &&
+        this.settings.dataSource[index] &&
+        index !== false
+      ) {
         this.account = this.settings.dataSource[index];
       }
     } catch (e) {
@@ -510,9 +525,8 @@ class Widget extends DmYY {
       console.log(e);
     }
   }
-
 }
 
 // @组件代码结束
 // await Runing(Widget, "", false); // 正式环境
-await Runing(Widget, '', false); //远程开发环境
+await Runing(Widget, "", false); //远程开发环境
