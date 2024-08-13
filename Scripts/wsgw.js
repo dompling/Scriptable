@@ -16,6 +16,22 @@ const { DmYY, Runing } = require('./DmYY');
  *
  */
 
+const defaultData = {
+  user: '**',
+  left: {
+    dayElePq: [],
+    balance: 0,
+    arrearsOfFees: false,
+  },
+  right: {
+    previousBill: 0,
+    previousBillRate: 0,
+    thisYear: 0,
+    thisYearRate: 0,
+  },
+  update: '',
+};
+
 // @组件代码开始
 class Widget extends DmYY {
   constructor(arg) {
@@ -37,29 +53,15 @@ class Widget extends DmYY {
 
   date = new Date();
 
-  dataSource = {
-    user: '**',
-    left: {
-      dayElePq: [],
-      balance: 0,
-      arrearsOfFees: false,
-    },
-    right: {
-      previousBill: 0,
-      previousBillRate: 0,
-      thisYear: 0,
-      thisYearRate: 0,
-    },
-    update: '',
-  };
+  dataSource = { ...defaultData };
 
   init = async () => {
-    if (this.settings.dataSource) {
-      this.dataSource = this.settings.dataSource;
+    if (this.settings.data && this.settings.data.length) {
+      this.dataSource = { ...this.settings.data[this.userNum] };
     } else {
       await this.cacheData();
     }
-    console.log(this.dataSource);
+    console.log(`当前用户下标：${this.userNum}`);
     this.cacheData();
   };
 
@@ -68,50 +70,69 @@ class Widget extends DmYY {
       const response = await this.$request.get(
         'http://api.wsgw-rewrite.com/electricity/bill/all'
       );
-      const dataInfo = response[this.userNum];
-      this.dataSource.user = dataInfo.userInfo.consName_dst.replaceAll('*', '');
-      this.dataSource.left.balance = parseFloat(dataInfo.eleBill.sumMoney);
-      this.dataSource.left.dayElePq = dataInfo.dayElecQuantity.sevenEleList
-        .filter((item) => item.dayElePq !== '-')
-        .map((item) => ({
-          label: item.day,
-          value: parseFloat(item.dayElePq),
-        }));
+      this.settings.data = [];
+      response.forEach((dataInfo) => {
+        const dataSource = {
+          user: '**',
+          left: {
+            dayElePq: [],
+            balance: 0,
+            arrearsOfFees: false,
+          },
+          right: {
+            previousBill: 0,
+            previousBillRate: 0,
+            thisYear: 0,
+            thisYearRate: 0,
+          },
+          update: '',
+        };
 
-      this.dataSource.left.arrearsOfFees = dataInfo.arrearsOfFees;
+        dataSource.user = dataInfo.userInfo.consName_dst.replaceAll('*', '');
+        dataSource.left.balance = parseFloat(dataInfo.eleBill.sumMoney);
+        dataSource.left.dayElePq = dataInfo.dayElecQuantity.sevenEleList
+          .filter((item) => item.dayElePq !== '-')
+          .map((item) => ({
+            label: item.day,
+            value: parseFloat(item.dayElePq),
+          }));
 
-      this.dataSource.right.previousBill = this.last(
-        dataInfo.monthElecQuantity.mothEleList
-      ).monthEleCost;
+        dataSource.left.arrearsOfFees = dataInfo.arrearsOfFees;
 
-      const oldVal = this.last(
-        dataInfo.monthElecQuantity.mothEleList,
-        2
-      ).monthEleCost;
+        dataSource.right.previousBill = parseFloat(
+          this.last(dataInfo.monthElecQuantity.mothEleList).monthEleCost
+        );
 
-      this.dataSource.right.previousBillRate =
-        ((this.dataSource.right.previousBill - oldVal) / oldVal) * 100;
+        const oldVal = this.last(
+          dataInfo.monthElecQuantity.mothEleList,
+          2
+        ).monthEleCost;
 
-      this.dataSource.right.previousBillRate = parseFloat(
-        this.dataSource.right.previousBillRate.toFixed(2)
-      );
+        dataSource.right.previousBillRate =
+          ((dataSource.right.previousBill - oldVal) / oldVal) * 100;
 
-      this.dataSource.right.thisYear = parseFloat(
-        dataInfo.monthElecQuantity.dataInfo.totalEleCost
-      );
+        dataSource.right.previousBillRate = parseFloat(
+          dataSource.right.previousBillRate.toFixed(2)
+        );
 
-      const lastYearVal = dataInfo.lastYearElecQuantity.dataInfo.totalEleCost;
+        dataSource.right.thisYear = parseFloat(
+          dataInfo.monthElecQuantity.dataInfo.totalEleCost
+        );
 
-      this.dataSource.right.thisYearRate =
-        ((this.dataSource.right.thisYear - lastYearVal) / lastYearVal) * 100;
+        const lastYearVal = dataInfo.lastYearElecQuantity.dataInfo.totalEleCost;
 
-      this.dataSource.right.thisYearRate = parseFloat(
-        this.dataSource.right.thisYearRate.toFixed(2)
-      );
+        dataSource.right.thisYearRate =
+          ((dataSource.right.thisYear - lastYearVal) / lastYearVal) * 100;
 
-      this.dataSource.update = dataInfo.eleBill.date;
+        dataSource.right.thisYearRate = parseFloat(
+          dataSource.right.thisYearRate.toFixed(2)
+        );
 
-      this.settings.dataSource = this.dataSource;
+        dataSource.update = dataInfo.eleBill.date;
+        this.settings.data.push({ ...dataSource });
+      });
+      console.log(this.settings.data);
+      this.dataSource = { ...this.settings.data[this.userNum] };
       this.saveSettings(false);
     } catch (e) {
       console.log(`接口数据异常：请检查 BoxJS 重写`);
