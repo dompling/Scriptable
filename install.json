@@ -510,17 +510,15 @@
     },
     {
       "version": "1.0.0",
-      "description": "Spotify",
-      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Spotify.js",
-      "thumb": "https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico",
-      "name": "Spotify",
-      "title": "声田音乐",
+      "description": "网上国网",
+      "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/wsgw.js",
+      "thumb": "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/83/d8/8a/83d88a92-5a4d-7a2f-118c-80d795e7a9f6/AppIcon-0-0-1x_U007emarketing-0-5-0-0-sRGB-85-220.png/144x144.png",
+      "name": "wsgw",
+      "title": "网上国网",
       "html": [
-        "<h4 align=\"center\">Spotify</h4>",
-        "<li>1.打开网站<a href=\"https://developer.spotify.com/dashboard\">Developer Spotify</a></li>",
-        "<li>2.Create App 创建 app</li>",
-        "<li>3.其他随意回调地址填写 <font color=\"red\">scriptable:///run/Spotify?openEditor=true</font> </li>",
-        "<li>4.在创建好的 App 设置复制客户端Id (Client ID)</li>"
+        "<h4 align=\"center\">网上国网</h4>",
+        "<li>1.填写账号密码<a href=\"https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/boxjs.json\">BoxJS订阅</a></li>",
+        "<li>2.参考借用【@小白脸】大佬的重写和【@Yuheng0101】大佬的脚本</li>"
       ],
       "depend": [
         {
