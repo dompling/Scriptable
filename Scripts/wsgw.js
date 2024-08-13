@@ -296,6 +296,7 @@ class Widget extends DmYY {
   async render() {
     await this.init();
     const widget = new ListWidget();
+    widget.url = `com.wsgw.e.zsdl://platformapi/`;
     await this.getWidgetBackgroundImage(widget);
     if (this.widgetFamily === 'medium') {
       return await this.renderMedium(widget);
