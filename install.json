@@ -518,7 +518,8 @@
       "html": [
         "<h4 align=\"center\">网上国网</h4>",
         "<li>1.填写账号密码<a href=\"https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/boxjs.json\">BoxJS订阅</a></li>",
-        "<li>2.参考借用【@小白脸】大佬的重写和【@Yuheng0101】大佬的脚本</li>"
+        "<li>2.参考借用【@小白脸】大佬的重写和【@Yuheng0101】大佬的脚本</li>",
+        "<li>3.Surge 添加远程重写模块【<a href=\"https://raw.githubusercontent.com/dompling/Script/master/wsgw/wsgw.sgmodule\">网上国网重写</a>】、其他的请自行使用 https://script.hub 转换</li>"
       ],
       "depend": [
         {
