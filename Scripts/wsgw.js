@@ -7,11 +7,12 @@ if (typeof require === 'undefined') require = importModule;
 const { DmYY, Runing } = require('./DmYY');
 
 /**
- * 重写沿用自作者
+ * 重写修改自作者
  * @channel https://t.me/yqc_123/
  * @feedback https://t.me/NobyDa_Chat
  * @author 小白脸|𝐎𝐍𝐙𝟑𝐕
- * 添加重写：https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/95598/95598.scriptable.js
+ *
+ * 添加重写：https://raw.githubusercontent.com/dompling/Script/master/wsgw/index.js
  *
  */
 
