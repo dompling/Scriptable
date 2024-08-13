@@ -213,6 +213,8 @@ class Widget extends DmYY {
 
     fontStyle.opacity = 1;
     const todayUse = this.dataSource.left.balance;
+    if (this.dataSource.left.arrearsOfFees)
+      fontStyle.color = new Color('#E64124');
     this.provideText(` ${todayUse.toLocaleString()}`, todayStack, fontStyle);
   };
 
