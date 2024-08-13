@@ -113,6 +113,7 @@ class Widget extends DmYY {
       this.settings.dataSource = this.dataSource;
       this.saveSettings(false);
     } catch (e) {
+      console.log(`接口数据异常：请检查 BoxJS 重写`);
       console.log(e);
     }
   };
