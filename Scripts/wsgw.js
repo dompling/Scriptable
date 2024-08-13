@@ -207,14 +207,15 @@ class Widget extends DmYY {
 
     const todayStack = leftStack.addStack();
     todayStack.centerAlignContent();
+    if (this.dataSource.left.arrearsOfFees)
+      fontStyle.color = new Color('#f65755');
 
     fontStyle.size = 20;
     this.provideText('¥ ', todayStack, fontStyle);
 
     fontStyle.opacity = 1;
     const todayUse = this.dataSource.left.balance;
-    if (this.dataSource.left.arrearsOfFees)
-      fontStyle.color = new Color('#E64124');
+
     this.provideText(` ${todayUse.toLocaleString()}`, todayStack, fontStyle);
   };
 
