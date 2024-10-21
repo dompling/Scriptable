@@ -56,21 +56,18 @@ class Widget extends DmYY {
   dataSource = { ...defaultData };
 
   init = async () => {
-    if (this.settings.data && this.settings.data.length) {
-      this.dataSource = { ...this.settings.data[this.userNum] };
-    } else {
-      await this.cacheData();
-    }
     console.log(`当前用户下标：${this.userNum}`);
-    this.cacheData();
+    await this.cacheData();
   };
 
   cacheData = async () => {
     try {
       const response = await this.$request.get(
-        'http://api.wsgw-rewrite.com/electricity/bill/all'
+        'https://api.wsgw-rewrite.com/electricity/bill/all',
+        { timeoutInterval: 60 }
       );
-      this.settings.data = [];
+      console.log(response);
+      this.settings.data = [];        
       response.forEach((dataInfo) => {
         const dataSource = {
           user: '**',
@@ -87,7 +84,7 @@ class Widget extends DmYY {
           },
           update: '',
         };
-
+        
         dataSource.user = dataInfo.userInfo.consName_dst.replaceAll('*', '');
         dataSource.left.balance = parseFloat(dataInfo.eleBill.sumMoney);
         dataSource.left.dayElePq = dataInfo.dayElecQuantity.sevenEleList
@@ -225,7 +222,7 @@ class Widget extends DmYY {
 
     leftStack.addSpacer();
 
-    this.provideText('Balance', leftStack, fontStyle);
+    this.provideText('余额', leftStack, fontStyle);
 
     const todayStack = leftStack.addStack();
     todayStack.centerAlignContent();
@@ -287,13 +284,13 @@ class Widget extends DmYY {
     const rightStack = widget.addStack();
     rightStack.layoutVertically();
     this.createCell(rightStack, {
-      title: 'Last Month',
+      title: '上期费用',
       num: this.dataSource.right.previousBill,
       radio: this.dataSource.right.previousBillRate,
     });
     rightStack.addSpacer();
     this.createCell(rightStack, {
-      title: 'This Year',
+      title: '今年费用',
       num: this.dataSource.right.thisYear,
       radio: this.dataSource.right.thisYearRate,
     });
