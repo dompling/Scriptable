@@ -47,17 +47,42 @@ class Widget extends DmYY {
         desc: '左侧背景色',
         val: 'leftColor',
       });
+      this.registerAction({
+        icon: { name: 'arrow.clockwise', color: '#1890ff' },
+        type: 'input',
+        title: '缓存时间',
+        desc: '默认3小时 (单位小时)，填写方式数字',
+        placeholder: '3',
+        val: 'cacheTime',
+      });
       this.registerAction('基础设置', this.setWidgetConfig);
     }
+    this.cacheTime = (this.settings.cacheTime || 3) * 3600000;
   }
 
   date = new Date();
+  day = this.date.getTime();
 
   dataSource = { ...defaultData };
 
   init = async () => {
     console.log(`当前用户下标：${this.userNum}`);
-    await this.cacheData();
+    if (
+      !this.settings.data ||
+      this.settings.cacheDay + this.cacheTime < this.day
+    ) {
+      console.log(`缓存失效，重新获取`);
+      await this.cacheData();
+    } else {
+      console.log(
+        `最后更新时间：${new Date(parseInt(this.settings.cacheDay)).toLocaleString()}`
+      );
+      console.log(
+        `缓存失效时间：${new Date(parseInt(this.settings.cacheDay) + this.cacheTime).toLocaleString()}`
+      );
+      this.dataSource = { ...this.settings.data[this.userNum] };
+      console.log(this.dataSource);
+    }
   };
 
   cacheData = async () => {
@@ -67,7 +92,7 @@ class Widget extends DmYY {
         { timeoutInterval: 60 }
       );
       console.log(response);
-      this.settings.data = [];        
+      this.settings.data = [];
       response.forEach((dataInfo) => {
         const dataSource = {
           user: '**',
@@ -84,7 +109,7 @@ class Widget extends DmYY {
           },
           update: '',
         };
-        
+
         dataSource.user = dataInfo.userInfo.consName_dst.replaceAll('*', '');
         dataSource.left.balance = parseFloat(dataInfo.eleBill.sumMoney);
         dataSource.left.dayElePq = dataInfo.dayElecQuantity.sevenEleList
@@ -130,6 +155,7 @@ class Widget extends DmYY {
       });
       console.log(this.settings.data);
       this.dataSource = { ...this.settings.data[this.userNum] };
+      this.settings.cacheDay = this.day;
       this.saveSettings(false);
     } catch (e) {
       console.log(`接口数据异常：请检查 BoxJS 重写`);
