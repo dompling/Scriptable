@@ -1313,7 +1313,7 @@ class DmYY {
 
         let defaultHtml = ``;
         if (idName !== undefined && !menuItem.defaultValue)
-          menuItem.defaultValue = this.settings[idName] || menuItem.val || '';
+          menuItem.defaultValue = this.settings[idName] || '';
 
         if (menuItem.type === 'input') {
           defaultHtml = menuItem.defaultValue || '';
