@@ -13,6 +13,8 @@
       "title": "DmYY",
       "html": [
         "<h4 align=\"center\">更新说明</h4>",
+        "v1.1.1",
+        "<li>feat: DmYY 判断有无 actions</li>",
         "v1.1.0",
         "<li>修复 boxjs 读取问题</li>",
         "v1.0.8",
