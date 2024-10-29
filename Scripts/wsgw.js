@@ -55,9 +55,18 @@ class Widget extends DmYY {
         placeholder: '3',
         val: 'cacheTime',
       });
+
+      this.registerAction({
+        icon: { name: 'character.cursor.ibeam', color: '#EC6240' },
+        type: 'input',
+        title: '文字缩放',
+        desc: '文字缩放比例，值为 0-1',
+        placeholder: '1',
+        val: 'scale',
+      });
+
       this.registerAction('基础设置', this.setWidgetConfig);
     }
-    this.cacheTime = (this.settings.cacheTime || 3) * 3600000;
   }
 
   date = new Date();
@@ -67,6 +76,8 @@ class Widget extends DmYY {
 
   init = async () => {
     console.log(`当前用户下标：${this.userNum}`);
+    this.cacheTime = (this.settings.cacheTime || 3) * 3600000;
+    this.scale = parseFloat(this.settings.scale || '1');
     if (
       !this.settings.data ||
       this.settings.cacheDay + this.cacheTime < this.day
@@ -228,7 +239,11 @@ class Widget extends DmYY {
   }
 
   createLeft = async (widget) => {
-    const fontStyle = { color: new Color('#fff'), size: 20, opacity: 0.8 };
+    const fontStyle = {
+      color: new Color('#fff'),
+      size: 20 * this.scale,
+      opacity: 0.8,
+    };
     const leftStack = widget.addStack();
     leftStack.cornerRadius = 10;
     leftStack.layoutVertically();
@@ -255,7 +270,7 @@ class Widget extends DmYY {
     if (this.dataSource.left.arrearsOfFees)
       fontStyle.color = new Color('#f65755');
 
-    fontStyle.size = 20;
+    fontStyle.size = 20 * this.scale;
     this.provideText('¥ ', todayStack, fontStyle);
 
     fontStyle.opacity = 1;
@@ -281,24 +296,28 @@ class Widget extends DmYY {
     cellStack.cornerRadius = 10;
     cellStack.layoutVertically();
 
-    const fontStyle = { color: new Color('#fff'), size: 14, opacity: 0.6 };
+    const fontStyle = {
+      color: new Color('#fff'),
+      size: 14 * this.scale,
+      opacity: 0.6,
+    };
     this.provideText(data.title, cellStack, fontStyle);
 
     const dataStack = cellStack.addStack();
     dataStack.bottomAlignContent();
 
-    fontStyle.size = 12;
+    fontStyle.size = 12 * this.scale;
     this.provideText('¥ ', dataStack, fontStyle);
 
     fontStyle.opacity = 1;
-    fontStyle.size = 20;
+    fontStyle.size = 20 * this.scale;
     this.provideText(` ${data.num.toLocaleString()}`, dataStack, fontStyle);
     dataStack.addSpacer();
 
     const dotStack = dataStack.addStack();
     this.createDot(dotStack, data.radio > 0 ? '#7EEF8F' : '#ED86A5');
 
-    fontStyle.size = 12;
+    fontStyle.size = 12 * this.scale;
     this.provideText(
       data.radio > 0 ? ` +${data.radio}%` : ` -${Math.abs(data.radio)}%`,
       dataStack,
