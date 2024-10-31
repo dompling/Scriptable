@@ -424,7 +424,7 @@
       ]
     },
     {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "获取当前省份油价",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/Oild.js",
       "thumb": "https://img.icons8.com/clouds/344/engine-oil-level.png",
@@ -435,6 +435,12 @@
           "name": "DmYY",
           "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js"
         }
+      ],
+      "html": [
+        "<h4 align=\"center\">今日油价</h4>",
+        "<ol>1.0.1 </ol>",
+        "<ol>增加自动定位设置</ol>",
+        "<ol>增加省份选择</ol>"
       ]
     },
     {
