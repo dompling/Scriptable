@@ -5,7 +5,7 @@
   "repo": "https://github.com/dompling/Scriptable",
   "apps": [
     {
-      "version": "1.1.0",
+      "version": "1.1.2",
       "description": "DmYY组件库",
       "scriptURL": "https://raw.githubusercontent.com/dompling/Scriptable/master/Scripts/DmYY.js",
       "thumb": "https://img.icons8.com/clouds/344/settings.png",
@@ -13,6 +13,8 @@
       "title": "DmYY",
       "html": [
         "<h4 align=\"center\">更新说明</h4>",
+        "v1.1.2",
+        "<li>fix: 输入默认值问题</li>",
         "v1.1.1",
         "<li>feat: DmYY 判断有无 actions</li>",
         "v1.1.0",

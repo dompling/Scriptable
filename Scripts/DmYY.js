@@ -1312,8 +1312,8 @@ class DmYY {
         const idName = menuItem.name || menuItem.val;
 
         let defaultHtml = ``;
-        if (idName !== undefined && !menuItem.defaultValue)
-          menuItem.defaultValue = this.settings[idName] || '';
+        menuItem.defaultValue =
+          this.settings[idName] || menuItem.defaultValue || '';
 
         if (menuItem.type === 'input') {
           defaultHtml = menuItem.defaultValue || '';
@@ -1330,13 +1330,13 @@ class DmYY {
           menuItem.options.forEach((option) => {
             let selected = `selected="selected"`;
             selectOptions += `<option value="${option}" ${
-              menuItem.defaultValue === option ? selected : ''
+              menuItem.defaultValue == option ? selected : ''
             }>${option}</option>`;
           });
           defaultHtml = `<select class="form-item__input" name="${idName}">${selectOptions}</select>`;
         } else if (menuItem.type === 'switch') {
           const checked =
-            menuItem.defaultValue === 'true' ? `checked="checked"` : '';
+            menuItem.defaultValue == 'true' ? `checked="checked"` : '';
           defaultHtml += `<input class="form-item__input" name="${idName}" role="switch" type="checkbox" value="true" ${checked} />`;
         } else if (menuItem.type) {
           defaultHtml = `<input class="form-item__input" placeholder="${
