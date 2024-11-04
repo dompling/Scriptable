@@ -1097,6 +1097,7 @@ class DmYY {
         text-overflow: ellipsis;
         display:flex;
         align-items: center;
+        white-space: nowrap;
       }
 
       .form-item-right-desc img{
