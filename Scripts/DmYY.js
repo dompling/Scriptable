@@ -1515,9 +1515,8 @@ class DmYY {
   }
 
   initSFSymbol() {
-    const _SFSymbol = SFSymbol;
-    const named = _SFSymbol.named;
-    _SFSymbol.named = (str) => {
+    const named = SFSymbol.named;
+    SFSymbol.named = (str) => {
       const current = named(str);
       if (!current) {
         console.log(`图标异常,请在文中搜索并替换图标：${str}`);
@@ -1525,7 +1524,6 @@ class DmYY {
       }
       return current;
     };
-    SFSymbol = _SFSymbol;
     return SFSymbol;
   }
 
