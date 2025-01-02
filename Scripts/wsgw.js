@@ -92,6 +92,7 @@ class Widget extends DmYY {
         `缓存失效时间：${new Date(parseInt(this.settings.cacheDay) + this.cacheTime).toLocaleString()}`
       );
       this.dataSource = { ...this.settings.data[this.userNum] };
+      if (!this.dataSource.user) await this.cacheData();
       console.log(this.dataSource);
     }
   };
