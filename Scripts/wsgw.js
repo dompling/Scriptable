@@ -104,7 +104,7 @@ class Widget extends DmYY {
       );
       console.log(response);
       this.settings.data = [];
-      response.forEach((dataInfo) => {
+      response?.forEach((dataInfo) => {
         const dataSource = {
           user: '**',
           left: {
@@ -133,13 +133,13 @@ class Widget extends DmYY {
         dataSource.left.arrearsOfFees = dataInfo.arrearsOfFees;
 
         dataSource.right.previousBill = parseFloat(
-          this.last(dataInfo.monthElecQuantity.mothEleList).monthEleCost
+          this.last(dataInfo.monthElecQuantity?.mothEleList || [])
+            ?.monthEleCost || 0
         );
 
-        const oldVal = this.last(
-          dataInfo.monthElecQuantity.mothEleList,
-          2
-        ).monthEleCost;
+        const oldVal =
+          this.last(dataInfo.monthElecQuantity?.mothEleList || [], 2)
+            ?.monthEleCost || 1;
 
         dataSource.right.previousBillRate =
           ((dataSource.right.previousBill - oldVal) / oldVal) * 100;
@@ -149,7 +149,7 @@ class Widget extends DmYY {
         );
 
         dataSource.right.thisYear = parseFloat(
-          dataInfo.monthElecQuantity.dataInfo.totalEleCost
+          dataInfo.monthElecQuantity?.dataInfo?.totalEleCost || 0
         );
 
         const lastYearVal = dataInfo.lastYearElecQuantity.dataInfo.totalEleCost;
